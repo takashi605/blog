@@ -34,6 +34,5 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:v0.0.0
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
