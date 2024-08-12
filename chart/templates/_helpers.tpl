@@ -1,14 +1,18 @@
 {{/*
-Expand the name of the chart.
+チャート名の取得
+Chart.yaml の中の name を取得するが、Value.yaml の中に nameOverride がある場合はそちらを優先する
+63文字で切り捨てを行い、末尾に - が残ってしまった場合に備えて - を削除している
 */}}
 {{- define "chart.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+完全修飾アプリ名(クラスタ内で一意の名前)の取得
+取得されるものは以下の3パターン
+1. .Values.fullnameOverride
+2. .Release.Name
+3. .Release.Name-.Chart.Name
 */}}
 {{- define "chart.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -24,14 +28,16 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
+「チャート名-バージョン値」の文字列を取得
+セマンティックバージョニングには +build のようなメタデータが含まれることがあるため、
++ を _ に変換して Kubernetes のリソース名として使用できるようにしている
 */}}
 {{- define "chart.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Common labels
+汎用ラベルの生成
 */}}
 {{- define "chart.labels" -}}
 helm.sh/chart: {{ include "chart.chart" . }}
@@ -43,7 +49,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+ラベルセレクタの生成
 */}}
 {{- define "chart.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "chart.name" . }}
@@ -51,7 +57,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+サービスアカウント名の取得
 */}}
 {{- define "chart.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
