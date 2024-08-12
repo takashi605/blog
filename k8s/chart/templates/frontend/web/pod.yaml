@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    app.kubernetes.io/name: web
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  containers:
+    - name: web
+      image: web:v0.0.0
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 5173

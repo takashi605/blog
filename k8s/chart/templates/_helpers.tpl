@@ -41,11 +41,11 @@ Chart.yaml の中の name を取得するが、Value.yaml の中に nameOverride
 */}}
 {{- define "chart.labels" -}}
 helm.sh/chart: {{ include "chart.chart" . }}
-{{ include "chart.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: {{ include "chart.fullname" . }}
 {{- end }}
 
 {{/*
