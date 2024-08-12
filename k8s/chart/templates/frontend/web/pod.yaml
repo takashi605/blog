@@ -9,6 +9,11 @@ spec:
   containers:
     - name: web
       image: web:v0.0.0
+      # Always だとリモートから pull してしまうため、
+      # 今回はローカルのイメージを使うために Never にしている
+      imagePullPolicy: Never
+      # (デバッグ用)コンテナが起動した後に終了しないようにする
+      command: ["sleep", "infinity"]
       resources:
         limits:
           memory: "128Mi"
