@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "web.appname" . }}
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "web.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "web.appname" . }}
+        {{- include "chart.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "web.appname" . }}
+          image: {{ include "web.appname" . }}:v0.0.0
+          # Always だとリモートから pull してしまうため、
+          # 今回はローカルのイメージを使うために Never にしている
+          imagePullPolicy: Never
+          # (デバッグ用)コンテナが起動した後に終了しないようにする
+          command: ["sleep", "infinity"]
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5173
