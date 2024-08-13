@@ -36,3 +36,29 @@ jobs:
             ghcr.io/${{ github.repository }}:v0.1.0
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
+
+  package-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v4.2.0
+      with:
+        version: v3.13.3
+
+    - name: Package Helm chart
+      run: helm package ${{ github.workspace }}/k8s/chart
+
+    - name: Log in to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push Helm chart to GHCR
+      run: |
+        CHART_NAME=$(basename *.tgz .tgz)
+        helm push ${CHART_NAME}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts
