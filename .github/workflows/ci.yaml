@@ -1,4 +1,4 @@
-name: "【CI】DockerImage の Build と Push"
+name: "CIフロー"
 
 on:
   push:
@@ -37,28 +37,28 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
 
-  package-and-push:
+  push_chart_package:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       packages: write
     steps:
-    - name: Checkout repository
+    - name: "リポジトリのチェックアウト"
       uses: actions/checkout@v4
 
-    - name: Set up Helm
+    - name: "Helm のセットアップ"
       uses: azure/setup-helm@v4.2.0
       with:
         version: v3.13.3
 
-    - name: Package Helm chart
-      run: helm package ${{ github.workspace }}/k8s/chart
+    - name: "Helm Chart のパッケージング"
+      run: helm package ${{ github.workspace }}/k8s/blog-chart
 
-    - name: Log in to GitHub Container Registry
+    - name: "GHCR へのログイン"
       run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Push Helm chart to GHCR
+    - name: "Helm Chart の Push"
       run: |
         CHART_NAME=$(basename *.tgz .tgz)
         helm push ${CHART_NAME}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts

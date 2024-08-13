@@ -13,12 +13,12 @@ kind-load-web:
 	kind load docker-image web:v0.1.0 --name $(CLUSTER_NAME)
 
 helm-install:
-	helm package k8s/chart; \
-	helm install blog ./chart-0.1.0.tgz
+	helm package k8s/blog-chart; \
+	helm install blog ./blog-chart-0.1.0.tgz
 
 helm-upgrade:
-	helm package k8s/chart; \
-	helm upgrade blog ./chart-0.1.0.tgz
+	helm package k8s/blog-chart; \
+	helm upgrade blog ./blog-chart-0.1.0.tgz
 
 helm-delete:
 	helm delete blog
