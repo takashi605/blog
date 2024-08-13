@@ -3,9 +3,9 @@ CLUSTER_NAME = blog
 docker-image-build:
 	docker image build -f containers/frontend/web/Dockerfile -t web:v0.1.0 .
 
-kind-up: 
+kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
-kind-down: 
+kind-down:
 	kind delete cluster --name $(CLUSTER_NAME)
 
 kind-load-all: kind-load-web
@@ -30,7 +30,7 @@ helm-reinstall: helm-delete helm-install
 ## MetalLB ##
 
 # MetalLB のインストール
-setup-metallb: 
+setup-metallb:
 	$(MAKE) update-kube-proxy
 	helm repo add metallb https://metallb.github.io/metallb
 	helm install metallb metallb/metallb
