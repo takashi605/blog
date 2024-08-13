@@ -45,3 +45,12 @@ update-kube-proxy:
 
 metallb-apply:
 	kubectl apply -f k8s/metallb-resources.yaml
+
+setup-ingressclass:
+	helm upgrade --install ingress-nginx ingress-nginx \
+		--repo https://kubernetes.github.io/ingress-nginx \
+		--namespace ingress-nginx --create-namespace
+
+default-set-ingressclass:
+	kubectl patch ingressclass nginx \
+	-p '{"metadata": {"annotations": {"ingressclass.kubernetes.io/is-default-class": "true"}}}'
