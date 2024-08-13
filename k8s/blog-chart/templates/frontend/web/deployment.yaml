@@ -4,7 +4,7 @@ metadata:
   name: {{ include "web.appname" . }}
   labels:
     app.kubernetes.io/name: {{ include "web.appname" . }}
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.web.deployment.replicas }}
   selector:
@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "web.appname" . }}
-        {{- include "chart.labels" . | nindent 8 }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
     spec:
       imagePullSecrets:
         {{- if .Values.web.pod.imagePullSecret }}
