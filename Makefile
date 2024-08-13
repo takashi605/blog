@@ -48,8 +48,7 @@ metallb-apply:
 
 setup-ingressclass:
 	helm upgrade --install ingress-nginx ingress-nginx \
-		--repo https://kubernetes.github.io/ingress-nginx \
-		--namespace ingress-nginx --create-namespace
+		--repo https://kubernetes.github.io/ingress-nginx
 
 default-set-ingressclass:
 	kubectl patch ingressclass nginx \
