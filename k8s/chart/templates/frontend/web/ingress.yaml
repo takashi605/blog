@@ -7,15 +7,15 @@ metadata:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
   rules:
-    - {{- if .Values.webHost }}
-      host: {{ .Values.webHost }}
+    - {{- if .Values.web.ingress.host }}
+      host: {{ .Values.web.ingress.host }}
       {{- end }}
       http:
         paths:
-        - pathType: Prefix
-          path: /
+        - pathType: {{ .Values.web.ingress.pathType }}
+          path: {{ .Values.web.ingress.path }}
           backend:
             service:
               name: {{ include "web.appname" . }}
               port:
-                number: 80
+                number: {{ .Values.web.service.port }}

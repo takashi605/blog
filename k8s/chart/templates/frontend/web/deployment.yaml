@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ include "web.appname" . }}
     {{- include "chart.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.web.deployment.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "web.appname" . }}
@@ -18,15 +18,16 @@ spec:
     spec:
       containers:
         - name: {{ include "web.appname" . }}
-          image: {{ include "web.appname" . }}:v0.0.0
-          # Always だとリモートから pull してしまうため、
-          # 今回はローカルのイメージを使うために Never にしている
-          imagePullPolicy: Never
+          image: {{ .Values.web.pod.imageName }}
+          imagePullPolicy: {{ .Values.web.pod.imagePullPolicy }}
           # (デバッグ用)コンテナが起動した後に終了しないようにする
           command: ["sleep", "infinity"]
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: {{ .Values.web.pod.memoryLimit }}
+              cpu: {{ .Values.web.pod.cpuLimit }}
+            requests:
+              memory: {{ .Values.web.pod.memoryRequest }}
+              cpu: {{ .Values.web.pod.cpuRequest }}
           ports:
-            - containerPort: 5173
+            - containerPort: {{ .Values.web.pod.containerPort }}

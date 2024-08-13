@@ -1,1 +1,27 @@
-webHost: ""
+web:
+  ingress:
+    # host が空文字列の場合は rules に含まれない
+    host: ""
+    pathType: Prefix
+    path: /
+  deployment:
+    replicas: 1
+  pod:
+    imageName: "web:v0.0.0"
+    # Always だとリモートから pull してしまうため、
+    # 今回はローカルのイメージを使うために Never にしている
+    imagePullPolicy: Never
+    memoryLimit: "128Mi"
+    cpuLimit: "500m"
+    memoryRequest: "64Mi"
+    cpuRequest: "250m"
+    containerPort: 5173
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5173
+    # ここから下の設定は type:ClusterIP の場合は関係ないが、
+    # 一応デフォルト値は入れておく
+    nodePort: 30080
+    loadBalancerIP: "192.168.1.100"
+    externalTrafficPolicy: Local
