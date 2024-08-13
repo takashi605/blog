@@ -8,6 +8,7 @@ web:
     replicas: 1
   pod:
     imageName: "web:v0.0.0"
+    imagePullSecret: ""
     # Always だとリモートから pull してしまうため、
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never

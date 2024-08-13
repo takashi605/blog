@@ -16,6 +16,10 @@ spec:
         app.kubernetes.io/name: {{ include "web.appname" . }}
         {{- include "chart.labels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+        {{- if .Values.web.pod.imagePullSecret }}
+        - name: {{ .Values.web.pod.imagePullSecret }}
+        {{- end }}
       containers:
         - name: {{ include "web.appname" . }}
           image: {{ .Values.web.pod.imageName }}
