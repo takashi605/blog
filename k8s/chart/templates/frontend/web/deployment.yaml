@@ -55,7 +55,9 @@ metadata:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
   rules:
-    - host: localhost
+    - {{- if .Values.webHost }}
+      host: {{ .Values.webHost }}
+      {{- end }}
       http:
         paths:
         - pathType: Prefix
