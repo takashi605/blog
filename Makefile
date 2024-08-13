@@ -25,3 +25,23 @@ helm-delete:
 
 # 一度削除してから再インストール
 helm-reinstall: helm-delete helm-install
+
+# 環境構築 #
+## MetalLB ##
+
+# MetalLB のインストール
+setup-metallb: 
+	$(MAKE) update-kube-proxy
+	helm repo add metallb https://metallb.github.io/metallb
+	helm install metallb metallb/metallb
+	$(MAKE) metallb-apply
+
+# MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
+# configmap リソース「 kube-proxy 」の strictARP を true に変更する
+update-kube-proxy:
+	kubectl get configmap kube-proxy -n kube-system -o yaml | \
+	sed -e "s/strictARP: false/strictARP: true/" | \
+	kubectl apply -f - -n kube-system
+
+metallb-apply:
+	kubectl apply -f k8s/metallb-resources.yaml
