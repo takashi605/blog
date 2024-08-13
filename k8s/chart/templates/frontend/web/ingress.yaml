@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "web.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "web.appname" . }}
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  rules:
+    - {{- if .Values.web.ingress.host }}
+      host: {{ .Values.web.ingress.host }}
+      {{- end }}
+      http:
+        paths:
+        - pathType: {{ .Values.web.ingress.pathType }}
+          path: {{ .Values.web.ingress.path }}
+          backend:
+            service:
+              name: {{ include "web.appname" . }}
+              port:
+                number: {{ .Values.web.service.port }}

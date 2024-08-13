@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "web.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "web.appname" . }}
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    - port: {{ .Values.web.service.port }}
+      targetPort: {{ .Values.web.service.targetPort }}
+      protocol: TCP
+      {{- if eq .Values.web.service.type "NodePort" }}
+      nodePort: {{ .Values.web.service.nodePort }}
+      {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "web.appname" . }}
+  {{- if eq .Values.web.service.type "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.web.service.loadBalancerIP }}
+  externalTrafficPolicy: {{ .Values.web.service.externalTrafficPolicy }}
+  {{- end }}
