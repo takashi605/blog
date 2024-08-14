@@ -1,4 +1,4 @@
-name: "CIフロー"
+name: "Chart および ContainerImage の build と push"
 
 on:
   push:
@@ -31,6 +31,7 @@ jobs:
         with:
           context: .
           file: ./containers/frontend/web/Dockerfile
+          target: prod
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:v0.1.0

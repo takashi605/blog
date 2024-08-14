@@ -1,0 +1,29 @@
+name: "各種自動テストの実行"
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+
+      - name: "node のセットアップ"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: "モジュールの install"
+        run: make install
+
+      - name: "静的チェックの実行"
+        run: make check
+
+      - name: "単体テストの実行"
+        run: make test-unit
