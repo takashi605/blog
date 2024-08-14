@@ -44,9 +44,7 @@ WORKDIR /source/frontend
 COPY --chown=node:node \
   ./source/frontend/tsconfig.json \
   ./source/frontend/.eslintrc.json \
-  ./source/frontend/.eslintignore \
   ./source/frontend/.prettierrc \
-  ./source/frontend/.prettierignore \
   ./source/frontend/package.json \
   ./source/frontend/package-lock.json \
   ./
