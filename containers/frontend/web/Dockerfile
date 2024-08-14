@@ -49,7 +49,7 @@ COPY --chown=node:node \
   ./source/frontend/package-lock.json \
   ./
 
-RUN npm ci
+RUN npm install
 
 # / 開発環境用ステージ /
 FROM base AS dev
@@ -63,7 +63,7 @@ WORKDIR /source/frontend/web
 # プロジェクトのファイル全体をコピー
 COPY --chown=node:node ./source/frontend/web .
 
-RUN npm ci
+RUN npm install
 
 CMD npm run dev
 
@@ -83,7 +83,7 @@ RUN npm run build
 
 
 # / 本番環境用ステージ /
-FROM gcr.io/distroless/nodejs22-debian12:nonroot as prod
+FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 
 ENV NODE_ENV production
 
@@ -91,7 +91,7 @@ WORKDIR /source/frontend/web
 
 # ビルド用ステージから必要なファイルのみをコピー
 COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/public ./public
-COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/.next/standalone ./
+COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/.next/standalone/ ./
 COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/.next/static ./.next/static
 
 # ポートを開放
@@ -100,4 +100,4 @@ ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
 
 # 実行開始
-CMD ["server.js"]
+CMD ["web/server.js"]
