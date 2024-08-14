@@ -1,7 +1,8 @@
 CLUSTER_NAME = blog
 
 docker-image-build:
-	docker image build -f containers/frontend/web/Dockerfile -t web:v0.1.0 .
+	docker image build --target dev -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+	docker system prune
 
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
