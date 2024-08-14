@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "startTest": "node ./.next/standalone/web/server.js",
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -17,15 +18,16 @@
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.5",
     "@testing-library/user-event": "^14.5.2",
+    "@types/node": "22.3.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "tailwindcss": "^3.4.1",
+    "eslint-config-next": "^14.2.3",
     "postcss": "^8"
   },
   "dependencies": {
-    "eslint-config-next": "^14.2.3",
     "next": "14.2.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwindcss": "^3.4.1"
   }
 }
