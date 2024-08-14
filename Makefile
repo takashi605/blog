@@ -33,6 +33,9 @@ check-ingressclass:
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=90s
 
+install:
+	cd source/frontend && npm install
+	cd source/frontend/web && npm install
 check:
 	cd source/frontend/web && npm run check
 fix:
