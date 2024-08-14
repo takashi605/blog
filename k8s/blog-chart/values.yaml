@@ -12,15 +12,15 @@ web:
     # Always だとリモートから pull してしまうため、
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
-    memoryLimit: "128Mi"
-    cpuLimit: "500m"
-    memoryRequest: "64Mi"
-    cpuRequest: "250m"
-    containerPort: 5173
+    memoryLimit: "750Mi"
+    cpuLimit: "750m"
+    memoryRequest: "500Mi"
+    cpuRequest: "500m"
+    containerPort: 3000
   service:
     type: ClusterIP
     port: 80
-    targetPort: 5173
+    targetPort: 3000
     # ここから下の設定は type:ClusterIP の場合は関係ないが、
     # 一応デフォルト値は入れておく
     nodePort: 30080
