@@ -1,4 +1,4 @@
-name: "CIフロー"
+name: "Chart および ContainerImage の build と push"
 
 on:
   push:
