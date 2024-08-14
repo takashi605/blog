@@ -9,7 +9,9 @@
     "start": "next start",
     "test": "jest",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "fix": "prettier --write . && eslint . --fix",
+    "check": "prettier --check . && eslint . && tsc"
   },
   "dependencies": {
     "eslint-config-next": "^14.2.3",

@@ -32,3 +32,8 @@ check-ingressclass:
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=90s
+
+check:
+	cd source/frontend/web && npm run check
+fix:
+	cd source/frontend/web && npm run fix
