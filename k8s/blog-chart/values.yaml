@@ -13,9 +13,9 @@ web:
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
     memoryLimit: "750Mi"
-    cpuLimit: "750m"
-    memoryRequest: "500Mi"
-    cpuRequest: "500m"
+    cpuLimit: "500m"
+    memoryRequest: "250Mi"
+    cpuRequest: "150m"
     containerPort: 3000
   service:
     type: ClusterIP
