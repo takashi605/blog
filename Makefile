@@ -37,3 +37,5 @@ check:
 	cd source/frontend/web && npm run check
 fix:
 	cd source/frontend/web && npm run fix
+test-unit:
+	cd source/frontend/web && npm run test
