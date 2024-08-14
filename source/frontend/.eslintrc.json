@@ -1,0 +1,38 @@
+// 参考にしたサイト:
+// https://zenn.dev/siakas/articles/05481bdefacd13
+{
+  // extends はルールの on,off を外部から読み込む
+  "extends": [
+    "plugin:@typescript-eslint/recommended", // TypeScriptのための推奨設定を内包したプラグイン
+    "plugin:tailwindcss/recommended", // Tailwind CSSの使用に関する推奨設定を内包したプラグイン
+    "prettier"
+  ],
+
+  "parser": "@typescript-eslint/parser", // TypeScript -> JavaScript のパース設定
+
+  // plugin はルールを拡張する設定
+  // 読み込んだルールの on, off は rules の中で設定しなければならない
+  "plugins": ["@typescript-eslint"], // TypeScriptのためのESLintプラグイン
+  "rules": {
+    // タイプインポートの一貫性を設定
+    "@typescript-eslint/consistent-type-imports": [
+      "error", // エラーを出す
+      {
+        "prefer": "type-imports", // 型の import 時には必ず import type を使う
+        "fixStyle": "separate-type-imports" // import {type Foo} ではなく import type { Foo } とする
+      }
+    ],
+
+    // 未使用の変数に対する設定
+    "@typescript-eslint/no-unused-vars": [
+      "warn", // 警告を出す
+      {
+        "vars": "all", // グローバルを含めたすべての未使用変数を対象とする
+        "varsIgnorePattern": "^_", // _で始まる変数は無視する
+        "args": "all", // すべての未使用引数を対象とする
+        "argsIgnorePattern": "^_" // _で始まる引数は無視する
+      }
+    ],
+    "object-shorthand": "error" // オブジェクトの省略記法を強制
+  }
+}

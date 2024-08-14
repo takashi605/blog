@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // 使用する API の指定
+    "lib": ["dom", "dom.iterable", "esnext"],
+    // js ファイルのインポートを許可
+    "allowJs": true,
+    // ソースコード内で明示的に参照している型のみをチェック
+    "skipLibCheck": true,
+    "strict": true,
+    // ソースコード等を出力しない
+    "noEmit": true,
+    // esmodule と commonjs の相互運用を許可
+    "esModuleInterop": true,
+    // どのモジュールシステムを使用するか
+    "module": "esnext",
+    // import,export の解決方法
+    // ECMAScript と CommonJS の両方に対応しつつ、import 時に拡張子を省略できるように設定
+    // 参考：https://qiita.com/yuk1_sys/items/598d0abacc15f984fb6b
+    "moduleResolution": "bundler",
+    // json ファイルを import したときに、型を推論できるようにする
+    "resolveJsonModule": true,
+    // トランスパイル時に解釈できないコードがある場合、警告を出す
+    "isolatedModules": true,
+    // トランスパイル時に .jsx ファイルをそのまま出力
+    "jsx": "preserve",
+    // tsconfig.tsbuildinfo　を生成し、バージョン管理を行う
+    // コンパイル時には差分のみをコンパイルしなおす
+    "incremental": true
+  },
+  // プログラムに含めるファイル
+  "include": ["**/*.ts", "**/*.tsx"],
+  // include から除外するファイル
+  "exclude": ["node_modules"]
+}

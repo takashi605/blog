@@ -1,0 +1,39 @@
+*chart*.tgz
+
+*node_modules
+
+# next.js のビルドプロセス等によって生成されるファイル群
+.next/
+out/
+
+# プロダクション用のビルドされたファイルを格納するディレクトリ
+build
+
+# next.js と typescript が連携するための型定義を含むファイル
+next-env.d.ts
+
+# yarn の依存モジュール関連
+*.pnp
+*.pnp.js
+*.yarn/install-state.gz
+
+# テストカバレッジのレポートが格納されるディレクトリ
+*coverage
+
+# macOS 用の隠しファイル
+*.DS_Store
+
+# セキュリティ証明書ファイル
+*.pem
+
+# npm や yarn によって生成されるデバッグログファイル
+*npm-debug.log*
+*yarn-debug.log*
+*yarn-error.log*
+
+# typescript のビルドキャッシュ用ファイル
+*.tsbuildinfo
+
+# 環境変数ファイル
+*.env
+.env*.local
