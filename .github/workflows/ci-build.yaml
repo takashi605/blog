@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # タグを正しく取得するためにすべてのコミットを取得できるようにする
 
       # 参考: https://zenn.dev/na_it_o/articles/cb7d0b9496496d
       - name: "push されたタグが main ブランチに存在していれば実行"
@@ -62,6 +65,9 @@ jobs:
     steps:
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # タグを正しく取得するためにすべてのコミットを取得できるようにする
 
       - name: "push されたタグが main ブランチに存在していれば実行"
         run: |
