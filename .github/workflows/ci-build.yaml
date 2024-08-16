@@ -52,7 +52,7 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:{{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}:${{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
 
@@ -89,7 +89,7 @@ jobs:
         run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
 
       - name: "Helm Chart のパッケージング"
-        run: helm package ${{ github.workspace }}/k8s/blog-chart --version {{ env.IMAGE_VERSION }}
+        run: helm package ${{ github.workspace }}/k8s/blog-chart --version ${{ env.IMAGE_VERSION }}
 
       - name: "GHCR へのログイン"
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
