@@ -38,6 +38,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "git の最新タグを GITHUB_ENV に追加"
+        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
+
       - name: "DockerImage の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -46,7 +49,7 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:v0.1.1
+            ghcr.io/${{ github.repository }}:{{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
 
@@ -76,8 +79,11 @@ jobs:
         with:
           version: v3.13.3
 
+      - name: "git の最新タグを GITHUB_ENV に追加"
+        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
+
       - name: "Helm Chart のパッケージング"
-        run: helm package ${{ github.workspace }}/k8s/blog-chart
+        run: helm package ${{ github.workspace }}/k8s/blog-chart --version {{ env.IMAGE_VERSION }}
 
       - name: "GHCR へのログイン"
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
