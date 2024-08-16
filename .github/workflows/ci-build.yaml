@@ -2,8 +2,8 @@ name: "Chart および ContainerImage の build と push"
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
 jobs:
   push_image:
@@ -16,6 +16,18 @@ jobs:
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
 
+      # 参考: https://zenn.dev/na_it_o/articles/cb7d0b9496496d
+      - name: "push されたタグが main ブランチに存在していれば実行"
+        run: |
+          BRANCHES=$(git branch --contains ${{ github.ref_name }})
+          set -- $BRANCHES
+          for BRANCH in $BRANCHES ; do
+            if [[ "$BRANCH" == "main" ]]; then
+              exit 0
+            fi
+          done
+          exit 1
+
       - name: "buildx のセットアップ"
         uses: docker/setup-buildx-action@v3
 
@@ -26,6 +38,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "git の最新タグを GITHUB_ENV に追加"
+        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
+
       - name: "DockerImage の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -34,7 +49,7 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:v0.1.1
+            ghcr.io/${{ github.repository }}:{{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
 
@@ -45,21 +60,35 @@ jobs:
       contents: read
       packages: write
     steps:
-    - name: "リポジトリのチェックアウト"
-      uses: actions/checkout@v4
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
 
-    - name: "Helm のセットアップ"
-      uses: azure/setup-helm@v4.2.0
-      with:
-        version: v3.13.3
+      - name: "push されたタグが main ブランチに存在していれば実行"
+        run: |
+          BRANCHES=$(git branch --contains ${{ github.ref_name }})
+          set -- $BRANCHES
+          for BRANCH in $BRANCHES ; do
+            if [[ "$BRANCH" == "main" ]]; then
+              exit 0
+            fi
+          done
+          exit 1
 
-    - name: "Helm Chart のパッケージング"
-      run: helm package ${{ github.workspace }}/k8s/blog-chart
+      - name: "Helm のセットアップ"
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.13.3
 
-    - name: "GHCR へのログイン"
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: "git の最新タグを GITHUB_ENV に追加"
+        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
 
-    - name: "Helm Chart の Push"
-      run: |
-        CHART_NAME=$(basename *.tgz .tgz)
-        helm push ${CHART_NAME}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts
+      - name: "Helm Chart のパッケージング"
+        run: helm package ${{ github.workspace }}/k8s/blog-chart --version {{ env.IMAGE_VERSION }}
+
+      - name: "GHCR へのログイン"
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: "Helm Chart の Push"
+        run: |
+          CHART_NAME=$(basename *.tgz .tgz)
+          helm push ${CHART_NAME}.tgz oci://ghcr.io/${{ github.repository_owner }}/charts
