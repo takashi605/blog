@@ -22,7 +22,7 @@ spec:
         {{- end }}
       containers:
         - name: {{ include "web.appname" . }}
-          image: {{ .Values.web.pod.imageName }}
+          image: "{{ .Values.web.pod.imageRepository }}:{{ .Values.web.pod.imageTag }}"
           imagePullPolicy: {{ .Values.web.pod.imagePullPolicy }}
           resources:
             limits:
