@@ -1,0 +1,4 @@
+# テスト結果やテスト実行ファイル
+/.features-gen
+/tests/report
+/tests/test-results

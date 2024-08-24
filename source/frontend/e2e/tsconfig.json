@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "paths": {
+      "@/*": ["./tests/*"]
+    }
+  },
+  // プログラムに含めるファイル
+  "include": ["**/*.ts"],
+  // include から除外するファイル
+  "exclude": ["node_modules"]
+}
