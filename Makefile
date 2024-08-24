@@ -1,5 +1,15 @@
 CLUSTER_NAME = blog
 
+tilt-up:
+	tilt up
+tilt-down:
+	tilt down
+	$(MAKE) tilt-delete-image
+
+# tilt によって生成された Docker Image を全て削除する
+tilt-delete-image:
+	docker images --format '{{.Repository}}:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
+
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
 kind-down:
