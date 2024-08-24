@@ -26,10 +26,10 @@ helm-delete:
 helm-reinstall: helm-delete helm-install
 
 # ingressclass の設定
-setup-ingressclass:
+ingressclass-setup:
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
-check-ingressclass:
+ingressclass-check:
 	kubectl wait --namespace ingress-nginx \
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
