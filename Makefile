@@ -15,14 +15,6 @@ kind-up:
 kind-down:
 	kind delete cluster --name $(CLUSTER_NAME)
 
-kind-load-all: kind-load-web
-kind-load-web:
-	kind load docker-image web:v0.0.0 --name $(CLUSTER_NAME)
-
-docker-image-build:
-	docker image build --target dev -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
-	docker system prune
-
 helm-install:
 	helm package k8s/blog-chart; \
 	helm install blog ./blog-chart-0.1.0.tgz
