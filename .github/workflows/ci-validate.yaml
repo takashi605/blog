@@ -20,10 +20,10 @@ jobs:
           node-version: '18'
 
       - name: "モジュールの install"
-        run: make install
+        run: make frontend-install
 
       - name: "静的チェックの実行"
-        run: make check
+        run: make frontend-check
 
       - name: "単体テストの実行"
-        run: make test-unit
+        run: make frontend-test-unit
