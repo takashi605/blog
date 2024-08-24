@@ -1,17 +1,19 @@
 CLUSTER_NAME = blog
 
+tilt-up:
+	tilt up
+tilt-down:
+	tilt down
+	$(MAKE) tilt-delete-image
+
+# tilt によって生成された Docker Image を全て削除する
+tilt-delete-image:
+	docker images --format '{{.Repository}}:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
+
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
 kind-down:
 	kind delete cluster --name $(CLUSTER_NAME)
-
-kind-load-all: kind-load-web
-kind-load-web:
-	kind load docker-image web:v0.0.0 --name $(CLUSTER_NAME)
-
-docker-image-build:
-	docker image build --target dev -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
-	docker system prune
 
 helm-install:
 	helm package k8s/blog-chart; \
@@ -24,21 +26,21 @@ helm-delete:
 helm-reinstall: helm-delete helm-install
 
 # ingressclass の設定
-setup-ingressclass:
+ingressclass-setup:
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
-check-ingressclass:
+ingressclass-check:
 	kubectl wait --namespace ingress-nginx \
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=90s
 
-install:
+frontend-install:
 	cd source/frontend && npm install
 	cd source/frontend/web && npm install
-check:
+frontend-check:
 	cd source/frontend/web && npm run check
-fix:
+frontend-fix:
 	cd source/frontend/web && npm run fix
-test-unit:
+frontend-test-unit:
 	cd source/frontend/web && npm run test
