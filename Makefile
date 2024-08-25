@@ -40,8 +40,7 @@ ingressclass-is-complate-setup:
 ## 基本的には tilt が管理してくれるのであまり使わない
 ###
 helm-install:
-	helm package k8s/blog-chart; \
-	helm install blog ./blog-chart-0.1.0.tgz
+	helm install blog k8s/blog-chart
 
 helm-delete:
 	helm delete blog

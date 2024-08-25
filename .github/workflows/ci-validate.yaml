@@ -41,3 +41,52 @@ jobs:
 
       - name: "静的チェックの実行"
         run: make frontend-check
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "kubectl のセットアップ"
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: "kind のセットアップ"
+        uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: v0.17.0
+
+      - name: "Helm のセットアップ"
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.9.0
+
+      - name: "kind クラスタの生成"
+        run: |
+          make kind-up
+
+      - name: "Chart のインストール"
+        run: |
+          helm install blog k8s/blog-chart
+
+      - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/e2e --timeout=90s
+
+      - name: "テスト対象の Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/web --timeout=90s
+
+      - name: "e2e テストを実行する"
+        run: |
+          # 必要に応じて、headlessモードでのテスト実行コマンドをここに追加
+          kubectl exec -it $(kubectl get pod -l app=e2e-test-deployment -o jsonpath="{.items[0].metadata.name}") -- npx playwright test --headless
+
+      - name: "クラスタを削除"
+        run: |
+          kind delete cluster --name e2e-test-cluster
