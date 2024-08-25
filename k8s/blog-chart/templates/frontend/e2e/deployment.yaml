@@ -1,0 +1,43 @@
+{{- if .Values.e2e.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "e2e.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "e2e.appname" . }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "e2e.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "e2e.appname" . }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "e2e.appname" . }}
+          image: "e2e:v0.0.0"
+          imagePullPolicy: "Never"
+          resources:
+            limits:
+              memory: "1.5Gi"
+              cpu: "1000m"
+            requests:
+              memory: "500Mi"
+              cpu: "300m"
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DISPLAY
+              value: :0
+          volumeMounts:
+            - mountPath: /tmp/.X11-unix
+              name: unix-domain-socket
+      volumes:
+        - name: unix-domain-socket
+          hostPath:
+            path: /tmp/.X11-unix
+{{- end }}

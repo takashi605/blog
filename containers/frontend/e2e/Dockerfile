@@ -24,3 +24,5 @@ WORKDIR /source/frontend/e2e
 COPY --chown=pwuser:pwuser ./source/frontend/e2e .
 
 RUN npm install
+
+CMD ["npm","run","e2e-ui"]

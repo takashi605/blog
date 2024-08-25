@@ -2,8 +2,8 @@
 custom_build(
   'web:v0.0.0',
   '''
+    docker images --format 'web:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
     docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
-    docker system prune && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
   deps=[
@@ -14,11 +14,25 @@ custom_build(
   ],
 )
 
+custom_build(
+  'e2e:v0.0.0',
+  '''
+    docker images --format 'e2e:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
+    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF . && \
+    kind load docker-image $EXPECTED_REF --name blog
+  ''',
+  deps=[
+    'source/frontend',
+  ],
+  live_update=[
+    sync('source/frontend', '/source/frontend'),
+  ],
+)
+
+# chart の読み込み
 yaml = helm(
   'k8s/blog-chart',
-  # The release name, equivalent to helm --name
   name='blog',
-  # The namespace to install in, equivalent to helm --namespace
   namespace='default',
 )
 k8s_yaml(yaml)
