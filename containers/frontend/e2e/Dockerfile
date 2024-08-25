@@ -24,3 +24,6 @@ WORKDIR /source/frontend/e2e
 COPY --chown=pwuser:pwuser ./source/frontend/e2e .
 
 RUN npm install
+
+# 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
+CMD ["sleep", "infinity"]
