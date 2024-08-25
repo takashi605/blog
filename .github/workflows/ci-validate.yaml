@@ -3,8 +3,9 @@ name: "各種自動テストの実行"
 on:
   pull_request:
     branches:
-      - main
-      - develop
+      - "main"
+      - "develop"
+      - "STORY*"
 
 jobs:
   unit:
