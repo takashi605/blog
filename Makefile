@@ -1,5 +1,8 @@
 CLUSTER_NAME = blog
 
+###
+## tilt 系
+###
 tilt-up:
 	tilt up
 tilt-down:
@@ -10,31 +13,31 @@ tilt-down:
 tilt-delete-image:
 	docker images --format '{{.Repository}}:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
 
+###
+## kind 系
+###
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
 kind-down:
 	kind delete cluster --name $(CLUSTER_NAME)
 
-helm-install:
-	helm package k8s/blog-chart; \
-	helm install blog ./blog-chart-0.1.0.tgz
-
-helm-delete:
-	helm delete blog
-
-# 一度削除してから再インストール
-helm-reinstall: helm-delete helm-install
-
-# ingressclass の設定
+###
+## ingressclass 系
+## kind を入れなおしたら実行する必要あり
+###
 ingressclass-setup:
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
-ingressclass-check:
+# ingressclass-setup でリソースが生成されるまで待機する
+ingressclass-is-complate-setup:
 	kubectl wait --namespace ingress-nginx \
 		--for=condition=ready pod \
 		--selector=app.kubernetes.io/component=controller \
 		--timeout=90s
 
+###
+## frontend 系
+###
 frontend-install:
 	cd source/frontend && npm install
 	cd source/frontend/web && npm install
@@ -44,3 +47,17 @@ frontend-fix:
 	cd source/frontend/web && npm run fix
 frontend-test-unit:
 	cd source/frontend/web && npm run test
+
+###
+## Helm 系
+## 基本的には tilt が管理してくれるのであまり使わない
+###
+helm-install:
+	helm package k8s/blog-chart; \
+	helm install blog ./blog-chart-0.1.0.tgz
+
+helm-delete:
+	helm delete blog
+
+# 一度削除してから再インストール
+helm-reinstall: helm-delete helm-install
