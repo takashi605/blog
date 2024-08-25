@@ -36,6 +36,20 @@ ingressclass-is-complate-setup:
 		--timeout=90s
 
 ###
+## Helm 系
+## 基本的には tilt が管理してくれるのであまり使わない
+###
+helm-install:
+	helm package k8s/blog-chart; \
+	helm install blog ./blog-chart-0.1.0.tgz
+
+helm-delete:
+	helm delete blog
+
+# 一度削除してから再インストール
+helm-reinstall: helm-delete helm-install
+
+###
 ## frontend 系
 ###
 frontend-install:
@@ -49,15 +63,14 @@ frontend-test-unit:
 	cd source/frontend/web && npm run test
 
 ###
-## Helm 系
-## 基本的には tilt が管理してくれるのであまり使わない
+## e2e 系
 ###
-helm-install:
-	helm package k8s/blog-chart; \
-	helm install blog ./blog-chart-0.1.0.tgz
+e2e-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep e2e
 
-helm-delete:
-	helm delete blog
-
-# 一度削除してから再インストール
-helm-reinstall: helm-delete helm-install
+e2e-sh:
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
+e2e-run:
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e
+e2e-run-ui:
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e-ui

@@ -25,4 +25,5 @@ COPY --chown=pwuser:pwuser ./source/frontend/e2e .
 
 RUN npm install
 
-CMD ["npm","run","e2e-ui"]
+# 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
+CMD ["sleep", "infinity"]
