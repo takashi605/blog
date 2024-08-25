@@ -7,7 +7,24 @@ on:
       - develop
 
 jobs:
-  validate:
+  unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+
+      - name: "node のセットアップ"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: "モジュールの install"
+        run: make frontend-install
+
+      - name: "単体テストの実行"
+        run: make frontend-test-unit
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +41,3 @@ jobs:
 
       - name: "静的チェックの実行"
         run: make frontend-check
-
-      - name: "単体テストの実行"
-        run: make frontend-test-unit
