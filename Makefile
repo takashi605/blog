@@ -87,6 +87,8 @@ e2e-pod-name:
 e2e-sh:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
 e2e-run:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c npm run e2e
+e2e-run-ci:
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true npm run e2e'
 e2e-run-ui:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e-ui

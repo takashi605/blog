@@ -100,9 +100,7 @@ jobs:
 
       - name: "e2e テストを実行する"
         run: |
-          make e2e-run
-        env:
-          CI: true
+          make e2e-run-ci
 
       - name: "クラスタを削除"
         run: |
