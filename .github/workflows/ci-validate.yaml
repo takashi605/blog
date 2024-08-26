@@ -46,6 +46,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 普通に実行すると各種ツールのインストールや DockerImage の読み込みでリソース不足に陥るため、
+      # 以下のアクションで事前にディスク領域を解放
+      - name: "action の実行環境のディスク領域を解放"
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
 
@@ -79,12 +86,9 @@ jobs:
         run: |
           make docker-image-build
 
-      - name: "web image の load"
+      - name: "image の load"
         run: |
-          make kind-load-web
-      - name: "e2e image の load"
-        run: |
-          make kind-load-e2e
+          make kind-load-image
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
