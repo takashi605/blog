@@ -75,6 +75,14 @@ jobs:
         run: |
           make helm-install
 
+      - name: "image の build"
+        run: |
+          make docker-image-build
+
+      - name: "クラスタへの image の load"
+        run: |
+          make kind-load-image
+
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/e2e --timeout=90s

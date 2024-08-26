@@ -14,12 +14,29 @@ tilt-delete-image:
 	docker images --format '{{.Repository}}:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
 
 ###
+## docker 系
+###
+docker-image-build:
+	$(MAKE) docker-image-build-web
+	$(MAKE) docker-image-build-e2e
+docker-image-build-web:
+	docker image build -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+docker-image-build-e2e:
+	docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+
+###
 ## kind 系
 ###
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
 kind-down:
 	kind delete cluster --name $(CLUSTER_NAME)
+
+kind-load-image: kind-load-web kind-load-e2e
+kind-load-web:
+	kind load docker-image web:v0.0.0 --name $(CLUSTER_NAME)
+kind-load-e2e:
+	kind load docker-image e2e:v0.0.0 --name $(CLUSTER_NAME)
 
 ###
 ## ingressclass 系
