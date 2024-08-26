@@ -55,17 +55,17 @@ jobs:
       - name: "kubectl のセットアップ"
         uses: azure/setup-kubectl@v4
         with:
-          version: 'v1.27'
+          version: 'v1.27.14'
 
       - name: "kind のセットアップ"
         uses: engineerd/setup-kind@v0.5.0
         with:
-          version: v0.20
+          version: v0.20.0
 
       - name: "Helm のセットアップ"
         uses: azure/setup-helm@v4.2.0
         with:
-          version: v3.13
+          version: v3.13.3
 
       - name: "kind クラスタの生成"
         run: |
