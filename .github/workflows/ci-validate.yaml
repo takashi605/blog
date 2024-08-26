@@ -75,13 +75,27 @@ jobs:
         run: |
           make helm-install
 
-      - name: "image の build"
-        run: |
-          make docker-image-build
+      - name: "web DockerImage の Build"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/web/Dockerfile
+          target: prod
+          tags: |
+            web:v0.0.0
+
+      - name: "e2e DockerImage の Build"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/e2e/Dockerfile
+          tags: |
+            e2e:v0.0.0
 
       - name: "クラスタへの image の load"
         run: |
-          make kind-load-image
+          kind load docker-image web:v0.0.0 --name blog
+          kind load docker-image e2e:v0.0.0 --name blog
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
