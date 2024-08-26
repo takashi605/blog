@@ -10,19 +10,20 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   outputDir: 'tests/test-results',
-  reporter: [
-    [
-      'html',
-      {
-        open: process.env.CI ? 'never': 'always',
-        outputFolder: 'tests/report',
+  reporter: process.env.CI
+    ? 'list'
+    : [
+        [
+          'html',
+          {
+            outputFolder: 'tests/report',
 
-        // ホスト上でレポートを開くためにホストとポートを指定
-        // package.json の scripts 内のコマンドにも host と port を入れてあるので、ここを修正したら package.json も修正すること
-        // 環境変数を使うようにするといいかも
-        host: '0.0.0.0',
-        port: '9323',
-      },
-    ],
-  ],
+            // ホスト上でレポートを開くためにホストとポートを指定
+            // package.json の scripts 内のコマンドにも host と port を入れてあるので、ここを修正したら package.json も修正すること
+            // 環境変数を使うようにするといいかも
+            host: '0.0.0.0',
+            port: '9323',
+          },
+        ],
+      ],
 });
