@@ -14,6 +14,7 @@ export default defineConfig({
     [
       'html',
       {
+        open: process.env.CI ? 'never': 'always',
         outputFolder: 'tests/report',
 
         // ホスト上でレポートを開くためにホストとポートを指定
