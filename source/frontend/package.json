@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "frontend"
-  ],
+  "engines": {
+    "pnpm": "9.9.0",
+    "npm": "please_use_pnpm_instead"
+  },
+  "packageManager": "pnpm@9.9.0",
   "scripts": {
-    "test": "jest"
+    "web": "pnpm -F web",
+    "e2e": "pnpm -F e2e"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

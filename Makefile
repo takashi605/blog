@@ -69,14 +69,13 @@ helm-reinstall: helm-delete helm-install
 ## frontend 系
 ###
 frontend-install:
-	cd source/frontend && npm install
-	cd source/frontend/web && npm install
+	cd source/frontend && pnpm install
 frontend-check:
-	cd source/frontend/web && npm run check
+	cd source/frontend/ && pnpm web run check
 frontend-fix:
-	cd source/frontend/web && npm run fix
+	cd source/frontend && pnpm web run fix
 frontend-test-unit:
-	cd source/frontend/web && npm run test
+	cd source/frontend && pnpm web run test
 
 ###
 ## e2e 系
@@ -87,8 +86,8 @@ e2e-pod-name:
 e2e-sh:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
 e2e-run:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e
 e2e-run-ci:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true npm run e2e'
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true pnpm run e2e'
 e2e-run-ui:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- npm run e2e-ui
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-ui
