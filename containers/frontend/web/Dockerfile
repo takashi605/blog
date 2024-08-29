@@ -43,14 +43,9 @@ USER node
 
 WORKDIR /$FRONTEND_DIR
 
-# プロジェクト全体の共通設定ファイルをコピー
-COPY --chown=node:node \
-  ./$FRONTEND_DIR/tsconfig.json \
-  ./$FRONTEND_DIR/.eslintrc.json \
-  ./$FRONTEND_DIR/.prettierrc \
-  ./$FRONTEND_DIR/package.json \
-  ./$FRONTEND_DIR/package-lock.json \
-  ./
+# プロジェクトファイルをコピー
+COPY --chown=node:node ./$FRONTEND_DIR ./
+RUN rm -rf /$FRONTEND_DIR/packages/e2e
 
 RUN pnpm install
 
@@ -63,13 +58,7 @@ USER node
 
 WORKDIR /$WEB_DIR
 
-# プロジェクトのファイル全体をコピー
-COPY --chown=node:node ./$WEB_DIR .
-
-RUN pnpm install
-
 CMD pnpm run dev
-
 
 # / ビルド用ステージ /
 FROM dev as builder
