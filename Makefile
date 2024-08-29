@@ -70,6 +70,8 @@ helm-reinstall: helm-delete helm-install
 ###
 frontend-install:
 	cd source/frontend && pnpm install
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm install
+
 frontend-check:
 	cd source/frontend/ && pnpm web run check
 frontend-fix:
@@ -86,7 +88,7 @@ e2e-pod-name:
 e2e-sh:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
 e2e-run:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
 e2e-run-ci:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true pnpm run e2e'
 e2e-run-ui:
