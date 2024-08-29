@@ -57,11 +57,11 @@ jobs:
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
-          kubectl rollout status deployment/e2e --timeout=90s
+          kubectl rollout status deployment/e2e --timeout=180s
 
       - name: "テスト対象の Deployment リソースが準備できるまで待機"
         run: |
-          kubectl rollout status deployment/web --timeout=90s
+          kubectl rollout status deployment/web --timeout=180s
 
       - name: "e2e テストを実行する"
         run: |
