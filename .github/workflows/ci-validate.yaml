@@ -1,13 +1,14 @@
-name: "各種自動テストの実行"
+name: "単体テスト&静的チェックの実行"
 
 on:
   pull_request:
     branches:
-      - main
-      - develop
+      - "main"
+      - "develop"
+      - "STORY*"
 
 jobs:
-  validate:
+  unit:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +18,35 @@ jobs:
       - name: "node のセットアップ"
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "20"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: "モジュールの install"
+        run: make frontend-install
+
+      - name: "単体テストの実行"
+        run: make frontend-test-unit
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+
+      - name: "node のセットアップ"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: "モジュールの install"
         run: make frontend-install
 
       - name: "静的チェックの実行"
         run: make frontend-check
-
-      - name: "単体テストの実行"
-        run: make frontend-test-unit

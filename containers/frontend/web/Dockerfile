@@ -1,8 +1,11 @@
+
 # / node の環境設定用に slim イメージを取得 /
 FROM node:20-slim AS node
 
 # / 基本的な設定を行うステージ /
 FROM ubuntu:20.04 AS base
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 RUN apt-get update \
   && apt-get -qq install -y --no-install-recommends \
@@ -31,25 +34,20 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # 作業ディレクトリを作成し、所有者を node ユーザーに変更
-RUN mkdir -p /source/frontend/web \
+RUN mkdir -p /$WEB_DIR \
   && chown -R node:node /source
 
 # ユーザーを指定
 # mkdir よりも前に記述するとパーミッションエラーが発生する
 USER node
 
-WORKDIR /source/frontend
+WORKDIR /$FRONTEND_DIR
 
-# プロジェクト全体の共通設定ファイルをコピー
-COPY --chown=node:node \
-  ./source/frontend/tsconfig.json \
-  ./source/frontend/.eslintrc.json \
-  ./source/frontend/.prettierrc \
-  ./source/frontend/package.json \
-  ./source/frontend/package-lock.json \
-  ./
+# プロジェクトファイルをコピー
+COPY --chown=node:node ./$FRONTEND_DIR ./
+RUN rm -rf /$FRONTEND_DIR/packages/e2e
 
-RUN npm install
+RUN pnpm install
 
 # / 開発環境用ステージ /
 FROM base AS dev
@@ -58,41 +56,38 @@ ENV NODE_ENV=development
 EXPOSE 3000
 USER node
 
-WORKDIR /source/frontend/web
+WORKDIR /$WEB_DIR
 
-# プロジェクトのファイル全体をコピー
-COPY --chown=node:node ./source/frontend/web .
-
-RUN npm install
-
-CMD npm run dev
-
+CMD pnpm run dev
 
 # / ビルド用ステージ /
 FROM dev as builder
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 # production にしないと build 時にエラーする
 ENV NODE_ENV production
 
 USER node
 
-WORKDIR /source/frontend/web
+WORKDIR /$WEB_DIR
 
 # .next ディレクトリにビルド成果物を生成
-RUN npm run build
-
+RUN pnpm run build
 
 # / 本番環境用ステージ /
 FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 ENV NODE_ENV production
 
-WORKDIR /source/frontend/web
+WORKDIR /$WEB_DIR
 
 # ビルド用ステージから必要なファイルのみをコピー
-COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/public ./public
-COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/.next/standalone/ ./
-COPY --from=builder --chown=nonroot:nonroot /source/frontend/web/.next/static ./.next/static
+COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/public ./public
+COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/.next/standalone/ ./
+COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/.next/static ./.next/static
 
 # ポートを開放
 EXPOSE 3000
@@ -100,4 +95,4 @@ ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
 
 # 実行開始
-CMD ["web/server.js"]
+CMD ["server.js"]

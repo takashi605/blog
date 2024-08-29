@@ -1,29 +1,27 @@
+FROM ubuntu:20.04 AS base
+ARG FRONTEND_DIR=source/frontend
+ARG E2E_DIR=$FRONTEND_DIR/packages/e2e
+
+WORKDIR /$FRONTEND_DIR
+COPY ./$FRONTEND_DIR ./
+RUN rm -rf /$FRONTEND_DIR/packages/web
+
 FROM mcr.microsoft.com/playwright:v1.46.1-jammy
+ARG FRONTEND_DIR=source/frontend
+ARG E2E_DIR=$FRONTEND_DIR/packages/e2e
+
+RUN npm install -g pnpm
 
 # ベースイメージに含まれるユーザーを使う
 USER pwuser
 
-WORKDIR /source/frontend
+WORKDIR /$FRONTEND_DIR
 
 # プロジェクト全体の共通設定ファイルをコピー
-COPY --chown=pwuser:pwuser \
-  ./source/frontend/tsconfig.json \
-  ./source/frontend/.eslintrc.json \
-  ./source/frontend/.prettierrc \
-  ./source/frontend/package.json \
-  ./source/frontend/package-lock.json \
-  ./
+WORKDIR /$FRONTEND_DIR
+COPY --from=base --chown=pwuser:pwuser ./$FRONTEND_DIR ./
 
-# node_modules のみ .dockerignore および volume trick で除外しているため、
-# npm ci で依存関係を解決
-RUN npm install
-
-WORKDIR /source/frontend/e2e
-
-# プロジェクトのファイル全体をコピー
-COPY --chown=pwuser:pwuser ./source/frontend/e2e .
-
-RUN npm install
+RUN pnpm install
 
 # 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
 CMD ["sleep", "infinity"]
