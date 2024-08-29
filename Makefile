@@ -68,9 +68,14 @@ helm-reinstall: helm-delete helm-install
 ###
 ## frontend 系
 ###
+
+# ホスト上で install してもコンテナ内は別途 install しないと動かない
+# なぜかは不明だが、そもそも node_modules が同期されていないようなので連続で install しても問題ないはず
+# node_modules は明示的に ignore したほうがいいかも
 frontend-install:
 	cd source/frontend && pnpm install
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm install
+	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- pnpm install
 
 frontend-check:
 	cd source/frontend/ && pnpm web run check
@@ -93,3 +98,9 @@ e2e-run-ci:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true pnpm run e2e'
 e2e-run-ui:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-ui
+
+###
+## web 系
+###
+web-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep web

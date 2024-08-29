@@ -3,7 +3,7 @@ custom_build(
   'web:v0.0.0',
   '''
     docker images --format 'web:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
-    docker image build --target prod -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
+    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
   deps=[
@@ -11,12 +11,6 @@ custom_build(
     'containers/frontend/web'
   ],
   live_update=[
-    # node_modules が同期されないので明示的に指定
-    # なぜ同期されないのか公式の情報は見つからなかったが、chat gpt によると大容量のディレクトリは
-    # 自動で除外される内部構造があるとのこと
-    sync('source/frontend/node_modules', '/source/frontend/node_modules'),
-    sync('source/frontend/packages/web/node_modules', '/source/frontend/packages/web/node_modules'),
-
     sync('source/frontend', '/source/frontend'),
   ],
 )
@@ -33,12 +27,6 @@ custom_build(
     'containers/frontend/e2e'
   ],
   live_update=[
-    # node_modules が同期されないので明示的に指定
-    # なぜ同期されないのか公式の情報は見つからなかったが、chat gpt によると大容量のディレクトリは
-    # 自動で除外される内部構造があるとのこと
-    sync('source/frontend/node_modules', '/source/frontend/node_modules'),
-    sync('source/frontend/packages/e2e/node_modules', '/source/frontend/packages/e2e/node_modules'),
-
     sync('source/frontend', '/source/frontend'),
   ]
 )
