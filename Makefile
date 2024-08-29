@@ -27,6 +27,13 @@ docker-image-build-e2e:
 ###
 ## kind 系
 ###
+kind-reset:
+	kubectx kubernetes-admin@kubernetes
+	$(MAKE) kind-down
+	$(MAKE) kind-up
+	$(MAKE) ingressclass-setup
+	$(MAKE) ingressclass-is-complate-setup
+
 kind-up:
 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
 kind-down:
