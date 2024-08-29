@@ -74,6 +74,9 @@ helm-reinstall: helm-delete helm-install
 # node_modules は明示的に ignore したほうがいいかも
 frontend-install:
 	cd source/frontend && pnpm install
+
+frontend-install-with-container:
+	$(MAKE) frontend-install
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm install
 	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- pnpm install
 
