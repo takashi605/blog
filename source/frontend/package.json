@@ -10,7 +10,8 @@
   "packageManager": "pnpm@9.9.0",
   "scripts": {
     "web": "pnpm -F web",
-    "e2e": "pnpm -F e2e"
+    "e2e": "pnpm -F e2e",
+    "e2e-test": "pnpm --filter e2e exec bddgen && pnpm --filter e2e exec playwright test"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

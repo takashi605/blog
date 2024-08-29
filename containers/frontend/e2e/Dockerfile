@@ -28,7 +28,5 @@ COPY --chown=pwuser:pwuser ./$E2E_DIR /$E2E_DIR
 
 RUN pnpm install
 
-WORKDIR /$E2E_DIR
-
 # 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
 CMD ["sleep", "infinity"]

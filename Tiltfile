@@ -11,6 +11,12 @@ custom_build(
     'containers/frontend/web'
   ],
   live_update=[
+    # node_modules が同期されないので明示的に指定
+    # なぜ同期されないのか公式の情報は見つからなかったが、chat gpt によると大容量のディレクトリは
+    # 自動で除外される内部構造があるとのこと
+    sync('source/frontend/node_modules', '/source/frontend/node_modules'),
+    sync('source/frontend/packages/e2e/node_modules', '/source/frontend/packages/e2e/node_modules'),
+
     sync('source/frontend', '/source/frontend'),
   ],
 )
@@ -27,8 +33,14 @@ custom_build(
     'containers/frontend/e2e'
   ],
   live_update=[
+    # node_modules が同期されないので明示的に指定
+    # なぜ同期されないのか公式の情報は見つからなかったが、chat gpt によると大容量のディレクトリは
+    # 自動で除外される内部構造があるとのこと
+    sync('source/frontend/node_modules', '/source/frontend/node_modules'),
+    sync('source/frontend/packages/e2e/node_modules', '/source/frontend/packages/e2e/node_modules'),
+
     sync('source/frontend', '/source/frontend'),
-  ],
+  ]
 )
 
 # chart の読み込み
