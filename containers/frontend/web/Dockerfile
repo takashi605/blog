@@ -73,6 +73,8 @@ CMD pnpm run dev
 
 # / ビルド用ステージ /
 FROM dev as builder
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 # production にしないと build 時にエラーする
 ENV NODE_ENV production
@@ -84,9 +86,10 @@ WORKDIR /$WEB_DIR
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm run build
 
-
 # / 本番環境用ステージ /
 FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 ENV NODE_ENV production
 
@@ -103,4 +106,4 @@ ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
 
 # 実行開始
-CMD ["web/server.js"]
+CMD ["server.js"]
