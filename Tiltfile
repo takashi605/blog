@@ -8,6 +8,7 @@ custom_build(
   ''',
   deps=[
     'source/frontend',
+    'containers/frontend/web'
   ],
   live_update=[
     sync('source/frontend', '/source/frontend'),
@@ -23,6 +24,7 @@ custom_build(
   ''',
   deps=[
     'source/frontend',
+    'containers/frontend/e2e'
   ],
   live_update=[
     sync('source/frontend', '/source/frontend'),
