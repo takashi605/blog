@@ -98,7 +98,7 @@ e2e-sh:
 e2e-run:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
 e2e-run-ci:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true pnpm run e2e'
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'CI=true pnpm run e2e-test'
 e2e-run-ui:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-ui
 
