@@ -56,38 +56,40 @@ ENV NODE_ENV=development
 EXPOSE 3000
 USER node
 
-WORKDIR /$WEB_DIR
+WORKDIR /$FRONTEND_DIR
 
-CMD pnpm run dev
+CMD pnpm run web-dev
 
 # / ビルド用ステージ /
 FROM dev as builder
-ARG FRONTEND_DIR=source/frontend
-ARG WEB_DIR=$FRONTEND_DIR/packages/web
-
-# production にしないと build 時にエラーする
-ENV NODE_ENV production
+ENV NODE_ENV produciton
 
 USER node
-
-WORKDIR /$WEB_DIR
-
-# .next ディレクトリにビルド成果物を生成
-RUN pnpm run build
-
-# / 本番環境用ステージ /
-FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
+WORKDIR /$FRONTEND_DIR
+RUN pnpm -F web deploy ./packages/pruned
+
+WORKDIR /$FRONTEND_DIR/packages/pruned
+
+# .next ディレクトリにビルド成果物を生成
+RUN pnpm exec next build
+
+CMD ["sleep", "infinity"]
+# / 本番環境用ステージ /
+FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
+
 ENV NODE_ENV production
+ARG FRONTEND_DIR=source/frontend
+ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 WORKDIR /$WEB_DIR
 
 # ビルド用ステージから必要なファイルのみをコピー
-COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/public ./public
-COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/.next/standalone/ ./
-COPY --from=builder --chown=nonroot:nonroot /$WEB_DIR/.next/static ./.next/static
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/public ./public
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/standalone/packages/pruned ./
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/static ./.next/static
 
 # ポートを開放
 EXPOSE 3000
