@@ -8,7 +8,7 @@ custom_build(
     docker system prune
 
     docker images --format 'web:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
-    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
+    docker image build --target prod -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
   deps=[
