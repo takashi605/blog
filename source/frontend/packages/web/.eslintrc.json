@@ -4,7 +4,7 @@
   // extends はルールの on,off を外部から読み込む
   "extends": [
     "next/core-web-vitals", // Next.js のための推奨設定
-    "../.eslintrc.json" // frontend ディレクトリ全体の設定を引き継ぐ
+    "../../.eslintrc.json" // frontend ディレクトリ全体の設定を引き継ぐ
   ],
   "rules": {
     "@next/next/no-img-element": "off", // Next.jsでの<img>タグを使用できるようにする
