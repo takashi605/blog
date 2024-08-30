@@ -104,6 +104,10 @@ e2e-sh:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
 e2e-run:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
+
+# CI でもコンテナ上で実行する関係で明示的に環境変数を指定
+# DISPLAY 環境変数をクリアしないとなぜかタイムアウトする
+# 参考: https://github.com/microsoft/playwright/issues/18255
 e2e-run-ci:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash -c 'DISPLAY= CI=true pnpm run e2e-test'
 e2e-run-ui:
