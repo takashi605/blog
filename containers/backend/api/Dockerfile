@@ -9,7 +9,7 @@ WORKDIR /$ROOT_DIR
 COPY ./$ROOT_DIR ./
 
 # コンテナ起動時に実行するコマンド
-# CMD ["cargo", "run"]
+CMD ["cargo", "run"]
 
 # Kubernetes 上で動くことをテストするためにいったん sleep を利用
-CMD ["sleep", "infinity"]
+# CMD ["sleep", "infinity"]
