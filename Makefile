@@ -121,3 +121,11 @@ e2e-run-ui:
 ###
 web-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep web
+
+###
+## api 系
+###
+api-run:
+	docker container run --rm api:v0.0.0
+api-sh:
+	docker container run --rm -it api:v0.0.0 /bin/bash
