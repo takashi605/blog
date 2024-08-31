@@ -10,7 +10,7 @@ web:
     imageRepository: "web"
     imageTag: "v0.0.0"
     imagePullSecret: ""
-    # Always だとリモートから pull してしまうため、
+    # Always だとリモートから pull してしまう
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
     memoryLimit: "750Mi"
@@ -29,3 +29,18 @@ web:
     externalTrafficPolicy: Local
 e2e:
   enabled: true
+api:
+  deployment:
+    replicas: 1
+  pod:
+    imageRepository: "api"
+    imageTag: "v0.0.0"
+    imagePullSecret: ""
+    # Always だとリモートから pull してしまう
+    # 今回はローカルのイメージを使うために Never にしている
+    imagePullPolicy: Never
+    memoryLimit: "750Mi"
+    cpuLimit: "500m"
+    memoryRequest: "250Mi"
+    cpuRequest: "150m"
+    containerPort: 8000
