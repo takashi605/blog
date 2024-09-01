@@ -52,9 +52,9 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ env.IMAGE_VERSION }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:cache
+            ghcr.io/${{ github.repository }}-web:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
 
   push_chart_package:
     runs-on: ubuntu-latest
