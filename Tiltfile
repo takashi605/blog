@@ -7,7 +7,7 @@ custom_build(
     xargs -r docker exec $kind_node ctr -n k8s.io images rm
     docker system prune
 
-    docker images --format 'web:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
+    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'web:tilt-' | xargs -I {} docker rmi {}
     docker image build --target prod -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
@@ -28,7 +28,7 @@ custom_build(
     xargs -r docker exec $kind_node ctr -n k8s.io images rm
     docker system prune
 
-    docker images --format 'e2e:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
+    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'e2e:tilt-' | xargs -I {} docker rmi {}
     docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF . && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
@@ -38,6 +38,27 @@ custom_build(
   ],
   live_update=[
     sync('source/frontend', '/source/frontend'),
+  ],
+)
+
+custom_build(
+  'api:v0.0.0',
+  '''
+    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
+    docker exec $kind_node ctr -n k8s.io images ls | grep 'api:tilt-' | awk '{print $1}' | \
+    xargs -r docker exec $kind_node ctr -n k8s.io images rm
+    docker system prune
+
+    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'api:tilt-' | xargs -I {} docker rmi {}
+    docker image build -f containers/backend/api/Dockerfile -t $EXPECTED_REF . && \
+    kind load docker-image $EXPECTED_REF --name blog
+  ''',
+  deps=[
+    'source/backend/api',
+    'containers/backend/api'
+  ],
+  live_update=[
+    sync('source/backend/api', '/source/backend/api'),
   ],
 )
 

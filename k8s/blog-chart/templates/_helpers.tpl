@@ -80,3 +80,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "e2e.appname" -}}
 {{- "e2e" }}
 {{- end }}
+
+{{- /*
+アプリケーション「api」の名前を取得
+*/ -}}
+{{- define "api.appname" -}}
+{{- "api" }}
+{{- end }}

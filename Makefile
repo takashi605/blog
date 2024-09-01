@@ -19,10 +19,13 @@ tilt-delete-image:
 docker-image-build:
 	$(MAKE) docker-image-build-web
 	$(MAKE) docker-image-build-e2e
+	$(MAKE) docker-image-build-api
 docker-image-build-web:
 	docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
 docker-image-build-e2e:
 	docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+docker-image-build-api:
+	docker image build -f containers/backend/api/Dockerfile -t api:v0.0.0 .
 
 ###
 ## kind 系
@@ -118,3 +121,11 @@ e2e-run-ui:
 ###
 web-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep web
+
+###
+## api 系
+###
+api-run:
+	docker container run --rm api:v0.0.0
+api-sh:
+	docker container run --rm -it api:v0.0.0 /bin/bash
