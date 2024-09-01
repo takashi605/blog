@@ -54,7 +54,7 @@ custom_build(
     docker system prune
     docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'api:tilt-' | xargs -I {} docker rmi {}
 
-    docker image build --target prod -f containers/backend/api/Dockerfile -t $EXPECTED_REF . && \
+    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF . && \
     kind load docker-image $EXPECTED_REF --name blog
   ''',
   deps=[
