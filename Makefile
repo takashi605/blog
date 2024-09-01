@@ -48,6 +48,9 @@ kind-load-web:
 kind-load-e2e:
 	kind load docker-image e2e:v0.0.0 --name $(CLUSTER_NAME)
 
+kind-images:
+	docker exec -it blog-worker /bin/bash -c "crictl images"
+
 ###
 ## ingressclass 系
 ## kind を入れなおしたら実行する必要あり
