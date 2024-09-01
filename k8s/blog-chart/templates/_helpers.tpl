@@ -74,3 +74,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- "web" }}
 {{- end }}
 
+{{- /*
+アプリケーション「e2e」の名前を取得
+*/ -}}
+{{- define "e2e.appname" -}}
+{{- "e2e" }}
+{{- end }}
+
+{{- /*
+アプリケーション「api」の名前を取得
+*/ -}}
+{{- define "api.appname" -}}
+{{- "api" }}
+{{- end }}

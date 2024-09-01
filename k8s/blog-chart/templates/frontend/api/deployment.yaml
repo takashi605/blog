@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "api.appname" . }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.api.deployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "api.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "api.appname" . }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- if .Values.api.pod.imagePullSecret }}
+        - name: {{ .Values.api.pod.imagePullSecret }}
+        {{- end }}
+      containers:
+        - name: {{ include "api.appname" . }}
+          image: "{{ .Values.api.pod.imageRepository }}:{{ .Values.api.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.api.pod.imagePullPolicy }}
+          resources:
+            limits:
+              memory: {{ .Values.api.pod.memoryLimit }}
+              cpu: {{ .Values.api.pod.cpuLimit }}
+            requests:
+              memory: {{ .Values.api.pod.memoryRequest }}
+              cpu: {{ .Values.api.pod.cpuRequest }}
+          ports:
+            - containerPort: {{ .Values.api.pod.containerPort }}

@@ -1,0 +1,72 @@
+name: "e2e テストの実行"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "develop"
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 普通に実行すると各種ツールのインストールや DockerImage の読み込みでリソース不足に陥るため、
+      # 以下のアクションで事前にディスク領域を解放
+      - name: "action の実行環境のディスク領域を解放"
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "kubectl のセットアップ"
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "v1.27.14"
+
+      - name: "kind のセットアップ"
+        uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: v0.20.0
+
+      - name: "Helm のセットアップ"
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.13.3
+
+      - name: "kind クラスタの生成"
+        run: |
+          make kind-up
+
+      - name: "Chart のインストール"
+        run: |
+          make helm-install
+
+      - name: "image の build"
+        run: |
+          make docker-image-build
+
+      - name: "image の load"
+        run: |
+          make kind-load-image
+
+      - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/e2e --timeout=180s
+
+      - name: "テスト対象の Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/web --timeout=180s
+
+      - name: "e2e テストを実行する"
+        run: |
+          make e2e-run-ci
+
+      - name: "クラスタを削除"
+        run: |
+          make kind-down
