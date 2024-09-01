@@ -56,6 +56,18 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
 
+      - name: "DockerImage の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/backend/api/Dockerfile
+          target: prod
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-api:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache
+
   push_chart_package:
     runs-on: ubuntu-latest
 
