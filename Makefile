@@ -30,8 +30,8 @@ docker-image-build-api:
 ###
 ## microk8s 系
 ###
-mk8s-import-api:
-	docker save api:v0.0.0 | microk8s.ctr image import -
+mk8s-import-image:
+	docker save ${IMAGE_NAME} | microk8s.ctr image import -
 mk8s-get-tilt-images:
 	microk8s.ctr image list | grep tilt- | awk '{print $1}'
 mk8s-delete-tilt-images:
