@@ -31,7 +31,7 @@ docker-image-build-api:
 ## microk8s 系
 ###
 mk8s-setup:
-	sudo snap install microk8s --classic && \
+	sudo snap install microk8s --classic --channel=1.31 && \
   sudo microk8s.enable dns && \
   sudo microk8s.enable registry
 mk8s-make-local-cluster:
