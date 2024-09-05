@@ -35,10 +35,9 @@ jobs:
 
       - name: "microk8s のグループをセットアップ"
         run:
-          sudo usermod -a -G microk8s $USER
-          mkdir -p ~/.kube
+          sudo usermod -a -G microk8s $USER && \
+          mkdir -p ~/.kube && \
           chmod 0700 ~/.kube
-          su - $USER
 
       - name: "microk8s の準備が完了するまで待機"
         run:
