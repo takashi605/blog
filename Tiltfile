@@ -2,13 +2,12 @@
 custom_build(
   'web:v0.0.0',
   '''
-    make mk8s-delete-tilt-images
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'web:tilt-' | xargs -I {} docker rmi {} || true
+    make mk8s-delete-tilt-images image_name=web;
 
-    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF .
-    make mk8s-import-image $EXPECTED_REF
+    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -22,13 +21,12 @@ custom_build(
 custom_build(
   'e2e:v0.0.0',
   '''
-    make mk8s-delete-tilt-images
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'e2e:tilt-' | xargs -I {} docker rmi {} || true
+    make mk8s-delete-tilt-images image_name=e2e;
 
-    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .
-    make mk8s-import-image $EXPECTED_REF
+    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -42,13 +40,12 @@ custom_build(
 custom_build(
   'api:v0.0.0',
   '''
-    make mk8s-delete-tilt-images
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'api:tilt-' | xargs -I {} docker rmi {} || true
+    make mk8s-delete-tilt-images image_name=api;
 
-    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .
-    make mk8s-import-image $EXPECTED_REF
+    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune
+    docker system prune;
   ''',
   deps=[
     'source/backend/api',

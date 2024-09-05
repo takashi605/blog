@@ -41,11 +41,12 @@ mk8s-make-local-cluster:
 	kubectl config use-context microk8s
 
 mk8s-import-image:
-	docker save ${IMAGE_NAME} | microk8s.ctr image import -
+	docker save $(image_name) | sudo microk8s.ctr image import -
 mk8s-get-tilt-images:
-	microk8s.ctr image list | grep tilt- | awk '{print $1}'
+	@sudo microk8s.ctr image list | grep $(image_name):tilt- | awk '{print $$1}'
 mk8s-delete-tilt-images:
-	$(MAKE) mk8s-get-tilt-images | args -r microk8s.ctr images remove
+	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove
+	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -I {} docker rmi {}
 
 ###
 ## Kubernetes 系
