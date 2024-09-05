@@ -34,6 +34,7 @@ jobs:
           make mk8s-setup
 
       - name: "microk8s のグループをセットアップ"
+        shell: bash
         run:
           sudo usermod -a -G microk8s $USER && \
           mkdir -p ~/.kube && \
