@@ -13,10 +13,10 @@ jobs:
     steps:
       # 普通に実行すると各種ツールのインストールや DockerImage の読み込みでリソース不足に陥るため、
       # 以下のアクションで事前にディスク領域を解放
-      - name: "action の実行環境のディスク領域を解放"
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
+      # - name: "action の実行環境のディスク領域を解放"
+      #   uses: jlumbroso/free-disk-space@main
+      #   with:
+      #     tool-cache: false
 
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
@@ -29,18 +29,14 @@ jobs:
         with:
           version: "v1.27.14"
 
-      - name: "MicroK8s のインストール"
-        run: |
-          sudo snap install microk8s --classic --channel=1.27/stable
-          sudo usermod -aG microk8s $USER
-          sudo chown -f -R $USER ~/.kube
-          newgrp microk8s
-
-      - name: "MicroK8s の設定"
-        run: |
+      - name: "microk8s のセットアップ"
+        run:
+          make mk8s-setup
           microk8s status --wait-ready
-          microk8s enable dns storage helm3
-          microk8s kubectl config view --raw > ~/.kube/config
+
+      - name: "microk8s をローカルクラスタに統合"
+        run:
+          make mk8s-make-local-cluster
 
       - name: "Helm のセットアップ"
         uses: azure/setup-helm@v4.2.0
