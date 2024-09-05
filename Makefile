@@ -56,6 +56,12 @@ kube-switch-working-namespace:
 kube-switch-default-namespace:
 	kubectl config set-context --current --namespace=default
 
+# ingress-controller にあたる Pod を直接ポートフォワーディングしている
+# そのため、ingress のルールは適用されない
+# wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
+kube-port-forward-ingress:
+	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 80:80
+
 # MetalLB のインストール
 setup-metallb:
 	kubectl create namespace metal-lb
