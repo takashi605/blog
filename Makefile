@@ -62,69 +62,6 @@ kube-switch-default-namespace:
 kube-port-forward-ingress:
 	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 80:80
 
-# MetalLB のインストール
-setup-metallb:
-	kubectl create namespace metal-lb
-	-$(MAKE) update-kube-proxy
-	helm repo add metallb https://metallb.github.io/metallb
-	helm install metallb metallb/metallb -n metal-lb
-
-# MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
-# configmap リソース「 kube-proxy 」の strictARP を true に変更する
-update-kube-proxy:
-	kubectl get configmap kube-proxy -n kube-system -o yaml | \
-	sed -e "s/strictARP: false/strictARP: true/" | \
-	kubectl apply -f - -n kube-system
-
-metallb-apply:
-	kubectl apply -f k8s/metallb.yaml
-
-setup-ingressclass:
-	helm upgrade --install ingress-nginx ingress-nginx \
-		--repo https://kubernetes.github.io/ingress-nginx
-
-default-set-ingressclass:
-	kubectl patch ingressclass nginx \
-	-p '{"metadata": {"annotations": {"ingressclass.kubernetes.io/is-default-class": "true"}}}'
-
-# ###
-# ## kind 系
-# ###
-# kind-reset:
-# 	kubectx kubernetes-admin@kubernetes
-# 	$(MAKE) kind-down
-# 	$(MAKE) kind-up
-# 	$(MAKE) ingressclass-setup
-# 	$(MAKE) ingressclass-is-complate-setup
-
-# kind-up:
-# 	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
-# kind-down:
-# 	kind delete cluster --name $(CLUSTER_NAME)
-
-# kind-load-image: kind-load-web kind-load-e2e
-# kind-load-web:
-# 	kind load docker-image web:v0.0.0 --name $(CLUSTER_NAME)
-# kind-load-e2e:
-# 	kind load docker-image e2e:v0.0.0 --name $(CLUSTER_NAME)
-
-# kind-images:
-# 	docker exec -it blog-worker /bin/bash -c "crictl images"
-
-# ###
-# ## ingressclass 系
-# ## kind を入れなおしたら実行する必要あり
-# ###
-# ingressclass-setup:
-# 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-
-# # ingressclass-setup でリソースが生成されるまで待機する
-# ingressclass-is-complate-setup:
-# 	kubectl wait --namespace ingress-nginx \
-# 		--for=condition=ready pod \
-# 		--selector=app.kubernetes.io/component=controller \
-# 		--timeout=90s
-
 ###
 ## Helm 系
 ## 基本的には tilt が管理してくれるのであまり使わない
