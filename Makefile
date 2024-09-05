@@ -30,6 +30,16 @@ docker-image-build-api:
 ###
 ## microk8s 系
 ###
+mk8s-setup:
+	sudo snap install microk8s --classic && \
+  sudo microk8s.enable dns && \
+  sudo microk8s.enable registry
+mk8s-make-local-cluster:
+	sudo microk8s.kubectl config view --flatten > ~/.kube/microk8s-config && \
+	KUBECONFIG=~/.kube/microk8s-config:~/.kube/config kubectl config view --flatten > ~/.kube/temp-config && \
+	mv ~/.kube/temp-config ~/.kube/config && \
+	kubectl config use-context microk8s
+
 mk8s-import-image:
 	docker save ${IMAGE_NAME} | microk8s.ctr image import -
 mk8s-get-tilt-images:
