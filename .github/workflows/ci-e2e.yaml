@@ -32,6 +32,9 @@ jobs:
       - name: "microk8s のセットアップ"
         run:
           make mk8s-setup
+
+      - name: "microk8s の準備が完了するまで待機"
+        run:
           microk8s status --wait-ready
 
       - name: "microk8s をローカルクラスタに統合"
