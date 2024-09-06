@@ -33,6 +33,8 @@ jobs:
         run:
           make mk8s-setup
 
+      - run: witch mkdir
+
       - name: "microk8s のグループをセットアップ"
         shell: bash
         run:
