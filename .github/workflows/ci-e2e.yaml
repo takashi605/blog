@@ -53,9 +53,9 @@ jobs:
 
       - name: "image の load"
         run: |
-          kind load docker-image web:v0.0.0
-          kind load docker-image api:v0.0.0
-          kind load docker-image e2e:v0.0.0
+          kind load docker-image web:v0.0.0 --name blog
+          kind load docker-image api:v0.0.0 --name blog
+          kind load docker-image e2e:v0.0.0 --name blog
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
