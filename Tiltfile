@@ -2,14 +2,12 @@
 custom_build(
   'web:v0.0.0',
   '''
-    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
-    docker exec $kind_node ctr -n k8s.io images ls | grep 'web:tilt-' | awk '{print $1}' | \
-    xargs -r docker exec $kind_node ctr -n k8s.io images rm
-    docker system prune
+    make mk8s-delete-tilt-images image_name=web;
 
-    docker images --format 'web:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
-    docker image build --target prod -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
-    kind load docker-image $EXPECTED_REF --name blog
+    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -17,20 +15,18 @@ custom_build(
   ],
   live_update=[
     sync('source/frontend', '/source/frontend'),
-  ],
+  ]
 )
 
 custom_build(
   'e2e:v0.0.0',
   '''
-    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
-    docker exec $kind_node ctr -n k8s.io images ls | grep 'e2e:tilt-' | awk '{print $1}' | \
-    xargs -r docker exec $kind_node ctr -n k8s.io images rm
-    docker system prune
+    make mk8s-delete-tilt-images image_name=e2e;
 
-    docker images --format 'e2e:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
-    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF . && \
-    kind load docker-image $EXPECTED_REF --name blog
+    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -38,13 +34,32 @@ custom_build(
   ],
   live_update=[
     sync('source/frontend', '/source/frontend'),
+  ]
+)
+
+custom_build(
+  'api:v0.0.0',
+  '''
+    make mk8s-delete-tilt-images image_name=api;
+
+    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
+  ''',
+  deps=[
+    'source/backend/api',
+    'containers/backend/api'
   ],
+  live_update=[
+    sync('source/backend/api', '/source/backend/api'),
+  ]
 )
 
 # chart の読み込み
 yaml = helm(
   'k8s/blog-chart',
   name='blog',
-  namespace='default',
+  namespace='blog',
 )
 k8s_yaml(yaml)

@@ -11,4 +11,7 @@
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "eslint.useESLintClass": true,
+  "rust-analyzer.linkedProjects": [
+    "source/backend/api/Cargo.toml"
+  ]
 }

@@ -19,45 +19,49 @@ tilt-delete-image:
 docker-image-build:
 	$(MAKE) docker-image-build-web
 	$(MAKE) docker-image-build-e2e
+	$(MAKE) docker-image-build-api
 docker-image-build-web:
 	docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
 docker-image-build-e2e:
 	docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+docker-image-build-api:
+	docker image build -f containers/backend/api/Dockerfile -t api:v0.0.0 .
 
 ###
-## kind 系
+## microk8s 系
 ###
-kind-reset:
-	kubectx kubernetes-admin@kubernetes
-	$(MAKE) kind-down
-	$(MAKE) kind-up
-	$(MAKE) ingressclass-setup
-	$(MAKE) ingressclass-is-complate-setup
+mk8s-setup:
+	sudo snap install microk8s --classic --channel=1.31 && \
+  sudo microk8s.enable dns && \
+  sudo microk8s.enable registry
+mk8s-make-local-cluster:
+	sudo microk8s.kubectl config view --flatten > ~/.kube/microk8s-config && \
+	KUBECONFIG=~/.kube/microk8s-config:~/.kube/config kubectl config view --flatten > ~/.kube/temp-config && \
+	mv ~/.kube/temp-config ~/.kube/config && \
+	kubectl config use-context microk8s
 
-kind-up:
-	kind create cluster --name $(CLUSTER_NAME) --config k8s/kind-config.yaml
-kind-down:
-	kind delete cluster --name $(CLUSTER_NAME)
-
-kind-load-image: kind-load-web kind-load-e2e
-kind-load-web:
-	kind load docker-image web:v0.0.0 --name $(CLUSTER_NAME)
-kind-load-e2e:
-	kind load docker-image e2e:v0.0.0 --name $(CLUSTER_NAME)
+mk8s-import-image:
+	docker save $(image_name) | sudo microk8s.ctr image import -
+mk8s-get-tilt-images:
+	@sudo microk8s.ctr image list | grep $(image_name):tilt- | awk '{print $$1}'
+mk8s-delete-tilt-images:
+	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove
+	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -I {} docker rmi {}
 
 ###
-## ingressclass 系
-## kind を入れなおしたら実行する必要あり
+## Kubernetes 系
 ###
-ingressclass-setup:
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+kube-switch-working-namespace:
+	kubectl create namespace blog
+	kubectl config set-context --current --namespace=blog
+kube-switch-default-namespace:
+	kubectl config set-context --current --namespace=default
 
-# ingressclass-setup でリソースが生成されるまで待機する
-ingressclass-is-complate-setup:
-	kubectl wait --namespace ingress-nginx \
-		--for=condition=ready pod \
-		--selector=app.kubernetes.io/component=controller \
-		--timeout=90s
+# ingress-controller にあたる Pod を直接ポートフォワーディングしている
+# そのため、ingress のルールは適用されない
+# wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
+kube-port-forward-ingress:
+	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 80:80
 
 ###
 ## Helm 系
@@ -118,3 +122,11 @@ e2e-run-ui:
 ###
 web-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep web
+
+###
+## api 系
+###
+api-run:
+	docker container run --rm api:v0.0.0
+api-sh:
+	docker container run --rm -it api:v0.0.0 /bin/bash
