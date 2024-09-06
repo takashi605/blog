@@ -36,7 +36,7 @@ jobs:
       - name: "microk8s のグループをセットアップ"
         shell: bash
         run:
-          sudo usermod -a -G microk8s $USER && \
+          sudo -E usermod -a -G microk8s $USER && \
           mkdir -p ~/.kube && \
           chmod 0700 ~/.kube && \
           newgrp microk8s # グループの適用。su だとシェルが変わるのでこちらが適切
