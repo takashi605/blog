@@ -13,10 +13,10 @@ jobs:
     steps:
       # 普通に実行すると各種ツールのインストールや DockerImage の読み込みでリソース不足に陥るため、
       # 以下のアクションで事前にディスク領域を解放
-      # - name: "action の実行環境のディスク領域を解放"
-      #   uses: jlumbroso/free-disk-space@main
-      #   with:
-      #     tool-cache: false
+      - name: "action の実行環境のディスク領域を解放"
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
 
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
@@ -29,32 +29,19 @@ jobs:
         with:
           version: "v1.27.14"
 
-      - name: "microk8s のセットアップ"
-        run:
-          make mk8s-setup
-
-      - run: which mkdir
-
-      - name: "microk8s のグループをセットアップ"
-        shell: bash
-        run:
-          sudo -E usermod -a -G microk8s $USER && \
-          mkdir -p ~/.kube && \
-          chmod 0700 ~/.kube && \
-          newgrp microk8s # グループの適用。su だとシェルが変わるのでこちらが適切
-
-      - name: "microk8s の準備が完了するまで待機"
-        run:
-          microk8s status --wait-ready
-
-      - name: "microk8s をローカルクラスタに統合"
-        run:
-          make mk8s-make-local-cluster
+      - name: "kind のセットアップ"
+        uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: v0.20.0
 
       - name: "Helm のセットアップ"
         uses: azure/setup-helm@v4.2.0
         with:
           version: v3.13.3
+
+      - name: "kind クラスタの生成"
+        run: |
+          kind create cluster
 
       - name: "Chart のインストール"
         run: |
@@ -66,9 +53,9 @@ jobs:
 
       - name: "image の load"
         run: |
-          make mk8s-import-image image_name=web:v0.0.0
-          make mk8s-import-image image_name=api:v0.0.0
-          make mk8s-import-image image_name=e2e:v0.0.0
+          kind load docker-image web:v0.0.0
+          kind load docker-image api:v0.0.0
+          kind load docker-image e2e:v0.0.0
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
