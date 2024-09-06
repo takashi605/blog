@@ -71,4 +71,4 @@ jobs:
 
       - name: "kind クラスタを削除"
         run: |
-          skind delete cluster --name blog
+          kind delete cluster --name blog
