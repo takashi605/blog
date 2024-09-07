@@ -14,20 +14,6 @@ tilt-delete-image:
 	docker images --format '{{.Repository}}:{{.Tag}}' | grep 'tilt-' | xargs -I {} docker rmi {}
 
 ###
-## docker 系
-###
-docker-image-build:
-	$(MAKE) docker-image-build-web
-	$(MAKE) docker-image-build-e2e
-	$(MAKE) docker-image-build-api
-docker-image-build-web:
-	docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
-docker-image-build-e2e:
-	docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
-docker-image-build-api:
-	docker image build -f containers/backend/api/Dockerfile -t api:v0.0.0 .
-
-###
 ## microk8s 系
 ###
 mk8s-setup:
@@ -130,3 +116,14 @@ api-run:
 	docker container run --rm api:v0.0.0
 api-sh:
 	docker container run --rm -it api:v0.0.0 /bin/bash
+api-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep api
+
+###
+## api テスト系
+## Pod「api」内に api テスト用コンテナがある
+###
+api-test-sh:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
+api-test-run:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test

@@ -1,4 +1,4 @@
-{{- if .Values.e2e.enabled }}
+{{- if not .Values.production }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
