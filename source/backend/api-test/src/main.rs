@@ -15,4 +15,14 @@ mod tests {
     assert_eq!(resp,"Hello world!");
     Ok(())
   }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn root_post() -> Result<(), Box<dyn std::error::Error>> {
+    let resp: String = reqwest::Client::new()
+        .post("http://localhost:8000")
+        .body("post message")
+        .send().await?.text().await?;
+    assert_eq!(resp,"post message");
+    Ok(())
+  }
 }
