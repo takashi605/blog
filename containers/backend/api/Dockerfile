@@ -12,7 +12,6 @@ USER rust:rust
 # ワーキングディレクトリを作成
 WORKDIR /$APP_ROOT_DIR
 
-# Cargo.toml と Cargo.lock をコピー
 COPY --chown=rust:rust ./$APP_ROOT_DIR ./
 
 FROM base as dev

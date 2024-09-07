@@ -2,16 +2,12 @@
 custom_build(
   'web:v0.0.0',
   '''
-    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
-    docker exec $kind_node ctr -n k8s.io images ls | grep 'web:tilt-' | awk '{print $1}' | \
-    xargs -r docker exec $kind_node ctr -n k8s.io images rm
+    make mk8s-delete-tilt-images image_name=web;
 
-    docker system prune
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'web:tilt-' | xargs -I {} docker rmi {}
+    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF . && \
-    kind load docker-image $EXPECTED_REF --name blog
-
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -25,15 +21,12 @@ custom_build(
 custom_build(
   'e2e:v0.0.0',
   '''
-    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
-    docker exec $kind_node ctr -n k8s.io images ls | grep 'e2e:tilt-' | awk '{print $1}' | \
-    xargs -r docker exec $kind_node ctr -n k8s.io images rm
+    make mk8s-delete-tilt-images image_name=e2e;
 
-    docker system prune
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'e2e:tilt-' | xargs -I {} docker rmi {}
+    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF . && \
-    kind load docker-image $EXPECTED_REF --name blog
+    docker system prune;
   ''',
   deps=[
     'source/frontend',
@@ -47,15 +40,12 @@ custom_build(
 custom_build(
   'api:v0.0.0',
   '''
-    kind_node=$(docker ps --filter "name=blog-worker" --format "{{.ID}}")
-    docker exec $kind_node ctr -n k8s.io images ls | grep 'api:tilt-' | awk '{print $1}' | \
-    xargs -r docker exec $kind_node ctr -n k8s.io images rm
+    make mk8s-delete-tilt-images image_name=api;
 
-    docker system prune
-    docker images --format '{{.Repository}}:{{ .Tag }}' | grep 'api:tilt-' | xargs -I {} docker rmi {}
+    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF . && \
-    kind load docker-image $EXPECTED_REF --name blog
+    docker system prune;
   ''',
   deps=[
     'source/backend/api',
@@ -66,10 +56,29 @@ custom_build(
   ]
 )
 
+custom_build(
+  'api-test:v0.0.0',
+  '''
+    make mk8s-delete-tilt-images image_name=api-test;
+
+    docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
+  ''',
+  deps=[
+    'source/backend/api-test',
+    'containers/backend/api-test'
+  ],
+  live_update=[
+    sync('source/backend/api-test', '/source/backend/api-test'),
+  ]
+)
+
 # chart の読み込み
 yaml = helm(
   'k8s/blog-chart',
   name='blog',
-  namespace='default',
+  namespace='blog',
 )
 k8s_yaml(yaml)

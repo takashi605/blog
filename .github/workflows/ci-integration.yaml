@@ -1,4 +1,4 @@
-name: "e2e テストの実行"
+name: "e2e テスト,api テストの実行"
 
 on:
   pull_request:
@@ -16,7 +16,14 @@ jobs:
       - name: "action の実行環境のディスク領域を解放"
         uses: jlumbroso/free-disk-space@main
         with:
+          # 全て実行すると時間がかかるため、必要なものだけ指定
+          android: true
+          dotnet: false
           tool-cache: false
+          haskell: false
+          large-packages: false
+          docker-images: false
+          swap-storage: false
 
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
@@ -41,7 +48,7 @@ jobs:
 
       - name: "kind クラスタの生成"
         run: |
-          make kind-up
+          kind create cluster --name blog
 
       - name: "Chart のインストール"
         run: |
@@ -49,24 +56,38 @@ jobs:
 
       - name: "image の build"
         run: |
-          make docker-image-build
+          docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+          docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+          docker image build --target prod -f containers/backend/api/Dockerfile -t api:v0.0.0 .
+          docker image build -f containers/backend/api-test/Dockerfile -t api-test:v0.0.0 .
 
       - name: "image の load"
         run: |
-          make kind-load-image
+          kind load docker-image web:v0.0.0 --name blog
+          kind load docker-image api:v0.0.0 --name blog
+          kind load docker-image api-test:v0.0.0 --name blog
+          kind load docker-image e2e:v0.0.0 --name blog
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
-          kubectl rollout status deployment/e2e --timeout=180s
+          kubectl rollout status deployment/e2e --timeout=120s
+
+      - name: "api を扱う Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/api --timeout=120s
 
       - name: "テスト対象の Deployment リソースが準備できるまで待機"
         run: |
-          kubectl rollout status deployment/web --timeout=180s
+          kubectl rollout status deployment/web --timeout=120s
 
       - name: "e2e テストを実行する"
         run: |
           make e2e-run-ci
 
-      - name: "クラスタを削除"
+      - name: "api テストを実行する"
         run: |
-          make kind-down
+          make api-test-run
+
+      - name: "kind クラスタを削除"
+        run: |
+          kind delete cluster --name blog
