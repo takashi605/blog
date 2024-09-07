@@ -55,11 +55,16 @@ jobs:
         run: |
           kind load docker-image web:v0.0.0 --name blog
           kind load docker-image api:v0.0.0 --name blog
+          kind load docker-image api-test:v0.0.0 --name blog
           kind load docker-image e2e:v0.0.0 --name blog
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/e2e --timeout=120s
+
+      - name: "api を扱う Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/api --timeout=120s
 
       - name: "テスト対象の Deployment リソースが準備できるまで待機"
         run: |
@@ -68,6 +73,10 @@ jobs:
       - name: "e2e テストを実行する"
         run: |
           make e2e-run-ci
+
+      - name: "api テストを実行する"
+        run: |
+          make api-test-run
 
       - name: "kind クラスタを削除"
         run: |
