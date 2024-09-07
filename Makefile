@@ -138,6 +138,6 @@ api-pod-name:
 ## Pod「api」内に api テスト用コンテナがある
 ###
 api-test-sh:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- sh
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
