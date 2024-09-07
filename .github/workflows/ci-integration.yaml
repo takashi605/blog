@@ -16,7 +16,14 @@ jobs:
       - name: "action の実行環境のディスク領域を解放"
         uses: jlumbroso/free-disk-space@main
         with:
+          # 全て実行すると時間がかかるため、必要なものだけ指定
+          android: true
+          dotnet: false
           tool-cache: false
+          haskell: false
+          large-packages: false
+          docker-images: false
+          swap-storage: false
 
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
