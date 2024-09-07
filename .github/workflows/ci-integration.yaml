@@ -18,7 +18,7 @@ jobs:
         with:
           # 全て実行すると時間がかかるため、必要なものだけ指定
           android: true
-          dotnet: true
+          dotnet: false
           tool-cache: false
           haskell: false
           large-packages: false
