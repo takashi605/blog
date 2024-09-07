@@ -9,6 +9,10 @@ const createJestConfig = nextJest({
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    customExportConditions: [],
+  },
+  setupFiles: ['./jest.polyfills.mjs'],
 };
 
 export default createJestConfig(config);
