@@ -1,4 +1,4 @@
-name: "e2e テストの実行"
+name: "e2e テスト,api テストの実行"
 
 on:
   pull_request:
