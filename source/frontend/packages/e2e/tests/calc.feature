@@ -2,6 +2,6 @@ Feature: 計算機
 
   Scenario: 足し算
     Given "http://web:80" にアクセスする
-    When "1" と "2" を入力する
+    When 「5・6」ボタンを押すと input それぞれに「5」「6」が表示される
     When 計算ボタンを押す
-    Then "3" が表示される
+    Then "11" が表示される
