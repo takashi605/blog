@@ -26,7 +26,7 @@ custom_build(
     docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune;
+    docker system prune -f;
   ''',
   deps=[
     'source/frontend',
@@ -45,7 +45,7 @@ custom_build(
     docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune;
+    docker system prune -f;
   ''',
   deps=[
     'source/backend/api',
@@ -64,7 +64,7 @@ custom_build(
     docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
 
-    docker system prune;
+    docker system prune -f;
   ''',
   deps=[
     'source/backend/api-test',

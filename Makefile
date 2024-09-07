@@ -8,6 +8,7 @@ tilt-up:
 tilt-down:
 	tilt down
 	$(MAKE) tilt-delete-image
+	docker system prune -f
 
 # tilt によって生成された Docker Image を全て削除する
 tilt-delete-image:
