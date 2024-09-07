@@ -49,7 +49,10 @@ jobs:
 
       - name: "image の build"
         run: |
-          make docker-image-build
+          docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+          docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+          docker image build -f containers/backend/api/Dockerfile -t api:v0.0.0 .
+          docker image build -f containers/backend/api-test/Dockerfile -t api-test:v0.0.0 .
 
       - name: "image の load"
         run: |
