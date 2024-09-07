@@ -56,19 +56,17 @@ jobs:
 
       - name: "image の build"
         run: |
-          docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 . & \
-          docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 . & \
-          docker image build --target prod -f containers/backend/api/Dockerfile -t api:v0.0.0 . & \
-          docker image build -f containers/backend/api-test/Dockerfile -t api-test:v0.0.0 . & \
-          wait
+          docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+          docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
+          docker image build --target prod -f containers/backend/api/Dockerfile -t api:v0.0.0 .
+          docker image build -f containers/backend/api-test/Dockerfile -t api-test:v0.0.0 .
 
       - name: "image の load"
         run: |
-          kind load docker-image web:v0.0.0 --name blog & \
-          kind load docker-image api:v0.0.0 --name blog & \
-          kind load docker-image api-test:v0.0.0 --name blog & \
-          kind load docker-image e2e:v0.0.0 --name blog & \
-          wait
+          kind load docker-image web:v0.0.0 --name blog
+          kind load docker-image api:v0.0.0 --name blog
+          kind load docker-image api-test:v0.0.0 --name blog
+          kind load docker-image e2e:v0.0.0 --name blog
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
