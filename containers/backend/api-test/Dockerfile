@@ -13,5 +13,5 @@ WORKDIR /$APP_ROOT_DIR
 
 COPY --chown=rust:rust ./$APP_ROOT_DIR ./
 
-# コンテナ起動時に実行するコマンド
-CMD ["cargo", "run"]
+# 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
+CMD ["sleep", "infinity"]
