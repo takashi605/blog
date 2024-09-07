@@ -130,3 +130,14 @@ api-run:
 	docker container run --rm api:v0.0.0
 api-sh:
 	docker container run --rm -it api:v0.0.0 /bin/bash
+api-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep api
+
+###
+## api テスト系
+## Pod「api」内に api テスト用コンテナがある
+###
+api-test-sh:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- sh
+api-test-run:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
