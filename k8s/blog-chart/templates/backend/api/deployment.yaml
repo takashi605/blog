@@ -33,3 +33,17 @@ spec:
               cpu: {{ .Values.api.pod.cpuRequest }}
           ports:
             - containerPort: {{ .Values.api.pod.containerPort }}
+        {{- if not .Values.production }}
+        - name: "{{ include "api.appname" . }}-test"
+          image: "api-test:v0.0.0"
+          imagePullPolicy: "Never"
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "500m"
+            requests:
+              memory: "400Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8888
+        {{- end }}

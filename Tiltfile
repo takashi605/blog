@@ -56,6 +56,25 @@ custom_build(
   ]
 )
 
+custom_build(
+  'api-test:v0.0.0',
+  '''
+    make mk8s-delete-tilt-images image_name=api-test;
+
+    docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
+  ''',
+  deps=[
+    'source/backend/api-test',
+    'containers/backend/api-test'
+  ],
+  live_update=[
+    sync('source/backend/api-test', '/source/backend/api-test'),
+  ]
+)
+
 # chart の読み込み
 yaml = helm(
   'k8s/blog-chart',
