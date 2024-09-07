@@ -1,6 +1,9 @@
 FROM rust:1.80-slim
 ARG APP_ROOT_DIR=source/backend/api-test
 
+RUN apt update && \
+    apt install -y pkg-config libssl-dev
+
 # グループとユーザーを追加
 RUN groupadd -g 1000 rust && \
     useradd -s /bin/bash -u 1000 -g rust rust
