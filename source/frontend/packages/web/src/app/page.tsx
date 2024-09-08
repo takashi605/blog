@@ -24,9 +24,11 @@ export default function Home() {
     setResult(sum(n1, n2).toString());
   }, [firstNum, secondNum]);
 
-  const handleClickFiveSix = useCallback(() => {
-    setFirstNum('5');
-    setSecondNum('6');
+  const handleClickFiveSix = useCallback(async() => {
+    const resp = await fetch('https://api/fivesix');
+    const { num1, num2 } = await resp.json();
+    setFirstNum(num1);
+    setSecondNum(num2);
   }, [setFirstNum, setSecondNum]);
 
   return (

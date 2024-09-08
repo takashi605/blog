@@ -1,7 +1,18 @@
+import { server } from '@/testMocks/server';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Home from './page';
+
+beforeAll(() => {
+  server.listen();
+});
+afterEach(async () => {
+  server.resetHandlers();
+});
+afterAll(() => {
+  server.close();
+});
 
 describe('/', () => {
   it('数値を入力できる input が2つ存在する', async () => {
@@ -26,12 +37,12 @@ describe('/', () => {
     const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
     expect(inputs[0]).toHaveValue(5);
     expect(inputs[1]).toHaveValue(6);
-  })
+  });
 
   it('「計算」と書かれたボタンをクリックすると、計算結果が表示される', async () => {
     render(<Home />);
     const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
-    const button = screen.getByRole('button',{ name: 'calc' });
+    const button = screen.getByRole('button', { name: 'calc' });
 
     // 計算1
     await userEvent.type(inputs[0], '101');
