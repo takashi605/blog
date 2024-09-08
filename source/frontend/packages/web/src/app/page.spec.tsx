@@ -4,12 +4,6 @@ import userEvent from '@testing-library/user-event';
 import Home from './page';
 
 describe('/', () => {
-  it('「5・6」と書かれたボタンが存在する', () => {
-    render(<Home />);
-    const button = screen.getByRole('button', { name: 'fivesix' });
-    expect(button).toHaveTextContent('5・6');
-  })
-
   it('数値を入力できる input が2つ存在する', async () => {
     render(<Home />);
 
@@ -22,6 +16,17 @@ describe('/', () => {
     await userEvent.type(inputs[1], '456');
     expect(inputs[1]).toHaveValue(456);
   });
+
+  it('「5・6」と書かれたボタンをクリックすると、input それぞれに「5」「6」といった数値が入る', async () => {
+    render(<Home />);
+    const button = screen.getByRole('button', { name: 'fivesix' });
+    expect(button).toHaveTextContent('5・6');
+    await userEvent.click(button);
+
+    const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
+    expect(inputs[0]).toHaveValue(5);
+    expect(inputs[1]).toHaveValue(6);
+  })
 
   it('「計算」と書かれたボタンをクリックすると、計算結果が表示される', async () => {
     render(<Home />);
