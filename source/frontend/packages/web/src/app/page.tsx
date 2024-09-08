@@ -21,6 +21,7 @@ export default function Home() {
   return (
     <main>
       <h2>計算機</h2>
+      <Button onClick={handleClickSum} name="fivesix">5・6</Button>
       <NumberInput
         name="num1"
         value={firstNum}
@@ -31,7 +32,7 @@ export default function Home() {
         value={secondNum}
         onChange={handleChangeSecondNum}
       />
-      <Button onClick={handleClickSum}>計算</Button>
+      <Button onClick={handleClickSum} name="calc">計算</Button>
       結果: <span>{result}</span>
     </main>
   );

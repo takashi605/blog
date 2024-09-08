@@ -4,6 +4,12 @@ import userEvent from '@testing-library/user-event';
 import Home from './page';
 
 describe('/', () => {
+  it('「5・6」と書かれたボタンが存在する', () => {
+    render(<Home />);
+    const button = screen.getByRole('button', { name: 'fivesix' });
+    expect(button).toHaveTextContent('5・6');
+  })
+
   it('数値を入力できる input が2つ存在する', async () => {
     render(<Home />);
 
@@ -20,7 +26,7 @@ describe('/', () => {
   it('「計算」と書かれたボタンをクリックすると、計算結果が表示される', async () => {
     render(<Home />);
     const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button',{ name: 'calc' });
 
     // 計算1
     await userEvent.type(inputs[0], '101');
