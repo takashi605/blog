@@ -1,10 +1,11 @@
 use anyhow::{Context, Result};
 use reqwest;
+use reqwest::header::CONTENT_TYPE;
 use crate::http::methods::Methods;
 use crate::http::response::Response;
 
 pub struct Request {
-  request_builder: reqwest::RequestBuilder,
+  pub request_builder: reqwest::RequestBuilder,
   pub method: Methods,
   _headers: Option<Vec<(String, String)>>,
   _url_params: Option<Vec<(String, String)>>,
@@ -15,7 +16,7 @@ impl Request {
     let client = reqwest::Client::new();
     let request_builder = match &method {
       Methods::GET => client.get(url),
-      Methods::POST { body } => client.post(url).body(body.to_string()),
+      Methods::POST { body } => client.post(url).body(body.to_string()).header(CONTENT_TYPE, "application/json"),
       Methods::PUT => client.put(url),
       Methods::DELETE => client.delete(url),
     };
