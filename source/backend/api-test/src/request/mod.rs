@@ -21,10 +21,30 @@ impl Request {
     }
   }
 
-  pub async fn send(&self) -> Result<reqwest::Response> {
-    reqwest::get(&self.url)
+  pub async fn send(&self) -> Result<Response> {
+    let resp = reqwest::get(&self.url)
       .await
-      .context("/ に対する get リクエストを正常に送信できませんでした")
+      .context("/ に対する get リクエストを正常に送信できませんでした")?;
+    Ok(Response::new(resp))
+  }
+}
+
+pub struct Response {
+  resp: reqwest::Response,
+}
+
+impl Response {
+  pub fn new(resp: reqwest::Response) -> Self {
+    Response {
+      resp,
+    }
+  }
+
+  pub async fn text(self) -> Result<String> {
+    self.resp
+      .text()
+      .await
+      .context("レスポンスをテキストに変換できませんでした")
   }
 }
 
@@ -40,11 +60,8 @@ mod tests {
   #[tokio::test(flavor = "current_thread")]
   async fn send_get_request() -> Result<()> {
     let req = Request::new(Methods::GET, "http://localhost:8000");
-    let resp = req.send()
-      .await?
-      .text()
-      .await
-      .context("Failed to convert response to text")?;
+    let resp = req.send().await?
+      .text().await?;
     assert_eq!(resp, "Hello world!");
 
     Ok(())
