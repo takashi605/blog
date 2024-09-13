@@ -6,7 +6,6 @@ use crate::http::response::Response;
 pub struct Request {
   request_builder: reqwest::RequestBuilder,
   pub method: Methods,
-  url: String,
   _headers: Option<Vec<(String, String)>>,
   _url_params: Option<Vec<(String, String)>>,
 }
@@ -20,7 +19,7 @@ impl Request {
       Methods::PUT => client.put(url),
       Methods::DELETE => client.delete(url),
     };
-    Request { request_builder, method, url: url.to_string(), _headers: None, _url_params: None }
+    Request { request_builder, method, _headers: None, _url_params: None }
   }
 
   pub async fn send(self) -> Result<Response> {
