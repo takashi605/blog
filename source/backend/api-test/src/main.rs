@@ -1,3 +1,5 @@
+mod request;
+
 fn main() {
   println!("これは API テスト用のクレートです。cargo test コマンドでテストを実行してください。");
 }
