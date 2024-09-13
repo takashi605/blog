@@ -6,7 +6,8 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-  use crate::http::{Methods, Request};
+  use crate::http::request::Request;
+  use crate::http::methods::Methods;
   use anyhow::{Context, Result};
 
   #[tokio::test(flavor = "current_thread")]
