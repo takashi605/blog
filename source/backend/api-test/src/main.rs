@@ -1,4 +1,5 @@
-mod request;
+mod http;
+
 
 fn main() {
   println!("これは API テスト用のクレートです。cargo test コマンドでテストを実行してください。");
@@ -7,15 +8,13 @@ fn main() {
 #[cfg(test)]
 mod tests {
   use anyhow::{Context, Result};
+  use crate::http::{Request, Methods};
 
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
-    let resp = reqwest::get("http://localhost:8000")
-      .await
-      .context("/ に対する get リクエストを正常に送信できませんでした")?
-      .text()
-      .await
-      .context("/ に対して get リクエストを送信しましたが、レスポンスをテキストに変換できませんでした")?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000")
+      .send().await?
+      .text().await?;
     assert_eq!(resp, "Hello world!");
     Ok(())
   }

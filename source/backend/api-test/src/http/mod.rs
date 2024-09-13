@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 
 #[derive(PartialEq, Debug)]
-enum Methods {
+pub enum Methods {
   GET,
   POST,
   PUT,
