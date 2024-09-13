@@ -11,11 +11,14 @@ pub enum Methods {
 pub struct Request {
   method: Methods,
   url: String,
+  _body: Option<String>,
+  _headers: Option<Vec<(String, String)>>,
+  _url_params: Option<Vec<(String, String)>>,
 }
 
 impl Request {
   pub fn new(method: Methods, url: &str) -> Self {
-    Request { method, url: url.to_string() }
+    Request { method, url: url.to_string(), _body: None, _headers: None, _url_params: None }
   }
 
   pub async fn send(&self) -> Result<Response> {
