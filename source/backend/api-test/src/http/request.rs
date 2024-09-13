@@ -1,8 +1,8 @@
+use crate::http::methods::Methods;
+use crate::http::response::Response;
 use anyhow::{Context, Result};
 use reqwest;
 use reqwest::header::CONTENT_TYPE;
-use crate::http::methods::Methods;
-use crate::http::response::Response;
 
 pub struct Request {
   pub request_builder: reqwest::RequestBuilder,
@@ -17,10 +17,13 @@ impl Request {
     let request_builder = match &method {
       Methods::GET => client.get(url),
       Methods::POST { body } => client.post(url).body(body.to_string()).header(CONTENT_TYPE, "application/json"),
-      Methods::PUT => client.put(url),
-      Methods::DELETE => client.delete(url),
     };
-    Request { request_builder, method, _headers: None, _url_params: None }
+    Request {
+      request_builder,
+      method,
+      _headers: None,
+      _url_params: None,
+    }
   }
 
   pub async fn send(self) -> Result<Response> {

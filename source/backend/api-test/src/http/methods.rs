@@ -2,6 +2,4 @@
 pub enum Methods {
   GET,
   POST { body: String },
-  PUT,
-  DELETE,
 }
