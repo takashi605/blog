@@ -8,6 +8,7 @@ custom_build(
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune;
+    crictl rmi --prune;
   ''',
   deps=[
     'source/frontend',
@@ -27,6 +28,7 @@ custom_build(
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune -f;
+    crictl rmi --prune;
   ''',
   deps=[
     'source/frontend',
@@ -46,6 +48,7 @@ custom_build(
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune -f;
+    crictl rmi --prune;
   ''',
   deps=[
     'source/backend/api',
@@ -65,6 +68,7 @@ custom_build(
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune -f;
+    crictl rmi --prune;
   ''',
   deps=[
     'source/backend/api-test',
