@@ -16,8 +16,10 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR ./
 
 FROM base as dev
 
+RUN cargo install cargo-watch
+
 # コンテナ起動時に実行するコマンド
-CMD ["cargo", "run"]
+CMD ["cargo", "watch", "-x", "run"]
 
 FROM base as builder
 ARG APP_ROOT_DIR=source/backend/api
