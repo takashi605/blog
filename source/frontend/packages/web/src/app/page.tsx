@@ -25,7 +25,7 @@ export default function Home() {
   }, [firstNum, secondNum]);
 
   const handleClickFiveSix = useCallback(async() => {
-    const resp = await fetch('http://api/fivesix', {
+    const resp = await fetch('http://api.example.com/fivesix', {
       method: 'GET',
       mode: 'cors',
       headers: {
