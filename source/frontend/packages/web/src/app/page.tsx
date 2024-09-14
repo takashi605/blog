@@ -25,7 +25,13 @@ export default function Home() {
   }, [firstNum, secondNum]);
 
   const handleClickFiveSix = useCallback(async() => {
-    const resp = await fetch('https://api/fivesix');
+    const resp = await fetch('http://api/fivesix', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     const { num1, num2 } = await resp.json();
     setFirstNum(num1);
     setSecondNum(num2);
