@@ -7,8 +7,6 @@ metadata:
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    metallb.universe.tf/address-pool: addresspool
-    metallb.universe.tf/ip-address: "192.168.1.1"
 spec:
   rules:
     - {{- if .Values.web.ingress.host }}
