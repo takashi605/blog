@@ -11,10 +11,14 @@ describe('コンポーネント: Button', () => {
   });
 
   it('指定した name を通じて要素を取得できる', () => {
-    render(<Button onClick={jest.fn()} name="test">押下</Button>);
+    render(
+      <Button onClick={jest.fn()} name="test">
+        押下
+      </Button>,
+    );
     const button = screen.getByRole('button', { name: 'test' });
     expect(button).toHaveAttribute('name', 'test');
-  })
+  });
 
   it('ボタンをクリックすると handleClick が発火する', async () => {
     const handleClick = jest.fn();

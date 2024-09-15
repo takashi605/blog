@@ -24,7 +24,7 @@ export default function Home() {
     setResult(sum(n1, n2).toString());
   }, [firstNum, secondNum]);
 
-  const handleClickFiveSix = useCallback(async() => {
+  const handleClickFiveSix = useCallback(async () => {
     const resp = await fetch('http://192.168.1.1/api/fivesix', {
       method: 'GET',
       mode: 'cors',
