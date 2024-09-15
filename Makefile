@@ -62,7 +62,7 @@ metallb-apply:
 ingress-controller-install:
 	kubectl create namespace ingress
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-	helm install custom-ingress-nginx ingress-nginx/ingress-nginx --namespace ingress --set controller.ingressClassResource.name=custom-nginx
+	helm install custom-ingress-nginx ingress-nginx/ingress-nginx --namespace ingress --set controller.ingressClassResource.name=custom-nginx --wait
 
 ingress-controller-set-metallb:
 	kubectl -n ingress patch service custom-ingress-nginx-controller \
