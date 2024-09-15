@@ -46,7 +46,7 @@ setup-metallb:
 setup-metallb-for-kind:
 	$(MAKE) update-kube-proxy-for-kind
 	helm repo add metallb https://metallb.github.io/metallb
-	helm install metallb metallb/metallb --namespace metallb-system --create-namespace
+	helm install metallb metallb/metallb --namespace metallb-system --create-namespace --wait
 	$(MAKE) metallb-apply
 
 # MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
@@ -57,7 +57,6 @@ update-kube-proxy-for-kind:
 	kubectl apply -f - -n kube-system
 
 metallb-apply:
-	kubectl wait -n metallb-system --for=condition=ready pod -l app=metallb --timeout=180s && \
 	kubectl apply -f k8s/metallb.yaml
 
 ingress-controller-install:
