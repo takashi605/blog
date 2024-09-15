@@ -50,10 +50,6 @@ jobs:
         run: |
           kind create cluster --name blog
 
-      - name: "Chart のインストール"
-        run: |
-          make helm-install
-
       - name: "metallb の適用"
         run: |
           make setup-metallb-for-kind
@@ -63,6 +59,10 @@ jobs:
           make ingress-controller-install && \
           make ingress-controller-set-metallb && \
           make ingress-controller-default-set
+
+      - name: "Chart のインストール"
+        run: |
+          make helm-install
 
       - name: "image の build"
         run: |
