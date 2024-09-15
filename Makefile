@@ -44,7 +44,7 @@ setup-metallb:
 	microk8s enable metallb:192.168.100.100-192.168.100.100
 
 setup-metallb-for-kind:
-	$(MAKE) update-kube-proxy
+	$(MAKE) update-kube-proxy-for-kind
 	helm repo add metallb https://metallb.github.io/metallb
 	helm install metallb metallb/metallb
 	$(MAKE) metallb-apply
