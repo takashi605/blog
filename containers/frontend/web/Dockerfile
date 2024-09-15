@@ -7,7 +7,7 @@ FROM node AS base
 ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.9.0
 
 # 作業ディレクトリを作成し、所有者を node ユーザーに変更
 RUN mkdir -p /$WEB_DIR \

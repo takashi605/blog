@@ -12,6 +12,7 @@ const inputHooks = {
 
     return {
       inputValue,
+      setInputValue,
       handleChange,
     } as const;
   },

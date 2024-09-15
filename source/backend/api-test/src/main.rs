@@ -1,35 +1,49 @@
+mod http;
+
 fn main() {
   println!("これは API テスト用のクレートです。cargo test コマンドでテストを実行してください。");
 }
 
 #[cfg(test)]
 mod tests {
+  use crate::http::request::Request;
+  use crate::http::methods::Methods;
   use anyhow::{Context, Result};
 
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
-    let resp = reqwest::get("http://localhost:8000")
-      .await
-      .context("/ に対する get リクエストを正常に送信できませんでした")?
-      .text()
-      .await
-      .context("/ に対して get リクエストを送信しましたが、レスポンスをテキストに変換できませんでした")?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000/api").send().await?.text().await?;
     assert_eq!(resp, "Hello world!");
     Ok(())
   }
 
   #[tokio::test(flavor = "current_thread")]
   async fn root_post() -> Result<()> {
-    let resp: String = reqwest::Client::new()
-      .post("http://localhost:8000")
-      .body("post message")
-      .send()
-      .await
-      .context("/ に対する post リクエストを正常に送信できませんでした")?
-      .text()
-      .await
-      .context("/ に対して post リクエストを送信しましたが、レスポンスをテキストに変換できませんでした")?;
+    let resp = Request::new(
+      Methods::POST {
+        body: "post message".to_string(),
+      },
+      "http://localhost:8000/api",
+    )
+    .send()
+    .await?
+    .text()
+    .await?;
     assert_eq!(resp, "post message");
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn fivesix_get() -> Result<()> {
+    #[derive(serde::Deserialize)]
+    struct Numbers {
+      num1: i32,
+      num2: i32,
+    }
+    let resp = Request::new(Methods::GET, "http://localhost:8000/api/fivesix").send().await?.text().await?;
+    let numbers: Numbers = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+    assert_eq!(numbers.num1, 5);
+    assert_eq!(numbers.num2, 6);
     Ok(())
   }
 }
