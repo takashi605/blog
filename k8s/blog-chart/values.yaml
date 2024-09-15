@@ -1,7 +1,7 @@
 web:
   ingress:
     # host が空文字列の場合は rules に含まれない
-    host: "web.example.com"
+    host: ""
     pathType: Prefix
     path: /
   deployment:
@@ -30,9 +30,9 @@ web:
 api:
   ingress:
     # host が空文字列の場合は rules に含まれない
-    host: "api.example.com"
+    host: ""
     pathType: Prefix
-    path: /
+    path: /api
   deployment:
     replicas: 1
   pod:

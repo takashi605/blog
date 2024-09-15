@@ -1,17 +1,17 @@
 use actix_cors::Cors;
 use actix_web::{get, http, post, web, App, HttpResponse, HttpServer, Responder};
 
-#[get("/")]
+#[get("/api")]
 async fn hello() -> impl Responder {
   HttpResponse::Ok().body("Hello world!")
 }
 
-#[post("/")]
+#[post("/api")]
 async fn echo(req_body: String) -> impl Responder {
   HttpResponse::Ok().body(req_body)
 }
 
-#[get("/fivesix")]
+#[get("/api/fivesix")]
 async fn fivesix() -> impl Responder {
   #[derive(serde::Serialize)]
   struct Numbers {
@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
   println!("api started");
   HttpServer::new(|| {
     let cors = Cors::default()
-      .allowed_origin("http://web.example.com")
+      .allow_any_origin()
       .allowed_methods(vec!["GET", "POST"])
       // .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
       .allowed_header(http::header::CONTENT_TYPE)
