@@ -39,7 +39,25 @@ mk8s-delete-tilt-images:
 ###
 ## ingress 系
 ###
+# MetalLB のインストール
+setup-metallb:
+	microk8s enable metallb:192.168.100.100-192.168.100.100
+
+setup-metallb-for-kind:
+	$(MAKE) update-kube-proxy
+	helm repo add metallb https://metallb.github.io/metallb
+	helm install metallb metallb/metallb
+	$(MAKE) metallb-apply
+
+# MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
+# configmap リソース「 kube-proxy 」の strictARP を true に変更する
+update-kube-proxy-for-kind:
+	kubectl get configmap kube-proxy -n kube-system -o yaml | \
+	sed -e "s/strictARP: false/strictARP: true/" | \
+	kubectl apply -f - -n kube-system
+
 metallb-apply:
+	kubectl wait -n metallb-system --for=condition=ready pod -l app=metallb --timeout=120s
 	kubectl apply -f k8s/metallb.yaml
 
 ingress-controller-install:
@@ -49,7 +67,7 @@ ingress-controller-install:
 
 ingress-controller-set-metallb:
 	kubectl -n ingress patch service custom-ingress-nginx-controller \
-		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "default-addresspool", "metallb.universe.tf/ip-address": "192.168.1.1"}}}'
+		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "192.168.1.1"}}}'
 
 ingress-controller-default-set:
 	kubectl patch ingressclass custom-nginx \

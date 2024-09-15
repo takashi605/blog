@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "api.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
-  metallb.universe.tf/address-pool: default-addresspool
+  metallb.universe.tf/address-pool: addresspool
   metallb.universe.tf/ip-address: "192.168.1.1"
 spec:
   rules:

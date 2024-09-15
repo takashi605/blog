@@ -56,7 +56,7 @@ jobs:
 
       - name: "metallb の適用"
         run: |
-          make metallb-apply
+          make setup-metallb-for-kind
 
       - name: "ingress controller の適用"
         run: |
