@@ -78,30 +78,6 @@ jobs:
           kind load docker-image api-test:v0.0.0 --name blog
           kind load docker-image e2e:v0.0.0 --name blog
 
-      - name: "api ingress の準備ができるまで待機"
-        run: |
-          for i in {1..60}; do
-            INGRESS_IP=$(kubectl get ingress api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-            if [ "$INGRESS_IP" != "" ]; then
-              echo "Ingress IP: $INGRESS_IP"
-              break
-            fi
-            echo "Ingress IP の準備ができるたまで待機しています..."
-            sleep 5
-          done
-
-      - name: "web ingress の準備ができるまで待機"
-        run: |
-          for i in {1..60}; do
-            INGRESS_IP=$(kubectl get ingress web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-            if [ "$INGRESS_IP" != "" ]; then
-              echo "Ingress IP: $INGRESS_IP"
-              break
-            fi
-            echo "Ingress IP の準備ができるたまで待機しています..."
-            sleep 5
-          done
-
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/e2e --timeout=120s
