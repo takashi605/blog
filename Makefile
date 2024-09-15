@@ -57,7 +57,6 @@ update-kube-proxy-for-kind:
 	kubectl apply -f - -n kube-system
 
 metallb-apply:
-	kubectl wait -n metallb-system --for=condition=ready pod -l app=metallb --timeout=120s
 	kubectl apply -f k8s/metallb.yaml
 
 ingress-controller-install:
