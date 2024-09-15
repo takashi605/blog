@@ -81,7 +81,7 @@ jobs:
       - name: "api ingress の準備ができるまで待機"
         run: |
           for i in {1..60}; do
-            INGRESS_IP=$(kubectl get ingress api -n blog -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+            INGRESS_IP=$(kubectl get ingress api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
             if [ "$INGRESS_IP" != "" ]; then
               echo "Ingress IP: $INGRESS_IP"
               break
@@ -93,7 +93,7 @@ jobs:
       - name: "web ingress の準備ができるまで待機"
         run: |
           for i in {1..60}; do
-            INGRESS_IP=$(kubectl get ingress web -n blog -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+            INGRESS_IP=$(kubectl get ingress web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
             if [ "$INGRESS_IP" != "" ]; then
               echo "Ingress IP: $INGRESS_IP"
               break
