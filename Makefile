@@ -8,6 +8,8 @@ tilt-up:
 tilt-down:
 	tilt down
 	$(MAKE) tilt-delete-image
+	docker system prune -f
+	crictl rmi --prune
 
 # tilt によって生成された Docker Image を全て削除する
 tilt-delete-image:
@@ -31,8 +33,44 @@ mk8s-import-image:
 mk8s-get-tilt-images:
 	@sudo microk8s.ctr image list | grep $(image_name):tilt- | awk '{print $$1}'
 mk8s-delete-tilt-images:
-	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove
-	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -I {} docker rmi {}
+	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove || true
+	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -r -I {} docker rmi {} || true
+
+###
+## ingress 系
+###
+# MetalLB のインストール
+setup-metallb:
+	microk8s enable metallb:192.168.100.100-192.168.100.100
+
+setup-metallb-for-kind:
+	$(MAKE) update-kube-proxy-for-kind
+	helm repo add metallb https://metallb.github.io/metallb
+	helm install metallb metallb/metallb --namespace metallb-system --create-namespace --wait
+	$(MAKE) metallb-apply
+
+# MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
+# configmap リソース「 kube-proxy 」の strictARP を true に変更する
+update-kube-proxy-for-kind:
+	kubectl get configmap kube-proxy -n kube-system -o yaml | \
+	sed -e "s/strictARP: false/strictARP: true/" | \
+	kubectl apply -f - -n kube-system
+
+metallb-apply:
+	kubectl apply -f k8s/metallb.yaml
+
+ingress-controller-install:
+	kubectl create namespace ingress
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm install custom-ingress-nginx ingress-nginx/ingress-nginx --namespace ingress --set controller.ingressClassResource.name=custom-nginx --wait
+
+ingress-controller-set-metallb:
+	kubectl -n ingress patch service custom-ingress-nginx-controller \
+		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "192.168.1.1"}}}'
+
+ingress-controller-default-set:
+	kubectl patch ingressclass custom-nginx \
+  -p '{"metadata": {"annotations": {"ingressclass.kubernetes.io/is-default-class": "true"}}}'
 
 ###
 ## Kubernetes 系
@@ -47,14 +85,14 @@ kube-switch-default-namespace:
 # そのため、ingress のルールは適用されない
 # wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
 kube-port-forward-ingress:
-	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 80:80
+	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 8080:80
 
 ###
 ## Helm 系
 ## 基本的には tilt が管理してくれるのであまり使わない
 ###
 helm-install:
-	helm install blog k8s/blog-chart
+	helm install blog k8s/blog-chart --wait
 
 helm-delete:
 	helm delete blog
@@ -91,7 +129,7 @@ e2e-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep e2e
 
 e2e-sh:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- sh
+	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash
 e2e-run:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
 

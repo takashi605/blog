@@ -28,6 +28,11 @@ web:
     loadBalancerIP: "192.168.1.100"
     externalTrafficPolicy: Local
 api:
+  ingress:
+    # host が空文字列の場合は rules に含まれない
+    host: ""
+    pathType: Prefix
+    path: /api
   deployment:
     replicas: 1
   pod:

@@ -50,9 +50,15 @@ jobs:
         run: |
           kind create cluster --name blog
 
-      - name: "Chart のインストール"
+      - name: "metallb の適用"
         run: |
-          make helm-install
+          make setup-metallb-for-kind
+
+      - name: "ingress controller の適用"
+        run: |
+          make ingress-controller-install && \
+          make ingress-controller-set-metallb && \
+          make ingress-controller-default-set
 
       - name: "image の build"
         run: |
@@ -67,6 +73,14 @@ jobs:
           kind load docker-image api:v0.0.0 --name blog
           kind load docker-image api-test:v0.0.0 --name blog
           kind load docker-image e2e:v0.0.0 --name blog
+
+      - name: "Chart のインストール"
+        run: |
+          make helm-install
+
+      - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
+        run: |
+          kubectl rollout status deployment/e2e --timeout=120s
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
