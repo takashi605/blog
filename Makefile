@@ -39,7 +39,14 @@ mk8s-delete-tilt-images:
 ###
 ## ingress 系
 ###
+
+# coredns の設定変更
+coredns-apply:
+	kubectl delete -f k8s/coredns.yaml -n kube-system || true
+	kubectl apply -f k8s/coredns.yaml -n kube-system
+
 # MetalLB のインストール
+# ip-range はマニフェストファイルに直接記述しているのでできれば書きたくないが、書かないとエラーする
 setup-metallb:
 	microk8s enable metallb:192.168.100.100-192.168.100.100
 

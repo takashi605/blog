@@ -5,6 +5,8 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "api.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - {{- if .Values.api.ingress.host }}
