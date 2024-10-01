@@ -1,0 +1,45 @@
+# デフォルトの coredns を変更するための設定ファイル
+# デフォルトの設定が何だったかを残すために、削除はせずコメントアウトしています
+# また、追加した箇所にはコメントを付けています
+apiVersion: v1
+data:
+  # hosts を追加
+  # hosts を変更するときは実行マシンの /etc/hosts も合わせて変更する事
+  Corefile: |
+    .:53 {
+        errors
+        health {
+          lameduck 5s
+        }
+        ready
+        log . {
+          class error
+        }
+        hosts {
+           192.168.1.1 blog.example api.blog.example
+           fallthrough
+        }
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"Corefile":".:53 {\n    errors\n    health {\n      lameduck 5s\n    }\n    ready\n    log . {\n      class error\n    }\n    kubernetes cluster.local in-addr.arpa ip6.arpa {\n      pods insecure\n      fallthrough in-addr.arpa ip6.arpa\n    }\n    prometheus :9153\n    forward . /etc/resolv.conf\n    cache 30\n    loop\n    reload\n    loadbalance\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"EnsureExists","k8s-app":"kube-dns"},"name":"coredns","namespace":"kube-system"}}
+  creationTimestamp: "2024-09-04T22:40:08Z"
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+    k8s-app: kube-dns
+  name: coredns
+  namespace: kube-system
+  resourceVersion: "327603"
+  uid: 5f6b71f9-4238-4aa6-b0dd-76a3a9880485

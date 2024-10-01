@@ -12,7 +12,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
-    let resp = Request::new(Methods::GET, "http://localhost:8000/api").send().await?.text().await?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000").send().await?.text().await?;
     assert_eq!(resp, "Hello world!");
     Ok(())
   }
@@ -23,7 +23,7 @@ mod tests {
       Methods::POST {
         body: "post message".to_string(),
       },
-      "http://localhost:8000/api",
+      "http://localhost:8000",
     )
     .send()
     .await?
@@ -40,7 +40,7 @@ mod tests {
       num1: i32,
       num2: i32,
     }
-    let resp = Request::new(Methods::GET, "http://localhost:8000/api/fivesix").send().await?.text().await?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000/fivesix").send().await?.text().await?;
     let numbers: Numbers = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
     assert_eq!(numbers.num1, 5);
     assert_eq!(numbers.num2, 6);
