@@ -46,7 +46,6 @@ coredns-apply:
 	kubectl apply -f k8s/coredns.yaml -n kube-system
 
 # MetalLB のインストール
-# ip-range はマニフェストファイルに直接記述しているのでできれば書きたくないが、書かないとエラーする
 setup-metallb:
 	helm repo add metallb https://metallb.github.io/metallb
 	helm install metallb metallb/metallb --namespace metallb-system --create-namespace --wait
