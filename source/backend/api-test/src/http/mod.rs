@@ -13,13 +13,13 @@ mod tests {
   use crate::http::request::Request;
   #[tokio::test(flavor = "current_thread")]
   async fn initialize_request() {
-    let req = Request::new(Methods::GET, "http://localhost:8000/api");
+    let req = Request::new(Methods::GET, "http://localhost:8000");
     assert_eq!(req.method, Methods::GET);
   }
 
   #[tokio::test(flavor = "current_thread")]
   async fn send_get_request() -> Result<()> {
-    let req = Request::new(Methods::GET, "http://localhost:8000/api");
+    let req = Request::new(Methods::GET, "http://localhost:8000");
     let resp = req.send().await?.text().await?;
     assert_eq!(resp, "Hello world!");
 
@@ -32,7 +32,7 @@ mod tests {
       Methods::POST {
         body: "post message".to_string(),
       },
-      "http://localhost:8000/api",
+      "http://localhost:8000",
     );
     // デフォルトでは Content-Type が json になっている
     if let Some(content_type) = req
