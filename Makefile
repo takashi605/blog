@@ -39,15 +39,25 @@ mk8s-delete-tilt-images:
 ###
 ## ingress 系
 ###
-# MetalLB のインストール
-setup-metallb:
-	microk8s enable metallb:192.168.100.100-192.168.100.100
 
-setup-metallb-for-kind:
-	$(MAKE) update-kube-proxy-for-kind
+# coredns の設定変更
+coredns-apply:
+	kubectl delete -f k8s/coredns.yaml -n kube-system || true
+	kubectl apply -f k8s/coredns.yaml -n kube-system
+
+# MetalLB のインストール
+# ip-range はマニフェストファイルに直接記述しているのでできれば書きたくないが、書かないとエラーする
+setup-metallb:
 	helm repo add metallb https://metallb.github.io/metallb
 	helm install metallb metallb/metallb --namespace metallb-system --create-namespace --wait
 	$(MAKE) metallb-apply
+
+metallb-apply:
+	kubectl apply -f k8s/metallb.yaml -n metallb-system
+
+setup-metallb-for-kind:
+	$(MAKE) update-kube-proxy-for-kind
+	$(MAKE) setup-metallb
 
 # MetalLB のインストールの準備として、ネームスペース「kubesystem」内の
 # configmap リソース「 kube-proxy 」の strictARP を true に変更する
@@ -55,9 +65,6 @@ update-kube-proxy-for-kind:
 	kubectl get configmap kube-proxy -n kube-system -o yaml | \
 	sed -e "s/strictARP: false/strictARP: true/" | \
 	kubectl apply -f - -n kube-system
-
-metallb-apply:
-	kubectl apply -f k8s/metallb.yaml
 
 ingress-controller-install:
 	kubectl create namespace ingress
