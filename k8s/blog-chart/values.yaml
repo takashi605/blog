@@ -18,6 +18,8 @@ web:
     memoryRequest: "250Mi"
     cpuRequest: "150m"
     containerPort: 3000
+    env:
+      API_URL: "http://api.blog.example"
   service:
     type: ClusterIP
     port: 80
@@ -56,4 +58,8 @@ api:
     nodePort: 30080
     loadBalancerIP: "192.168.1.100"
     externalTrafficPolicy: Local
+e2e:
+  pod:
+    env:
+      TEST_TARGET_VALUE: "http://blog.example"
 production: false

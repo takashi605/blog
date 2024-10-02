@@ -31,8 +31,10 @@ spec:
           ports:
             - containerPort: 4000
           env:
+            - name: TEST_TARGET_VALUE
+              value: {{ .Values.e2e.pod.env.TEST_TARGET_VALUE }}
             - name: DISPLAY
-              value: :0
+              value: ":0"
           volumeMounts:
             - mountPath: /tmp/.X11-unix
               name: unix-domain-socket
