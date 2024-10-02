@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-from-ingress
-  namespace: blog
 spec:
   podSelector: {}
   policyTypes:
@@ -17,7 +16,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: forbid-external-access-to-e2e
-  namespace: blog
 spec:
   podSelector:
     matchLabels:
