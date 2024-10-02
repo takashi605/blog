@@ -152,7 +152,8 @@ e2e-run-ui:
 ###
 web-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep web
-
+web-sh:
+	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- bash
 ###
 ## api 系
 ###
