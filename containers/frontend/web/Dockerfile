@@ -46,13 +46,14 @@ ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 WORKDIR /$FRONTEND_DIR
 
-ARG NEXT_PUBLIC_API_URL
-RUN touch .env.production
-RUN echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.production
 
 RUN pnpm -F web deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
+
+ARG NEXT_PUBLIC_API_URL
+RUN touch .env
+RUN echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env
 
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm exec next build
