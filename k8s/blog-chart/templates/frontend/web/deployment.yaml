@@ -34,5 +34,5 @@ spec:
           ports:
             - containerPort: {{ .Values.web.pod.containerPort }}
           env:
-            - name: API_URL
-              value: {{ .Values.web.pod.env.API_URL }}
+            - name: NEXT_PUBLIC_API_URL
+              value: {{ .Values.web.pod.env.NEXT_PUBLIC_API_URL }}

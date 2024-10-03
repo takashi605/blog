@@ -19,7 +19,7 @@ web:
     cpuRequest: "150m"
     containerPort: 3000
     env:
-      API_URL: "http://api.blog.example"
+      NEXT_PUBLIC_API_URL: "http://api.blog.example"
   service:
     type: ClusterIP
     port: 80
