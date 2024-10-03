@@ -48,7 +48,7 @@ WORKDIR /$FRONTEND_DIR
 
 ARG NEXT_PUBLIC_API_URL
 RUN touch .env.production
-RUN echo "NEXT_PUBLIC_FOO=$NEXT_PUBLIC_FOO" >> .env.production
+RUN echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.production
 
 RUN pnpm -F web deploy ./packages/pruned
 
