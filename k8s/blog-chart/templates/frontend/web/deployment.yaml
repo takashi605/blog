@@ -33,3 +33,6 @@ spec:
               cpu: {{ .Values.web.pod.cpuRequest }}
           ports:
             - containerPort: {{ .Values.web.pod.containerPort }}
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: {{ .Values.web.pod.env.NEXT_PUBLIC_API_URL }}

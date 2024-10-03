@@ -45,9 +45,12 @@ ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 WORKDIR /$FRONTEND_DIR
+
 RUN pnpm -F web deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
+
+ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
 
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm exec next build
