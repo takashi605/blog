@@ -3,8 +3,11 @@ import { createBdd } from 'playwright-bdd';
 
 const { Given, When, Then } = createBdd();
 
-Given('{string} にアクセスする', async ({ page }, url) => {
-  await page.goto(url);
+Given('トップページにアクセスする', async ({ page }) => {
+  if (!process.env.TEST_TARGET_URL) {
+    throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
+  }
+  await page.goto(process.env.TEST_TARGET_URL);
 });
 
 When('「5・6」ボタンを押すと input それぞれに「5」「6」が表示される', async ({ page }) => {

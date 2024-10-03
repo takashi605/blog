@@ -61,5 +61,5 @@ api:
 e2e:
   pod:
     env:
-      TEST_TARGET_VALUE: "http://blog.example"
+      TEST_TARGET_URL: "http://blog.example"
 production: false
