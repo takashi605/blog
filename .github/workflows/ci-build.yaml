@@ -55,6 +55,8 @@ jobs:
             ghcr.io/${{ github.repository }}-web:${{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
+          build-args: |
+            NEXT_PUBLIC_API_URL=http://api.blog.example
 
       - name: "DockerImage の Build と Push"
         uses: docker/build-push-action@v5
