@@ -45,6 +45,11 @@ ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 WORKDIR /$FRONTEND_DIR
+
+ARG NEXT_PUBLIC_API_URL
+RUN touch .env.production
+RUN echo "NEXT_PUBLIC_FOO=$NEXT_PUBLIC_FOO" >> .env.production
+
 RUN pnpm -F web deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
@@ -60,10 +65,6 @@ ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
 WORKDIR /$WEB_DIR
-
-ARG NEXT_PUBLIC_API_URL
-RUN touch .env.production
-RUN echo "NEXT_PUBLIC_FOO=$NEXT_PUBLIC_FOO" >> .env.production
 
 # ビルド用ステージから必要なファイルのみをコピー
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/public ./public
