@@ -3,8 +3,8 @@ import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
   loader: ['ts-node/esm'],
-  paths: ['tests/*.feature'],
-  import: ['tests/*.spec.ts'],
+  paths: ['tests/**/*.feature'],
+  import: ['tests/**/*.spec.ts'],
 });
 
 export default defineConfig({

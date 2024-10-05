@@ -1,0 +1,10 @@
+Feature: 投稿記事
+
+  Scenario: 記事を閲覧する
+    Given "/posts/1" にアクセスする
+    Then 記事タイトル が表示される
+    Then 記事本文 が表示される
+    Then h2見出し が表示される
+    Then h3見出し が表示される
+    Then 投稿日時 が表示される
+    Then 更新日時 が表示される
