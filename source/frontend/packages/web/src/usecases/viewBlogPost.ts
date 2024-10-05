@@ -1,3 +1,6 @@
+import { createBlogPost } from "@/entities/blogPost";
+import type { BlogPost } from "@/entities/blogPost";
+
 export type ViewBlogPostInput = {
   postTitle: string;
 };
@@ -7,7 +10,8 @@ export type ViewBlogPostOutput = {
 };
 
 export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
+  const blogPost: BlogPost = createBlogPost(input.postTitle);
   return {
-    postTitle: input.postTitle,
+    postTitle: blogPost.title,
   };
 };
