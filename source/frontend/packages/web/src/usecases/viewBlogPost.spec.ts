@@ -9,7 +9,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       h3List: ['h3見出し1', 'h3見出し2', 'h3見出し3'],
     };
 
-    const output: ViewBlogPostOutput = viewBlogPost(input, input.h2List, input.h3List);
+    const output: ViewBlogPostOutput = viewBlogPost(input);
     expect(output.postTitle.getText()).toBe('記事タイトル');
     expect(output.postTitle.getLevel()).toBe(1);
     output.getH2List().forEach((h2, index) => {

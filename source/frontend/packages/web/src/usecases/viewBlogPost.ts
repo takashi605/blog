@@ -23,11 +23,9 @@ export type ViewBlogPostOutput = {
 };
 
 export const viewBlogPost = (
-  input: ViewBlogPostInput,
-  h2List: string[],
-  h3List: string[],
+  input: ViewBlogPostInput
 ): ViewBlogPostOutput => {
-  const blogPost: BlogPost = createBlogPost(input.postTitle, h2List, h3List);
+  const blogPost: BlogPost = createBlogPost(input.postTitle, input.h2List, input.h3List);
   return {
     postTitle: {
       getText: () => blogPost.getTitleText(),
