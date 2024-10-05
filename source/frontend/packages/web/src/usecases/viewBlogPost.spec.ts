@@ -8,5 +8,6 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     };
     const output: ViewBlogPostOutput = viewBlogPost(input);
     expect(output.postTitle.getTitle()).toBe('記事タイトル');
+    expect(output.postTitle.getLevel()).toBe(1);
   });
 });

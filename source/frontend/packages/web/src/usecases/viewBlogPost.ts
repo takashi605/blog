@@ -8,6 +8,7 @@ export type ViewBlogPostInput = {
 export type ViewBlogPostOutput = {
   postTitle: {
     getTitle: () => string;
+    getLevel: () => number;
   };
 };
 
@@ -15,7 +16,8 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
   const blogPost: BlogPost = createBlogPost(input.postTitle);
   return {
     postTitle: {
-      getTitle: () => blogPost.getTitle(),
+      getTitle: () => blogPost.getTitleText(),
+      getLevel: () => blogPost.getTitleLevel(),
     },
   };
 };
