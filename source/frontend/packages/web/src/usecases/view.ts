@@ -1,0 +1,3 @@
+type Input = {
+  blogTitle: string;
+}
