@@ -27,4 +27,11 @@ describe('エンティティ: 投稿記事', () => {
       expect(h3.getLevel()).toBe(3);
     });
   });
+
+  it('段落を生成できる', () => {
+    const title = '記事タイトル';
+    const paragraphList = ['段落1', '段落2', '段落3'];
+    const blogPost: BlogPost = createBlogPost(title, [], [], paragraphList);
+    expect(blogPost.getParagraphList()).toEqual(paragraphList);
+  })
 });
