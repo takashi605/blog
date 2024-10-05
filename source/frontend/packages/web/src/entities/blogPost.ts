@@ -1,0 +1,3 @@
+type blogPost = {
+  blogTitle: string;
+};
