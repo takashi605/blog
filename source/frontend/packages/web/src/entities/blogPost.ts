@@ -1,8 +1,13 @@
-export type BlogPost = {
-  title: string;
+export type Heading = {
+  text: string;
+  level: number;
 };
 
-export const createBlogPost = (title: string): BlogPost => {
+export type BlogPost = {
+  title: Heading;
+};
+
+export const createBlogPost = (title: Heading): BlogPost => {
   return {
     title,
   };
