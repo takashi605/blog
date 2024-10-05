@@ -4,6 +4,7 @@ import { createBlogPost } from '@/entities/blogPost';
 export type ViewBlogPostInput = {
   postTitle: string;
   h2List: string[];
+  h3List: string[];
 };
 
 export type ViewBlogPostOutput = {
@@ -15,18 +16,24 @@ export type ViewBlogPostOutput = {
     getText: () => string;
     getLevel: () => number;
   }[];
+  getH3List: () => {
+    getText: () => string;
+    getLevel: () => number;
+  }[];
 };
 
 export const viewBlogPost = (
   input: ViewBlogPostInput,
   h2List: string[],
+  h3List: string[],
 ): ViewBlogPostOutput => {
-  const blogPost: BlogPost = createBlogPost(input.postTitle, h2List);
+  const blogPost: BlogPost = createBlogPost(input.postTitle, h2List, h3List);
   return {
     postTitle: {
       getText: () => blogPost.getTitleText(),
       getLevel: () => blogPost.getTitleLevel(),
     },
     getH2List: () => blogPost.getH2List(),
+    getH3List: () => blogPost.getH3List(),
   };
 };

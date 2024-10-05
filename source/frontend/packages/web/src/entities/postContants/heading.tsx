@@ -11,6 +11,10 @@ export const createH2 = (initialText: string): Heading => {
   return createHeading(initialText, 2);
 }
 
+export const createH3 = (initialText: string): Heading => {
+  return createHeading(initialText, 3);
+}
+
 const createHeading = (initialText: string, level: number): Heading => {
   const text = initialText;
 
