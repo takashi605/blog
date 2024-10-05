@@ -1,3 +1,3 @@
 type blogPost = {
-  blogTitle: string;
+  postTitle: string;
 };

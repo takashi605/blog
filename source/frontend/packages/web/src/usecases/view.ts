@@ -1,13 +1,13 @@
 export type Input = {
-  blogTitle: string;
-}
+  postTitle: string;
+};
 
 export type Output = {
-  blogTitle: string;
+  postTitle: string;
 };
 
 export const createBlogPost = (input: Input): Output => {
   return {
-    blogTitle: input.blogTitle,
-  }
-}
+    postTitle: input.postTitle,
+  };
+};
