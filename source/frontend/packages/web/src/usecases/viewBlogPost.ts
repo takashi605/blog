@@ -5,6 +5,7 @@ export type ViewBlogPostInput = {
   postTitle: string;
   h2List: string[];
   h3List: string[];
+  paragraphList: string[];
 };
 
 export type ViewBlogPostOutput = {
@@ -20,12 +21,15 @@ export type ViewBlogPostOutput = {
     getText: () => string;
     getLevel: () => number;
   }[];
+  getParagraphList: () => {
+    getText: () => string;
+  }[];
 };
 
 export const viewBlogPost = (
   input: ViewBlogPostInput
 ): ViewBlogPostOutput => {
-  const blogPost: BlogPost = createBlogPost(input.postTitle, input.h2List, input.h3List);
+  const blogPost: BlogPost = createBlogPost(input.postTitle, input.h2List, input.h3List, input.paragraphList);
   return {
     postTitle: {
       getText: () => blogPost.getTitleText(),
@@ -33,5 +37,6 @@ export const viewBlogPost = (
     },
     getH2List: () => blogPost.getH2List(),
     getH3List: () => blogPost.getH3List(),
+    getParagraphList: () => blogPost.getParagraphList(),
   };
 };
