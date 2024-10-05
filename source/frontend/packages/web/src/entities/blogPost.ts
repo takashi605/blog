@@ -4,11 +4,14 @@ export type Heading = {
 };
 
 export type BlogPost = {
-  title: Heading;
+  getTitle: () => string;
 };
 
-export const createBlogPost = (title: Heading): BlogPost => {
+export const createBlogPost = (initialTitle: Heading): BlogPost => {
+  // setter 等が必要になった時のために title を変数に保持しておく
+  const title = initialTitle;
+
   return {
-    title,
+    getTitle: () => title.text,
   };
 };

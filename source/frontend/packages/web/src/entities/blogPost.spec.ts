@@ -7,6 +7,6 @@ describe('エンティティ: 投稿記事', () => {
       level: 1,
     };
     const blogPost: BlogPost = createBlogPost(title);
-    expect(blogPost.title.text).toBe(title.text);
+    expect(blogPost.getTitle()).toBe(title.text);
   });
 });
