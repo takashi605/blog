@@ -4,18 +4,15 @@ export type Heading = {
 };
 
 export const createH1 = (initialText: string): Heading => {
-  const text = initialText;
-  const level = 1;
-
-  return {
-    getText: () => text,
-    getLevel: () => level,
-  };
+  return createHeading(initialText, 1);
 }
 
 export const createH2 = (initialText: string): Heading => {
+  return createHeading(initialText, 2);
+}
+
+const createHeading = (initialText: string, level: number): Heading => {
   const text = initialText;
-  const level = 2;
 
   return {
     getText: () => text,
