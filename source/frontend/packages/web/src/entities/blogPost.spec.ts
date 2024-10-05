@@ -1,14 +1,14 @@
 import { createBlogPost, type BlogPost } from './blogPost';
 
 describe('エンティティ: 投稿記事', () => {
-  it('記事タイトルとなる h1 見出しを生成できる', async () => {
+  it('記事タイトルとなる h1 見出しを生成できる', () => {
     const title = '記事タイトル';
     const blogPost: BlogPost = createBlogPost(title, [], []);
     expect(blogPost.getTitleText()).toBe(title);
     expect(blogPost.getTitleLevel()).toBe(1);
   });
 
-  it('h2 見出しを複数生成できる', async () => {
+  it('h2 見出しを複数生成できる', () => {
     const title = '記事タイトル';
     const h2List = ['h2見出し1', 'h2見出し2', 'h2見出し3'];
     const blogPost: BlogPost = createBlogPost(title, h2List, []);
@@ -18,7 +18,7 @@ describe('エンティティ: 投稿記事', () => {
     });
   });
 
-  it('h3 見出しを複数生成できる', async () => {
+  it('h3 見出しを複数生成できる', () => {
     const title = '記事タイトル';
     const h3List = ['h3見出し1', 'h3見出し2', 'h3見出し3'];
     const blogPost: BlogPost = createBlogPost(title, [], h3List);
