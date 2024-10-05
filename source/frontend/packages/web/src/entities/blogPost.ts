@@ -1,7 +1,8 @@
 import { createH1 } from "./postContants/heading";
 
 export type BlogPost = {
-  getTitle: () => string;
+  getTitleText: () => string;
+  getTitleLevel: () => number;
 };
 
 export const createBlogPost = (initialTitle: string): BlogPost => {
@@ -9,6 +10,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
   const title = createH1(initialTitle);
 
   return {
-    getTitle: () => title.getText(),
+    getTitleText: () => title.getText(),
+    getTitleLevel: () => title.getLevel(),
   };
 };
