@@ -9,7 +9,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     };
 
     const output: ViewBlogPostOutput = viewBlogPost(input, input.h2List);
-    expect(output.postTitle.getTitle()).toBe('記事タイトル');
+    expect(output.postTitle.getText()).toBe('記事タイトル');
     expect(output.postTitle.getLevel()).toBe(1);
     output.getH2List().forEach((h2, index) => {
       expect(h2.getText()).toBe(input.h2List[index]);

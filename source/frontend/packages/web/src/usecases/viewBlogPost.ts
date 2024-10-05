@@ -8,7 +8,7 @@ export type ViewBlogPostInput = {
 
 export type ViewBlogPostOutput = {
   postTitle: {
-    getTitle: () => string;
+    getText: () => string;
     getLevel: () => number;
   };
   getH2List: () => {
@@ -24,16 +24,9 @@ export const viewBlogPost = (
   const blogPost: BlogPost = createBlogPost(input.postTitle, h2List);
   return {
     postTitle: {
-      getTitle: () => blogPost.getTitleText(),
+      getText: () => blogPost.getTitleText(),
       getLevel: () => blogPost.getTitleLevel(),
     },
-    getH2List: () => {
-      return blogPost.getH2List().map((h2) => {
-        return {
-          getText: () => h2.getText(),
-          getLevel: () => h2.getLevel(),
-        };
-      });
-    },
+    getH2List: () => blogPost.getH2List(),
   };
 };
