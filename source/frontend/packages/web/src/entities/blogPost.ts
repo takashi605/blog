@@ -1,4 +1,4 @@
-import { createH1, type Heading } from "./postContants/heading";
+import { createH1 } from "./postContants/heading";
 
 export type BlogPost = {
   getTitle: () => string;
