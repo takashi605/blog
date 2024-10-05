@@ -1,8 +1,8 @@
-export type blogPost = {
+export type BlogPost = {
   title: string;
 };
 
-export const createBlogPost = (title: string): blogPost => {
+export const createBlogPost = (title: string): BlogPost => {
   return {
     title,
   };
