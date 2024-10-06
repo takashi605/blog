@@ -33,7 +33,7 @@ describe('エンティティ: 投稿記事', () => {
     const paragraphList = ['段落1', '段落2', '段落3'];
     const blogPost: BlogPost = createBlogPost(title, [], [], paragraphList);
     blogPost.getParagraphList().forEach((paragraph, index) => {
-      expect(paragraph.getText()).toBe(paragraphList[index]);
+      expect(paragraph.getContent()).toBe(paragraphList[index]);
     });
   });
 });

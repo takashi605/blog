@@ -51,6 +51,12 @@ export const viewBlogPost = (
         };
       });
     },
-    getParagraphList: () => blogPost.getParagraphList(),
+    getParagraphList: () => {
+      return blogPost.getParagraphList().map((paragraph) => {
+        return {
+          getText: () => paragraph.getContent(),
+        };
+      });
+    },
   };
 };
