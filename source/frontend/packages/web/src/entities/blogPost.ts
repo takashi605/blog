@@ -38,11 +38,13 @@ export const createBlogPost = (
     getParagraphList: () => paragraphList,
     getContents: () => contents,
     addH2(text: string) {
-      contents.push(createH2(1, text));
+      const id = contents.length + 1;
+      contents.push(createH2(id, text));
       return this;
     },
     addH3(text: string) {
-      contents.push(createH3(1, text));
+      const id = contents.length + 1;
+      contents.push(createH3(id, text));
       return this;
     },
   };

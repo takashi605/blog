@@ -44,7 +44,9 @@ describe('エンティティ: 投稿記事', () => {
     expect(contents.length).toBe(2);
     expect(contents[0].getContent()).toBe('h2見出し');
     expect(contents[0].getContentType()).toBe('h2');
+    expect(contents[0].getId()).toBe(1);
     expect(contents[1].getContent()).toBe('h3見出し');
     expect(contents[1].getContentType()).toBe('h3');
+    expect(contents[1].getId()).toBe(2);
   })
 });
