@@ -21,7 +21,7 @@ export const createBlogPost = (
   const title = createH1(1, initialTitle);
   const h2List = initialH2List.map((h2) => createH2(1, h2));
   const h3List = initialH3List.map((h3) => createH3(1, h3));
-  const paragraphList = initialParagraphList.map((paragraph) => createParagraph(paragraph));
+  const paragraphList = initialParagraphList.map((paragraph) => createParagraph(1, paragraph));
 
   return {
     getTitleText: () => title.getText(),
