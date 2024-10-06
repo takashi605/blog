@@ -7,6 +7,7 @@ describe('エンティティ: 見出し', () => {
     expect(h1.getContent()).toBe('h1見出し');
     expect(h1.getLevel()).toBe(1);
     expect(h1.getId()).toBe(1);
+    expect(h1.getContentType()).toBe('h1');
   });
 
   it('h2 見出しを生成できる', () => {
@@ -14,6 +15,7 @@ describe('エンティティ: 見出し', () => {
     expect(h2.getContent()).toBe('h2見出し');
     expect(h2.getLevel()).toBe(2);
     expect(h2.getId()).toBe(1);
+    expect(h2.getContentType()).toBe('h2');
   });
 
   it('h3 見出しを生成できる', () => {
@@ -21,5 +23,6 @@ describe('エンティティ: 見出し', () => {
     expect(h3.getContent()).toBe('h3見出し');
     expect(h3.getLevel()).toBe(3);
     expect(h3.getId()).toBe(1);
+    expect(h3.getContentType()).toBe('h3');
   });
 });

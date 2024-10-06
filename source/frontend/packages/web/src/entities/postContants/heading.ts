@@ -1,5 +1,6 @@
 export type Heading = {
   getId: () => number;
+  getContentType: () => string;
   getContent: () => string;
   getLevel: () => number;
 };
@@ -27,5 +28,6 @@ const createHeading = (
     getId: () => id,
     getContent: () => text,
     getLevel: () => level,
+    getContentType: () => `h${level}`,
   };
 };
