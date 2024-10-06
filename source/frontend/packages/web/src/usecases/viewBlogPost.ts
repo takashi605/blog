@@ -21,9 +21,7 @@ export type ViewBlogPostOutput = {
   }[];
 };
 
-export const viewBlogPost = (
-  input: ViewBlogPostInput
-): ViewBlogPostOutput => {
+export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
   const blogPost: BlogPost = createBlogPost(input.postTitle);
 
   input.contents.forEach((content) => {

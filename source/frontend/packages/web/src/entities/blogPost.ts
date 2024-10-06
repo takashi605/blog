@@ -11,9 +11,7 @@ export type BlogPost = {
   addParagraph: (text: string) => BlogPost;
 };
 
-export const createBlogPost = (
-  initialTitle: string,
-): BlogPost => {
+export const createBlogPost = (initialTitle: string): BlogPost => {
   // setter 等が必要になった時のために変数に保持しておく
   const title = createH1(1, initialTitle);
   const contents: Content[] = [];

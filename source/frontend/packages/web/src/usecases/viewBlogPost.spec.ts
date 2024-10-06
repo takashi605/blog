@@ -2,7 +2,6 @@ import type { ViewBlogPostInput, ViewBlogPostOutput } from './viewBlogPost';
 import { viewBlogPost } from './viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
-
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
     const input: ViewBlogPostInput = {
       postTitle: '記事タイトル',
