@@ -37,16 +37,30 @@ describe('エンティティ: 投稿記事', () => {
     });
   });
 
-  it('コンテンツとしてh2,h3見出しを持つ記事を生成できる', () => {
+  it('コンテンツとしてh2,h3見出し及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
-    const blogPost: BlogPost = createBlogPost(title, [], []).addH2('h2見出し').addH3('h3見出し');
+    const blogPost: BlogPost = createBlogPost(title, [], [])
+      .addH2('h2見出し')
+      .addParagraph('段落1')
+      .addH3('h3見出し')
+      .addParagraph('段落2');
     const contents = blogPost.getContents();
-    expect(contents.length).toBe(2);
+    expect(contents.length).toBe(4);
+
     expect(contents[0].getContent()).toBe('h2見出し');
     expect(contents[0].getContentType()).toBe('h2');
     expect(contents[0].getId()).toBe(1);
-    expect(contents[1].getContent()).toBe('h3見出し');
-    expect(contents[1].getContentType()).toBe('h3');
+
+    expect(contents[1].getContent()).toBe('段落1');
+    expect(contents[1].getContentType()).toBe('paragraph');
     expect(contents[1].getId()).toBe(2);
-  })
+
+    expect(contents[2].getContent()).toBe('h3見出し');
+    expect(contents[2].getContentType()).toBe('h3');
+    expect(contents[2].getId()).toBe(3);
+
+    expect(contents[3].getContent()).toBe('段落2');
+    expect(contents[3].getContentType()).toBe('paragraph');
+    expect(contents[3].getId()).toBe(4);
+  });
 });

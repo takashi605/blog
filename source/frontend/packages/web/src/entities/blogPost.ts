@@ -13,6 +13,7 @@ export type BlogPost = {
   getContents: () => Content[];
   addH2: (text: string) => BlogPost;
   addH3: (text: string) => BlogPost;
+  addParagraph: (text: string) => BlogPost;
 };
 
 export const createBlogPost = (
@@ -45,6 +46,11 @@ export const createBlogPost = (
     addH3(text: string) {
       const id = contents.length + 1;
       contents.push(createH3(id, text));
+      return this;
+    },
+    addParagraph(text: string) {
+      const id = contents.length + 1;
+      contents.push(createParagraph(id, text));
       return this;
     },
   };
