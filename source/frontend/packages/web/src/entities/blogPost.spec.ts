@@ -37,12 +37,14 @@ describe('エンティティ: 投稿記事', () => {
     });
   });
 
-  it('コンテンツとしてh2見出しを持つ記事を生成できる', () => {
+  it('コンテンツとしてh2,h3見出しを持つ記事を生成できる', () => {
     const title = '記事タイトル';
-    const blogPost: BlogPost = createBlogPost(title, [], []).addH2('h2見出し');
+    const blogPost: BlogPost = createBlogPost(title, [], []).addH2('h2見出し').addH3('h3見出し');
     const contents = blogPost.getContents();
-    expect(contents.length).toBe(1);
+    expect(contents.length).toBe(2);
     expect(contents[0].getContent()).toBe('h2見出し');
     expect(contents[0].getContentType()).toBe('h2');
+    expect(contents[1].getContent()).toBe('h3見出し');
+    expect(contents[1].getContentType()).toBe('h3');
   })
 });

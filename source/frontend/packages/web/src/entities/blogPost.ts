@@ -12,6 +12,7 @@ export type BlogPost = {
   getParagraphList: () => Paragraph[];
   getContents: () => Content[];
   addH2: (text: string) => BlogPost;
+  addH3: (text: string) => BlogPost;
 };
 
 export const createBlogPost = (
@@ -38,6 +39,10 @@ export const createBlogPost = (
     getContents: () => contents,
     addH2(text: string) {
       contents.push(createH2(1, text));
+      return this;
+    },
+    addH3(text: string) {
+      contents.push(createH3(1, text));
       return this;
     },
   };
