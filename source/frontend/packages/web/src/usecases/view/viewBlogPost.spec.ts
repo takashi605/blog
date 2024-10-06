@@ -1,6 +1,6 @@
-import type { ViewBlogPostOutput } from './viewBlogPost';
-import type { ViewBlogPostInput } from './input';
 import { viewBlogPost } from './viewBlogPost';
+import type { ViewBlogPostInput } from './input';
+import type { ViewBlogPostOutput } from './output';
 
 
 describe('ユースケース: 投稿記事の閲覧', () => {

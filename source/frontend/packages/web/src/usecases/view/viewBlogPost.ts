@@ -1,18 +1,7 @@
 import type { BlogPost } from '@/entities/blogPost';
 import { createBlogPost } from '@/entities/blogPost';
 import type { ViewBlogPostInput } from '@/usecases/view/input';
-
-export type ViewBlogPostOutput = {
-  postTitle: {
-    getText: () => string;
-    getLevel: () => number;
-  };
-  getContents: () => {
-    getId: () => number;
-    getText: () => string;
-    getType: () => string;
-  }[];
-};
+import type { ViewBlogPostOutput } from '@/usecases/view/output';
 
 export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
   const blogPost: BlogPost = createBlogPost(input.postTitle);
