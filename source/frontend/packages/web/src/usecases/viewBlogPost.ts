@@ -6,6 +6,10 @@ export type ViewBlogPostInput = {
   h2List: string[];
   h3List: string[];
   paragraphList: string[];
+  contents: {
+    type: string;
+    contentValue: string;
+  }[];
 };
 
 export type ViewBlogPostOutput = {
@@ -24,12 +28,24 @@ export type ViewBlogPostOutput = {
   getParagraphList: () => {
     getText: () => string;
   }[];
+  getContents: () => {
+    getId: () => number;
+    getText: () => string;
+    getType: () => string;
+  }[];
 };
 
 export const viewBlogPost = (
   input: ViewBlogPostInput
 ): ViewBlogPostOutput => {
   const blogPost: BlogPost = createBlogPost(input.postTitle, input.h2List, input.h3List, input.paragraphList);
+
+  input.contents.forEach((content) => {
+    if (content.type === 'h2') {
+      blogPost.addH2(content.contentValue);
+    }
+  });
+
   return {
     postTitle: {
       getText: () => blogPost.getTitleText(),
@@ -55,6 +71,15 @@ export const viewBlogPost = (
       return blogPost.getParagraphList().map((paragraph) => {
         return {
           getText: () => paragraph.getContent(),
+        };
+      });
+    },
+    getContents: () => {
+      return blogPost.getContents().map((content) => {
+        return {
+          getId: () => content.getId(),
+          getText: () => content.getContent(),
+          getType: () => content.getContentType(),
         };
       });
     },
