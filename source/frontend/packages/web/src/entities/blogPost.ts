@@ -1,6 +1,6 @@
 import type { Heading } from './postContants/heading';
-import type { Paragraph } from './postContants/paragraph';
 import { createH1, createH2, createH3 } from './postContants/heading';
+import type { Paragraph } from './postContants/paragraph';
 import { createParagraph } from './postContants/paragraph';
 
 export type BlogPost = {
@@ -21,10 +21,12 @@ export const createBlogPost = (
   const title = createH1(1, initialTitle);
   const h2List = initialH2List.map((h2) => createH2(1, h2));
   const h3List = initialH3List.map((h3) => createH3(1, h3));
-  const paragraphList = initialParagraphList.map((paragraph) => createParagraph(1, paragraph));
+  const paragraphList = initialParagraphList.map((paragraph) =>
+    createParagraph(1, paragraph),
+  );
 
   return {
-    getTitleText: () => title.getText(),
+    getTitleText: () => title.getContent(),
     getTitleLevel: () => title.getLevel(),
     getH2List: () => h2List,
     getH3List: () => h3List,

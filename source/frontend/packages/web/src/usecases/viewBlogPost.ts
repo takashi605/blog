@@ -35,8 +35,22 @@ export const viewBlogPost = (
       getText: () => blogPost.getTitleText(),
       getLevel: () => blogPost.getTitleLevel(),
     },
-    getH2List: () => blogPost.getH2List(),
-    getH3List: () => blogPost.getH3List(),
+    getH2List: () => {
+      return blogPost.getH2List().map((h2) => {
+        return {
+          getText: () => h2.getContent(),
+          getLevel: () => h2.getLevel(),
+        };
+      });
+    },
+    getH3List: () => {
+      return blogPost.getH3List().map((h3) => {
+        return {
+          getText: () => h3.getContent(),
+          getLevel: () => h3.getLevel(),
+        };
+      });
+    },
     getParagraphList: () => blogPost.getParagraphList(),
   };
 };
