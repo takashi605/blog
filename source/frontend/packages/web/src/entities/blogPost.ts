@@ -18,9 +18,9 @@ export const createBlogPost = (
   initialParagraphList: string[] = [],
 ): BlogPost => {
   // setter 等が必要になった時のために変数に保持しておく
-  const title = createH1(initialTitle);
-  const h2List = initialH2List.map((h2) => createH2(h2));
-  const h3List = initialH3List.map((h3) => createH3(h3));
+  const title = createH1(1, initialTitle);
+  const h2List = initialH2List.map((h2) => createH2(1, h2));
+  const h3List = initialH3List.map((h3) => createH3(1, h3));
   const paragraphList = initialParagraphList.map((paragraph) => createParagraph(paragraph));
 
   return {

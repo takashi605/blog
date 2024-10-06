@@ -1,24 +1,26 @@
 export type Heading = {
+  getId: () => number;
   getText: () => string;
   getLevel: () => number;
 };
 
-export const createH1 = (initialText: string): Heading => {
-  return createHeading(initialText, 1);
+export const createH1 = (id:number, initialText: string): Heading => {
+  return createHeading(id, initialText, 1);
 }
 
-export const createH2 = (initialText: string): Heading => {
-  return createHeading(initialText, 2);
-}
+export const createH2 = (id: number, initialText: string): Heading => {
+  return createHeading(id, initialText, 2);
+};
 
-export const createH3 = (initialText: string): Heading => {
-  return createHeading(initialText, 3);
-}
+export const createH3 = (id: number, initialText: string): Heading => {
+  return createHeading(id, initialText, 3);
+};
 
-const createHeading = (initialText: string, level: number): Heading => {
+const createHeading = (id:number, initialText: string, level: number): Heading => {
   const text = initialText;
 
   return {
+    getId: () => id,
     getText: () => text,
     getLevel: () => level,
   };
