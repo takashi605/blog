@@ -45,6 +45,8 @@ export const viewBlogPost = (
       blogPost.addH2(content.contentValue);
     } else if (content.type === 'h3') {
       blogPost.addH3(content.contentValue);
+    } else if (content.type === 'paragraph') {
+      blogPost.addParagraph(content.contentValue);
     }
   });
 
