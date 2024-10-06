@@ -1,13 +1,6 @@
 import type { BlogPost } from '@/entities/blogPost';
 import { createBlogPost } from '@/entities/blogPost';
-
-export type ViewBlogPostInput = {
-  postTitle: string;
-  contents: {
-    type: string;
-    contentValue: string;
-  }[];
-};
+import type { ViewBlogPostInput } from '@/usecases/view/input';
 
 export type ViewBlogPostOutput = {
   postTitle: {
