@@ -1,7 +1,6 @@
-export type Heading = {
-  getId: () => number;
-  getContentType: () => string;
-  getContent: () => string;
+import type { Content } from "@/entities/postContants/content";
+
+export type Heading = Content & {
   getLevel: () => number;
 };
 

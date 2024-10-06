@@ -1,8 +1,6 @@
-export type Paragraph = {
-  getId: () => number;
-  getContent: () => string;
-  getContentType: () => string;
-};
+import type { Content } from "@/entities/postContants/content";
+
+export type Paragraph = Content;
 
 export const createParagraph = (id: number, initialText: string): Paragraph => {
   const text = initialText;
