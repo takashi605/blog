@@ -36,4 +36,13 @@ describe('エンティティ: 投稿記事', () => {
       expect(paragraph.getContent()).toBe(paragraphList[index]);
     });
   });
+
+  it('コンテンツとしてh2見出しを持つ記事を生成できる', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title, [], []).addH2('h2見出し');
+    const contents = blogPost.getContents();
+    expect(contents.length).toBe(1);
+    expect(contents[0].getContent()).toBe('h2見出し');
+    expect(contents[0].getContentType()).toBe('h2');
+  })
 });

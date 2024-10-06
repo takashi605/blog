@@ -1,3 +1,4 @@
+import type { Content } from '@/entities/postContants/content';
 import type { Heading } from './postContants/heading';
 import { createH1, createH2, createH3 } from './postContants/heading';
 import type { Paragraph } from './postContants/paragraph';
@@ -9,6 +10,8 @@ export type BlogPost = {
   getH2List: () => Heading[];
   getH3List: () => Heading[];
   getParagraphList: () => Paragraph[];
+  getContents: () => Content[];
+  addH2: (text: string) => BlogPost;
 };
 
 export const createBlogPost = (
@@ -24,6 +27,7 @@ export const createBlogPost = (
   const paragraphList = initialParagraphList.map((paragraph) =>
     createParagraph(1, paragraph),
   );
+  const contents: Content[] = [];
 
   return {
     getTitleText: () => title.getContent(),
@@ -31,5 +35,10 @@ export const createBlogPost = (
     getH2List: () => h2List,
     getH3List: () => h3List,
     getParagraphList: () => paragraphList,
+    getContents: () => contents,
+    addH2(text: string) {
+      contents.push(createH2(1, text));
+      return this;
+    },
   };
 };
