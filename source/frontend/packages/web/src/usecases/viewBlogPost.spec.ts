@@ -47,6 +47,10 @@ describe('ユースケース: 投稿記事の閲覧', () => {
           type: 'h2',
           contentValue: 'h2見出し1',
         },
+        {
+          type: 'h3',
+          contentValue: 'h3見出し1',
+        }
       ],
     };
 
@@ -55,9 +59,14 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     expect(output.postTitle.getText()).toBe('記事タイトル');
 
     const contents = output.getContents();
-    expect(contents.length).toBe(1);
+    expect(contents.length).toBe(2);
+
     expect(contents[0].getId()).toBe(1);
     expect(contents[0].getText()).toBe('h2見出し1');
     expect(contents[0].getType()).toBe('h2');
+
+    expect(contents[1].getId()).toBe(2);
+    expect(contents[1].getText()).toBe('h3見出し1');
+    expect(contents[1].getType()).toBe('h3');
   });
 });
