@@ -4,9 +4,9 @@ import type { ViewBlogPostInput } from '@/usecases/view/input';
 import type { ViewBlogPostOutput } from '@/usecases/view/output';
 
 export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
-  const blogPost: BlogPost = createBlogPost(input.postTitle);
+  const blogPost: BlogPost = createBlogPost(input.getPostTitle());
 
-  input.contents.forEach((content) => {
+  input.getContents().forEach((content) => {
     if (content.type === 'h2') {
       blogPost.addH2(content.contentValue);
     } else if (content.type === 'h3') {
