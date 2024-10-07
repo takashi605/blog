@@ -1,4 +1,4 @@
-import { createViewBlogPostInput } from './input';
+import { createViewBlogPostInput } from './input/input';
 import type { ViewBlogPostOutput } from './output';
 import { viewBlogPost } from './viewBlogPost';
 

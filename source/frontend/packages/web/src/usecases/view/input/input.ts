@@ -1,6 +1,8 @@
+import type { ContentInput } from './content';
+
 export type ViewBlogPostInput = {
   getPostTitle: () => string;
-  getContents: () => { type: string; contentValue: string }[];
+  getContents: () => ContentInput[];
   addH2: (contentValue: string) => ViewBlogPostInput;
   addH3: (contentValue: string) => ViewBlogPostInput;
   addParagraph: (contentValue: string) => ViewBlogPostInput;
@@ -9,10 +11,7 @@ export type ViewBlogPostInput = {
 
 export const createViewBlogPostInput = (): ViewBlogPostInput => {
   let postTitle = '';
-  const contents: {
-    type: string;
-    contentValue: string;
-  }[] = [];
+  const contents: ContentInput[] = [];
 
   return {
     getPostTitle: () => postTitle,

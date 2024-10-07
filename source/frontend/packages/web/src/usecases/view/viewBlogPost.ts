@@ -1,6 +1,6 @@
 import type { BlogPost } from '@/entities/blogPost';
 import { createBlogPost } from '@/entities/blogPost';
-import type { ViewBlogPostInput } from '@/usecases/view/input';
+import type { ViewBlogPostInput } from '@/usecases/view/input/input';
 import type { ViewBlogPostOutput } from '@/usecases/view/output';
 
 export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
