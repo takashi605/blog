@@ -1,7 +1,7 @@
 import { ContentType, createContent } from '@/entities/postContants/content';
 import type { Heading } from '@/entities/postContants/heading';
 
-describe('エンティティ: コンテント', () => {
+describe('エンティティ: 投稿記事のコンテント', () => {
   it('コンテント生成関数から h2 見出しを生成できる', () => {
     const h2 = createContent({
       id: 1,
