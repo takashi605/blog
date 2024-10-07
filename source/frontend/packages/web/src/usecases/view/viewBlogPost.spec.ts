@@ -4,31 +4,6 @@ import { viewBlogPost } from './viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
-    // const input: ViewBlogPostInput = {
-    //   postTitle: '記事タイトル',
-    //   contents: [
-    //     {
-    //       type: 'h2',
-    //       contentValue: 'h2見出し1',
-    //     },
-    //     {
-    //       type: 'h3',
-    //       contentValue: 'h3見出し1',
-    //     },
-    //     {
-    //       type: 'paragraph',
-    //       contentValue: '段落1',
-    //     },
-    //     {
-    //       type: 'h3',
-    //       contentValue: 'h3見出し2',
-    //     },
-    //     {
-    //       type: 'paragraph',
-    //       contentValue: '段落2',
-    //     },
-    //   ],
-    // };
     const input = createViewBlogPostInput()
       .setPostTitle('記事タイトル')
       .addH2('h2見出し1')

@@ -1,9 +1,4 @@
 export type ViewBlogPostInput = {
-  postTitle: string;
-  contents: {
-    type: string;
-    contentValue: string;
-  }[];
   getPostTitle: () => string;
   getContents: () => { type: string; contentValue: string }[];
   addH2: (contentValue: string) => ViewBlogPostInput;
@@ -20,8 +15,6 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
   }[] = [];
 
   return {
-    postTitle: '',
-    contents: [],
     getPostTitle: () => postTitle,
     getContents: () => contents,
     addH2(contentValue: string) {
