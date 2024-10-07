@@ -9,6 +9,7 @@ export type BlogPost = {
   addH2: (text: string) => BlogPost;
   addH3: (text: string) => BlogPost;
   addParagraph: (text: string) => BlogPost;
+  addContent: (content: Content) => BlogPost;
 };
 
 export const createBlogPost = (initialTitle: string): BlogPost => {
@@ -33,6 +34,10 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
     addParagraph(text: string) {
       const id = contents.length + 1;
       contents.push(createParagraph(id, text));
+      return this;
+    },
+    addContent(content: Content) {
+      contents.push(content);
       return this;
     },
   };
