@@ -1,4 +1,6 @@
+import type { ContentType } from "@/entities/postContants/content";
+
 export type ContentInput = {
-  type: string;
+  type: ContentType;
   contentValue: string;
 };

@@ -1,3 +1,4 @@
+import { ContentType } from '@/entities/postContants/content';
 import type { ContentInput } from './content';
 
 export type ViewBlogPostInput = {
@@ -17,15 +18,15 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
     getPostTitle: () => postTitle,
     getContents: () => contents,
     addH2(contentValue: string) {
-      contents.push({ type: 'h2', contentValue });
+      contents.push({ type: ContentType.H2, contentValue });
       return this;
     },
     addH3(contentValue: string) {
-      contents.push({ type: 'h3', contentValue });
+      contents.push({ type: ContentType.H3, contentValue });
       return this;
     },
     addParagraph(contentValue: string) {
-      contents.push({ type: 'paragraph', contentValue });
+      contents.push({ type: ContentType.Paragraph, contentValue });
       return this;
     },
     setPostTitle(newPostTitle: string) {
