@@ -1,6 +1,6 @@
 import type { BlogPost } from '@/entities/blogPost';
 import { createBlogPost } from '@/entities/blogPost';
-import { createContent } from '@/entities/postContants/content';
+import { createContentByInput } from '@/usecases/view/input/content';
 import type { ViewBlogPostInput } from '@/usecases/view/input/input';
 import type { ViewBlogPostOutput } from '@/usecases/view/output';
 
@@ -9,11 +9,7 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
 
   input.getContents().forEach((contentInput) => {
     blogPost.addContent(
-      createContent({
-        id: blogPost.getContents().length + 1,
-        type: contentInput.type,
-        value: contentInput.contentValue,
-      }),
+      createContentByInput(blogPost.getContents().length + 1, contentInput),
     );
   });
 
