@@ -37,4 +37,14 @@ describe('エンティティ: コンテント', () => {
     expect(h3.getId()).toBe(1);
     expect(h3.getContentType()).toBe('h3');
   });
+
+  it('不正なコンテントタイプを指定するとエラーが発生する', () => {
+    expect(() =>
+      createContent({
+        id: 1,
+        type: 'invalid',
+        value: '不正なコンテント',
+      }),
+    ).toThrow('不明なコンテントタイプです');
+  });
 });

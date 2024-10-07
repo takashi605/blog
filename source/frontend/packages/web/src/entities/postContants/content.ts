@@ -17,6 +17,6 @@ export const createContent = (params: ContentParams): Content => {
     case "h3":
       return createH3(params.id, params.value);
     default:
-      throw new Error("不正なコンテントタイプです");
+      throw new Error("不明なコンテントタイプです");
   }
 };
