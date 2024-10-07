@@ -1,4 +1,5 @@
 import { createH1, createH2, createH3 } from "@/entities/postContants/heading";
+import { createParagraph } from "@/entities/postContants/paragraph";
 
 export type Content = {
   getId: () => number;
@@ -16,6 +17,8 @@ export const createContent = (params: ContentParams): Content => {
       return createH2(params.id, params.value);
     case "h3":
       return createH3(params.id, params.value);
+    case "paragraph":
+      return createParagraph(params.id, params.value);
     default:
       throw new Error("不明なコンテントタイプです");
   }

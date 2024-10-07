@@ -38,6 +38,17 @@ describe('エンティティ: コンテント', () => {
     expect(h3.getContentType()).toBe('h3');
   });
 
+  it('コンテント生成関数から段落を生成できる', () => {
+    const paragraph = createContent({
+      id: 1,
+      type: 'paragraph',
+      value: '段落',
+    });
+    expect(paragraph.getContent()).toBe('段落');
+    expect(paragraph.getContentType()).toBe('paragraph');
+    expect(paragraph.getId()).toBe(1);
+  });
+
   it('不正なコンテントタイプを指定するとエラーが発生する', () => {
     expect(() =>
       createContent({
