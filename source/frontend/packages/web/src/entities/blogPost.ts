@@ -14,7 +14,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
   const contents: Content[] = [];
 
   return {
-    getTitleText: () => title.getContent(),
+    getTitleText: () => title.getValue(),
     getTitleLevel: () => title.getLevel(),
     getContents: () => contents,
     addContent(content: Content) {

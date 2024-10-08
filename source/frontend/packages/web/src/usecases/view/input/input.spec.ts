@@ -44,7 +44,7 @@ describe('ユースケース: 投稿記事生成のための入力値', () => {
     expect(blogPost.getContents().length).toBe(5);
     blogPost.getContents().forEach((content, index) => {
       const contentForInput = input.getContents()[index];
-      expect(content.getContent()).toBe(contentForInput.contentValue);
+      expect(content.getValue()).toBe(contentForInput.contentValue);
       expect(content.getType()).toBe(contentForInput.type);
     });
   });

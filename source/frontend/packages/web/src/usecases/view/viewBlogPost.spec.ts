@@ -20,23 +20,23 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     expect(contents.length).toBe(5);
 
     expect(contents[0].getId()).toBe(1);
-    expect(contents[0].getText()).toBe('h2見出し1');
+    expect(contents[0].getValue()).toBe('h2見出し1');
     expect(contents[0].getType()).toBe('h2');
 
     expect(contents[1].getId()).toBe(2);
-    expect(contents[1].getText()).toBe('h3見出し1');
+    expect(contents[1].getValue()).toBe('h3見出し1');
     expect(contents[1].getType()).toBe('h3');
 
     expect(contents[2].getId()).toBe(3);
-    expect(contents[2].getText()).toBe('段落1');
+    expect(contents[2].getValue()).toBe('段落1');
     expect(contents[2].getType()).toBe('paragraph');
 
     expect(contents[3].getId()).toBe(4);
-    expect(contents[3].getText()).toBe('h3見出し2');
+    expect(contents[3].getValue()).toBe('h3見出し2');
     expect(contents[3].getType()).toBe('h3');
 
     expect(contents[4].getId()).toBe(5);
-    expect(contents[4].getText()).toBe('段落2');
+    expect(contents[4].getValue()).toBe('段落2');
     expect(contents[4].getType()).toBe('paragraph');
     expect(contents[4].getType()).toBe('paragraph');
   });

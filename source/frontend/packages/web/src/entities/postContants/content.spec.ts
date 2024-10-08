@@ -8,7 +8,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       type: ContentType.H2,
       value: 'h2見出し',
     }) as Heading;
-    expect(h2.getContent()).toBe('h2見出し');
+    expect(h2.getValue()).toBe('h2見出し');
     expect(h2.getLevel()).toBe(2);
     expect(h2.getId()).toBe(1);
     expect(h2.getType()).toBe('h2');
@@ -20,7 +20,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       type: ContentType.H3,
       value: 'h3見出し',
     }) as Heading;
-    expect(h3.getContent()).toBe('h3見出し');
+    expect(h3.getValue()).toBe('h3見出し');
     expect(h3.getLevel()).toBe(3);
     expect(h3.getId()).toBe(1);
     expect(h3.getType()).toBe('h3');
@@ -32,7 +32,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       type: ContentType.Paragraph,
       value: '段落',
     });
-    expect(paragraph.getContent()).toBe('段落');
+    expect(paragraph.getValue()).toBe('段落');
     expect(paragraph.getType()).toBe('paragraph');
     expect(paragraph.getId()).toBe(1);
   });

@@ -11,7 +11,7 @@ export const createContentByInput = (
 ): Content => {
   return {
     getId: () => id,
-    getContent: () => input.contentValue,
+    getValue: () => input.contentValue,
     getType: () => input.type,
   };
 };

@@ -7,7 +7,7 @@ export const createParagraph = (id: number, initialText: string): Paragraph => {
 
   return {
     getId: () => id,
-    getContent: () => text,
+    getValue: () => text,
     getType: () => 'paragraph',
   };
 };

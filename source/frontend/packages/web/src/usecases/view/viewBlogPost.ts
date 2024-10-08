@@ -10,14 +10,6 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
 
   return {
     getTitle: () => blogPost.getTitleText(),
-    getContents: () => {
-      return blogPost.getContents().map((content) => {
-        return {
-          getId: () => content.getId(),
-          getText: () => content.getContent(),
-          getType: () => content.getType(),
-        };
-      });
-    },
+    getContents: () => blogPost.getContents(),
   };
 };
