@@ -1,5 +1,6 @@
+import type { BlogPost } from '@/entities/blogPost';
 import { ContentType } from '@/entities/postContants/content';
-import type { ContentInput } from './content';
+import { createContentByInput, type ContentInput } from './content';
 
 export type ViewBlogPostInput = {
   getPostTitle: () => string;
@@ -8,6 +9,7 @@ export type ViewBlogPostInput = {
   addH3: (contentValue: string) => ViewBlogPostInput;
   addParagraph: (contentValue: string) => ViewBlogPostInput;
   setPostTitle: (postTitle: string) => ViewBlogPostInput;
+  injectionContentsTo: (blogPost: BlogPost) => void;
 };
 
 export const createViewBlogPostInput = (): ViewBlogPostInput => {
@@ -32,6 +34,13 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
     setPostTitle(newPostTitle: string) {
       postTitle = newPostTitle;
       return this;
+    },
+    injectionContentsTo(blogPost: BlogPost) {
+      contents.forEach((content) => {
+        blogPost.addContent(
+          createContentByInput(blogPost.getContents().length + 1, content),
+        );
+      });
     },
   };
 };
