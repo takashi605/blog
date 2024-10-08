@@ -1,5 +1,5 @@
-import { createH2, createH3 } from '@/entities/postContants/heading';
-import { createParagraph } from '@/entities/postContants/paragraph';
+import { createH2, createH3 } from './heading';
+import { createParagraph } from './paragraph';
 
 export const enum ContentType {
   H2 = 'h2',
