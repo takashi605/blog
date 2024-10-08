@@ -2,9 +2,9 @@ import type { BlogPost } from '@/entities/blogPost';
 import { createBlogPost } from '@/entities/blogPost';
 import { createContentByInput } from '@/usecases/view/input/content';
 import type { ViewBlogPostInput } from '@/usecases/view/input/input';
-import type { ViewBlogPostOutput } from '@/usecases/view/output';
+import type { ViewBlogPost } from '@/usecases/view/output';
 
-export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
+export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
   const blogPost: BlogPost = createBlogPost(input.getPostTitle());
 
   input.getContents().forEach((contentInput) => {

@@ -1,4 +1,4 @@
-export type ViewBlogPostOutput = {
+export type ViewBlogPost = {
   getTitle: () => string;
   getContents: () => {
     getId: () => number;

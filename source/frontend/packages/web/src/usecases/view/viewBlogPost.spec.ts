@@ -1,5 +1,5 @@
 import { createViewBlogPostInput } from './input/input';
-import type { ViewBlogPostOutput } from './output';
+import type { ViewBlogPost } from './output';
 import { viewBlogPost } from './viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
@@ -12,7 +12,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       .addH3('h3見出し2')
       .addParagraph('段落2');
 
-    const output: ViewBlogPostOutput = viewBlogPost(input);
+    const output: ViewBlogPost = viewBlogPost(input);
 
     expect(output.getTitle()).toBe('記事タイトル');
 
