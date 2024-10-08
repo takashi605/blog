@@ -1,5 +1,5 @@
 import { createBlogPost } from '@/entities/blogPost';
-import { createViewBlogPostInput } from './input';
+import { createViewBlogPostInput } from '@/usecases/view/input/input';
 
 describe('ユースケース: 投稿記事生成のための入力値', () => {
   it('メソッドチェーンによるファクトリ', () => {

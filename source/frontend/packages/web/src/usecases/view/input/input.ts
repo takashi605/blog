@@ -1,6 +1,9 @@
 import type { BlogPost } from '@/entities/blogPost';
 import { ContentType } from '@/entities/postContants/content';
-import { createContentByInput, type ContentInput } from './content';
+import {
+  createContentByInput,
+  type ContentInput,
+} from '@/usecases/view/input/content';
 
 export type ViewBlogPostInput = {
   getPostTitle: () => string;

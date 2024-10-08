@@ -1,5 +1,5 @@
+import { createBlogPost, type BlogPost } from '@/entities/blogPost';
 import { ContentType, createContent } from '@/entities/postContants/content';
-import { createBlogPost, type BlogPost } from './blogPost';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {

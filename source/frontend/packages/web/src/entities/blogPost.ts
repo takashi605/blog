@@ -1,5 +1,5 @@
 import type { Content } from '@/entities/postContants/content';
-import { createH1 } from './postContants/heading';
+import { createH1 } from '@/entities/postContants/heading';
 
 export type BlogPost = {
   getTitleText: () => string;

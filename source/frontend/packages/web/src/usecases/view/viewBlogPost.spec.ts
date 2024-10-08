@@ -1,6 +1,6 @@
-import { createViewBlogPostInput } from './input/input';
-import type { ViewBlogPost } from './output';
-import { viewBlogPost } from './viewBlogPost';
+import { createViewBlogPostInput } from '@/usecases/view/input/input';
+import type { ViewBlogPost } from '@/usecases/view/output';
+import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
