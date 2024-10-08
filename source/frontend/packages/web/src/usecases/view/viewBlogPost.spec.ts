@@ -14,7 +14,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
 
     const output: ViewBlogPostOutput = viewBlogPost(input);
 
-    expect(output.postTitle.getText()).toBe('記事タイトル');
+    expect(output.getTitle()).toBe('記事タイトル');
 
     const contents = output.getContents();
     expect(contents.length).toBe(5);

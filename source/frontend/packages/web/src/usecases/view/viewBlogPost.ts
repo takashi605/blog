@@ -14,10 +14,7 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostOutput => {
   });
 
   return {
-    postTitle: {
-      getText: () => blogPost.getTitleText(),
-      getLevel: () => blogPost.getTitleLevel(),
-    },
+    getTitle: () => blogPost.getTitleText(),
     getContents: () => {
       return blogPost.getContents().map((content) => {
         return {
