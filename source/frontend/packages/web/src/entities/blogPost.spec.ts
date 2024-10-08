@@ -29,7 +29,7 @@ describe('エンティティ: 投稿記事', () => {
     const blogPost: BlogPost = createBlogPost(title)
       .addContent(h2)
       .addContent(h3)
-      .addContent(paragraph1)
+      .addContent(paragraph1);
     const contents = blogPost.getContents();
     expect(contents.length).toBe(3);
 

@@ -1,4 +1,4 @@
-import type { ContentType } from "@/entities/postContants/content";
+import type { ContentType } from '@/entities/postContants/content';
 
 export type ContentInput = {
   type: ContentType;
@@ -11,4 +11,4 @@ export const createContentByInput = (id: number, input: ContentInput) => {
     getContent: () => input.contentValue,
     getContentType: () => input.type,
   };
-}
+};
