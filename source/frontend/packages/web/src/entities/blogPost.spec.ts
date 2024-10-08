@@ -34,15 +34,15 @@ describe('エンティティ: 投稿記事', () => {
     expect(contents.length).toBe(3);
 
     expect(contents[0].getContent()).toBe('h2見出し');
-    expect(contents[0].getContentType()).toBe('h2');
+    expect(contents[0].getType()).toBe('h2');
     expect(contents[0].getId()).toBe(1);
 
     expect(contents[1].getContent()).toBe('h3見出し');
-    expect(contents[1].getContentType()).toBe('h3');
+    expect(contents[1].getType()).toBe('h3');
     expect(contents[1].getId()).toBe(2);
 
     expect(contents[2].getContent()).toBe('段落');
-    expect(contents[2].getContentType()).toBe('paragraph');
+    expect(contents[2].getType()).toBe('paragraph');
     expect(contents[2].getId()).toBe(3);
   });
 });

@@ -8,6 +8,6 @@ export const createParagraph = (id: number, initialText: string): Paragraph => {
   return {
     getId: () => id,
     getContent: () => text,
-    getContentType: () => 'paragraph',
+    getType: () => 'paragraph',
   };
 };

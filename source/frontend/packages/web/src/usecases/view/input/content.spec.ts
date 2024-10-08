@@ -12,7 +12,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     };
     const content = createContentByInput(1, contentInput);
     expect(content.getContent()).toBe('h2見出し');
-    expect(content.getContentType()).toBe('h2');
+    expect(content.getType()).toBe('h2');
     expect(content.getId()).toBe(1);
   });
 });

@@ -15,7 +15,7 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
         return {
           getId: () => content.getId(),
           getText: () => content.getContent(),
-          getType: () => content.getContentType(),
+          getType: () => content.getType(),
         };
       });
     },

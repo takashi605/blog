@@ -27,6 +27,6 @@ const createHeading = (
     getId: () => id,
     getContent: () => text,
     getLevel: () => level,
-    getContentType: () => `h${level}`,
+    getType: () => `h${level}`,
   };
 };
