@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "fix": "prettier --write . && eslint . --fix",
-    "check": "prettier --check . && eslint . && tsc"
+    "check": "prettier --check . && eslint . && tsc --noEmit"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
