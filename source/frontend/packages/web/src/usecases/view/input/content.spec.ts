@@ -1,8 +1,8 @@
-import { ContentType } from '@/entities/postContants/content';
 import {
   createContentByInput,
   type ContentInput,
 } from '@/usecases/view/input/content';
+import { ContentType } from 'entities/src/postContents/content';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('id およびユースケースへの入力値からコンテントを生成できる', () => {
