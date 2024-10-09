@@ -1,5 +1,5 @@
-import { ContentType, createContent } from '@/entities/postContants/content';
-import type { Heading } from '@/entities/postContants/heading';
+import { ContentType, createContent } from './content';
+import type { Heading } from './heading';
 
 describe('エンティティ: 投稿記事のコンテント', () => {
   it('コンテント生成関数から h2 見出しを生成できる', () => {

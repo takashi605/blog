@@ -125,11 +125,11 @@ frontend-test:
 	$(MAKE) frontend-test-unit
 	$(MAKE) frontend-check
 frontend-check:
-	cd source/frontend/ && pnpm web run check
+	cd source/frontend/ && pnpm web run check && pnpm entities run check
 frontend-fix:
-	cd source/frontend && pnpm web run fix
+	cd source/frontend && pnpm web run fix && pnpm entities run fix
 frontend-test-unit:
-	cd source/frontend && pnpm web run test
+	cd source/frontend && pnpm web run test && pnpm entities run test
 
 ###
 ## e2e 系

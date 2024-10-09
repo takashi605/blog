@@ -1,4 +1,4 @@
-import type { Content } from '@/entities/postContants/content';
+import type { Content } from './content';
 
 export type Heading = Content & {
   getLevel: () => number;
