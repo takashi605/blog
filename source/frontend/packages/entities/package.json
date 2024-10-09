@@ -1,4 +1,11 @@
 {
   "name": "entities",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "fix": "prettier --write . && eslint . --fix",
+    "check": "prettier --check . && eslint . && tsc"
+  }
 }

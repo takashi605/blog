@@ -129,7 +129,7 @@ frontend-check:
 frontend-fix:
 	cd source/frontend && pnpm web run fix
 frontend-test-unit:
-	cd source/frontend && pnpm web run test
+	cd source/frontend && pnpm web run test && pnpm entities run test
 
 ###
 ## e2e 系
