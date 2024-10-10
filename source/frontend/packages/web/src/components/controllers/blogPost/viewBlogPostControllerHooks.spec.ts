@@ -1,9 +1,22 @@
+import { server } from '@/apiMock/server';
 import { useViewBlogPostController } from '@/components/controllers/blogPost/viewBlogPostControllerHooks';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
+
+beforeAll(() => {
+  server.listen();
+});
+afterEach(async () => {
+  server.resetHandlers();
+});
+afterAll(() => {
+  server.close();
+});
 
 describe('カスタムフック: useViewBlogPostController', () => {
-  it('記事タイトルが取得できる', () => {
+  it('記事タイトルが取得できる', async () => {
     const { result } = renderHook(() => useViewBlogPostController());
-    expect(result.current.title).toBe('記事タイトル');
+    await waitFor(() => {
+      expect(result.current.title).not.toBe('');
+    });
   });
 });

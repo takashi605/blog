@@ -1,7 +1,7 @@
 import { server } from '@/apiMock/server';
 import ViewBlogPostController from '@/components/controllers/blogPost/ViewBlogPostController';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 beforeAll(() => {
   server.listen();
@@ -14,10 +14,13 @@ afterAll(() => {
 });
 
 describe('コンポーネント: viewBlogPostController', () => {
-  it('記事タイトルが表示されている', () => {
+  it('記事タイトルが表示されている', async () => {
     render(<ViewBlogPostController />);
     const title = screen.getByRole('heading');
     expect(title).toBeInTheDocument();
-    expect(title.textContent).not.toBe('');
+
+    await waitFor(() => {
+      expect(title.textContent).not.toBe('');
+    });
   });
 });

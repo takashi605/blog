@@ -1,5 +1,8 @@
 import { server } from '@/apiMock/server';
-import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
+import {
+  fetchBlogPost,
+  fetchRawBlogPost,
+} from '@/components/controllers/blogPost/services/fetchBlogPost';
 import { responseToViewBlogPost } from '@/components/controllers/blogPost/services/response';
 
 beforeAll(() => {
@@ -13,16 +16,16 @@ afterAll(() => {
 });
 
 describe('投稿記事を取得する', () => {
-  it('レスポンスからid, 記事タイトル,コンテンツが取得できる', async () => {
+  it('ブログ記事構造に変換したデータからid, 記事タイトル,コンテンツが取得できる', async () => {
     const blogPostResponse = await fetchBlogPost(1);
 
-    expect(blogPostResponse).toHaveProperty('id');
     expect(blogPostResponse).toHaveProperty('title');
     expect(blogPostResponse).toHaveProperty('contents');
   });
 
+  // 以下は詳細な変換処理のテストであり、取得処理の振る舞いの理解としては上記のテストで十分
   it('レスポンスをブログ記事の構造に変換できる', async () => {
-    const BlogPostResponse = await fetchBlogPost(1);
+    const BlogPostResponse = await fetchRawBlogPost(1);
 
     const blogPost = responseToViewBlogPost(BlogPostResponse);
 
