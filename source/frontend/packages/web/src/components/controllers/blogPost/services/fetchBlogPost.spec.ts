@@ -1,5 +1,7 @@
 import { server } from '@/apiMock/server';
 import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
+import { createViewBlogPostInput } from '@/usecases/view/input/input';
+import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 beforeAll(() => {
   server.listen();
@@ -12,11 +14,50 @@ afterAll(() => {
 });
 
 describe('投稿記事を取得する', () => {
-  it('id, 記事タイトル,コンテンツが取得できる', async () => {
-    const blogPost = await fetchBlogPost(1);
+  it('レスポンスからid, 記事タイトル,コンテンツが取得できる', async () => {
+    const blogPostResponse = await fetchBlogPost(1);
 
-    expect(blogPost).toHaveProperty('id');
-    expect(blogPost).toHaveProperty('title');
-    expect(blogPost).toHaveProperty('contents');
+    expect(blogPostResponse).toHaveProperty('id');
+    expect(blogPostResponse).toHaveProperty('title');
+    expect(blogPostResponse).toHaveProperty('contents');
+  });
+
+  it('レスポンスをブログ記事の構造に変換できる', async () => {
+    const BlogPostResponse = await fetchBlogPost(1);
+
+    const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
+      BlogPostResponse.title,
+    );
+
+    BlogPostResponse.contents.forEach((content) => {
+      if (content.type === 'h2') {
+        viewBlogPostInput.addH2(content.value);
+      } else if (content.type === 'h3') {
+        viewBlogPostInput.addH3(content.value);
+      } else if (content.type === 'paragraph') {
+        viewBlogPostInput.addParagraph(content.value);
+      }
+    });
+
+    const blogPost = viewBlogPost(viewBlogPostInput);
+
+    expect(blogPost.title).toBe(BlogPostResponse.title);
+
+    if (
+      blogPost.contents.length === 0 ||
+      BlogPostResponse.contents.length === 0
+    ) {
+      throw new Error(
+        '投稿記事のテストデータにコンテンツが存在内ため正しくテストできません',
+      );
+    }
+
+    expect(blogPost.contents.length).toBe(BlogPostResponse.contents.length);
+
+    blogPost.contents.forEach((content, index) => {
+      expect(content.id).toBe(index + 1);
+      expect(content.value).toBe(BlogPostResponse.contents[index].value);
+      expect(content.type).toBe(BlogPostResponse.contents[index].type);
+    });
   });
 });
