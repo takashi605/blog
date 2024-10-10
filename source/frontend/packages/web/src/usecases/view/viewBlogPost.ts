@@ -9,7 +9,7 @@ export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
   input.injectionContentsTo(blogPost);
 
   return {
-    getTitle: () => blogPost.getTitleText(),
+    title: blogPost.getTitleText(),
     getContents: () => blogPost.getContents(),
   };
 };

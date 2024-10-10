@@ -1,5 +1,5 @@
 export type ViewBlogPost = {
-  getTitle: () => string;
+  title: string;
   getContents: () => {
     getId: () => number;
     getValue: () => string;
