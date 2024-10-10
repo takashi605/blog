@@ -1,11 +1,4 @@
-type BlogPostResponse = {
-  id: number;
-  title: string;
-  contents: {
-    type: string;
-    value: string;
-  }[];
-};
+import type { BlogPostResponse } from '@/components/controllers/blogPost/services/response';
 
 export const fetchBlogPost = async (id: number): Promise<BlogPostResponse> => {
   const response = await fetch(
