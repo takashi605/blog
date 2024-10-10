@@ -12,9 +12,11 @@ afterAll(() => {
 });
 
 describe('投稿記事を取得する', () => {
-  it('投稿記事のタイトルが取得できる', async () => {
+  it('id, 記事タイトル,コンテンツが取得できる', async () => {
     const blogPost = await fetchBlogPost(1);
 
+    expect(blogPost).toHaveProperty('id');
     expect(blogPost).toHaveProperty('title');
+    expect(blogPost).toHaveProperty('contents');
   });
 });
