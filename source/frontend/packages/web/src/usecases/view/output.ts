@@ -1,8 +1,8 @@
 export type ViewBlogPost = {
-  title: string;
-  contents: {
-    id: number;
-    value: string;
-    type: string;
-  }[];
+  readonly title: string;
+  readonly contents: ReadonlyArray<{
+    readonly id: number;
+    readonly value: string;
+    readonly type: string;
+  }>;
 };
