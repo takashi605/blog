@@ -19,9 +19,9 @@ export const responseToViewBlogPost = (
 ): ViewBlogPost => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
-  const blobPost = viewBlogPost(viewBlogPostInput);
+  const blogPost = viewBlogPost(viewBlogPostInput);
 
-  return blobPost;
+  return blogPost;
 };
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
