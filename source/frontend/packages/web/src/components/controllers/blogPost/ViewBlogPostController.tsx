@@ -1,7 +1,11 @@
+import { useViewBlogPostController } from '@/components/controllers/blogPost/viewBlogPostControllerHooks';
+
 function ViewBlogPostController() {
+  const { title } = useViewBlogPostController();
+
   return (
     <div>
-      <h1>記事タイトル</h1>
+      <h1>{title}</h1>
     </div>
   );
 }
