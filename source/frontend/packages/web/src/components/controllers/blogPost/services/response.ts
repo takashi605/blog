@@ -14,7 +14,27 @@ export type BlogPostResponse = {
   }[];
 };
 
-export const mapResponseContentToBlogPost = (
+export const responseToViewBlogPost = (
+  response: BlogPostResponse,
+): ViewBlogPost => {
+  const viewBlogPostInput = responseToViewBlogPostInput(response);
+
+  const blobPost = viewBlogPost(viewBlogPostInput);
+
+  return blobPost;
+};
+
+const responseToViewBlogPostInput = (response: BlogPostResponse) => {
+  const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
+    response.title,
+  );
+
+  mapResponseContentToBlogPost(response, viewBlogPostInput);
+
+  return viewBlogPostInput;
+};
+
+const mapResponseContentToBlogPost = (
   response: BlogPostResponse,
   viewBlogPostInput: ViewBlogPostInput,
 ) => {
@@ -27,18 +47,4 @@ export const mapResponseContentToBlogPost = (
       viewBlogPostInput.addParagraph(content.value);
     }
   });
-};
-
-export const responseToViewBlogPost = (
-  response: BlogPostResponse,
-): ViewBlogPost => {
-  const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
-    response.title,
-  );
-
-  mapResponseContentToBlogPost(response, viewBlogPostInput);
-
-  const blobPost = viewBlogPost(viewBlogPostInput);
-
-  return blobPost;
 };
