@@ -1,4 +1,9 @@
-import type { ViewBlogPostInput } from '@/usecases/view/input/input';
+import {
+  createViewBlogPostInput,
+  type ViewBlogPostInput,
+} from '@/usecases/view/input/input';
+import type { ViewBlogPost } from '@/usecases/view/output';
+import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
   id: number;
@@ -22,4 +27,18 @@ export const mapResponseContentToBlogPost = (
       viewBlogPostInput.addParagraph(content.value);
     }
   });
+};
+
+export const responseToViewBlogPost = (
+  response: BlogPostResponse,
+): ViewBlogPost => {
+  const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
+    response.title,
+  );
+
+  mapResponseContentToBlogPost(response, viewBlogPostInput);
+
+  const blobPost = viewBlogPost(viewBlogPostInput);
+
+  return blobPost;
 };

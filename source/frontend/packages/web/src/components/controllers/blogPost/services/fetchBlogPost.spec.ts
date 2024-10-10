@@ -1,8 +1,6 @@
 import { server } from '@/apiMock/server';
 import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
-import { mapResponseContentToBlogPost } from '@/components/controllers/blogPost/services/response';
-import { createViewBlogPostInput } from '@/usecases/view/input/input';
-import { viewBlogPost } from '@/usecases/view/viewBlogPost';
+import { responseToViewBlogPost } from '@/components/controllers/blogPost/services/response';
 
 beforeAll(() => {
   server.listen();
@@ -26,13 +24,7 @@ describe('投稿記事を取得する', () => {
   it('レスポンスをブログ記事の構造に変換できる', async () => {
     const BlogPostResponse = await fetchBlogPost(1);
 
-    const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
-      BlogPostResponse.title,
-    );
-
-    mapResponseContentToBlogPost(BlogPostResponse, viewBlogPostInput);
-
-    const blogPost = viewBlogPost(viewBlogPostInput);
+    const blogPost = responseToViewBlogPost(BlogPostResponse);
 
     expect(blogPost.title).toBe(BlogPostResponse.title);
 
