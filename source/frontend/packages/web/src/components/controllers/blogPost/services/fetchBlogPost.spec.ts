@@ -1,5 +1,6 @@
 import { server } from '@/apiMock/server';
 import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
+import { mapResponseContentToBlogPost } from '@/components/controllers/blogPost/services/response';
 import { createViewBlogPostInput } from '@/usecases/view/input/input';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
@@ -29,15 +30,7 @@ describe('投稿記事を取得する', () => {
       BlogPostResponse.title,
     );
 
-    BlogPostResponse.contents.forEach((content) => {
-      if (content.type === 'h2') {
-        viewBlogPostInput.addH2(content.value);
-      } else if (content.type === 'h3') {
-        viewBlogPostInput.addH3(content.value);
-      } else if (content.type === 'paragraph') {
-        viewBlogPostInput.addParagraph(content.value);
-      }
-    });
+    mapResponseContentToBlogPost(BlogPostResponse, viewBlogPostInput);
 
     const blogPost = viewBlogPost(viewBlogPostInput);
 
