@@ -12,5 +12,8 @@ export const useViewBlogPostController = (blogPostId: number) => {
   useEffect(() => {
     execFetch();
   }, [execFetch]);
-  return { title: blogPost?.title ?? '' };
+  return {
+    title: blogPost?.title ?? '',
+    contents: blogPost?.contents ?? [],
+  };
 };

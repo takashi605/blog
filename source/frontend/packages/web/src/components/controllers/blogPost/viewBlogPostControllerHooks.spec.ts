@@ -17,9 +17,28 @@ describe('カスタムフック: useViewBlogPostController', () => {
     const { result } = renderHook(() => useViewBlogPostController(1));
     await waitFor(() => {
       if (result.current === null) {
-        throw new Error('blogPost is null');
+        throw new Error('投稿記事が取得できませんでした');
       }
       expect(result.current.title).not.toBe('');
+    });
+  });
+
+  describe('コンテンツ', () => {
+    it('h2 が取得できる', async () => {
+      const { result } = renderHook(() => useViewBlogPostController(1));
+      await waitFor(() => {
+        if (result.current === null) {
+          throw new Error('投稿記事が取得できませんでした');
+        }
+        expect(result.current.contents).not.toHaveLength(0);
+        expectContainH2TypeContent();
+
+        function expectContainH2TypeContent() {
+          expect(
+            result.current.contents.some((content) => content.type === 'h2'),
+          ).toBe(true);
+        }
+      });
     });
   });
 });
