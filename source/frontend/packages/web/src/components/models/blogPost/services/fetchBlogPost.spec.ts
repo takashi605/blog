@@ -2,8 +2,8 @@ import { server } from '@/apiMock/server';
 import {
   fetchBlogPost,
   fetchRawBlogPost,
-} from '@/components/controllers/blogPost/services/fetchBlogPost';
-import { responseToViewBlogPost } from '@/components/controllers/blogPost/services/response';
+} from '@/components/models/blogPost/services/fetchBlogPost';
+import { responseToViewBlogPost } from '@/components/models/blogPost/services/response';
 
 beforeAll(() => {
   server.listen();

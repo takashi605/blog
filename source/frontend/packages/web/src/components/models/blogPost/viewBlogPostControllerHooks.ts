@@ -1,4 +1,4 @@
-import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
+import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import type { ViewBlogPost } from '@/usecases/view/output';
 import { useCallback, useEffect, useState } from 'react';
 

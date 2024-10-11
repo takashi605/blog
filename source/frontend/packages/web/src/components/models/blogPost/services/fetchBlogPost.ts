@@ -1,7 +1,7 @@
 import {
   responseToViewBlogPost,
   type BlogPostResponse,
-} from '@/components/controllers/blogPost/services/response';
+} from '@/components/models/blogPost/services/response';
 import type { ViewBlogPost } from '@/usecases/view/output';
 
 export const fetchBlogPost = async (id: number): Promise<ViewBlogPost> => {
