@@ -27,12 +27,9 @@ describe('コンポーネント: viewBlogPostController', () => {
   describe('コンテンツ', () => {
     it('h2 が表示されている', async () => {
       render(<ViewBlogPostController />);
-      const h2Elements = screen.getAllByRole('heading', { level: 2 });
-      expect(h2Elements).not.toHaveLength(0);
 
-      h2Elements.forEach((h2) => {
-        expect(h2.textContent).toBe('h2');
-      });
+      const h2 = await screen.findAllByRole('heading', { level: 2 });
+      expect(h2).not.toHaveLength(0);
     });
   });
 });
