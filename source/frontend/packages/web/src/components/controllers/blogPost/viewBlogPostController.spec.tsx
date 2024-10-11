@@ -31,5 +31,19 @@ describe('コンポーネント: viewBlogPostController', () => {
       const h2 = await screen.findAllByRole('heading', { level: 2 });
       expect(h2).not.toHaveLength(0);
     });
+
+    it('h3 が表示されている', async () => {
+      render(<ViewBlogPostController />);
+
+      const h3 = await screen.findAllByRole('heading', { level: 3 });
+      expect(h3).not.toHaveLength(0);
+    });
+
+    it('p が表示されている', async () => {
+      render(<ViewBlogPostController />);
+
+      const p = await screen.findAllByRole('paragraph');
+      expect(p).not.toHaveLength(0);
+    });
   });
 });
