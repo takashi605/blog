@@ -1,12 +1,13 @@
 import { fetchBlogPost } from '@/components/controllers/blogPost/services/fetchBlogPost';
+import type { ViewBlogPost } from '@/usecases/view/output';
 import { useState } from 'react';
 
 export const useViewBlogPostController = () => {
-  const [title, setTitle] = useState('');
+  const [blogPost, setBlogPost] = useState<ViewBlogPost | null>(null);
   const execFetch = async () => {
     const blogPost = await fetchBlogPost(1);
-    setTitle(blogPost.title);
+    setBlogPost(blogPost);
   };
   execFetch();
-  return { title };
+  return { title: blogPost?.title ?? '' };
 };

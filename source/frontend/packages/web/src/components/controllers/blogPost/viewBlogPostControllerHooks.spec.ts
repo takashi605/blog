@@ -16,6 +16,9 @@ describe('カスタムフック: useViewBlogPostController', () => {
   it('記事タイトルが取得できる', async () => {
     const { result } = renderHook(() => useViewBlogPostController());
     await waitFor(() => {
+      if (result.current === null) {
+        throw new Error('blogPost is null');
+      }
       expect(result.current.title).not.toBe('');
     });
   });
