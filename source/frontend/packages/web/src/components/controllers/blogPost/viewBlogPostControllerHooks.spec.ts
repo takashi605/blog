@@ -14,7 +14,7 @@ afterAll(() => {
 
 describe('カスタムフック: useViewBlogPostController', () => {
   it('記事タイトルが取得できる', async () => {
-    const { result } = renderHook(() => useViewBlogPostController());
+    const { result } = renderHook(() => useViewBlogPostController(1));
     await waitFor(() => {
       if (result.current === null) {
         throw new Error('blogPost is null');

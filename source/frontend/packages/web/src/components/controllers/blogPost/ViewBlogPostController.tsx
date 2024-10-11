@@ -1,7 +1,7 @@
 import { useViewBlogPostController } from '@/components/controllers/blogPost/viewBlogPostControllerHooks';
 
 function ViewBlogPostController() {
-  const { title } = useViewBlogPostController();
+  const { title } = useViewBlogPostController(1);
 
   return (
     <div>
