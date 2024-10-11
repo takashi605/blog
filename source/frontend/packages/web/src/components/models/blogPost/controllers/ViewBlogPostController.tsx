@@ -1,5 +1,10 @@
 import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
 
+export type ContentProps = {
+  type: string;
+  value: string;
+};
+
 function ViewBlogPostController() {
   const { title, contents } = useViewBlogPostController(1);
 

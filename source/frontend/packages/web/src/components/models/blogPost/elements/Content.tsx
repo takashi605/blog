@@ -1,7 +1,4 @@
-type ContentProps = {
-  type: string;
-  value: string;
-};
+import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
 
 function Content({ type, value }: ContentProps) {
   return type === 'h2' ? (
