@@ -1,4 +1,4 @@
-import { useViewBlogPostController } from '@/components/models/blogPost/viewBlogPostControllerHooks';
+import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
 
 function ViewBlogPostController() {
   const { title, contents } = useViewBlogPostController(1);

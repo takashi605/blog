@@ -1,5 +1,5 @@
 import { server } from '@/apiMock/server';
-import { useViewBlogPostController } from '@/components/models/blogPost/viewBlogPostControllerHooks';
+import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
 import { renderHook, waitFor } from '@testing-library/react';
 
 beforeAll(() => {
