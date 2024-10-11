@@ -1,5 +1,6 @@
 import { server } from '@/apiMock/server';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
+import Content from '@/components/models/blogPost/elements/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
@@ -13,9 +14,12 @@ afterAll(() => {
   server.close();
 });
 
+const renderTestComponent = () =>
+  render(<ViewBlogPostController ContentComponent={Content} />);
+
 describe('コンポーネント: viewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {
-    render(<ViewBlogPostController />);
+    renderTestComponent();
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
 
@@ -24,23 +28,23 @@ describe('コンポーネント: viewBlogPostController', () => {
     });
   });
 
-  describe('コンテンツ', () => {
+  describe('Content コンポーネントとの結合テスト', () => {
     it('h2 が表示されている', async () => {
-      render(<ViewBlogPostController />);
+      renderTestComponent();
 
       const h2 = await screen.findAllByRole('heading', { level: 2 });
       expect(h2).not.toHaveLength(0);
     });
 
     it('h3 が表示されている', async () => {
-      render(<ViewBlogPostController />);
+      renderTestComponent();
 
       const h3 = await screen.findAllByRole('heading', { level: 3 });
       expect(h3).not.toHaveLength(0);
     });
 
     it('p が表示されている', async () => {
-      render(<ViewBlogPostController />);
+      renderTestComponent();
 
       const p = await screen.findAllByRole('paragraph');
       expect(p).not.toHaveLength(0);
