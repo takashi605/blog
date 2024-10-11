@@ -14,30 +14,29 @@ describe('ユースケース: 投稿記事の閲覧', () => {
 
     const output: ViewBlogPost = viewBlogPost(input);
 
-    expect(output.getTitle()).toBe('記事タイトル');
+    expect(output.title).toBe('記事タイトル');
 
-    const contents = output.getContents();
+    const contents = output.contents;
     expect(contents.length).toBe(5);
 
-    expect(contents[0].getId()).toBe(1);
-    expect(contents[0].getValue()).toBe('h2見出し1');
-    expect(contents[0].getType()).toBe('h2');
+    expect(contents[0].id).toBe(1);
+    expect(contents[0].value).toBe('h2見出し1');
+    expect(contents[0].type).toBe('h2');
 
-    expect(contents[1].getId()).toBe(2);
-    expect(contents[1].getValue()).toBe('h3見出し1');
-    expect(contents[1].getType()).toBe('h3');
+    expect(contents[1].id).toBe(2);
+    expect(contents[1].value).toBe('h3見出し1');
+    expect(contents[1].type).toBe('h3');
 
-    expect(contents[2].getId()).toBe(3);
-    expect(contents[2].getValue()).toBe('段落1');
-    expect(contents[2].getType()).toBe('paragraph');
+    expect(contents[2].id).toBe(3);
+    expect(contents[2].value).toBe('段落1');
+    expect(contents[2].type).toBe('paragraph');
 
-    expect(contents[3].getId()).toBe(4);
-    expect(contents[3].getValue()).toBe('h3見出し2');
-    expect(contents[3].getType()).toBe('h3');
+    expect(contents[3].id).toBe(4);
+    expect(contents[3].value).toBe('h3見出し2');
+    expect(contents[3].type).toBe('h3');
 
-    expect(contents[4].getId()).toBe(5);
-    expect(contents[4].getValue()).toBe('段落2');
-    expect(contents[4].getType()).toBe('paragraph');
-    expect(contents[4].getType()).toBe('paragraph');
+    expect(contents[4].id).toBe(5);
+    expect(contents[4].value).toBe('段落2');
+    expect(contents[4].type).toBe('paragraph');
   });
 });
