@@ -1,5 +1,7 @@
+import { server as mockServer } from '@/apiMock/server';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { useEffect } from 'react';
 
 // フォントの定義
 const inter = Inter({ subsets: ['latin'] });
@@ -8,6 +10,8 @@ export const metadata: Metadata = {
   title: 'ブログ',
   description: 'ブログサイト',
 };
+
+mockServer.listen();
 
 export default function RootLayout({
   children,
