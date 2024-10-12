@@ -1,7 +1,7 @@
-import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
+import type { ContentElementProps } from '@/components/models/blogPost/ui/contents/Content';
 
-export function Paragraph({ value }: ContentProps) {
-  return <p>{value}</p>;
+export function Paragraph({ children }: ContentElementProps) {
+  return <p>{children}</p>;
 }
 
 export default Paragraph;

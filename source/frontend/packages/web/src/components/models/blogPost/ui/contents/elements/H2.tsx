@@ -1,7 +1,7 @@
-import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
+import type { ContentElementProps } from '@/components/models/blogPost/ui/contents/Content';
 
-export function H2({ value }: ContentProps) {
-  return <h2>{value}</h2>;
+export function H2({ children }: ContentElementProps) {
+  return <h2>{children}</h2>;
 }
 
 export default H2;

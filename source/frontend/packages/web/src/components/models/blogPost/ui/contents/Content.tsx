@@ -3,13 +3,17 @@ import H2 from '@/components/models/blogPost/ui/contents/elements/H2';
 import H3 from '@/components/models/blogPost/ui/contents/elements/H3';
 import Paragraph from '@/components/models/blogPost/ui/contents/elements/Paragraph';
 
+export type ContentElementProps = {
+  children: string;
+};
+
 function ContentRenderer({ type, value }: ContentProps) {
   return type === 'h2' ? (
-    <H2 type={type} value={value} />
+    <H2>{value}</H2>
   ) : type === 'h3' ? (
-    <H3 type={type} value={value} />
+    <H3>{value}</H3>
   ) : type === 'paragraph' ? (
-    <Paragraph type={type} value={value} />
+    <Paragraph>{value}</Paragraph>
   ) : null;
 }
 

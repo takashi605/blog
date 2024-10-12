@@ -1,7 +1,7 @@
-import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
+import type { ContentElementProps } from '@/components/models/blogPost/ui/contents/Content';
 
-export function H3({ value }: ContentProps) {
-  return <h3>{value}</h3>;
+export function H3({ children }: ContentElementProps) {
+  return <h3>{children}</h3>;
 }
 
 export default H3;
