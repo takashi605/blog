@@ -1,6 +1,6 @@
 import { server } from '@/apiMock/server';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
-import Content from '@/components/models/blogPost/elements/Content';
+import ContentRenderer from '@/components/models/blogPost/elements/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
@@ -15,7 +15,7 @@ afterAll(() => {
 });
 
 const renderTestComponent = () =>
-  render(<ViewBlogPostController ContentComponent={Content} />);
+  render(<ViewBlogPostController ContentComponent={ContentRenderer} />);
 
 describe('コンポーネント: viewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {

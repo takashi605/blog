@@ -1,5 +1,4 @@
 import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
-import React from 'react';
 
 export type ContentProps = {
   type: string;

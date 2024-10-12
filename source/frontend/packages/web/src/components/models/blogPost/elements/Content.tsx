@@ -1,6 +1,6 @@
 import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
 
-function Content({ type, value }: ContentProps) {
+function ContentRenderer({ type, value }: ContentProps) {
   return type === 'h2' ? (
     <h2>{value}</h2>
   ) : type === 'h3' ? (
@@ -10,4 +10,4 @@ function Content({ type, value }: ContentProps) {
   ) : null;
 }
 
-export default Content;
+export default ContentRenderer;
