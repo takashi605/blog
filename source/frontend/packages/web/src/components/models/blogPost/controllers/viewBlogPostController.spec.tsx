@@ -1,4 +1,4 @@
-import { mockApiForServer } from '@/apiMock/server';
+import { mockApiForServer } from '@/apiMock/serverForNode';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 import '@testing-library/jest-dom';

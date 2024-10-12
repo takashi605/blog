@@ -1,4 +1,4 @@
-import { mockApiForServer } from '@/apiMock/server';
+import { mockApiForServer } from '@/apiMock/serverForNode';
 import {
   fetchBlogPost,
   fetchRawBlogPost,

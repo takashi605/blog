@@ -1,4 +1,4 @@
-import { mockApiForServer } from '@/apiMock/server';
+import { mockApiForServer } from '@/apiMock/serverForNode';
 import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
 import { renderHook, waitFor } from '@testing-library/react';
 

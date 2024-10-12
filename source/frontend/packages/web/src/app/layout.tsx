@@ -1,4 +1,4 @@
-import { mockApiForServer as mockServer } from '@/apiMock/server';
+import { mockApiForServer as mockServer } from '@/apiMock/serverForNode';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
