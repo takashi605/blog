@@ -1,6 +1,6 @@
 import { server } from '@/apiMock/server';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
-import ContentRenderer from '@/components/models/blogPost/elements/Content';
+import ContentRenderer from '@/components/models/blogPost/elements/contents/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
