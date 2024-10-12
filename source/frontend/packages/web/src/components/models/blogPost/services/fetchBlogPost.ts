@@ -13,7 +13,7 @@ export const fetchRawBlogPost = async (
   id: number,
 ): Promise<BlogPostResponse> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/blog/post/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${id}`,
   );
   return response.json();
 };

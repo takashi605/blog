@@ -15,6 +15,7 @@ export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
 
   return (
     <div>
+      <p>test</p>
       <ViewBlogPostController
         blogPost={blogPostResponse}
         BlogPostTitleComponent={BlogPostTitle}
