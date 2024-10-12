@@ -1,4 +1,6 @@
+import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 
 type ViewBlogPostParams = {
   params: {
@@ -12,7 +14,10 @@ export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
 
   return (
     <div>
-      <h1>{blogPostResponse.title}</h1>
+      <ViewBlogPostController
+        blogPost={blogPostResponse}
+        ContentComponent={ContentRenderer}
+      />
     </div>
   );
 }
