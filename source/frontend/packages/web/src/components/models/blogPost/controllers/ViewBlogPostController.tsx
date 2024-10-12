@@ -6,7 +6,7 @@ export type ContentProps = {
   value: string;
 };
 
-type ContentComponentType = React.ComponentType<ContentProps>;
+type ContentComponentType = (props: ContentProps) => JSX.Element | null;
 
 function ViewBlogPostController({
   ContentComponent,
