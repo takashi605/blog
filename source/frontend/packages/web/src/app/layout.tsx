@@ -1,4 +1,3 @@
-import { mockApiForServer as mockServer } from '@/apiMock/serverForNode';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
@@ -9,8 +8,6 @@ export const metadata: Metadata = {
   title: 'ブログ',
   description: 'ブログサイト',
 };
-
-mockServer.listen();
 
 export default function RootLayout({
   children,
