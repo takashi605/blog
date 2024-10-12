@@ -1,15 +1,18 @@
+import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+
 type ViewBlogPostParams = {
   params: {
     id: number;
   };
 };
 
-export default function ViewBlogPost({ params }: ViewBlogPostParams) {
+export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
   const { id: postId } = params;
+  const blogPostResponse = await fetchBlogPost(postId);
 
   return (
     <div>
-      <h1>Post {postId}</h1>
+      <h1>{blogPostResponse.title}</h1>
     </div>
   );
 }
