@@ -7,16 +7,24 @@ export type ContentProps = {
 
 type ContentComponentType = (props: ContentProps) => JSX.Element | null;
 
+export type BlogPostTitleProps = {
+  children: React.ReactNode;
+};
+
+type BlogPostTitleComponent = (props: BlogPostTitleProps) => JSX.Element | null;
+
 function ViewBlogPostController({
   blogPost,
+  BlogPostTitleComponent,
   ContentComponent,
 }: {
   blogPost: ViewBlogPost | null;
+  BlogPostTitleComponent: BlogPostTitleComponent;
   ContentComponent: ContentComponentType;
 }) {
   return (
     <div>
-      <h1>{blogPost?.title}</h1>
+      <BlogPostTitleComponent>{blogPost?.title}</BlogPostTitleComponent>
       {blogPost?.contents.map((content) => (
         <ContentComponent
           key={content.id}

@@ -1,6 +1,7 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+import BlogPostTitle from '@/components/models/blogPost/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 import type { ViewBlogPost } from '@/usecases/view/output';
 import '@testing-library/jest-dom';
@@ -37,6 +38,7 @@ function ViewBlogPostControllerWithDependencies() {
   return (
     <ViewBlogPostController
       blogPost={blogPost}
+      BlogPostTitleComponent={BlogPostTitle}
       ContentComponent={ContentRenderer}
     />
   );
