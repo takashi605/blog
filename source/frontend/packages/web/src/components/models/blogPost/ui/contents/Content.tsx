@@ -8,13 +8,16 @@ export type ContentElementProps = {
 };
 
 function ContentRenderer({ type, value }: ContentProps) {
-  return type === 'h2' ? (
-    <H2>{value}</H2>
-  ) : type === 'h3' ? (
-    <H3>{value}</H3>
-  ) : type === 'paragraph' ? (
-    <Paragraph>{value}</Paragraph>
-  ) : null;
+  switch (type) {
+    case 'h2':
+      return <H2>{value}</H2>;
+    case 'h3':
+      return <H3>{value}</H3>;
+    case 'paragraph':
+      return <Paragraph>{value}</Paragraph>;
+    default:
+      return null;
+  }
 }
 
 export default ContentRenderer;
