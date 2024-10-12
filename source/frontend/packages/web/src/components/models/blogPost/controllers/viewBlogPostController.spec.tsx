@@ -1,17 +1,17 @@
-import { server } from '@/apiMock/server';
+import { mockApiForServer } from '@/apiMock/server';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
 beforeAll(() => {
-  server.listen();
+  mockApiForServer.listen();
 });
 afterEach(async () => {
-  server.resetHandlers();
+  mockApiForServer.resetHandlers();
 });
 afterAll(() => {
-  server.close();
+  mockApiForServer.close();
 });
 
 const renderTestComponent = () =>

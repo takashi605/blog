@@ -1,7 +1,6 @@
-import { server as mockServer } from '@/apiMock/server';
+import { mockApiForServer as mockServer } from '@/apiMock/server';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { useEffect } from 'react';
 
 // フォントの定義
 const inter = Inter({ subsets: ['latin'] });
