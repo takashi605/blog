@@ -1,8 +1,11 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
+import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
+import type { ViewBlogPost } from '@/usecases/view/output';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
+import { useCallback, useEffect, useState } from 'react';
 
 beforeAll(() => {
   mockApiForServer.listen();
@@ -15,7 +18,29 @@ afterAll(() => {
 });
 
 const renderTestComponent = () =>
-  render(<ViewBlogPostController ContentComponent={ContentRenderer} />);
+  render(<ViewBlogPostControllerWithDependencies />);
+
+// テスト対象コンポーネントと依存するコンポーネントやロジックを
+// まとめたコンポーネント
+function ViewBlogPostControllerWithDependencies() {
+  const [blogPost, setBlogPost] = useState<ViewBlogPost | null>(null);
+
+  const execFetch = useCallback(async () => {
+    const blogPost = await fetchBlogPost(1);
+    setBlogPost(blogPost);
+  }, []);
+
+  useEffect(() => {
+    execFetch();
+  }, [execFetch]);
+
+  return (
+    <ViewBlogPostController
+      blogPost={blogPost}
+      ContentComponent={ContentRenderer}
+    />
+  );
+}
 
 describe('コンポーネント: viewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {

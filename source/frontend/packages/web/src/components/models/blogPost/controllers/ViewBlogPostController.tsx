@@ -1,4 +1,4 @@
-import { useViewBlogPostController } from '@/components/models/blogPost/controllers/viewBlogPostControllerHooks';
+import type { ViewBlogPost } from '@/usecases/view/output';
 
 export type ContentProps = {
   type: string;
@@ -8,16 +8,16 @@ export type ContentProps = {
 type ContentComponentType = (props: ContentProps) => JSX.Element | null;
 
 function ViewBlogPostController({
+  blogPost,
   ContentComponent,
 }: {
+  blogPost: ViewBlogPost | null;
   ContentComponent: ContentComponentType;
 }) {
-  const { title, contents } = useViewBlogPostController(1);
-
   return (
     <div>
-      <h1>{title}</h1>
-      {contents.map((content) => (
+      <h1>{blogPost?.title}</h1>
+      {blogPost?.contents.map((content) => (
         <ContentComponent
           key={content.id}
           type={content.type}
