@@ -18,9 +18,9 @@ export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
     <div>
       <ViewBlogPostController
         blogPost={blogPostResponse}
-        BlogPostTitleComponent={BlogPostTitle}
-        BlogPostDateComponent={BlogPostDate}
-        ContentComponent={ContentRenderer}
+        Title={BlogPostTitle}
+        Date={BlogPostDate}
+        Content={ContentRenderer}
       />
     </div>
   );

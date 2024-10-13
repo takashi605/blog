@@ -39,9 +39,9 @@ function ViewBlogPostControllerWithDependencies() {
   return (
     <ViewBlogPostController
       blogPost={blogPost}
-      BlogPostTitleComponent={BlogPostTitle}
-      ContentComponent={ContentRenderer}
-      BlogPostDateComponent={BlogPostDate}
+      Title={BlogPostTitle}
+      Content={ContentRenderer}
+      Date={BlogPostDate}
     />
   );
 }
