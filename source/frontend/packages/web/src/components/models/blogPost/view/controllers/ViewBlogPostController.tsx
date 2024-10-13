@@ -4,6 +4,7 @@ import type {
   BlogPostTitleProps,
 } from '@/components/models/blogPost/view/controllers/types';
 import type { ViewBlogPost } from '@/usecases/view/output';
+import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
   blogPost: ViewBlogPost | null;
@@ -24,17 +25,34 @@ function ViewBlogPostController({
   Content,
 }: ViewBlogPostControllerProps) {
   return (
-    <div>
-      <div>
+    <article className={styles.article}>
+      <div className={styles.datesWrapper}>
         <Date label="投稿日" date="2024/10/03" />
         <Date label="更新日" date="2024/10/04" />
       </div>
-      <Title>{blogPost?.title}</Title>
+      <div className={styles.blogTitle}>
+        <Title>{blogPost?.title}</Title>
+      </div>
       {blogPost?.contents.map((content) => (
-        <Content key={content.id} type={content.type} value={content.value} />
+        <div key={content.id} className={generateContentClass(content.type)}>
+          <Content type={content.type} value={content.value} />
+        </div>
       ))}
-    </div>
+    </article>
   );
 }
 
 export default ViewBlogPostController;
+
+function generateContentClass(type: string): string | undefined {
+  switch (type) {
+    case 'paragraph':
+      return styles.paragraph;
+    case 'h2':
+      return styles.h2;
+    case 'h3':
+      return styles.h3;
+    default:
+      return undefined;
+  }
+}
