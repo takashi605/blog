@@ -11,7 +11,7 @@ export type BlogPostTitleProps = {
   children: React.ReactNode;
 };
 
-type BlogPostTitleComponent = (props: BlogPostTitleProps) => JSX.Element | null;
+type BlogPostTitleComponent = (props: BlogPostTitleProps) => JSX.Element;
 
 export type BlogPostDateProps = {
   label: string;
