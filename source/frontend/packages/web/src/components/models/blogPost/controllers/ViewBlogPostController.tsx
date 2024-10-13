@@ -1,3 +1,4 @@
+import BlogPostDate from '@/components/models/blogPost/ui/BlogPostDate';
 import type { ViewBlogPost } from '@/usecases/view/output';
 
 export type ContentProps = {
@@ -25,12 +26,8 @@ function ViewBlogPostController({
   return (
     <div>
       <div>
-        <p>
-          投稿日:<time dateTime="2024/10/03">2024/10/03</time>
-        </p>
-        <p>
-          更新日:<time dateTime="2024/10/04">2023/10/04</time>
-        </p>
+        <BlogPostDate label="投稿日" date="2024/10/03" />
+        <BlogPostDate label="更新日" date="2024/10/04" />
       </div>
       <BlogPostTitleComponent>{blogPost?.title}</BlogPostTitleComponent>
       {blogPost?.contents.map((content) => (
