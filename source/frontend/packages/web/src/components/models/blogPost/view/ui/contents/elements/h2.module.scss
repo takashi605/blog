@@ -1,0 +1,19 @@
+.h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+
+  width: 60%;
+  max-width: 600px;
+
+  padding: 15px 30px;
+
+  background: linear-gradient(
+    50deg,
+    #000 0%,
+    #000 60%,
+    #8a1d36 92%,
+    #ac373a 100%
+  );
+  border-radius: 10px;
+}
