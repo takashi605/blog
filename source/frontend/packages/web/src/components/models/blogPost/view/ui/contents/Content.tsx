@@ -1,7 +1,7 @@
-import type { ContentProps } from '@/components/models/blogPost/controllers/ViewBlogPostController';
-import H2 from '@/components/models/blogPost/ui/contents/elements/H2';
-import H3 from '@/components/models/blogPost/ui/contents/elements/H3';
-import Paragraph from '@/components/models/blogPost/ui/contents/elements/Paragraph';
+import type { ContentProps } from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
+import H2 from '@/components/models/blogPost/view/ui/contents/elements/H2';
+import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
+import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
 
 export type ContentElementProps = {
   children: string;

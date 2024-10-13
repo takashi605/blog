@@ -1,4 +1,4 @@
-import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
+import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
