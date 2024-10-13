@@ -1,25 +1,5 @@
 import type { ViewBlogPost } from '@/usecases/view/output';
 
-export type ContentProps = {
-  type: string;
-  value: string;
-};
-
-type ContentComponentType = (props: ContentProps) => JSX.Element | null;
-
-export type BlogPostTitleProps = {
-  children: React.ReactNode;
-};
-
-type BlogPostTitleComponent = (props: BlogPostTitleProps) => JSX.Element;
-
-export type BlogPostDateProps = {
-  label: string;
-  date: string;
-};
-
-type BlogPostDateComponent = (props: BlogPostDateProps) => JSX.Element;
-
 function ViewBlogPostController({
   blogPost,
   BlogPostTitleComponent,
@@ -48,5 +28,22 @@ function ViewBlogPostController({
     </div>
   );
 }
+
+export type ContentProps = {
+  type: string;
+  value: string;
+};
+type ContentComponentType = (props: ContentProps) => JSX.Element | null;
+
+export type BlogPostTitleProps = {
+  children: React.ReactNode;
+};
+type BlogPostTitleComponent = (props: BlogPostTitleProps) => JSX.Element;
+
+export type BlogPostDateProps = {
+  label: string;
+  date: string;
+};
+type BlogPostDateComponent = (props: BlogPostDateProps) => JSX.Element;
 
 export default ViewBlogPostController;
