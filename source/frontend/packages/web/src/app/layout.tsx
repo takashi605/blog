@@ -1,3 +1,4 @@
+import Header from '@/components/topLayout/header/Header';
 import 'destyle.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -17,7 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
