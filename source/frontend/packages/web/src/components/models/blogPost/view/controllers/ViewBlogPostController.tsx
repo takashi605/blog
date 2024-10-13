@@ -33,7 +33,6 @@ function ViewBlogPostController({
       {blogPost?.contents.map((content) => (
         <Content key={content.id} type={content.type} value={content.value} />
       ))}
-      about:blank#blocked
     </div>
   );
 }
