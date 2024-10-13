@@ -24,6 +24,14 @@ function ViewBlogPostController({
 }) {
   return (
     <div>
+      <div>
+        <p>
+          投稿日:<time dateTime="2024/10/03">2024/10/03</time>
+        </p>
+        <p>
+          更新日:<time dateTime="2024/10/04">2023/10/04</time>
+        </p>
+      </div>
       <BlogPostTitleComponent>{blogPost?.title}</BlogPostTitleComponent>
       {blogPost?.contents.map((content) => (
         <ContentComponent
