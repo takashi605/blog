@@ -77,7 +77,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     }
   });
 
-  describe('Content コンポーネントとの結合テスト', () => {
+  describe('コンテンツ', () => {
     it('h2 が表示されている', async () => {
       renderTestComponent();
 
