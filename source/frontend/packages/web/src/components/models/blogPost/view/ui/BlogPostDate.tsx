@@ -1,4 +1,4 @@
-import type { BlogPostDateProps } from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
+import type { BlogPostDateProps } from '@/components/models/blogPost/view/controllers/types';
 
 function BlogPostDate({ label, date }: BlogPostDateProps) {
   return (
