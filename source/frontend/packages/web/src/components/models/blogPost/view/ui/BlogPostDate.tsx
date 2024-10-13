@@ -1,4 +1,5 @@
 import type { BlogPostDateProps } from '@/components/models/blogPost/view/controllers/types';
+import { memo } from 'react';
 import styles from './blogPostDate.module.scss';
 
 function BlogPostDate({ label, date }: BlogPostDateProps) {
@@ -9,4 +10,4 @@ function BlogPostDate({ label, date }: BlogPostDateProps) {
   );
 }
 
-export default BlogPostDate;
+export default memo(BlogPostDate);

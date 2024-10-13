@@ -4,6 +4,7 @@ import type {
   BlogPostTitleProps,
 } from '@/components/models/blogPost/view/controllers/types';
 import type { ViewBlogPost } from '@/usecases/view/output';
+import { memo } from 'react';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
@@ -14,9 +15,9 @@ type ViewBlogPostControllerProps = {
 };
 
 // render props するコンポーネントのインターフェースを定義
-type Content = (props: BlogPostContentProps) => JSX.Element | null;
-type Title = (props: BlogPostTitleProps) => JSX.Element;
-type Date = (props: BlogPostDateProps) => JSX.Element;
+type Content = React.ComponentType<BlogPostContentProps>;
+type Title = React.ComponentType<BlogPostTitleProps>;
+type Date = React.ComponentType<BlogPostDateProps>;
 
 function ViewBlogPostController({
   blogPost,
@@ -42,7 +43,7 @@ function ViewBlogPostController({
   );
 }
 
-export default ViewBlogPostController;
+export default memo(ViewBlogPostController);
 
 function generateContentClass(type: string): string | undefined {
   switch (type) {

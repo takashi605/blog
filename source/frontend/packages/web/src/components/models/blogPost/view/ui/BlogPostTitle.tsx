@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './blogPostTitle.module.scss';
 
 type BlogPostTitleProps = {
@@ -9,4 +9,4 @@ function BlogPostTitle({ children }: BlogPostTitleProps) {
   return <h1 className={styles.title}>{children}</h1>;
 }
 
-export default BlogPostTitle;
+export default memo(BlogPostTitle);
