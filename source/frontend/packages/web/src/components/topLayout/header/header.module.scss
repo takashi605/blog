@@ -1,6 +1,12 @@
-.header {
-  padding: 20px 60px;
+.headerWrapper {
+  padding: 60px 0;
   border-bottom: 3px solid #ddd;
+}
+
+.header {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 1400px;
 }
 
 .blogTitle {
