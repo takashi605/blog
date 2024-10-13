@@ -1,5 +1,6 @@
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+import BlogPostDate from '@/components/models/blogPost/ui/BlogPostDate';
 import BlogPostTitle from '@/components/models/blogPost/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 
@@ -19,6 +20,7 @@ export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
       <ViewBlogPostController
         blogPost={blogPostResponse}
         BlogPostTitleComponent={BlogPostTitle}
+        BlogPostDateComponent={BlogPostDate}
         ContentComponent={ContentRenderer}
       />
     </div>

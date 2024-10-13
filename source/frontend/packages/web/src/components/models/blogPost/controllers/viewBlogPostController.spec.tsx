@@ -1,6 +1,7 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import ViewBlogPostController from '@/components/models/blogPost/controllers/ViewBlogPostController';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+import BlogPostDate from '@/components/models/blogPost/ui/BlogPostDate';
 import BlogPostTitle from '@/components/models/blogPost/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/ui/contents/Content';
 import type { ViewBlogPost } from '@/usecases/view/output';
@@ -40,6 +41,7 @@ function ViewBlogPostControllerWithDependencies() {
       blogPost={blogPost}
       BlogPostTitleComponent={BlogPostTitle}
       ContentComponent={ContentRenderer}
+      BlogPostDateComponent={BlogPostDate}
     />
   );
 }
