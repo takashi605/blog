@@ -1,5 +1,5 @@
 // render props するコンポーネントのインターフェースを定義
-export type ContentProps = {
+export type BlogPostContentProps = {
   type: string;
   value: string;
 };

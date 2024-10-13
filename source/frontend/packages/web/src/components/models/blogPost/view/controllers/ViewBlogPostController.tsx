@@ -1,7 +1,7 @@
 import type {
+  BlogPostContentProps,
   BlogPostDateProps,
   BlogPostTitleProps,
-  ContentProps,
 } from '@/components/models/blogPost/view/controllers/types';
 import type { ViewBlogPost } from '@/usecases/view/output';
 
@@ -13,7 +13,7 @@ type ViewBlogPostControllerProps = {
 };
 
 // render props するコンポーネントのインターフェースを定義
-type Content = (props: ContentProps) => JSX.Element | null;
+type Content = (props: BlogPostContentProps) => JSX.Element | null;
 type Title = (props: BlogPostTitleProps) => JSX.Element;
 type Date = (props: BlogPostDateProps) => JSX.Element;
 
