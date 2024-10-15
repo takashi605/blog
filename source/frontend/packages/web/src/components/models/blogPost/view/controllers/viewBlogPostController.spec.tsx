@@ -60,22 +60,20 @@ describe('コンポーネント: viewBlogPostController', () => {
   it('投稿日,更新日が表示されている', async () => {
     renderTestComponent();
 
-    const postDateSection = screen.getByText('投稿日:').parentElement;
-    expect(postDateSection).toBeInTheDocument();
+    const postDateSection = screen.getByText('投稿日:');
 
     if (postDateSection) {
-      const { getByText } = within(postDateSection);
-      expect(getByText('投稿日:')).toBeInTheDocument();
-      expect(getByText('2024/10/03')).toBeInTheDocument();
+      const { findByText } = within(postDateSection);
+      expect(await findByText('投稿日:')).toBeInTheDocument();
+      expect(await findByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeInTheDocument();
     }
 
-    const updateDateSection = screen.getByText('更新日:').parentElement;
-    expect(updateDateSection).toBeInTheDocument();
+    const updateDateSection = screen.getByText('更新日:');
 
     if (updateDateSection) {
-      const { getByText } = within(updateDateSection);
-      expect(getByText('更新日:')).toBeInTheDocument();
-      expect(getByText('2024/10/03')).toBeInTheDocument();
+      const { findByText } = within(updateDateSection);
+      expect(await findByText('更新日:')).toBeInTheDocument();
+      expect(await findByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeInTheDocument();
     }
   });
 

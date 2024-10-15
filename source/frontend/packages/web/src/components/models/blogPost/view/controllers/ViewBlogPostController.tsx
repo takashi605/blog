@@ -28,8 +28,8 @@ function ViewBlogPostController({
   return (
     <article className={styles.article}>
       <div className={styles.datesWrapper}>
-        <Date label="投稿日" date="2024/10/03" />
-        <Date label="更新日" date="2024/10/04" />
+        <Date label="投稿日" date={blogPost?.postDate || ''} />
+        <Date label="更新日" date={blogPost?.lastUpdateDate || ''} />
       </div>
       <div className={styles.blogTitle}>
         <Title>{blogPost?.title}</Title>
