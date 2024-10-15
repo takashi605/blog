@@ -45,4 +45,20 @@ describe('エンティティ: 投稿記事', () => {
     expect(contents[2].getType()).toBe('paragraph');
     expect(contents[2].getId()).toBe(3);
   });
+
+  it('記事の投稿日付を取得できる', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    const date = '2021-01-01';
+    blogPost.setPostDate(date);
+    expect(blogPost.getPostDate()).toEqual(new Date(date));
+  });
+
+  it('記事の最終更新日を取得できる', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    const date = '2021-01-01';
+    blogPost.setLastUpdateDate(date);
+    expect(blogPost.getLastUpdateDate()).toEqual(new Date(date));
+  });
 });

@@ -5,6 +5,8 @@ export const blogPostHandlers = [
     return HttpResponse.json({
       id: 1,
       title: '初めての技術スタックへの挑戦',
+      postDate: '2022-01-01',
+      lastUpdateDate: '2022-01-02',
       contents: [
         {
           type: 'paragraph',
