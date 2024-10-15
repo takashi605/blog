@@ -17,6 +17,9 @@ export type ViewBlogPostInput = {
   getPotsDate: () => string;
   setPostDate: (postDate: string) => ViewBlogPostInput;
 
+  getLastUpdateDate: () => string;
+  setLastUpdateDate: (lastUpdateDate: string) => ViewBlogPostInput;
+
   injectionContentsTo: (blogPost: BlogPost) => void;
   generateBlogPost: () => BlogPost;
 };
@@ -24,6 +27,7 @@ export type ViewBlogPostInput = {
 export const createViewBlogPostInput = (): ViewBlogPostInput => {
   let postTitle = '';
   let postDate = '';
+  let lastUpdateDate = '';
   const contents: ContentInput[] = [];
 
   return {
@@ -32,6 +36,7 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
       postTitle = newPostTitle;
       return this;
     },
+
     getContents: () => contents,
     addH2(contentValue: string) {
       contents.push({ type: ContentType.H2, contentValue });
@@ -45,11 +50,20 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
       contents.push({ type: ContentType.Paragraph, contentValue });
       return this;
     },
+
     getPotsDate() {
       return postDate;
     },
     setPostDate(newPostDate: string) {
       postDate = newPostDate;
+      return this;
+    },
+
+    getLastUpdateDate() {
+      return lastUpdateDate;
+    },
+    setLastUpdateDate(newLastUpdateDate: string) {
+      lastUpdateDate = newLastUpdateDate;
       return this;
     },
 
@@ -65,6 +79,7 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
       const blogPost = createBlogPost(postTitle);
       this.injectionContentsTo(blogPost);
       blogPost.setPostDate(postDate);
+      blogPost.setLastUpdateDate(lastUpdateDate);
       return blogPost;
     },
   };
