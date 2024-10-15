@@ -16,12 +16,16 @@ describe('ユースケース: 投稿記事生成のための入力値', () => {
     const blogPost = input.generateBlogPost();
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
-    expect(blogPost.getContents().length).toBe(5);
 
-    blogPost.getContents().forEach((content, index) => {
-      const contentForInput = input.getContents()[index];
-      expect(content.getValue()).toBe(contentForInput.contentValue);
-      expect(content.getType()).toBe(contentForInput.type);
-    });
+    expect(blogPost.getContents().length).toBe(5);
+    contentsEqualsInputData();
+
+    function contentsEqualsInputData() {
+      blogPost.getContents().forEach((content, index) => {
+        const contentForInput = input.getContents()[index];
+        expect(content.getValue()).toBe(contentForInput.contentValue);
+        expect(content.getType()).toBe(contentForInput.type);
+      });
+    }
   });
 });
