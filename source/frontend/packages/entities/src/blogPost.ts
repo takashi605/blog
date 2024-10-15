@@ -6,11 +6,14 @@ export type BlogPost = {
   getTitleLevel: () => number;
   getContents: () => Content[];
   addContent: (content: Content) => BlogPost;
+  getPostDate: () => Date | null;
+  setPostDate: (date: string) => BlogPost;
 };
 
 export const createBlogPost = (initialTitle: string): BlogPost => {
   // setter 等が必要になった時のために変数に保持しておく
   const title = createH1(1, initialTitle);
+  let postDate: Date | null = null;
   const contents: Content[] = [];
 
   return {
@@ -19,6 +22,11 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
     getContents: () => contents,
     addContent(content: Content) {
       contents.push(content);
+      return this;
+    },
+    getPostDate: () => postDate,
+    setPostDate(date: string) {
+      postDate = new Date(date);
       return this;
     },
   };
