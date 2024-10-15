@@ -2,7 +2,7 @@ import {
   createContentByInput,
   type ContentInput,
 } from '@/usecases/view/input/content';
-import type { BlogPost } from 'entities/src/blogPost';
+import { createBlogPost, type BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/postContents/content';
 
 export type ViewBlogPostInput = {
@@ -13,6 +13,7 @@ export type ViewBlogPostInput = {
   addParagraph: (contentValue: string) => ViewBlogPostInput;
   setPostTitle: (postTitle: string) => ViewBlogPostInput;
   injectionContentsTo: (blogPost: BlogPost) => void;
+  generateBlogPost: () => BlogPost;
 };
 
 export const createViewBlogPostInput = (): ViewBlogPostInput => {
@@ -44,6 +45,11 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
           createContentByInput(blogPost.getContents().length + 1, content),
         );
       });
+    },
+    generateBlogPost() {
+      const blogPost = createBlogPost(postTitle);
+      this.injectionContentsTo(blogPost);
+      return blogPost;
     },
   };
 };
