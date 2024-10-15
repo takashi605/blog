@@ -8,6 +8,8 @@ import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 export type BlogPostResponse = {
   id: number;
   title: string;
+  postDate: string;
+  lastUpdateDate: string;
   contents: {
     type: string;
     value: string;
@@ -25,9 +27,10 @@ export const responseToViewBlogPost = (
 };
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
-  const viewBlogPostInput = createViewBlogPostInput().setPostTitle(
-    response.title,
-  );
+  const viewBlogPostInput = createViewBlogPostInput()
+    .setPostTitle(response.title)
+    .setPostDate(response.postDate)
+    .setLastUpdateDate(response.lastUpdateDate);
 
   mapResponseContentToBlogPost(response, viewBlogPostInput);
 

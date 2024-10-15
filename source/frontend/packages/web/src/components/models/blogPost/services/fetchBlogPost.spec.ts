@@ -16,11 +16,16 @@ afterAll(() => {
 });
 
 describe('投稿記事を取得する', () => {
-  it('ブログ記事構造に変換したデータからid, 記事タイトル,コンテンツが取得できる', async () => {
+  it('ブログ記事構造に変換したデータから投稿日,最終更新日,記事タイトル,コンテンツが取得できる', async () => {
     const blogPostResponse = await fetchBlogPost(1);
 
-    expect(blogPostResponse).toHaveProperty('title');
-    expect(blogPostResponse).toHaveProperty('contents');
+    await expect(blogPostResponse.postDate).toMatch(/\d{4}\/\d{1,2}\/\d{1,2}/);
+    await expect(blogPostResponse.lastUpdateDate).toMatch(
+      /\d{4}\/\d{1,2}\/\d{1,2}/,
+    );
+
+    await expect(blogPostResponse.title).not.toBe('');
+    await expect(blogPostResponse.contents.length).toBeGreaterThan(0);
   });
 
   // 以下は詳細な変換処理のテストであり、取得処理の振る舞いの理解としては上記のテストで十分
