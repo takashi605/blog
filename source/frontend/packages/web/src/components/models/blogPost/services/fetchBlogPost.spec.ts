@@ -1,4 +1,4 @@
-import { server } from '@/apiMock/server';
+import { mockApiForServer } from '@/apiMock/serverForNode';
 import {
   fetchBlogPost,
   fetchRawBlogPost,
@@ -6,13 +6,13 @@ import {
 import { responseToViewBlogPost } from '@/components/models/blogPost/services/response';
 
 beforeAll(() => {
-  server.listen();
+  mockApiForServer.listen();
 });
 afterEach(async () => {
-  server.resetHandlers();
+  mockApiForServer.resetHandlers();
 });
 afterAll(() => {
-  server.close();
+  mockApiForServer.close();
 });
 
 describe('投稿記事を取得する', () => {

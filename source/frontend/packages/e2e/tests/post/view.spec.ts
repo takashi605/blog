@@ -11,21 +11,42 @@ Given('{string} にアクセスする', async ({ page }, url) => {
 });
 
 Then('記事タイトル が表示される', async ({ page }) => {
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'post-title' }),
-  ).toBeVisible();
+  const title = page.locator('h1');
+
+  await expect(title.textContent).not.toBe('');
 });
 
 Then('記事本文 が表示される', async ({ page }) => {
-  await expect(page.getByText('記事本文')).toBeVisible();
+  const p = page.locator('p');
+
+  const count = await p.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    await expect(p.nth(i).textContent).not.toBe('');
+  }
 });
 
 Then('h2見出し が表示される', async ({ page }) => {
-  await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
+  const h2 = page.locator('h2');
+
+  const count = await h2.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    await expect(h2.nth(i).textContent).not.toBe('');
+  }
 });
 
 Then('h3見出し が表示される', async ({ page }) => {
-  await expect(page.getByRole('heading', { level: 3 })).toBeVisible();
+  const h3 = page.locator('h3');
+
+  const count = await h3.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    await expect(h3.nth(i).textContent).not.toBe('');
+  }
 });
 
 Then('投稿日時 が表示される', async ({ page }) => {

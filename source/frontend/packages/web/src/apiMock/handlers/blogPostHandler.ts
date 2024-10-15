@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const blogPostHandlers = [
-  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/post/1`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1`, () => {
     return HttpResponse.json({
       id: 1,
       title: '初めての技術スタックへの挑戦',

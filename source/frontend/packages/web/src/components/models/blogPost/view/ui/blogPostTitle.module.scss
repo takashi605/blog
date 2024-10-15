@@ -1,0 +1,30 @@
+.title {
+  position: relative;
+
+  font-family: ta-mincho-gf-03, sans-serif;
+  font-size: 32px;
+
+  color: #fff;
+
+  width: 100%;
+  max-width: 1000px;
+
+  padding: 30px 30px;
+
+  background: linear-gradient(70deg, #212121 0%, #47242c 75%, #ec3161 100%);
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+
+  &::before {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: 15px;
+
+    width: 5px;
+    height: 100%;
+
+    background: #fff;
+  }
+}
