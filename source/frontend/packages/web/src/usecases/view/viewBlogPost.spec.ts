@@ -6,6 +6,8 @@ describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
     const input = createViewBlogPostInput()
       .setPostTitle('記事タイトル')
+      .setPostDate('2021-01-01')
+      .setLastUpdateDate('2021-01-02')
       .addH2('h2見出し1')
       .addH3('h3見出し1')
       .addParagraph('段落1')
@@ -15,6 +17,9 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     const output: ViewBlogPost = viewBlogPost(input);
 
     expect(output.title).toBe('記事タイトル');
+
+    expect(output.postDate).toEqual('2021/01/01');
+    expect(output.lastUpdateDate).toEqual('2021/01/02');
 
     const contents = output.contents;
     expect(contents.length).toBe(5);
