@@ -1,15 +1,19 @@
 import { createViewBlogPostInput } from '@/usecases/view/input/input';
 import { createBlogPost } from 'entities/src/blogPost';
 
+const createInputForTest = () => {
+  return createViewBlogPostInput()
+    .setPostTitle('記事タイトル')
+    .addH2('h2見出し1')
+    .addH3('h3見出し1')
+    .addParagraph('段落1')
+    .addH3('h3見出し2')
+    .addParagraph('段落2');
+};
+
 describe('ユースケース: 投稿記事生成のための入力値', () => {
   it('メソッドチェーンによるファクトリ', () => {
-    const input = createViewBlogPostInput()
-      .setPostTitle('記事タイトル')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1')
-      .addH3('h3見出し2')
-      .addParagraph('段落2');
+    const input = createInputForTest();
 
     expect(input.getPostTitle()).toBe('記事タイトル');
     expect(input.getContents().length).toBe(5);
@@ -31,13 +35,7 @@ describe('ユースケース: 投稿記事生成のための入力値', () => {
   });
 
   it('コンテンツをエンティティに流し込む', () => {
-    const input = createViewBlogPostInput()
-      .setPostTitle('記事タイトル')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1')
-      .addH3('h3見出し2')
-      .addParagraph('段落2');
+    const input = createInputForTest();
 
     const blogPost = createBlogPost(input.getPostTitle());
     input.injectionContentsTo(blogPost);
