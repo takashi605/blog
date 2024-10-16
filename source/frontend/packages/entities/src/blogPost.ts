@@ -6,9 +6,9 @@ export type BlogPost = {
   getTitleLevel: () => number;
   getContents: () => Content[];
   addContent: (content: Content) => BlogPost;
-  getPostDate: () => Date | null;
+  getPostDate: () => Date;
   setPostDate: (date: string) => BlogPost;
-  getLastUpdateDate: () => Date | null;
+  getLastUpdateDate: () => Date;
   setLastUpdateDate: (date: string) => BlogPost;
 };
 
@@ -27,12 +27,22 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
       contents.push(content);
       return this;
     },
-    getPostDate: () => postDate,
+    getPostDate: () => {
+      if (!postDate) {
+        throw new Error('投稿日が設定されていません');
+      }
+      return postDate;
+    },
     setPostDate(date: string) {
       postDate = new Date(date);
       return this;
     },
-    getLastUpdateDate: () => lastUpdateDate,
+    getLastUpdateDate: () => {
+      if (!lastUpdateDate) {
+        throw new Error('最終更新日が設定されていません');
+      }
+      return lastUpdateDate;
+    },
     setLastUpdateDate(date: string) {
       lastUpdateDate = new Date(date);
       return this;

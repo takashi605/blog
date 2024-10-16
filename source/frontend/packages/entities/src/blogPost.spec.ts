@@ -54,11 +54,23 @@ describe('エンティティ: 投稿記事', () => {
     expect(blogPost.getPostDate()).toEqual(new Date(date));
   });
 
+  it('記事の投稿日付が空の時に取得するとエラーが発生する', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    expect(() => blogPost.getPostDate()).toThrow();
+  });
+
   it('記事の最終更新日を取得できる', () => {
     const title = '記事タイトル';
     const blogPost: BlogPost = createBlogPost(title);
     const date = '2021-01-01';
     blogPost.setLastUpdateDate(date);
     expect(blogPost.getLastUpdateDate()).toEqual(new Date(date));
+  });
+
+  it('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    expect(() => blogPost.getLastUpdateDate()).toThrow();
   });
 });
