@@ -3,12 +3,12 @@ import type {
   BlogPostDateProps,
   BlogPostTitleProps,
 } from '@/components/models/blogPost/view/controllers/types';
-import type { ViewBlogPost } from '@/usecases/view/output';
+import type { ViewBlogPostDTO } from '@/usecases/view/output';
 import { memo } from 'react';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
-  blogPost: ViewBlogPost | null;
+  blogPost: ViewBlogPostDTO | null;
   Title: Title;
   Date: Date;
   Content: Content;

@@ -1,7 +1,7 @@
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost';
 
-export type ViewBlogPost = {
+export type ViewBlogPostDTO = {
   readonly title: string;
   readonly postDate: string;
   readonly lastUpdateDate: string;

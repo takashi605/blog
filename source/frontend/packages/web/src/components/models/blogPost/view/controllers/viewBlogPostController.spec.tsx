@@ -4,7 +4,7 @@ import ViewBlogPostController from '@/components/models/blogPost/view/controller
 import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
 import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
-import type { ViewBlogPost } from '@/usecases/view/output';
+import type { ViewBlogPostDTO } from '@/usecases/view/output';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ const renderTestComponent = () =>
 // テスト対象コンポーネントと依存するコンポーネントやロジックを
 // まとめたコンポーネント
 function ViewBlogPostControllerWithDependencies() {
-  const [blogPost, setBlogPost] = useState<ViewBlogPost | null>(null);
+  const [blogPost, setBlogPost] = useState<ViewBlogPostDTO | null>(null);
 
   const execFetch = useCallback(async () => {
     const blogPost = await fetchBlogPost(1);

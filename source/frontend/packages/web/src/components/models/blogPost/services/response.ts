@@ -2,7 +2,7 @@ import {
   createViewBlogPostInput,
   type ViewBlogPostInput,
 } from '@/usecases/view/input/input';
-import type { ViewBlogPost } from '@/usecases/view/output';
+import type { ViewBlogPostDTO } from '@/usecases/view/output';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
@@ -18,7 +18,7 @@ export type BlogPostResponse = {
 
 export const responseToViewBlogPost = (
   response: BlogPostResponse,
-): ViewBlogPost => {
+): ViewBlogPostDTO => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
   const blogPost = viewBlogPost(viewBlogPostInput);

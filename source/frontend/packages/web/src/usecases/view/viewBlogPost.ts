@@ -2,11 +2,11 @@ import type { ViewBlogPostInput } from '@/usecases/view/input/input';
 import {
   extractLastUpdateDateForDTO,
   extractPostDateForDTO,
-  type ViewBlogPost,
+  type ViewBlogPostDTO,
 } from '@/usecases/view/output';
 import type { BlogPost } from 'entities/src/blogPost';
 
-export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
+export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPostDTO => {
   const blogPost: BlogPost = input.generateBlogPost();
 
   return {
