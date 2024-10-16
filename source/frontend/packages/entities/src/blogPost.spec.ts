@@ -57,7 +57,7 @@ describe('エンティティ: 投稿記事', () => {
   it('記事の投稿日付が空の時に取得するとエラーが発生する', () => {
     const title = '記事タイトル';
     const blogPost: BlogPost = createBlogPost(title);
-    expect(() => blogPost.getPostDate()).toThrow();
+    expect(() => blogPost.getPostDate()).toThrow('投稿日が設定されていません');
   });
 
   it('記事の最終更新日を取得できる', () => {
@@ -71,6 +71,8 @@ describe('エンティティ: 投稿記事', () => {
   it('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
     const title = '記事タイトル';
     const blogPost: BlogPost = createBlogPost(title);
-    expect(() => blogPost.getLastUpdateDate()).toThrow();
+    expect(() => blogPost.getLastUpdateDate()).toThrow(
+      '最終更新日が設定されていません',
+    );
   });
 });
