@@ -1,20 +1,31 @@
 import type { ViewBlogPostInput } from '@/usecases/view/input/input';
 import type { ViewBlogPost } from '@/usecases/view/output';
+import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost';
 
 export const viewBlogPost = (input: ViewBlogPostInput): ViewBlogPost => {
   const blogPost: BlogPost = input.generateBlogPost();
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  };
+
+  const postDateValue = blogPost.getPostDate();
+  if (!postDateValue) {
+    throw new Error(
+      '投稿日は必須ですが、投稿日が存在しない記事を生成しようとしました',
+    );
+  }
+  const postDate = formatDate2DigitString(postDateValue);
+
+  const lastUpdateDateValue = blogPost.getLastUpdateDate();
+  if (!lastUpdateDateValue) {
+    throw new Error(
+      '最終更新日は必須ですが、最終更新日が存在しない記事を生成しようとしました',
+    );
+  }
+  const lastUpdateDate = formatDate2DigitString(lastUpdateDateValue);
+
   return {
     title: blogPost.getTitleText(),
-    postDate:
-      blogPost.getPostDate()?.toLocaleDateString('ja-JP', options) ?? '',
-    lastUpdateDate:
-      blogPost.getLastUpdateDate()?.toLocaleDateString('ja-JP', options) ?? '',
+    postDate,
+    lastUpdateDate,
     contents: blogPost.getContents().map((content, index) => {
       return {
         id: index + 1,
