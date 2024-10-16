@@ -12,7 +12,22 @@ export type ViewBlogPostDTO = {
   }>;
 };
 
-export const extractPostDateForDTO = (blogPost: BlogPost): string => {
+export const createViewBlogPostDTO = (blogPost: BlogPost): ViewBlogPostDTO => {
+  return {
+    title: blogPost.getTitleText(),
+    postDate: extractPostDateForDTO(blogPost),
+    lastUpdateDate: extractLastUpdateDateForDTO(blogPost),
+    contents: blogPost.getContents().map((content, index) => {
+      return {
+        id: index + 1,
+        value: content.getValue(),
+        type: content.getType(),
+      };
+    }),
+  };
+};
+
+const extractPostDateForDTO = (blogPost: BlogPost): string => {
   const postDateValue = blogPost.getPostDate();
   if (!postDateValue) {
     throw new Error(
@@ -23,7 +38,7 @@ export const extractPostDateForDTO = (blogPost: BlogPost): string => {
   return postDate;
 };
 
-export const extractLastUpdateDateForDTO = (blogPost: BlogPost): string => {
+const extractLastUpdateDateForDTO = (blogPost: BlogPost): string => {
   const lastUpdateDateValue = blogPost.getLastUpdateDate();
   if (!lastUpdateDateValue) {
     throw new Error(
