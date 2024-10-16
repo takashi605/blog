@@ -8,7 +8,7 @@ import { memo } from 'react';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
-  blogPost: ViewBlogPostDTO | null;
+  blogPost: ViewBlogPostDTO;
   Title: Title;
   Date: Date;
   Content: Content;
@@ -28,8 +28,8 @@ function ViewBlogPostController({
   return (
     <article className={styles.article}>
       <div className={styles.datesWrapper}>
-        <Date label="投稿日" date={blogPost?.postDate || ''} />
-        <Date label="更新日" date={blogPost?.lastUpdateDate || ''} />
+        <Date label="投稿日" date={blogPost.postDate} />
+        <Date label="更新日" date={blogPost.lastUpdateDate} />
       </div>
       <div className={styles.blogTitle}>
         <Title>{blogPost?.title}</Title>
