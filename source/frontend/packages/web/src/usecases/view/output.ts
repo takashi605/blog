@@ -17,13 +17,7 @@ export const createViewBlogPostDTO = (blogPost: BlogPost): ViewBlogPostDTO => {
     title: blogPost.getTitleText(),
     postDate: extractPostDateForDTO(blogPost),
     lastUpdateDate: extractLastUpdateDateForDTO(blogPost),
-    contents: blogPost.getContents().map((content, index) => {
-      return {
-        id: index + 1,
-        value: content.getValue(),
-        type: content.getType(),
-      };
-    }),
+    contents: extractContentsForDTO(blogPost),
   };
 };
 
@@ -47,4 +41,16 @@ const extractLastUpdateDateForDTO = (blogPost: BlogPost): string => {
   }
   const lastUpdateDate = formatDate2DigitString(lastUpdateDateValue);
   return lastUpdateDate;
+};
+
+const extractContentsForDTO = (
+  blogPost: BlogPost,
+): ViewBlogPostDTO['contents'] => {
+  return blogPost.getContents().map((content, index) => {
+    return {
+      id: index + 1,
+      value: content.getValue(),
+      type: content.getType(),
+    };
+  });
 };
