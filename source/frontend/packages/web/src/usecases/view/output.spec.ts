@@ -47,4 +47,20 @@ describe('DTO の生成', () => {
     expect(dto.postDate).toEqual('2021/01/01');
     expect(dto.lastUpdateDate).toEqual('2021/01/02');
   });
+
+  it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    expect(() => createViewBlogPostDTO(blogPost)).toThrow(
+      '投稿日が存在しない記事を生成しようとしました',
+    );
+  });
+
+  it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title).setPostDate('2021-01-01');
+    expect(() => createViewBlogPostDTO(blogPost)).toThrow(
+      '最終更新日が存在しない記事を生成しようとしました',
+    );
+  });
 });

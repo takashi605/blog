@@ -22,25 +22,19 @@ export const createViewBlogPostDTO = (blogPost: BlogPost): ViewBlogPostDTO => {
 };
 
 const extractPostDateForDTO = (blogPost: BlogPost): string => {
-  const postDateValue = blogPost.getPostDate();
-  if (!postDateValue) {
-    throw new Error(
-      '投稿日は必須ですが、投稿日が存在しない記事を生成しようとしました',
-    );
+  try {
+    return formatDate2DigitString(blogPost.getPostDate());
+  } catch {
+    throw new Error('投稿日が存在しない記事を生成しようとしました');
   }
-  const postDate = formatDate2DigitString(postDateValue);
-  return postDate;
 };
 
 const extractLastUpdateDateForDTO = (blogPost: BlogPost): string => {
-  const lastUpdateDateValue = blogPost.getLastUpdateDate();
-  if (!lastUpdateDateValue) {
-    throw new Error(
-      '最終更新日は必須ですが、最終更新日が存在しない記事を生成しようとしました',
-    );
+  try {
+    return formatDate2DigitString(blogPost.getLastUpdateDate());
+  } catch {
+    throw new Error('最終更新日が存在しない記事を生成しようとしました');
   }
-  const lastUpdateDate = formatDate2DigitString(lastUpdateDateValue);
-  return lastUpdateDate;
 };
 
 const extractContentsForDTO = (
