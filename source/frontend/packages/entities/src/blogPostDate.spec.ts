@@ -7,4 +7,16 @@ describe('エンティティ：投稿記事の日付', () => {
     const expectedDate = new Date('2021-01-01');
     expect(blogPostDate.getDate()).toEqual(expectedDate);
   });
+
+  it('YYYY-MM-DD の形式ではない文字列を渡すとエラーが発生する', () => {
+    expect(() => createBlogPostDate('')).toThrow(
+      '日付は YYYY-MM-DD 形式で指定してください',
+    );
+    expect(() => createBlogPostDate('2021-01-01 00:00:00')).toThrow(
+      '日付は YYYY-MM-DD 形式で指定してください',
+    );
+    expect(() => createBlogPostDate('2021/01/01')).toThrow(
+      '日付は YYYY-MM-DD 形式で指定してください',
+    );
+  });
 });
