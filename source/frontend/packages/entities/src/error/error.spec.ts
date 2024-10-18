@@ -10,4 +10,12 @@ describe('エンティティ: エラー', () => {
       'エンティティでエラーが発生しました',
     );
   });
+
+  it('instanceof で型比較できる', () => {
+    try {
+      throwErrorFunction();
+    } catch (error) {
+      expect(error instanceof EntityError).toBeTruthy();
+    }
+  });
 });
