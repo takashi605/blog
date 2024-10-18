@@ -2,7 +2,7 @@ import {
   createContentByInput,
   type ContentInput,
 } from '@/usecases/view/input/content';
-import { createBlogPost, type BlogPost } from 'entities/src/blogPost/index';
+import { n__BlogPost } from 'entities/src/blogPost/index';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostInput = {
@@ -20,8 +20,8 @@ export type ViewBlogPostInput = {
   getLastUpdateDate: () => string;
   setLastUpdateDate: (lastUpdateDate: string) => ViewBlogPostInput;
 
-  injectionContentsTo: (blogPost: BlogPost) => void;
-  generateBlogPost: () => BlogPost;
+  injectionContentsTo: (blogPost: n__BlogPost) => void;
+  generateBlogPost: () => n__BlogPost;
 };
 
 export const createViewBlogPostInput = (): ViewBlogPostInput => {
@@ -67,7 +67,7 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
       return this;
     },
 
-    injectionContentsTo(blogPost: BlogPost) {
+    injectionContentsTo(blogPost: n__BlogPost) {
       contents.forEach((content) => {
         blogPost.addContent(
           createContentByInput(blogPost.getContents().length + 1, content),
@@ -76,7 +76,7 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
     },
 
     generateBlogPost() {
-      const blogPost = createBlogPost(postTitle);
+      const blogPost = new n__BlogPost(postTitle);
       this.injectionContentsTo(blogPost);
       blogPost.setPostDate(postDate);
       blogPost.setLastUpdateDate(lastUpdateDate);
