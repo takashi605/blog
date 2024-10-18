@@ -148,25 +148,25 @@ describe('【旧】エンティティ: 投稿記事', () => {
     expect(() => blogPost.getPostDate()).toThrow('投稿日が設定されていません');
   });
 
-  it.skip('記事の最終更新日を取得できる', () => {
+  it('記事の最終更新日を取得できる', () => {
     const title = '記事タイトル';
-    const blogPost: BlogPost = createBlogPost(title);
+    const blogPost = new n__BlogPost(title);
     const date = '2021-01-01';
     blogPost.setLastUpdateDate(date);
     expect(blogPost.getLastUpdateDate()).toEqual(new Date(date));
   });
 
-  it.skip('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
+  it('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost: BlogPost = createBlogPost(title);
+    const blogPost = new n__BlogPost(title);
     expect(() => blogPost.getLastUpdateDate()).toThrow(
       '最終更新日が設定されていません',
     );
   });
 
-  it.skip('YYYY-MM-DD の形式ではない文字列で日付を生成すると EntityError が発生する', () => {
+  it('YYYY-MM-DD の形式ではない文字列で日付を生成すると EntityError が発生する', () => {
     const title = '記事タイトル';
-    const blogPost: BlogPost = createBlogPost(title);
+    const blogPost = new n__BlogPost(title);
     const date = '2021/01/01';
     expect(() => blogPost.setPostDate(date)).toThrow(
       '日付は YYYY-MM-DD 形式で指定してください',
