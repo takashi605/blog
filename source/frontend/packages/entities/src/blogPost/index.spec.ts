@@ -97,7 +97,7 @@ describe('【旧】エンティティ: 投稿記事', () => {
     expect(blogPost.getTitleLevel()).toBe(1);
   });
 
-  it.skip('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
+  it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
     const h2 = createContent({
       id: 1,
@@ -114,7 +114,7 @@ describe('【旧】エンティティ: 投稿記事', () => {
       type: ContentType.Paragraph,
       value: '段落',
     });
-    const blogPost: BlogPost = createBlogPost(title)
+    const blogPost = new n__BlogPost(title)
       .addContent(h2)
       .addContent(h3)
       .addContent(paragraph1);

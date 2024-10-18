@@ -54,6 +54,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
 
 export class n__BlogPost {
   private title: Heading;
+  private contents: Content[] = [];
 
   constructor(title: string) {
     this.title = createH1(1, title);
@@ -65,5 +66,14 @@ export class n__BlogPost {
 
   getTitleLevel() {
     return this.title.getLevel();
+  }
+
+  addContent(content: Content) {
+    this.contents.push(content);
+    return this;
+  }
+
+  getContents() {
+    return this.contents;
   }
 }
