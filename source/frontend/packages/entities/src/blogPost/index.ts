@@ -1,4 +1,4 @@
-import { n__BlogPostDate } from './blogPostDate';
+import { BlogPostDate } from './blogPostDate';
 import type { Content } from './postContents/content';
 import { createH1 } from './postContents/heading';
 
@@ -16,8 +16,8 @@ export type BlogPost = {
 export const createBlogPost = (initialTitle: string): BlogPost => {
   // setter 等が必要になった時のために変数に保持しておく
   const title = createH1(1, initialTitle);
-  let postDate: n__BlogPostDate | null = null;
-  let lastUpdateDate: n__BlogPostDate | null = null;
+  let postDate: BlogPostDate | null = null;
+  let lastUpdateDate: BlogPostDate | null = null;
   const contents: Content[] = [];
 
   return {
@@ -35,7 +35,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
       return postDate.getDate();
     },
     setPostDate(date: string) {
-      postDate = new n__BlogPostDate(date);
+      postDate = new BlogPostDate(date);
       return this;
     },
     getLastUpdateDate: () => {
@@ -45,7 +45,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
       return lastUpdateDate.getDate();
     },
     setLastUpdateDate(date: string) {
-      lastUpdateDate = new n__BlogPostDate(date);
+      lastUpdateDate = new BlogPostDate(date);
       return this;
     },
   };
