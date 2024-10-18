@@ -1,3 +1,4 @@
+import { EntityError } from '@/error/error';
 import { createBlogPostDate } from './blogPostDate';
 
 describe('エンティティ：投稿記事の日付', () => {
@@ -8,7 +9,7 @@ describe('エンティティ：投稿記事の日付', () => {
     expect(blogPostDate.getDate()).toEqual(expectedDate);
   });
 
-  it('YYYY-MM-DD の形式ではない文字列を渡すとエラーが発生する', () => {
+  it('YYYY-MM-DD の形式ではない文字列を渡すと EntityError が発生する', () => {
     expect(() => createBlogPostDate('')).toThrow(
       '日付は YYYY-MM-DD 形式で指定してください',
     );
@@ -18,5 +19,13 @@ describe('エンティティ：投稿記事の日付', () => {
     expect(() => createBlogPostDate('2021/01/01')).toThrow(
       '日付は YYYY-MM-DD 形式で指定してください',
     );
+  });
+
+  it('エラーの際、EntityError 型のエラーが発生する', () => {
+    try {
+      createBlogPostDate('');
+    } catch (error) {
+      expect(error instanceof EntityError).toBeTruthy();
+    }
   });
 });
