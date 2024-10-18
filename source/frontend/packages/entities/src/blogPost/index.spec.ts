@@ -1,10 +1,10 @@
-import { n__BlogPost } from './index';
+import { BlogPost } from './index';
 import { ContentType, createContent } from './postContents/content';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     expect(blogPost.getTitleText()).toBe(title);
     expect(blogPost.getTitleLevel()).toBe(1);
   });
@@ -26,7 +26,7 @@ describe('エンティティ: 投稿記事', () => {
       type: ContentType.Paragraph,
       value: '段落',
     });
-    const blogPost = new n__BlogPost(title)
+    const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)
       .addContent(paragraph1);
@@ -48,7 +48,7 @@ describe('エンティティ: 投稿記事', () => {
 
   it('記事の投稿日付を取得できる', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     const date = '2021-01-01';
     blogPost.setPostDate(date);
     expect(blogPost.getPostDate()).toEqual(new Date(date));
@@ -56,13 +56,13 @@ describe('エンティティ: 投稿記事', () => {
 
   it('記事の投稿日付が空の時に取得するとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     expect(() => blogPost.getPostDate()).toThrow('投稿日が設定されていません');
   });
 
   it('記事の最終更新日を取得できる', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     const date = '2021-01-01';
     blogPost.setLastUpdateDate(date);
     expect(blogPost.getLastUpdateDate()).toEqual(new Date(date));
@@ -70,7 +70,7 @@ describe('エンティティ: 投稿記事', () => {
 
   it('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     expect(() => blogPost.getLastUpdateDate()).toThrow(
       '最終更新日が設定されていません',
     );
@@ -78,7 +78,7 @@ describe('エンティティ: 投稿記事', () => {
 
   it('YYYY-MM-DD の形式ではない文字列で日付を生成すると EntityError が発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     const date = '2021/01/01';
     expect(() => blogPost.setPostDate(date)).toThrow(
       '日付は YYYY-MM-DD 形式で指定してください',

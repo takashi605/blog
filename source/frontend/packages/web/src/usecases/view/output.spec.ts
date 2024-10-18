@@ -1,5 +1,5 @@
 import { createViewBlogPostDTO } from '@/usecases/view/output';
-import { n__BlogPost } from 'entities/src/blogPost/index';
+import { BlogPost } from 'entities/src/blogPost/index';
 import {
   ContentType,
   createContent,
@@ -23,7 +23,7 @@ describe('DTO の生成', () => {
       type: ContentType.Paragraph,
       value: '段落',
     });
-    const blogPost = new n__BlogPost(title)
+    const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)
       .addContent(paragraph1)
@@ -52,7 +52,7 @@ describe('DTO の生成', () => {
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title);
+    const blogPost = new BlogPost(title);
     expect(() => createViewBlogPostDTO(blogPost)).toThrow(
       '投稿日が存在しない記事を生成しようとしました',
     );
@@ -60,7 +60,7 @@ describe('DTO の生成', () => {
 
   it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new n__BlogPost(title).setPostDate('2021-01-01');
+    const blogPost = new BlogPost(title).setPostDate('2021-01-01');
     expect(() => createViewBlogPostDTO(blogPost)).toThrow(
       '最終更新日が存在しない記事を生成しようとしました',
     );

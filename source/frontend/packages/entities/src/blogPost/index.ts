@@ -3,7 +3,7 @@ import type { Content } from './postContents/content';
 import type { Heading } from './postContents/heading';
 import { createH1 } from './postContents/heading';
 
-export class n__BlogPost {
+export class BlogPost {
   private title: Heading;
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
