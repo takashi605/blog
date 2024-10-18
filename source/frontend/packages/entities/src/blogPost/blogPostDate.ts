@@ -1,6 +1,6 @@
-import { EntityError } from '@/error/error';
+import { EntityError } from '../error/error';
 
-type BlogPostDate = {
+export type BlogPostDate = {
   value: Date;
   getDate: () => Date;
 };

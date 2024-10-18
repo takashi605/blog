@@ -1,4 +1,4 @@
-import { EntityError } from '@/error/error';
+import { EntityError } from './error';
 
 const throwErrorFunction = () => {
   throw new EntityError('エンティティでエラーが発生しました');

@@ -1,4 +1,4 @@
-import { createBlogPost, type BlogPost } from '.';
+import { createBlogPost, type BlogPost } from './index';
 import { ContentType, createContent } from './postContents/content';
 
 describe('エンティティ: 投稿記事', () => {
@@ -73,6 +73,18 @@ describe('エンティティ: 投稿記事', () => {
     const blogPost: BlogPost = createBlogPost(title);
     expect(() => blogPost.getLastUpdateDate()).toThrow(
       '最終更新日が設定されていません',
+    );
+  });
+
+  it('YYYY-MM-DD の形式ではない文字列で日付を生成すると EntityError が発生する', () => {
+    const title = '記事タイトル';
+    const blogPost: BlogPost = createBlogPost(title);
+    const date = '2021/01/01';
+    expect(() => blogPost.setPostDate(date)).toThrow(
+      '日付は YYYY-MM-DD 形式で指定してください',
+    );
+    expect(() => blogPost.setLastUpdateDate(date)).toThrow(
+      '日付は YYYY-MM-DD 形式で指定してください',
     );
   });
 });

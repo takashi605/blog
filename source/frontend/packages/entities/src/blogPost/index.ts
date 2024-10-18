@@ -1,3 +1,4 @@
+import { createBlogPostDate, type BlogPostDate } from './blogPostDate';
 import type { Content } from './postContents/content';
 import { createH1 } from './postContents/heading';
 
@@ -15,8 +16,8 @@ export type BlogPost = {
 export const createBlogPost = (initialTitle: string): BlogPost => {
   // setter 等が必要になった時のために変数に保持しておく
   const title = createH1(1, initialTitle);
-  let postDate: Date | null = null;
-  let lastUpdateDate: Date | null = null;
+  let postDate: BlogPostDate | null = null;
+  let lastUpdateDate: BlogPostDate | null = null;
   const contents: Content[] = [];
 
   return {
@@ -31,20 +32,20 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
       if (!postDate) {
         throw new Error('投稿日が設定されていません');
       }
-      return postDate;
+      return postDate.getDate();
     },
     setPostDate(date: string) {
-      postDate = new Date(date);
+      postDate = createBlogPostDate(date);
       return this;
     },
     getLastUpdateDate: () => {
       if (!lastUpdateDate) {
         throw new Error('最終更新日が設定されていません');
       }
-      return lastUpdateDate;
+      return lastUpdateDate.getDate();
     },
     setLastUpdateDate(date: string) {
-      lastUpdateDate = new Date(date);
+      lastUpdateDate = createBlogPostDate(date);
       return this;
     },
   };

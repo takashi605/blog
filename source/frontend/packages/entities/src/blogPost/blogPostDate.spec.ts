@@ -1,4 +1,4 @@
-import { EntityError } from '@/error/error';
+import { EntityError } from '../error/error';
 import { createBlogPostDate } from './blogPostDate';
 
 describe('エンティティ：投稿記事の日付', () => {
