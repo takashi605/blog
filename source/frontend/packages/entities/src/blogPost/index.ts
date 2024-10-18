@@ -1,5 +1,6 @@
 import { BlogPostDate } from './blogPostDate';
 import type { Content } from './postContents/content';
+import type { Heading } from './postContents/heading';
 import { createH1 } from './postContents/heading';
 
 export type BlogPost = {
@@ -50,3 +51,19 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
     },
   };
 };
+
+export class n__BlogPost {
+  private title: Heading;
+
+  constructor(title: string) {
+    this.title = createH1(1, title);
+  }
+
+  getTitleText() {
+    return this.title.getValue();
+  }
+
+  getTitleLevel() {
+    return this.title.getLevel();
+  }
+}
