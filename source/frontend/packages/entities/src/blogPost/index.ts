@@ -55,6 +55,7 @@ export const createBlogPost = (initialTitle: string): BlogPost => {
 export class n__BlogPost {
   private title: Heading;
   private contents: Content[] = [];
+  private postDate: BlogPostDate | null = null;
 
   constructor(title: string) {
     this.title = createH1(1, title);
@@ -75,5 +76,20 @@ export class n__BlogPost {
 
   getContents() {
     return this.contents;
+  }
+
+  setPostDate(date: string) {
+    if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      throw new Error('日付は YYYY-MM-DD 形式で指定してください');
+    }
+    this.postDate = new BlogPostDate(date);
+    return this;
+  }
+
+  getPostDate() {
+    if (!this.postDate) {
+      throw new Error('投稿日が設定されていません');
+    }
+    return this.postDate.getDate();
   }
 }
