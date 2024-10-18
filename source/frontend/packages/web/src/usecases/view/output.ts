@@ -1,5 +1,5 @@
 import { formatDate2DigitString } from '@/utils/date';
-import type { BlogPost } from 'entities/src/blogPost';
+import type { BlogPost } from 'entities/src/blogPost/blogPost';
 
 export type ViewBlogPostDTO = {
   readonly title: string;

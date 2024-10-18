@@ -1,7 +1,10 @@
 import { createViewBlogPostDTO } from '@/usecases/view/output';
-import type { BlogPost } from 'entities/src/blogPost';
-import { createBlogPost } from 'entities/src/blogPost';
-import { ContentType, createContent } from 'entities/src/postContents/content';
+import type { BlogPost } from 'entities/src/blogPost/blogPost';
+import { createBlogPost } from 'entities/src/blogPost/blogPost';
+import {
+  ContentType,
+  createContent,
+} from 'entities/src/blogPost/postContents/content';
 
 describe('DTO の生成', () => {
   it('ファクトリ関数を使って DTO を生成する', () => {
