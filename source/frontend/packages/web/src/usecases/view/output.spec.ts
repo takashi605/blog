@@ -1,6 +1,6 @@
 import { createViewBlogPostDTO } from '@/usecases/view/output';
-import type { BlogPost } from 'entities/src/blogPost/blogPost';
-import { createBlogPost } from 'entities/src/blogPost/blogPost';
+import type { BlogPost } from 'entities/src/blogPost/index';
+import { createBlogPost } from 'entities/src/blogPost/index';
 import {
   ContentType,
   createContent,

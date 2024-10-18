@@ -1,4 +1,4 @@
-import { createBlogPost, type BlogPost } from './blogPost';
+import { createBlogPost, type BlogPost } from '.';
 import { ContentType, createContent } from './postContents/content';
 
 describe('エンティティ: 投稿記事', () => {

@@ -1,4 +1,7 @@
-import type { Content, ContentType } from 'entities/src/postContents/content';
+import type {
+  Content,
+  ContentType,
+} from 'entities/src/blogPost/postContents/content';
 
 export type ContentInput = {
   type: ContentType;

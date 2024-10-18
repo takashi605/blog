@@ -2,7 +2,7 @@ import {
   createContentByInput,
   type ContentInput,
 } from '@/usecases/view/input/content';
-import { createBlogPost, type BlogPost } from 'entities/src/blogPost/blogPost';
+import { createBlogPost, type BlogPost } from 'entities/src/blogPost/index';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostInput = {
