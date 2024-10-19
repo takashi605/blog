@@ -52,18 +52,18 @@ describe('DTO の生成', () => {
     expect(dto.lastUpdateDate).toEqual('2021/01/02');
   });
 
-  it.skip('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
+  it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
     const blogPost = new BlogPost(title);
-    expect(() => createViewBlogPostDTO(blogPost)).toThrow(
+    expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '投稿日が存在しない記事を生成しようとしました',
     );
   });
 
-  it.skip('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
+  it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
     const blogPost = new BlogPost(title).setPostDate('2021-01-01');
-    expect(() => createViewBlogPostDTO(blogPost)).toThrow(
+    expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '最終更新日が存在しない記事を生成しようとしました',
     );
   });
