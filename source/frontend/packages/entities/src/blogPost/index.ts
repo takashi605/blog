@@ -1,20 +1,18 @@
 import { BlogPostDate } from './blogPostDate';
 import type { Content } from './postContents/content';
-import type { Heading } from './postContents/heading';
-import { createH1 } from './postContents/heading';
 
 export class BlogPost {
-  private title: Heading;
+  private title: string;
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
 
   constructor(title: string) {
-    this.title = createH1(1, title);
+    this.title = title;
   }
 
   getTitleText() {
-    return this.title.getValue();
+    return this.title;
   }
 
   addContent(content: Content) {
