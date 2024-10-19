@@ -1,3 +1,4 @@
+import { EntityError } from '../../error/error';
 import { createH2, createH3 } from './heading';
 import { Paragraph } from './paragraph';
 
@@ -24,6 +25,6 @@ export const createContent = (params: ContentParams): Content => {
     case 'paragraph':
       return new Paragraph(params.id, params.value);
     default:
-      throw new Error('不明なコンテントタイプです');
+      throw new EntityError('不明なコンテントタイプです');
   }
 };

@@ -36,4 +36,14 @@ describe('エンティティ: 投稿記事のコンテント', () => {
     expect(paragraph.getType()).toBe('paragraph');
     expect(paragraph.getId()).toBe(1);
   });
+
+  it('不明なコンテントタイプを指定するとエラーが発生する', () => {
+    expect(() =>
+      createContent({
+        id: 1,
+        type: 'unknown' as ContentType,
+        value: '不明なコンテント',
+      }),
+    ).toThrow('不明なコンテントタイプです');
+  });
 });
