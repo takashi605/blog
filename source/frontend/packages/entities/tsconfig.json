@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    // @/ で src/ を参照できるようにする
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   // プログラムに含めるファイル
   "include": ["**/*.ts"],
