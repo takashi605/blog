@@ -1,3 +1,4 @@
+import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
 import type { Content } from './postContents/content';
 
@@ -31,7 +32,7 @@ export class BlogPost {
 
   getPostDate() {
     if (!this.postDate) {
-      throw new Error('投稿日が設定されていません');
+      throw new EntityError('投稿日が設定されていません');
     }
     return this.postDate.getDate();
   }
@@ -43,7 +44,7 @@ export class BlogPost {
 
   getLastUpdateDate() {
     if (!this.lastUpdateDate) {
-      throw new Error('最終更新日が設定されていません');
+      throw new EntityError('最終更新日が設定されていません');
     }
     return this.lastUpdateDate.getDate();
   }
