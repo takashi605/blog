@@ -1,8 +1,8 @@
-import { BlogPostBuilder } from '@/usecases/entityBuilder/index';
+import { createBlogPostBuilder } from '@/usecases/entityBuilder';
 
 describe('ユースケース: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
-    const builder = new BlogPostBuilder()
+    const builder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')

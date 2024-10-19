@@ -60,3 +60,5 @@ export class BlogPostBuilder {
     return blogPost;
   }
 }
+
+export const createBlogPostBuilder = () => new BlogPostBuilder();

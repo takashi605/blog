@@ -1,4 +1,7 @@
-import { BlogPostBuilder } from '@/usecases/entityBuilder/index';
+import {
+  createBlogPostBuilder,
+  type BlogPostBuilder,
+} from '@/usecases/entityBuilder/index';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
@@ -24,7 +27,7 @@ export const responseToViewBlogPost = (
 };
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
-  const viewBlogPostInput = new BlogPostBuilder()
+  const viewBlogPostInput = createBlogPostBuilder()
     .setPostTitle(response.title)
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
