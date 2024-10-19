@@ -1,13 +1,21 @@
 import type { Content } from './content';
 
-export type Paragraph = Content;
+export class Paragraph implements Content {
+  private id: number;
+  private text: string;
 
-export const createParagraph = (id: number, initialText: string): Paragraph => {
-  const text = initialText;
+  constructor(id: number, text: string) {
+    this.id = id;
+    this.text = text;
+  }
 
-  return {
-    getId: () => id,
-    getValue: () => text,
-    getType: () => 'paragraph',
-  };
-};
+  getId() {
+    return this.id;
+  }
+  getValue() {
+    return this.text;
+  }
+  getType() {
+    return 'paragraph';
+  }
+}
