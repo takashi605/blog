@@ -1,9 +1,5 @@
 import { ContentType, type Content } from './content';
 
-export const createH1 = (id: number, initialText: string): Heading => {
-  return new Heading(id, initialText, 1);
-};
-
 export const createH2 = (id: number, initialText: string): Heading => {
   return new Heading(id, initialText, 2);
 };
