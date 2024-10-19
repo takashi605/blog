@@ -87,13 +87,19 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
 
 export class BlogPostBuilder {
   private postTitle = '';
+  private postDate = '';
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
     return this;
   }
 
+  setPostDate(postDate: string) {
+    this.postDate = postDate;
+    return this;
+  }
+
   build() {
-    return new BlogPost(this.postTitle);
+    return new BlogPost(this.postTitle).setPostDate(this.postDate);
   }
 }

@@ -55,13 +55,15 @@ describe('ユースケース: 投稿記事を生成するビルダークラス',
     // const input = createInputForTest();
     // const blogPost = input.generateBlogPost();
 
-    const builder = new BlogPostBuilder().setPostTitle('記事タイトル');
+    const builder = new BlogPostBuilder()
+      .setPostTitle('記事タイトル')
+      .setPostDate('2021-01-01');
     const blogPost = builder.build();
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
 
-    // const expectedPostDate = new Date('2021-01-01');
-    // expect(blogPost.getPostDate()).toEqual(expectedPostDate);
+    const expectedPostDate = new Date('2021-01-01');
+    expect(blogPost.getPostDate()).toEqual(expectedPostDate);
 
     // const expectedLastUpdateDate = new Date('2021-01-02');
     // expect(blogPost.getLastUpdateDate()).toEqual(expectedLastUpdateDate);
