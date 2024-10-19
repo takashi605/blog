@@ -89,6 +89,7 @@ export class BlogPostBuilder {
   private postTitle = '';
   private postDate = '';
   private lastUpdateDate = '';
+  private contents: ContentInput[] = [];
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -105,9 +106,34 @@ export class BlogPostBuilder {
     return this;
   }
 
+  addH2(contentValue: string) {
+    this.contents.push({ type: ContentType.H2, contentValue });
+    return this;
+  }
+
+  addH3(contentValue: string) {
+    this.contents.push({ type: ContentType.H3, contentValue });
+    return this;
+  }
+
+  addParagraph(contentValue: string) {
+    this.contents.push({ type: ContentType.Paragraph, contentValue });
+    return this;
+  }
+
+  injectionContentsTo(blogPost: BlogPost) {
+    this.contents.forEach((content) => {
+      blogPost.addContent(
+        createContentByInput(blogPost.getContents().length + 1, content),
+      );
+    });
+  }
+
   build() {
-    return new BlogPost(this.postTitle)
+    const blogPost = new BlogPost(this.postTitle)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
+    this.injectionContentsTo(blogPost);
+    return blogPost;
   }
 }
