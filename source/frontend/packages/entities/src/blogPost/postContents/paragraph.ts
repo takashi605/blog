@@ -1,4 +1,4 @@
-import type { Content } from './content';
+import { ContentType, type Content } from './content';
 
 export class Paragraph implements Content {
   private id: number;
@@ -16,6 +16,6 @@ export class Paragraph implements Content {
     return this.text;
   }
   getType() {
-    return 'paragraph';
+    return ContentType.Paragraph;
   }
 }

@@ -1,4 +1,4 @@
-import type { Content } from './content';
+import { ContentType, type Content } from './content';
 
 export const createH1 = (id: number, initialText: string): Heading => {
   return new Heading(id, initialText, 1);
@@ -30,7 +30,14 @@ export class Heading implements Content {
     return this.text;
   }
   getType() {
-    return `h${this.level}`;
+    switch (this.level) {
+      case 2:
+        return ContentType.H2;
+      case 3:
+        return ContentType.H3;
+      default:
+        throw new Error('不明な見出しレベルです');
+    }
   }
   getLevel() {
     return this.level;

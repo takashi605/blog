@@ -10,7 +10,7 @@ export const enum ContentType {
 export type Content = {
   getId: () => number;
   getValue: () => string;
-  getType: () => string;
+  getType: () => ContentType;
 };
 
 type ContentParams = { id: number; type: ContentType; value: string };
