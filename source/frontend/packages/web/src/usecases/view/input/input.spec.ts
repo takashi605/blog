@@ -43,18 +43,6 @@ describe('【旧】ユースケース: 投稿記事生成のための入力値',
 
 describe('ユースケース: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
-    // createViewBlogPostInput()
-    //   .setPostTitle('記事タイトル')
-    //   .setPostDate('2021-01-01')
-    //   .setLastUpdateDate('2021-01-02')
-    //   .addH2('h2見出し1')
-    //   .addH3('h3見出し1')
-    //   .addParagraph('段落1')
-    //   .addH3('h3見出し2')
-    //   .addParagraph('段落2');
-    // const input = createInputForTest();
-    // const blogPost = input.generateBlogPost();
-
     const builder = new BlogPostBuilder()
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
