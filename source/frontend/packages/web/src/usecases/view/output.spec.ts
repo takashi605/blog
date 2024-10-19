@@ -1,4 +1,7 @@
-import { createViewBlogPostDTO } from '@/usecases/view/output';
+import {
+  BlogPostDTOBuilder,
+  createViewBlogPostDTO,
+} from '@/usecases/view/output';
 import { BlogPost } from 'entities/src/blogPost/index';
 import {
   ContentType,
@@ -48,6 +51,37 @@ describe('DTO の生成', () => {
 
     expect(dto.postDate).toEqual('2021/01/01');
     expect(dto.lastUpdateDate).toEqual('2021/01/02');
+  });
+
+  it('builder クラスを使って DTO を生成できる', () => {
+    const title = '記事タイトル';
+    const h2 = createContent({
+      id: 1,
+      type: ContentType.H2,
+      value: 'h2見出し',
+    });
+    const h3 = createContent({
+      id: 2,
+      type: ContentType.H3,
+      value: 'h3見出し',
+    });
+    const paragraph1 = createContent({
+      id: 3,
+      type: ContentType.Paragraph,
+      value: '段落',
+    });
+    const blogPost = new BlogPost(title)
+      .addContent(h2)
+      .addContent(h3)
+      .addContent(paragraph1)
+      .setPostDate('2021-01-01')
+      .setLastUpdateDate('2021-01-02');
+
+    const builder = new BlogPostDTOBuilder(blogPost);
+    const dto = builder.build();
+
+    expect(dto.title).toBe('記事タイトル');
+    expect(dto.contents.length).toBe(3);
   });
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {

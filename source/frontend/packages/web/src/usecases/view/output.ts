@@ -48,3 +48,20 @@ const extractContentsForDTO = (
     };
   });
 };
+
+export class BlogPostDTOBuilder {
+  private blogPost: BlogPost;
+
+  constructor(blogPost: BlogPost) {
+    this.blogPost = blogPost;
+  }
+
+  build(): ViewBlogPostDTO {
+    return {
+      title: this.blogPost.getTitleText(),
+      postDate: extractPostDateForDTO(this.blogPost),
+      lastUpdateDate: extractLastUpdateDateForDTO(this.blogPost),
+      contents: extractContentsForDTO(this.blogPost),
+    };
+  }
+}
