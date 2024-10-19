@@ -20,5 +20,6 @@
     "editor.formatOnSave": true,
     "editor.inlayHints.enabled": "off"
   },
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "cSpell.words": ["Usecase"]
 }
