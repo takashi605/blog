@@ -6,7 +6,6 @@ describe('エンティティ: 投稿記事', () => {
     const title = '記事タイトル';
     const blogPost = new BlogPost(title);
     expect(blogPost.getTitleText()).toBe(title);
-    expect(blogPost.getTitleLevel()).toBe(1);
   });
 
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {

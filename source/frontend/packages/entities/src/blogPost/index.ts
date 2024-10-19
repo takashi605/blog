@@ -17,10 +17,6 @@ export class BlogPost {
     return this.title.getValue();
   }
 
-  getTitleLevel() {
-    return this.title.getLevel();
-  }
-
   addContent(content: Content) {
     this.contents.push(content);
     return this;
