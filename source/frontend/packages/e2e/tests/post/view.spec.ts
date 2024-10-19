@@ -65,8 +65,26 @@ Given('投稿日,更新日時が存在しないページにアクセスする', 
 });
 
 Then(
-  '{string} というエラーメッセージが表示される',
+  'データ不整合により {string} というエラーメッセージが表示される',
   async ({ page }, errorMessage) => {
     await expect(page.getByText(errorMessage)).toBeVisible();
   },
 );
+
+Given(
+  '対応する記事データが存在しないページにアクセスする',
+  async ({ page }) => {
+    if (!process.env.TEST_TARGET_URL) {
+      throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
+    }
+    await page.goto(`${process.env.TEST_TARGET_URL}/posts/1000`);
+  },
+);
+
+Then(
+  'データ未存在により {string} というエラーメッセージが表示される',
+  async ({ page }, errorMessage) => {
+    await expect(page.getByText(errorMessage)).toBeVisible();
+  },
+);
+
