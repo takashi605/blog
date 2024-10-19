@@ -25,9 +25,6 @@ export class BlogPost {
   }
 
   setPostDate(date: string) {
-    if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      throw new Error('日付は YYYY-MM-DD 形式で指定してください');
-    }
     this.postDate = new BlogPostDate(date);
     return this;
   }
@@ -40,9 +37,6 @@ export class BlogPost {
   }
 
   setLastUpdateDate(date: string) {
-    if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      throw new Error('日付は YYYY-MM-DD 形式で指定してください');
-    }
     this.lastUpdateDate = new BlogPostDate(date);
     return this;
   }
