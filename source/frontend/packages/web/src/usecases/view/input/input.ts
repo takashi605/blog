@@ -84,3 +84,16 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
     },
   };
 };
+
+export class BlogPostBuilder {
+  private postTitle = '';
+
+  setPostTitle(postTitle: string) {
+    this.postTitle = postTitle;
+    return this;
+  }
+
+  build() {
+    return new BlogPost(this.postTitle);
+  }
+}
