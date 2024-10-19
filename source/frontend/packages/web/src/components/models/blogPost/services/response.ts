@@ -1,7 +1,4 @@
-import {
-  createViewBlogPostInput,
-  type ViewBlogPostInput,
-} from '@/usecases/view/input/input';
+import { BlogPostBuilder } from '@/usecases/view/input/input';
 import type { ViewBlogPostDTO } from '@/usecases/view/output';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
@@ -27,7 +24,7 @@ export const responseToViewBlogPost = (
 };
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
-  const viewBlogPostInput = createViewBlogPostInput()
+  const viewBlogPostInput = new BlogPostBuilder()
     .setPostTitle(response.title)
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
@@ -39,7 +36,7 @@ const responseToViewBlogPostInput = (response: BlogPostResponse) => {
 
 const mapResponseContentToBlogPost = (
   response: BlogPostResponse,
-  viewBlogPostInput: ViewBlogPostInput,
+  viewBlogPostInput: BlogPostBuilder,
 ) => {
   response.contents.forEach((content) => {
     if (content.type === 'h2') {

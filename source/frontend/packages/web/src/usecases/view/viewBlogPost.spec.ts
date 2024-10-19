@@ -1,10 +1,10 @@
-import { createViewBlogPostInput } from '@/usecases/view/input/input';
+import { BlogPostBuilder } from '@/usecases/view/input/input';
 import type { ViewBlogPostDTO } from '@/usecases/view/output';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
-    const input = createViewBlogPostInput()
+    const input = new BlogPostBuilder()
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
