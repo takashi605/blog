@@ -88,6 +88,7 @@ export const createViewBlogPostInput = (): ViewBlogPostInput => {
 export class BlogPostBuilder {
   private postTitle = '';
   private postDate = '';
+  private lastUpdateDate = '';
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -99,7 +100,14 @@ export class BlogPostBuilder {
     return this;
   }
 
+  setLastUpdateDate(lastUpdateDate: string) {
+    this.lastUpdateDate = lastUpdateDate;
+    return this;
+  }
+
   build() {
-    return new BlogPost(this.postTitle).setPostDate(this.postDate);
+    return new BlogPost(this.postTitle)
+      .setPostDate(this.postDate)
+      .setLastUpdateDate(this.lastUpdateDate);
   }
 }

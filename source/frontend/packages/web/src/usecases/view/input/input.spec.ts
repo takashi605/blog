@@ -57,7 +57,8 @@ describe('ユースケース: 投稿記事を生成するビルダークラス',
 
     const builder = new BlogPostBuilder()
       .setPostTitle('記事タイトル')
-      .setPostDate('2021-01-01');
+      .setPostDate('2021-01-01')
+      .setLastUpdateDate('2021-01-02');
     const blogPost = builder.build();
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
@@ -65,8 +66,8 @@ describe('ユースケース: 投稿記事を生成するビルダークラス',
     const expectedPostDate = new Date('2021-01-01');
     expect(blogPost.getPostDate()).toEqual(expectedPostDate);
 
-    // const expectedLastUpdateDate = new Date('2021-01-02');
-    // expect(blogPost.getLastUpdateDate()).toEqual(expectedLastUpdateDate);
+    const expectedLastUpdateDate = new Date('2021-01-02');
+    expect(blogPost.getLastUpdateDate()).toEqual(expectedLastUpdateDate);
 
     // expect(blogPost.getContents().length).toBe(5);
     // contentsEqualsInputData();
