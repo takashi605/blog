@@ -1,4 +1,4 @@
-import { BlogPostBuilder } from '@/usecases/view/input/input';
+import { BlogPostBuilder } from '@/usecases/entityBuilder/index';
 
 describe('ユースケース: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {

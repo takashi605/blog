@@ -1,7 +1,7 @@
 import {
   createContentForBlogPostBuilder,
   type ContentForBlogPostBuilder,
-} from '@/usecases/view/input/content';
+} from '@/usecases/entityBuilder/content';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
