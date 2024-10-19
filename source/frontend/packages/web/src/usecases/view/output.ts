@@ -56,12 +56,38 @@ export class BlogPostDTOBuilder {
     this.blogPost = blogPost;
   }
 
+  private extractPostDateForDTO(): string {
+    try {
+      return formatDate2DigitString(this.blogPost.getPostDate());
+    } catch {
+      throw new Error('投稿日が存在しない記事を生成しようとしました');
+    }
+  }
+
+  private extractLastUpdateDateForDTO(): string {
+    try {
+      return formatDate2DigitString(this.blogPost.getLastUpdateDate());
+    } catch {
+      throw new Error('最終更新日が存在しない記事を生成しようとしました');
+    }
+  }
+
+  private extractContentsForDTO(): ViewBlogPostDTO['contents'] {
+    return this.blogPost.getContents().map((content, index) => {
+      return {
+        id: index + 1,
+        value: content.getValue(),
+        type: content.getType(),
+      };
+    });
+  }
+
   build(): ViewBlogPostDTO {
     return {
       title: this.blogPost.getTitleText(),
-      postDate: extractPostDateForDTO(this.blogPost),
-      lastUpdateDate: extractLastUpdateDateForDTO(this.blogPost),
-      contents: extractContentsForDTO(this.blogPost),
+      postDate: this.extractPostDateForDTO(),
+      lastUpdateDate: this.extractLastUpdateDateForDTO(),
+      contents: this.extractContentsForDTO(),
     };
   }
 }

@@ -82,6 +82,21 @@ describe('DTO の生成', () => {
 
     expect(dto.title).toBe('記事タイトル');
     expect(dto.contents.length).toBe(3);
+
+    expect(dto.contents[0].id).toBe(1);
+    expect(dto.contents[0].value).toBe('h2見出し');
+    expect(dto.contents[0].type).toBe('h2');
+
+    expect(dto.contents[1].id).toBe(2);
+    expect(dto.contents[1].value).toBe('h3見出し');
+    expect(dto.contents[1].type).toBe('h3');
+
+    expect(dto.contents[2].id).toBe(3);
+    expect(dto.contents[2].value).toBe('段落');
+    expect(dto.contents[2].type).toBe('paragraph');
+
+    expect(dto.postDate).toEqual('2021/01/01');
+    expect(dto.lastUpdateDate).toEqual('2021/01/02');
   });
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
