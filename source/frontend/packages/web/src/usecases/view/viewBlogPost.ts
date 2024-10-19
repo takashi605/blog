@@ -1,6 +1,6 @@
 import type { BlogPostBuilder } from '@/usecases/view/input/input';
 import {
-  createViewBlogPostDTO,
+  BlogPostDTOBuilder,
   type ViewBlogPostDTO,
 } from '@/usecases/view/output';
 import type { BlogPost } from 'entities/src/blogPost';
@@ -10,6 +10,6 @@ export const viewBlogPost = (
 ): ViewBlogPostDTO => {
   const blogPost: BlogPost = blogPostBuilder.build();
 
-  const dto = createViewBlogPostDTO(blogPost);
+  const dto = new BlogPostDTOBuilder(blogPost).build();
   return dto;
 };

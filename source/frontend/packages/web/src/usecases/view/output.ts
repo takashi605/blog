@@ -12,43 +12,6 @@ export type ViewBlogPostDTO = {
   }>;
 };
 
-export const createViewBlogPostDTO = (blogPost: BlogPost): ViewBlogPostDTO => {
-  return {
-    title: blogPost.getTitleText(),
-    postDate: extractPostDateForDTO(blogPost),
-    lastUpdateDate: extractLastUpdateDateForDTO(blogPost),
-    contents: extractContentsForDTO(blogPost),
-  };
-};
-
-const extractPostDateForDTO = (blogPost: BlogPost): string => {
-  try {
-    return formatDate2DigitString(blogPost.getPostDate());
-  } catch {
-    throw new Error('投稿日が存在しない記事を生成しようとしました');
-  }
-};
-
-const extractLastUpdateDateForDTO = (blogPost: BlogPost): string => {
-  try {
-    return formatDate2DigitString(blogPost.getLastUpdateDate());
-  } catch {
-    throw new Error('最終更新日が存在しない記事を生成しようとしました');
-  }
-};
-
-const extractContentsForDTO = (
-  blogPost: BlogPost,
-): ViewBlogPostDTO['contents'] => {
-  return blogPost.getContents().map((content, index) => {
-    return {
-      id: index + 1,
-      value: content.getValue(),
-      type: content.getType(),
-    };
-  });
-};
-
 export class BlogPostDTOBuilder {
   private blogPost: BlogPost;
 
