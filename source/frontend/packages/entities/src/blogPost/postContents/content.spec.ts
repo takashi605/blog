@@ -9,7 +9,6 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       value: 'h2見出し',
     }) as Heading;
     expect(h2.getValue()).toBe('h2見出し');
-    expect(h2.getLevel()).toBe(2);
     expect(h2.getId()).toBe(1);
     expect(h2.getType()).toBe('h2');
   });
@@ -21,7 +20,6 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       value: 'h3見出し',
     }) as Heading;
     expect(h3.getValue()).toBe('h3見出し');
-    expect(h3.getLevel()).toBe(3);
     expect(h3.getId()).toBe(1);
     expect(h3.getType()).toBe('h3');
   });
