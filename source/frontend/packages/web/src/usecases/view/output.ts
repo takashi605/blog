@@ -1,15 +1,18 @@
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
+import type { Content } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
   readonly postDate: string;
   readonly lastUpdateDate: string;
-  readonly contents: ReadonlyArray<{
-    readonly id: number;
-    readonly value: string;
-    readonly type: string;
-  }>;
+  readonly contents: ReadonlyArray<ContentForDTO>;
+};
+
+type ContentForDTO = {
+  readonly id: number;
+  readonly value: string;
+  readonly type: string;
 };
 
 export class BlogPostDTOBuilder {
@@ -36,13 +39,17 @@ export class BlogPostDTOBuilder {
   }
 
   private extractContentsForDTO(): ViewBlogPostDTO['contents'] {
-    return this.blogPost.getContents().map((content, index) => {
-      return {
-        id: index + 1,
-        value: content.getValue(),
-        type: content.getType(),
-      };
-    });
+    return this.blogPost
+      .getContents()
+      .map((content) => this.createContentForDTO(content));
+  }
+
+  private createContentForDTO(content: Content): ContentForDTO {
+    return {
+      id: content.getId(),
+      value: content.getValue(),
+      type: content.getType(),
+    };
   }
 
   build(): ViewBlogPostDTO {
