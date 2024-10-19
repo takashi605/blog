@@ -9,7 +9,6 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       value: 'h2見出し',
     }) as Heading;
     expect(h2.getValue()).toBe('h2見出し');
-    expect(h2.getLevel()).toBe(2);
     expect(h2.getId()).toBe(1);
     expect(h2.getType()).toBe('h2');
   });
@@ -21,7 +20,6 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       value: 'h3見出し',
     }) as Heading;
     expect(h3.getValue()).toBe('h3見出し');
-    expect(h3.getLevel()).toBe(3);
     expect(h3.getId()).toBe(1);
     expect(h3.getType()).toBe('h3');
   });
@@ -35,5 +33,15 @@ describe('エンティティ: 投稿記事のコンテント', () => {
     expect(paragraph.getValue()).toBe('段落');
     expect(paragraph.getType()).toBe('paragraph');
     expect(paragraph.getId()).toBe(1);
+  });
+
+  it('不明なコンテントタイプを指定するとエラーが発生する', () => {
+    expect(() =>
+      createContent({
+        id: 1,
+        type: 'unknown' as ContentType,
+        value: '不明なコンテント',
+      }),
+    ).toThrow('不明なコンテントタイプです');
   });
 });

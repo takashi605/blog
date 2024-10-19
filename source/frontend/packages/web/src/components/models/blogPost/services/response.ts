@@ -1,8 +1,8 @@
 import {
-  createViewBlogPostInput,
-  type ViewBlogPostInput,
-} from '@/usecases/view/input/input';
-import type { ViewBlogPost } from '@/usecases/view/output';
+  createBlogPostBuilder,
+  type BlogPostBuilder,
+} from '@/usecases/entityBuilder/index';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
@@ -18,7 +18,7 @@ export type BlogPostResponse = {
 
 export const responseToViewBlogPost = (
   response: BlogPostResponse,
-): ViewBlogPost => {
+): ViewBlogPostDTO => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
   const blogPost = viewBlogPost(viewBlogPostInput);
@@ -27,7 +27,7 @@ export const responseToViewBlogPost = (
 };
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
-  const viewBlogPostInput = createViewBlogPostInput()
+  const viewBlogPostInput = createBlogPostBuilder()
     .setPostTitle(response.title)
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
@@ -39,7 +39,7 @@ const responseToViewBlogPostInput = (response: BlogPostResponse) => {
 
 const mapResponseContentToBlogPost = (
   response: BlogPostResponse,
-  viewBlogPostInput: ViewBlogPostInput,
+  viewBlogPostInput: BlogPostBuilder,
 ) => {
   response.contents.forEach((content) => {
     if (content.type === 'h2') {

@@ -1,10 +1,10 @@
-import { createViewBlogPostInput } from '@/usecases/view/input/input';
-import type { ViewBlogPost } from '@/usecases/view/output';
+import { createBlogPostBuilder } from '@/usecases/entityBuilder';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
-    const input = createViewBlogPostInput()
+    const input = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
@@ -14,7 +14,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       .addH3('h3見出し2')
       .addParagraph('段落2');
 
-    const output: ViewBlogPost = viewBlogPost(input);
+    const output: ViewBlogPostDTO = viewBlogPost(input);
 
     expect(output.title).toBe('記事タイトル');
 

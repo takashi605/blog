@@ -2,9 +2,9 @@ import {
   responseToViewBlogPost,
   type BlogPostResponse,
 } from '@/components/models/blogPost/services/response';
-import type { ViewBlogPost } from '@/usecases/view/output';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 
-export const fetchBlogPost = async (id: number): Promise<ViewBlogPost> => {
+export const fetchBlogPost = async (id: number): Promise<ViewBlogPostDTO> => {
   const response = await fetchRawBlogPost(id);
   return responseToViewBlogPost(response);
 };

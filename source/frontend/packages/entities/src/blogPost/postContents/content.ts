@@ -1,5 +1,6 @@
+import { EntityError } from '../../error/error';
 import { createH2, createH3 } from './heading';
-import { createParagraph } from './paragraph';
+import { Paragraph } from './paragraph';
 
 export const enum ContentType {
   H2 = 'h2',
@@ -10,7 +11,7 @@ export const enum ContentType {
 export type Content = {
   getId: () => number;
   getValue: () => string;
-  getType: () => string;
+  getType: () => ContentType;
 };
 
 type ContentParams = { id: number; type: ContentType; value: string };
@@ -22,8 +23,8 @@ export const createContent = (params: ContentParams): Content => {
     case 'h3':
       return createH3(params.id, params.value);
     case 'paragraph':
-      return createParagraph(params.id, params.value);
+      return new Paragraph(params.id, params.value);
     default:
-      throw new Error('不明なコンテントタイプです');
+      throw new EntityError('不明なコンテントタイプです');
   }
 };

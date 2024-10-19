@@ -1,3 +1,4 @@
+import WithErrorHandlingServer from '@/components/error/WithErrorHandlingServer';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
 import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
@@ -10,7 +11,7 @@ type ViewBlogPostParams = {
   };
 };
 
-export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
+async function ViewBlogPost({ params }: ViewBlogPostParams) {
   const { id: postId } = params;
   const blogPostResponse = await fetchBlogPost(postId);
 
@@ -25,3 +26,8 @@ export default async function ViewBlogPost({ params }: ViewBlogPostParams) {
     </div>
   );
 }
+
+export default WithErrorHandlingServer(
+  ViewBlogPost,
+  '記事データを生成できませんでした',
+);

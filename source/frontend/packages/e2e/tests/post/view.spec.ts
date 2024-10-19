@@ -3,11 +3,11 @@ import { createBdd } from 'playwright-bdd';
 
 const { Given, Then } = createBdd();
 
-Given('{string} にアクセスする', async ({ page }, url) => {
+Given('正常な記事が取得できるページにアクセスする', async ({ page }) => {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}${url}`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/1`);
 });
 
 Then('記事タイトル が表示される', async ({ page }) => {
@@ -56,3 +56,17 @@ Then('投稿日時 が表示される', async ({ page }) => {
 Then('更新日時 が表示される', async ({ page }) => {
   await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
 });
+
+Given('投稿日,更新日時が存在しないページにアクセスする', async ({ page }) => {
+  if (!process.env.TEST_TARGET_URL) {
+    throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
+  }
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/2`);
+});
+
+Then(
+  '{string} というエラーメッセージが表示される',
+  async ({ page }, errorMessage) => {
+    await expect(page.getByText(errorMessage)).toBeVisible();
+  },
+);
