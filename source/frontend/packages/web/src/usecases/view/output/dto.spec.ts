@@ -1,4 +1,4 @@
-import { BlogPostDTOBuilder } from '@/usecases/view/output';
+import { BlogPostDTOBuilder } from '@/usecases/view/output/dto';
 import { BlogPost } from 'entities/src/blogPost/index';
 import {
   ContentType,

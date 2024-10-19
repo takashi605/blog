@@ -1,5 +1,5 @@
 import { BlogPostBuilder } from '@/usecases/entityBuilder/index';
-import type { ViewBlogPostDTO } from '@/usecases/view/output';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {

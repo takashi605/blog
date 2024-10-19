@@ -2,7 +2,7 @@ import type { BlogPostBuilder } from '@/usecases/entityBuilder/index';
 import {
   BlogPostDTOBuilder,
   type ViewBlogPostDTO,
-} from '@/usecases/view/output';
+} from '@/usecases/view/output/dto';
 import type { BlogPost } from 'entities/src/blogPost';
 
 export const viewBlogPost = (
