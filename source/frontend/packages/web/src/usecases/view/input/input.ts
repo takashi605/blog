@@ -1,6 +1,6 @@
 import {
-  createContentByInput,
-  type ContentInput,
+  createContentForBlogPostBuilder,
+  type ContentForBlogPostBuilder,
 } from '@/usecases/view/input/content';
 import { BlogPost } from 'entities/src/blogPost/index';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
@@ -9,7 +9,7 @@ export class BlogPostBuilder {
   private postTitle = '';
   private postDate = '';
   private lastUpdateDate = '';
-  private contents: ContentInput[] = [];
+  private contents: ContentForBlogPostBuilder[] = [];
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -44,7 +44,10 @@ export class BlogPostBuilder {
   injectionContentsTo(blogPost: BlogPost) {
     this.contents.forEach((content) => {
       blogPost.addContent(
-        createContentByInput(blogPost.getContents().length + 1, content),
+        createContentForBlogPostBuilder(
+          blogPost.getContents().length + 1,
+          content,
+        ),
       );
     });
   }

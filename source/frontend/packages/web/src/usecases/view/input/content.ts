@@ -3,14 +3,14 @@ import type {
   ContentType,
 } from 'entities/src/blogPost/postContents/content';
 
-export type ContentInput = {
+export type ContentForBlogPostBuilder = {
   type: ContentType;
   contentValue: string;
 };
 
-export const createContentByInput = (
+export const createContentForBlogPostBuilder = (
   id: number,
-  input: ContentInput,
+  input: ContentForBlogPostBuilder,
 ): Content => {
   return {
     getId: () => id,
