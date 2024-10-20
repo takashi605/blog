@@ -15,7 +15,7 @@ const fetchRawBlogPost = async (id: number): Promise<BlogPostResponse> => {
     `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${id}`,
   );
   if (response.status === 404) {
-    throw new HttpError('記事データが存在しませんでした');
+    throw new HttpError('記事データが存在しませんでした', response.status);
   }
   return response.json();
 };

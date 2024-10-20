@@ -13,7 +13,7 @@ export const blogPostHandlers = [
   }),
   http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1000`, () => {
     return new HttpResponse('Not found', {
-      status: 404
+      status: 404,
     });
   }),
 ];

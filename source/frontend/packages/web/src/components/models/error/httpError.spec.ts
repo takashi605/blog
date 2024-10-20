@@ -1,7 +1,7 @@
 import { HttpError } from '@/components/models/error/httpError';
 
 const throwErrorFunction = () => {
-  throw new HttpError('HTTP 通信でエラーが発生しました');
+  throw new HttpError('HTTP 通信でエラーが発生しました', 500);
 };
 
 describe('HTTP エラー', () => {
@@ -16,6 +16,15 @@ describe('HTTP エラー', () => {
       throwErrorFunction();
     } catch (error) {
       expect(error instanceof HttpError).toBeTruthy();
+    }
+  });
+
+  it('エラーステータスを取得できる', () => {
+    try {
+      throwErrorFunction();
+    } catch (error) {
+      const httpError = error as HttpError;
+      expect(httpError.status).toBe(500);
     }
   });
 });

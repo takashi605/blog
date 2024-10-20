@@ -32,6 +32,7 @@ describe('投稿記事を取得する', () => {
       expect(error instanceof HttpError).toBeTruthy();
       const httpError = error as HttpError;
       expect(httpError.message).toBe('記事データが存在しませんでした');
+      expect(httpError.status).toBe(404);
     }
   });
 });
