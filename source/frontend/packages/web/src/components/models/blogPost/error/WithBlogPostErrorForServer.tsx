@@ -13,6 +13,9 @@ function WithErrorHandlingServer<T>(
         return <div>記事データを生成できませんでした</div>;
       }
       if (error instanceof HttpError) {
+        if (error.status === 404) {
+          return <div>記事が見つかりませんでした</div>;
+        }
         return <div>記事データの取得に失敗しました</div>;
       }
       return <div>不明なエラーです。</div>;
