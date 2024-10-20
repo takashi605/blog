@@ -7,12 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "startTest": "node ./.next/standalone/web/server.js",
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "fix": "prettier --write . && eslint . --fix",
-    "check": "prettier --check . && eslint . && tsc"
+    "check": "prettier --check . && eslint . && tsc --noEmit",
+    "register-service-worker": "pnpm exec msw init public --save"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
@@ -22,15 +22,24 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "cross-fetch": "^4.0.0",
+    "entities": "^5.0.0",
     "eslint-config-next": "^14.2.3",
-    "msw": "^2.4.3",
     "postcss": "^8",
+    "sass": "^1.79.5",
     "undici": "^5.28.4"
   },
   "dependencies": {
-    "next": "14.2.2",
+    "msw": "^2.4.3",
+    "destyle.css": "^4.0.1",
+    "entities": "workspace:*",
+    "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
     "tailwindcss": "^3.4.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

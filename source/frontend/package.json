@@ -11,6 +11,7 @@
   "scripts": {
     "web": "pnpm -F web",
     "e2e": "pnpm -F e2e",
+    "entities": "pnpm -F entities",
     "e2e-test": "pnpm --filter e2e exec bddgen && pnpm --filter e2e exec playwright test",
     "e2e-ui": "pnpm e2e e2e-ui",
     "web-build": "pnpm -F web exec next build",

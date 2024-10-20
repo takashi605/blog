@@ -1,3 +1,4 @@
+import { blogPostHandlers } from '@/apiMock/handlers/blogPostHandler';
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
@@ -8,3 +9,5 @@ export const handlers = [
     });
   }),
 ];
+
+export const allHandlers = [...handlers, ...blogPostHandlers];

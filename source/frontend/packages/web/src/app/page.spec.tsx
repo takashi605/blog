@@ -1,17 +1,17 @@
-import { server } from '@/testMocks/server';
+import { mockApiForServer } from '@/apiMock/serverForNode';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Home from './page';
 
 beforeAll(() => {
-  server.listen();
+  mockApiForServer.listen();
 });
 afterEach(async () => {
-  server.resetHandlers();
+  mockApiForServer.resetHandlers();
 });
 afterAll(() => {
-  server.close();
+  mockApiForServer.close();
 });
 
 describe('/', () => {

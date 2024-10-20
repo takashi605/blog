@@ -121,12 +121,15 @@ frontend-install-with-container:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm install
 	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- pnpm install
 
+frontend-test:
+	$(MAKE) frontend-test-unit
+	$(MAKE) frontend-check
 frontend-check:
-	cd source/frontend/ && pnpm web run check
+	cd source/frontend/ && pnpm web run check && pnpm entities run check
 frontend-fix:
-	cd source/frontend && pnpm web run fix
+	cd source/frontend && pnpm web run fix && pnpm entities run fix
 frontend-test-unit:
-	cd source/frontend && pnpm web run test
+	cd source/frontend && pnpm web run test && pnpm entities run test
 
 ###
 ## e2e 系
