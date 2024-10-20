@@ -7,8 +7,9 @@ async function ErrorComponent() {
   return <div>これは表示されない文字列だよ</div>;
 }
 
-describe('投稿記事関連エラーを扱うコンポーネント', () => {
-  it('エラーメッセージを表示する', async () => {
+describe('エラーを扱うコンポーネント', () => {
+  it('エラーをキャッチすると本来レンダリング予定のコンポーネントを\
+      レンダリングせずにエラーメッセージを表示する', async () => {
     const WithErrorHandling = await WithErrorHandlingServer(
       ErrorComponent,
       'エラー発生！',
