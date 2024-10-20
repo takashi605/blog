@@ -4,11 +4,16 @@ export const blogPostHandlers = [
   http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1`, () => {
     return HttpResponse.json(successResponse);
   }),
-  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts2`, () => {
+  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/2`, () => {
     return HttpResponse.json({
       ...successResponse,
       postDate: '',
       lastUpdateDate: '',
+    });
+  }),
+  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1000`, () => {
+    return new HttpResponse('Not found', {
+      status: 404,
     });
   }),
 ];

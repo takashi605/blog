@@ -1,4 +1,4 @@
-import WithErrorHandlingServer from '@/components/error/WithErrorHandlingServer';
+import WithBlogPostErrorForServer from '@/components/models/blogPost/error/WithBlogPostErrorForServer';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
 import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
@@ -27,7 +27,4 @@ async function ViewBlogPost({ params }: ViewBlogPostParams) {
   );
 }
 
-export default WithErrorHandlingServer(
-  ViewBlogPost,
-  '記事データを生成できませんでした',
-);
+export default WithBlogPostErrorForServer(ViewBlogPost);
