@@ -29,6 +29,7 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  transpilePackages: ['entities'],
 };
 
 export default nextConfig;
