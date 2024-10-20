@@ -1,7 +1,7 @@
-async function WithErrorHandlingServer<T>(
+function WithErrorHandlingServer<T>(
   Component: (props: T) => Promise<JSX.Element>,
   errorMessage: string,
-): Promise<(props: T) => Promise<JSX.Element>> {
+): (props: T) => Promise<JSX.Element> {
   return async function (props: T) {
     try {
       return await Component(props);

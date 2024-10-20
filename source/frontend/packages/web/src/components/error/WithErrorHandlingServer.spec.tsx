@@ -10,7 +10,7 @@ async function ErrorComponent() {
 describe('エラーを扱うコンポーネント', () => {
   it('エラーをキャッチすると本来レンダリング予定のコンポーネントを\
       レンダリングせずにエラーメッセージを表示する', async () => {
-    const WithErrorHandling = await WithErrorHandlingServer(
+    const WithErrorHandling = WithErrorHandlingServer(
       ErrorComponent,
       'エラー発生！',
     );

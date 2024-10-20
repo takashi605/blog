@@ -9,7 +9,7 @@ async function ErrorComponent() {
 
 describe('投稿記事関連エラーを扱うコンポーネント', () => {
   it('エラーメッセージを表示する', async () => {
-    const WithErrorHandling = await WithBlogPostErrorForServer(ErrorComponent);
+    const WithErrorHandling = WithBlogPostErrorForServer(ErrorComponent);
     const screen = render(await WithErrorHandling(undefined));
 
     expect(screen.getByText('不明なエラーです。')).toBeInTheDocument();
