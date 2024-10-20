@@ -73,6 +73,7 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
+ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
 
 # 実行開始
 CMD ["server.js"]
