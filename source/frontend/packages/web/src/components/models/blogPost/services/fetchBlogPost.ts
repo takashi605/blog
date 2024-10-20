@@ -2,6 +2,7 @@ import {
   responseToViewBlogPost,
   type BlogPostResponse,
 } from '@/components/models/blogPost/services/response';
+import { HttpError } from '@/components/models/error/httpError';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 
 export const fetchBlogPost = async (id: number): Promise<ViewBlogPostDTO> => {
@@ -9,11 +10,12 @@ export const fetchBlogPost = async (id: number): Promise<ViewBlogPostDTO> => {
   return responseToViewBlogPost(response);
 };
 
-export const fetchRawBlogPost = async (
-  id: number,
-): Promise<BlogPostResponse> => {
+const fetchRawBlogPost = async (id: number): Promise<BlogPostResponse> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${id}`,
   );
+  if (response.status === 404) {
+    throw new HttpError('記事データが存在しませんでした');
+  }
   return response.json();
 };

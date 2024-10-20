@@ -1,5 +1,6 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
+import { HttpError } from '@/components/models/error/httpError';
 
 beforeAll(() => {
   mockApiForServer.listen();
@@ -22,5 +23,15 @@ describe('投稿記事を取得する', () => {
 
     await expect(blogPostResponse.title).not.toBe('');
     await expect(blogPostResponse.contents.length).toBeGreaterThan(0);
+  });
+
+  it('404 エラーが返ってきた場合、エラーが throw される', async () => {
+    try {
+      await fetchBlogPost(1000);
+    } catch (error) {
+      expect(error instanceof HttpError).toBeTruthy();
+      const httpError = error as HttpError;
+      expect(httpError.message).toBe('記事データが存在しませんでした');
+    }
   });
 });
