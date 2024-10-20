@@ -73,6 +73,9 @@ importers:
       entities:
         specifier: workspace:*
         version: link:../entities
+      msw:
+        specifier: ^2.4.3
+        version: 2.4.3(typescript@5.5.4)
       next:
         specifier: 14.2.4
         version: 14.2.4(@babel/core@7.25.2)(@playwright/test@1.46.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.5)
@@ -110,9 +113,6 @@ importers:
       eslint-config-next:
         specifier: ^14.2.3
         version: 14.2.7(eslint@8.57.0)(typescript@5.5.4)
-      msw:
-        specifier: ^2.4.3
-        version: 2.4.3(typescript@5.5.4)
       postcss:
         specifier: ^8
         version: 8.4.41
