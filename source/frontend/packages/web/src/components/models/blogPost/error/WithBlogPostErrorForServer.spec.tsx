@@ -1,9 +1,15 @@
 import WithBlogPostErrorForServer from '@/components/models/blogPost/error/WithBlogPostErrorForServer';
+import { UsecaseError } from '@/usecases/error';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
 async function ErrorComponent() {
   throw new Error('エラー！！');
+  return <div>これは表示されない文字列だよ</div>;
+}
+
+async function UsecaseErrorComponent() {
+  throw new UsecaseError('エラー！！');
   return <div>これは表示されない文字列だよ</div>;
 }
 
@@ -13,6 +19,16 @@ describe('投稿記事関連エラーを扱うコンポーネント', () => {
     const screen = render(await WithErrorHandling(undefined));
 
     expect(screen.getByText('不明なエラーです。')).toBeInTheDocument();
+    expect(screen.queryByText('これは表示されない文字列だよ')).toBeNull();
+  });
+
+  it('Usecase 層でエラーが発生していた場合、「記事データを生成できませんでした」というエラーメッセージを表示する', async () => {
+    const WithErrorHandling = WithBlogPostErrorForServer(UsecaseErrorComponent);
+    const screen = render(await WithErrorHandling(undefined));
+
+    expect(
+      screen.getByText('記事データを生成できませんでした'),
+    ).toBeInTheDocument();
     expect(screen.queryByText('これは表示されない文字列だよ')).toBeNull();
   });
 });
