@@ -1,3 +1,21 @@
+// 参考にしたサイト:
+// https://zenn.dev/siakas/articles/05481bdefacd13
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  // extends はルールの on,off を外部から読み込む
+  "extends": [
+    "next/core-web-vitals", // Next.js のための推奨設定
+    "../../.eslintrc.json" // ルート全体の設定を引き継ぐ
+  ],
+  "rules": {
+    "@next/next/no-img-element": "off", // Next.jsでの<img>タグを使用できるようにする
+    "tailwindcss/no-custom-classname": "off", // TailwindCSS で定義されていないクラス名を使用することを許可
+    "react/jsx-curly-brace-presence": "error", // JSX内で余分な{}を許可しない
+    "react/self-closing-comp": [
+      "error", // セルフクローズタグの使用を強制
+      {
+        "component": true, // Reactコンポーネントに対して適用
+        "html": false // HTMLタグには適用しない
+      }
+    ]
+  }
 }
