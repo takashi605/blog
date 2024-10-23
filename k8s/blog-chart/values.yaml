@@ -32,7 +32,7 @@ web:
 admin:
   ingress:
     # host が空文字列の場合は rules に含まれない
-    host: "blog.admin.example"
+    host: "admin.blog.example"
     pathType: Prefix
     path: /
   deployment:

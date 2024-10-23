@@ -4,7 +4,8 @@
 apiVersion: v1
 data:
   # hosts を追加
-  # hosts を変更するときは実行マシンの /etc/hosts も合わせて変更する事
+  # 【【【重要】】】
+  # hosts を変更するときは実行マシンの /etc/hosts も合わせて変更する事！！！！
   Corefile: |
     .:53 {
         errors
@@ -16,7 +17,7 @@ data:
           class error
         }
         hosts {
-           192.168.1.1 blog.example api.blog.example
+           192.168.1.1 blog.example api.blog.example admin.blog.example
            fallthrough
         }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
