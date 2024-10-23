@@ -75,10 +75,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- /*
-アプリケーション「blog-admin」の名前を取得
+アプリケーション「admin」の名前を取得
 */ -}}
-{{- define "blog-admin.appname" -}}
-{{- "blog-admin" }}
+{{- define "admin.appname" -}}
+{{- "admin" }}
 {{- end }}
 
 {{- /*

@@ -29,7 +29,7 @@ web:
     nodePort: 30080
     loadBalancerIP: "192.168.1.100"
     externalTrafficPolicy: Local
-blog-admin:
+admin:
   ingress:
     # host が空文字列の場合は rules に含まれない
     host: "blog.admin.example"

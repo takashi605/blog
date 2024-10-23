@@ -1,23 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "blog-admin.appname" . }}
+  name: {{ include "admin.appname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+    app.kubernetes.io/name: {{ include "admin.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - {{- if .Values.blog-admin.ingress.host }}
-      host: {{ .Values.blog-admin.ingress.host }}
+    - {{- if .Values.admin.ingress.host }}
+      host: {{ .Values.admin.ingress.host }}
       {{- end }}
       http:
         paths:
-        - pathType: {{ .Values.blog-admin.ingress.pathType }}
-          path: {{ .Values.blog-admin.ingress.path }}
+        - pathType: {{ .Values.admin.ingress.pathType }}
+          path: {{ .Values.admin.ingress.path }}
           backend:
             service:
-              name: {{ include "blog-admin.appname" . }}
+              name: {{ include "admin.appname" . }}
               port:
-                number: {{ .Values.blog-admin.service.port }}
+                number: {{ .Values.admin.service.port }}

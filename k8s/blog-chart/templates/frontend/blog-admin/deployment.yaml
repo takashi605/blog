@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "blog-admin.appname" . }}
+  name: {{ include "admin.appname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+    app.kubernetes.io/name: {{ include "admin.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.blog-admin.deployment.replicas }}
+  replicas: {{ .Values.admin.deployment.replicas }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+      app.kubernetes.io/name: {{ include "admin.appname" . }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+        app.kubernetes.io/name: {{ include "admin.appname" . }}
         {{- include "blog-chart.labels" . | nindent 8 }}
     spec:
       imagePullSecrets:
-        {{- if .Values.blog-admin.pod.imagePullSecret }}
-        - name: {{ .Values.blog-admin.pod.imagePullSecret }}
+        {{- if .Values.admin.pod.imagePullSecret }}
+        - name: {{ .Values.admin.pod.imagePullSecret }}
         {{- end }}
       containers:
-        - name: {{ include "blog-admin.appname" . }}
-          image: "{{ .Values.blog-admin.pod.imageRepository }}:{{ .Values.blog-admin.pod.imageTag }}"
-          imagePullPolicy: {{ .Values.blog-admin.pod.imagePullPolicy }}
+        - name: {{ include "admin.appname" . }}
+          image: "{{ .Values.admin.pod.imageRepository }}:{{ .Values.admin.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.admin.pod.imagePullPolicy }}
           resources:
             limits:
-              memory: {{ .Values.blog-admin.pod.memoryLimit }}
-              cpu: {{ .Values.blog-admin.pod.cpuLimit }}
+              memory: {{ .Values.admin.pod.memoryLimit }}
+              cpu: {{ .Values.admin.pod.cpuLimit }}
             requests:
-              memory: {{ .Values.blog-admin.pod.memoryRequest }}
-              cpu: {{ .Values.blog-admin.pod.cpuRequest }}
+              memory: {{ .Values.admin.pod.memoryRequest }}
+              cpu: {{ .Values.admin.pod.cpuRequest }}
           ports:
-            - containerPort: {{ .Values.blog-admin.pod.containerPort }}
+            - containerPort: {{ .Values.admin.pod.containerPort }}
           env:
             - name: NEXT_PUBLIC_API_URL
-              value: {{ .Values.blog-admin.pod.env.NEXT_PUBLIC_API_URL }}
+              value: {{ .Values.admin.pod.env.NEXT_PUBLIC_API_URL }}

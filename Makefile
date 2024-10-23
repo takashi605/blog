@@ -180,4 +180,4 @@ api-test-run:
 ## blog-admin 系
 ###
 blog-admin-build:
-  docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
+	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
