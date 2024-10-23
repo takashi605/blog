@@ -20,6 +20,26 @@ custom_build(
 )
 
 custom_build(
+  'blog-admin:v0.0.0',
+  '''
+    make mk8s-delete-tilt-images image_name=blog-admin;
+
+    docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune;
+    crictl rmi --prune || true;
+  ''',
+  deps=[
+    'source/frontend',
+    'containers/frontend/blog-admin'
+  ],
+  live_update=[
+    sync('source/frontend', '/source/frontend'),
+  ]
+)
+
+custom_build(
   'e2e:v0.0.0',
   '''
     make mk8s-delete-tilt-images image_name=e2e;

@@ -4,12 +4,12 @@ FROM node:20-slim AS node
 # / 基本的な設定を行うステージ /
 FROM node AS base
 ARG FRONTEND_DIR=source/frontend
-ARG WEB_DIR=$FRONTEND_DIR/packages/web
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
 
 RUN npm install -g pnpm@9.9.0
 
 # 作業ディレクトリを作成し、所有者を node ユーザーに変更
-RUN mkdir -p /$WEB_DIR \
+RUN mkdir -p /$ADMIN_DIR \
   && chown -R node:node /source
 
 # ユーザーを指定
@@ -33,7 +33,7 @@ USER node
 
 WORKDIR /$FRONTEND_DIR
 
-CMD ["pnpm", "run", "web-dev"]
+CMD ["pnpm", "run", "admin-dev"]
 
 # / ビルド用ステージ /
 FROM dev as builder
@@ -41,11 +41,11 @@ ENV NODE_ENV produciton
 
 USER node
 ARG FRONTEND_DIR=source/frontend
-ARG WEB_DIR=$FRONTEND_DIR/packages/web
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
 
 WORKDIR /$FRONTEND_DIR
 
-RUN pnpm -F web deploy ./packages/pruned
+RUN pnpm -F blog-admin deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
 
@@ -59,9 +59,9 @@ FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 
 ENV NODE_ENV production
 ARG FRONTEND_DIR=source/frontend
-ARG WEB_DIR=$FRONTEND_DIR/packages/web
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
 
-WORKDIR /$WEB_DIR
+WORKDIR /$ADMIN_DIR
 
 # ビルド用ステージから必要なファイルのみをコピー
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/public ./public

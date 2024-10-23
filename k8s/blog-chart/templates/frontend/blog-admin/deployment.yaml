@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "admin.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "admin.appname" . }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.admin.deployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "admin.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "admin.appname" . }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- if .Values.admin.pod.imagePullSecret }}
+        - name: {{ .Values.admin.pod.imagePullSecret }}
+        {{- end }}
+      containers:
+        - name: {{ include "admin.appname" . }}
+          image: "{{ .Values.admin.pod.imageRepository }}:{{ .Values.admin.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.admin.pod.imagePullPolicy }}
+          resources:
+            limits:
+              memory: {{ .Values.admin.pod.memoryLimit }}
+              cpu: {{ .Values.admin.pod.cpuLimit }}
+            requests:
+              memory: {{ .Values.admin.pod.memoryRequest }}
+              cpu: {{ .Values.admin.pod.cpuRequest }}
+          ports:
+            - containerPort: {{ .Values.admin.pod.containerPort }}
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: {{ .Values.admin.pod.env.NEXT_PUBLIC_API_URL }}

@@ -175,3 +175,9 @@ api-test-sh:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
+
+###
+## blog-admin 系
+###
+blog-admin-build:
+	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .

@@ -75,6 +75,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- /*
+アプリケーション「admin」の名前を取得
+*/ -}}
+{{- define "admin.appname" -}}
+{{- "admin" }}
+{{- end }}
+
+{{- /*
 アプリケーション「e2e」の名前を取得
 */ -}}
 {{- define "e2e.appname" -}}

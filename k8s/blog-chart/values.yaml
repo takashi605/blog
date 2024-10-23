@@ -29,6 +29,37 @@ web:
     nodePort: 30080
     loadBalancerIP: "192.168.1.100"
     externalTrafficPolicy: Local
+admin:
+  ingress:
+    # host が空文字列の場合は rules に含まれない
+    host: "admin.blog.example"
+    pathType: Prefix
+    path: /
+  deployment:
+    replicas: 1
+  pod:
+    imageRepository: "blog-admin"
+    imageTag: "v0.0.0"
+    imagePullSecret: ""
+    # Always だとリモートから pull してしまう
+    # 今回はローカルのイメージを使うために Never にしている
+    imagePullPolicy: Never
+    memoryLimit: "750Mi"
+    cpuLimit: "500m"
+    memoryRequest: "250Mi"
+    cpuRequest: "150m"
+    containerPort: 3000
+    env:
+      NEXT_PUBLIC_API_URL: "http://api.blog.example"
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+    # ここから下の設定は type:ClusterIP の場合は関係ないが、
+    # 一応デフォルト値は入れておく
+    nodePort: 30080
+    loadBalancerIP: "192.168.1.100"
+    externalTrafficPolicy: Local
 api:
   ingress:
     # host が空文字列の場合は rules に含まれない

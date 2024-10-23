@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    // @/ で src/ を参照できるようにする
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  // プログラムに含めるファイル
+  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  // include から除外するファイル
+  "exclude": ["node_modules"]
+}
