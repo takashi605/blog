@@ -34,3 +34,45 @@ USER node
 WORKDIR /$FRONTEND_DIR
 
 CMD ["pnpm", "run", "admin-dev"]
+
+# / ビルド用ステージ /
+FROM dev as builder
+ENV NODE_ENV produciton
+
+USER node
+ARG FRONTEND_DIR=source/frontend
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
+
+WORKDIR /$FRONTEND_DIR
+
+RUN pnpm -F blog-admin deploy ./packages/pruned
+
+WORKDIR /$FRONTEND_DIR/packages/pruned
+
+ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+
+# .next ディレクトリにビルド成果物を生成
+RUN pnpm exec next build
+
+# / 本番環境用ステージ /
+FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
+
+ENV NODE_ENV production
+ARG FRONTEND_DIR=source/frontend
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
+
+WORKDIR /$ADMIN_DIR
+
+# ビルド用ステージから必要なファイルのみをコピー
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/public ./public
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/standalone/packages/pruned ./
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/static ./.next/static
+
+# ポートを開放
+EXPOSE 3000
+ENV PORT 3000
+ENV HOSTNAME="0.0.0.0"
+ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+
+# 実行開始
+CMD ["server.js"]
