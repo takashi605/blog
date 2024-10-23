@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "blog-admin.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.blog-admin.deployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "blog-admin.appname" . }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- if .Values.blog-admin.pod.imagePullSecret }}
+        - name: {{ .Values.blog-admin.pod.imagePullSecret }}
+        {{- end }}
+      containers:
+        - name: {{ include "blog-admin.appname" . }}
+          image: "{{ .Values.blog-admin.pod.imageRepository }}:{{ .Values.blog-admin.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.blog-admin.pod.imagePullPolicy }}
+          resources:
+            limits:
+              memory: {{ .Values.blog-admin.pod.memoryLimit }}
+              cpu: {{ .Values.blog-admin.pod.cpuLimit }}
+            requests:
+              memory: {{ .Values.blog-admin.pod.memoryRequest }}
+              cpu: {{ .Values.blog-admin.pod.cpuRequest }}
+          ports:
+            - containerPort: {{ .Values.blog-admin.pod.containerPort }}
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: {{ .Values.blog-admin.pod.env.NEXT_PUBLIC_API_URL }}
