@@ -33,7 +33,7 @@ USER node
 
 WORKDIR /$FRONTEND_DIR
 
-CMD pnpm run web-dev
+CMD ["pnpm", "run", "web-dev"]
 
 # / ビルド用ステージ /
 FROM dev as builder
