@@ -1,4 +1,3 @@
-
 # / node の環境設定用に slim イメージを取得 /
 FROM node:20-slim AS node
 
