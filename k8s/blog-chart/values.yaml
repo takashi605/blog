@@ -62,4 +62,5 @@ e2e:
   pod:
     env:
       TEST_TARGET_URL: "http://blog.example"
+      ADMIN_URL: "http://admin.blog.example"
 production: false

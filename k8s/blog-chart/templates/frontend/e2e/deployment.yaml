@@ -33,6 +33,8 @@ spec:
           env:
             - name: TEST_TARGET_URL
               value: {{ .Values.e2e.pod.env.TEST_TARGET_URL }}
+            - name: ADMIN_URL
+              value: {{ .Values.e2e.pod.env.ADMIN_URL }}
             - name: DISPLAY
               value: :0
           volumeMounts:
