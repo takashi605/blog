@@ -1,6 +1,6 @@
-import { createBlogPostBuilder } from '@/usecases/entityBuilder';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
+import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {

@@ -1,7 +1,4 @@
-import type {
-  Content,
-  ContentType,
-} from 'entities/src/blogPost/postContents/content';
+import type { Content, ContentType } from '../../blogPost/postContents/content';
 
 export class ContentBuilder {
   private type: ContentType;

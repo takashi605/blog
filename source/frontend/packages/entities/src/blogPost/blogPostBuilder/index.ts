@@ -1,6 +1,6 @@
-import { ContentBuilder } from '@/usecases/entityBuilder/content';
-import { BlogPost } from 'entities/src/blogPost/index';
-import { ContentType } from 'entities/src/blogPost/postContents/content';
+import { BlogPost } from '../../blogPost';
+import { ContentBuilder } from '../../blogPost/blogPostBuilder/content';
+import { ContentType } from '../../blogPost/postContents/content';
 
 export class BlogPostBuilder {
   private postTitle = '';
