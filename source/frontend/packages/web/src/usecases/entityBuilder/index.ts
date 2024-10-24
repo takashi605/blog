@@ -6,7 +6,7 @@ export class BlogPostBuilder {
   private postTitle = '';
   private postDate = '';
   private lastUpdateDate = '';
-  private contents: ContentBuilder[] = [];
+  private contentBuilders: ContentBuilder[] = [];
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -24,28 +24,28 @@ export class BlogPostBuilder {
   }
 
   addH2(contentValue: string) {
-    this.contents.push(
+    this.contentBuilders.push(
       new ContentBuilder({ type: ContentType.H2, contentValue }),
     );
     return this;
   }
 
   addH3(contentValue: string) {
-    this.contents.push(
+    this.contentBuilders.push(
       new ContentBuilder({ type: ContentType.H3, contentValue }),
     );
     return this;
   }
 
   addParagraph(contentValue: string) {
-    this.contents.push(
+    this.contentBuilders.push(
       new ContentBuilder({ type: ContentType.Paragraph, contentValue }),
     );
     return this;
   }
 
   injectionContentsTo(blogPost: BlogPost) {
-    this.contents.forEach((content) => {
+    this.contentBuilders.forEach((content) => {
       blogPost.addContent(
         content.createContent(blogPost.getContents().length + 1),
       );
