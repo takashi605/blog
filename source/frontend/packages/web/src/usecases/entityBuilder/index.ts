@@ -1,5 +1,5 @@
 import {
-  createContentForBlogPostBuilder,
+  createContent,
   type ContentForBlogPostBuilder,
 } from '@/usecases/entityBuilder/content';
 import { BlogPost } from 'entities/src/blogPost/index';
@@ -44,10 +44,7 @@ export class BlogPostBuilder {
   injectionContentsTo(blogPost: BlogPost) {
     this.contents.forEach((content) => {
       blogPost.addContent(
-        createContentForBlogPostBuilder(
-          blogPost.getContents().length + 1,
-          content,
-        ),
+        createContent(blogPost.getContents().length + 1, content),
       );
     });
   }

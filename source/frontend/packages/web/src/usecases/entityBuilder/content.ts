@@ -8,7 +8,7 @@ export type ContentForBlogPostBuilder = {
   contentValue: string;
 };
 
-export const createContentForBlogPostBuilder = (
+export const createContent = (
   id: number,
   input: ContentForBlogPostBuilder,
 ): Content => {
