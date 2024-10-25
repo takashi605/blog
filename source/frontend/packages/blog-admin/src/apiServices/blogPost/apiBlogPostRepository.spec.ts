@@ -15,6 +15,7 @@ afterAll(() => {
 describe('apiBlogPostRepository', () => {
   it('api を通じて JSON 形式の記録データが保存できる', async () => {
     const apiRepository = new ApiBlogPostRepository();
+
     const blogPostBuilder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
@@ -23,6 +24,7 @@ describe('apiBlogPostRepository', () => {
       .addH3('h3見出し1')
       .addParagraph('段落1');
     const blogPost = blogPostBuilder.build();
+
     const resp = await apiRepository.save(blogPost);
     expect(resp).toEqual({
       title: '記事タイトル',

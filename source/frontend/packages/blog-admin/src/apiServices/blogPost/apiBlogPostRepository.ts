@@ -24,7 +24,9 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       throw new Error('ブログ記事の保存に失敗しました');
     }
 
-    return response.json();
+    const validatedResponse = blogPostResponseSchema.parse(await response.json());
+
+    return validatedResponse;
   }
 }
 
