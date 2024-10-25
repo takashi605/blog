@@ -1,7 +1,7 @@
 import type { BlogPostRepository } from '@/usecases/create/createBlogPost';
 import { z } from 'zod';
 
-const BlogPostResponseSchema = z.object({
+const blogPostResponseSchema = z.object({
   title: z.string(),
   postDate: z.string(),
   lastUpdateDate: z.string(),
@@ -13,7 +13,7 @@ const BlogPostResponseSchema = z.object({
   ),
 });
 
-type BlogPostResponse = z.infer<typeof BlogPostResponseSchema>;
+type BlogPostResponse = z.infer<typeof blogPostResponseSchema>;
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   async save(blogPostJson: string): Promise<BlogPostResponse> {
@@ -22,6 +22,8 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     if (!response.ok) {
       throw new Error('ブログ記事の保存に失敗しました');
     }
+
+
 
     return response.json();
   }
