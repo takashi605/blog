@@ -5,7 +5,7 @@ type BlogPostResponse = {
   postDate: string;
   lastUpdateDate: string;
   contents: { type: string; text: string }[];
-}
+};
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   async save(blogPostJson: string): Promise<BlogPostResponse> {
@@ -19,7 +19,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 }
 
-const post = async (blogPostJson: string): Promise<Response> => {
+async function post(blogPostJson: string): Promise<Response> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
     method: 'POST',
     headers: {
@@ -28,4 +28,4 @@ const post = async (blogPostJson: string): Promise<Response> => {
     body: blogPostJson,
   });
   return response;
-};
+}
