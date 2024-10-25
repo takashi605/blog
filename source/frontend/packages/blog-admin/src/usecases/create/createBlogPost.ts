@@ -23,7 +23,7 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  buildJson(): string {
+  private buildJson(): string {
     const blogPost = this.buildBlogPost();
 
     return JSON.stringify({
