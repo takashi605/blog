@@ -1,9 +1,9 @@
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {
   createBlogPostBuilder,
   type BlogPostBuilder,
-} from '@/usecases/entityBuilder/index';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
-import { viewBlogPost } from '@/usecases/view/viewBlogPost';
+} from 'entities/src/blogPost/blogPostBuilder/index';
 
 export type BlogPostResponse = {
   id: number;
