@@ -23,22 +23,6 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  private buildJson(): string {
-    const blogPost = this.buildBlogPost();
-
-    return JSON.stringify({
-      title: blogPost.getTitleText(),
-      postDate: blogPost.getPostDate().toISOString().split('T')[0],
-      lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
-      contents: blogPost.getContents().map((content) => {
-        return {
-          type: content.getType(),
-          text: content.getValue(),
-        };
-      }),
-    });
-  }
-
   execute(): void {
     const blogPost = this.buildBlogPost();
     this.repository.save(blogPost);
