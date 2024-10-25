@@ -1,11 +1,19 @@
 import type { BlogPostRepository } from '@/usecases/create/createBlogPost';
+import { z } from 'zod';
 
-type BlogPostResponse = {
-  title: string;
-  postDate: string;
-  lastUpdateDate: string;
-  contents: { type: string; text: string }[];
-};
+const BlogPostResponseSchema = z.object({
+  title: z.string(),
+  postDate: z.string(),
+  lastUpdateDate: z.string(),
+  contents: z.array(
+    z.object({
+      type: z.string(),
+      text: z.string(),
+    }),
+  ),
+});
+
+type BlogPostResponse = z.infer<typeof BlogPostResponseSchema>;
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   async save(blogPostJson: string): Promise<BlogPostResponse> {
