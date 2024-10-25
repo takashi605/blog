@@ -40,7 +40,7 @@ export class BlogPostCreator {
   }
 
   execute(): void {
-    const blogPostJson = this.buildBlogPost();
-    this.repository.save(blogPostJson);
+    const blogPost = this.buildBlogPost();
+    this.repository.save(blogPost);
   }
 }

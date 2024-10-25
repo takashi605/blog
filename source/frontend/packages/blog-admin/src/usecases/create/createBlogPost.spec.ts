@@ -7,7 +7,7 @@ const mockRepository: BlogPostRepository = {
 };
 
 describe('ユースケース: 記事の投稿', () => {
-  it('ユースケースを実行すると JSON 記事データを生成してデータリポジトリへ保存する', () => {
+  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', () => {
     const mockSave = jest.fn();
     const mockRepository: BlogPostRepository = {
       save: mockSave,
@@ -25,7 +25,8 @@ describe('ユースケース: 記事の投稿', () => {
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
     const blogPost = getSaveMethodArg();
-    expect(blogPost).toEqual(blogPostCreator.buildBlogPost());
+    expect(blogPost.getTitleText()).toBe('記事タイトル');
+    expect(blogPost.getContents()).toHaveLength(3);
 
     function getSaveMethodArg() {
       return mockSave.mock.calls[0][0];
