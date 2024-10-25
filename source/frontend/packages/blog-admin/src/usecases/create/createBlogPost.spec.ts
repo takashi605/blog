@@ -12,33 +12,39 @@ describe('ユースケース: 記事の投稿', () => {
     const mockRepository: BlogPostRepository = {
       save: mockSave,
     };
+
     const builder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
       .addH2('h2見出し1')
       .addH3('h3見出し1')
       .addParagraph('段落1');
     const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+
     blogPostCreator.execute();
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    const today = onlyYMD(new Date());
-    const expectedJson = {
-      title: '記事タイトル',
-      postDate: today,
-      lastUpdateDate: today,
-      contents: [
-        { type: 'h2', text: 'h2見出し1' },
-        { type: 'h3', text: 'h3見出し1' },
-        { type: 'paragraph', text: '段落1' },
-      ],
-    };
-
     const json = getSaveMethodArg();
-    expect(json).toEqual(JSON.stringify(expectedJson));
+    expect(json).toEqual(expectedJson());
 
     function getSaveMethodArg() {
       return mockSave.mock.calls[0][0];
+    }
+
+    function expectedJson(): string {
+      const today = onlyYMD(new Date());
+      const blogPost = {
+        title: '記事タイトル',
+        postDate: today,
+        lastUpdateDate: today,
+        contents: [
+          { type: 'h2', text: 'h2見出し1' },
+          { type: 'h3', text: 'h3見出し1' },
+          { type: 'paragraph', text: '段落1' },
+        ],
+      };
+
+      return JSON.stringify(blogPost);
     }
   });
 
