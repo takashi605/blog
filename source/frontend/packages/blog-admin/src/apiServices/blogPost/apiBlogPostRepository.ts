@@ -18,39 +18,42 @@ type BlogPostResponse = z.infer<typeof blogPostResponseSchema>;
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   async save(blogPost: BlogPost): Promise<BlogPostResponse> {
-    const response = await post(blogPostToJson(blogPost));
+    const body = this.blogPostToJson(blogPost);
+    const response = await this.post(body);
 
     if (!response.ok) {
       throw new Error('ブログ記事の保存に失敗しました');
     }
 
-    const validatedResponse = blogPostResponseSchema.parse(await response.json());
+    const validatedResponse = blogPostResponseSchema.parse(
+      await response.json(),
+    );
 
     return validatedResponse;
   }
-}
 
-async function post(blogPostJson: string): Promise<Response> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: blogPostJson,
-  });
-  return response;
-}
+  private async post(blogPostJson: string): Promise<Response> {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: blogPostJson,
+    });
+    return response;
+  }
 
-function blogPostToJson(blogPost: BlogPost): string {
-  return JSON.stringify({
-    title: blogPost.getTitleText(),
-    postDate: blogPost.getPostDate().toISOString().split('T')[0],
-    lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
-    contents: blogPost.getContents().map((content) => {
-      return {
-        type: content.getType(),
-        text: content.getValue(),
-      };
-    }),
-  });
+  private blogPostToJson(blogPost: BlogPost): string {
+    return JSON.stringify({
+      title: blogPost.getTitleText(),
+      postDate: blogPost.getPostDate().toISOString().split('T')[0],
+      lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
+      contents: blogPost.getContents().map((content) => {
+        return {
+          type: content.getType(),
+          text: content.getValue(),
+        };
+      }),
+    });
+  }
 }
