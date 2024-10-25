@@ -1,4 +1,5 @@
 import type { BlogPostRepository } from '@/usecases/create/createBlogPost';
+import type { BlogPost } from 'entities/src/blogPost';
 import { z } from 'zod';
 
 const blogPostResponseSchema = z.object({
@@ -16,14 +17,12 @@ const blogPostResponseSchema = z.object({
 type BlogPostResponse = z.infer<typeof blogPostResponseSchema>;
 
 export class ApiBlogPostRepository implements BlogPostRepository {
-  async save(blogPostJson: string): Promise<BlogPostResponse> {
-    const response = await post(blogPostJson);
+  async save(blogPost: BlogPost): Promise<BlogPostResponse> {
+    const response = await post(blogPostToJson(blogPost));
 
     if (!response.ok) {
       throw new Error('ブログ記事の保存に失敗しました');
     }
-
-
 
     return response.json();
   }
@@ -38,4 +37,18 @@ async function post(blogPostJson: string): Promise<Response> {
     body: blogPostJson,
   });
   return response;
+}
+
+function blogPostToJson(blogPost: BlogPost): string {
+  return JSON.stringify({
+    title: blogPost.getTitleText(),
+    postDate: blogPost.getPostDate().toISOString().split('T')[0],
+    lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
+    contents: blogPost.getContents().map((content) => {
+      return {
+        type: content.getType(),
+        text: content.getValue(),
+      };
+    }),
+  });
 }
