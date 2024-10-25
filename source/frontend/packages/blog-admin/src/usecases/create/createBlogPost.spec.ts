@@ -59,16 +59,24 @@ describe('ユースケース: 記事の投稿', () => {
     expect(json).toEqual(JSON.stringify(expectedJson));
   });
 
-  it('ユースケースを実行すると、データリポジトリへの保存が行われる', () => {
+  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', () => {
+    const mockSave = jest.fn();
     const mockRepository: BlogPostRepository = {
-      save: jest.fn(),
+      save: mockSave,
     };
     const builder = createBlogPostBuilder().setPostTitle('記事タイトル');
 
     const blogPostCreator = new BlogPostCreator(builder, mockRepository);
     blogPostCreator.execute();
 
-    expect(mockRepository.save).toHaveBeenCalled();
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+
+    const blogPost = getSaveMethodArg();
+    expect(blogPost.getTitleText()).toBe('記事タイトル');
+
+    function getSaveMethodArg(){
+      return mockSave.mock.calls[0][0];
+    }
   });
 });
 
