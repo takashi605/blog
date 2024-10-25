@@ -24,27 +24,11 @@ describe('ユースケース: 記事の投稿', () => {
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    const json = getSaveMethodArg();
-    expect(json).toEqual(expectedJson());
+    const blogPost = getSaveMethodArg();
+    expect(blogPost).toEqual(blogPostCreator.buildBlogPost());
 
     function getSaveMethodArg() {
       return mockSave.mock.calls[0][0];
-    }
-
-    function expectedJson(): string {
-      const today = onlyYMD(new Date());
-      const blogPost = {
-        title: '記事タイトル',
-        postDate: today,
-        lastUpdateDate: today,
-        contents: [
-          { type: 'h2', text: 'h2見出し1' },
-          { type: 'h3', text: 'h3見出し1' },
-          { type: 'paragraph', text: '段落1' },
-        ],
-      };
-
-      return JSON.stringify(blogPost);
     }
   });
 
