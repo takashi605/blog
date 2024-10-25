@@ -8,8 +8,8 @@ type BlogPostResponse = {
 }
 
 export class ApiBlogPostRepository implements BlogPostRepository {
-  async save(blogPost: string): Promise<BlogPostResponse> {
-    const response = await post(blogPost);
+  async save(blogPostJson: string): Promise<BlogPostResponse> {
+    const response = await post(blogPostJson);
 
     if (!response.ok) {
       throw new Error('ブログ記事の保存に失敗しました');
@@ -19,13 +19,13 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 }
 
-const post = async (blogPost: string): Promise<Response> => {
+const post = async (blogPostJson: string): Promise<Response> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: blogPost,
+    body: blogPostJson,
   });
   return response;
 };
