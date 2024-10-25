@@ -7,6 +7,41 @@ const mockRepository: BlogPostRepository = {
 };
 
 describe('ユースケース: 記事の投稿', () => {
+  it('ユースケースを実行すると JSON 記事データを生成してデータリポジトリへ保存する', () => {
+    const mockSave = jest.fn();
+    const mockRepository: BlogPostRepository = {
+      save: mockSave,
+    };
+    const builder = createBlogPostBuilder()
+      .setPostTitle('記事タイトル')
+      .addH2('h2見出し1')
+      .addH3('h3見出し1')
+      .addParagraph('段落1');
+    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+    blogPostCreator.execute();
+
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+
+    const today = onlyYMD(new Date());
+    const expectedJson = {
+      title: '記事タイトル',
+      postDate: today,
+      lastUpdateDate: today,
+      contents: [
+        { type: 'h2', text: 'h2見出し1' },
+        { type: 'h3', text: 'h3見出し1' },
+        { type: 'paragraph', text: '段落1' },
+      ],
+    };
+
+    const json = getSaveMethodArg();
+    expect(json).toEqual(JSON.stringify(expectedJson));
+
+    function getSaveMethodArg() {
+      return mockSave.mock.calls[0][0];
+    }
+  });
+
   it('ブログ記事のデータを生成できる', () => {
     const builder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
@@ -57,26 +92,6 @@ describe('ユースケース: 記事の投稿', () => {
       ],
     };
     expect(json).toEqual(JSON.stringify(expectedJson));
-  });
-
-  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', () => {
-    const mockSave = jest.fn();
-    const mockRepository: BlogPostRepository = {
-      save: mockSave,
-    };
-    const builder = createBlogPostBuilder().setPostTitle('記事タイトル');
-
-    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
-    blogPostCreator.execute();
-
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-
-    const blogPost = getSaveMethodArg();
-    expect(blogPost.getTitleText()).toBe('記事タイトル');
-
-    function getSaveMethodArg(){
-      return mockSave.mock.calls[0][0];
-    }
   });
 });
 

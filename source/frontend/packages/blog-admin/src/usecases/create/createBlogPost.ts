@@ -2,7 +2,7 @@ import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 
 export type BlogPostRepository = {
-  save(blogPost: BlogPost): void;
+  save(blogPost: string): void;
 };
 
 export class BlogPostCreator {
@@ -40,7 +40,7 @@ export class BlogPostCreator {
   }
 
   execute(): void {
-    const blogPost = this.buildBlogPost();
-    this.repository.save(blogPost);
+    const blogPostJson = this.buildJson();
+    this.repository.save(blogPostJson);
   }
 }
