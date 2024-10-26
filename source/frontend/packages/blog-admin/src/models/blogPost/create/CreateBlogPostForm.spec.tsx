@@ -16,21 +16,18 @@ afterAll(() => {
 });
 
 describe('CreateBlogPostForm', () => {
-  it('投稿ボタンをクリックすると記事の投稿処理が発火する', async () => {
+  it('入力されたタイトルが投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
+    const titleInput = screen.getByRole('textbox', { name: 'タイトル' });
     const submitButton = screen.getByRole('button', { name: '投稿' });
-    await userEvent.click(submitButton);
 
-    const today = new Date().toISOString().split('T')[0];
-    expect(createdBlogPosts[0]).toEqual({
-      title: '記事タイトル',
-      postDate: today,
-      lastUpdateDate: today,
-      contents: [
-        { type: 'h2', text: 'h2見出し1' },
-        { type: 'h3', text: 'h3見出し1' },
-        { type: 'paragraph', text: '段落1' },
-      ],
-    });
+    await userEvent.type(titleInput, '入力されたタイトル');
+    await userEvent.click(submitButton);
+    expect(createdBlogPosts[0].title).toEqual('入力されたタイトル');
+
+    await userEvent.clear(titleInput);
+    await userEvent.type(titleInput, '再度入力されたタイトル');
+    await userEvent.click(submitButton);
+    expect(createdBlogPosts[1].title).toEqual('再度入力されたタイトル');
   });
 });
