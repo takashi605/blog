@@ -15,17 +15,6 @@ afterAll(() => {
 });
 
 describe('CreateBlogPostForm', () => {
-  it('レンダーできる', () => {
-    const { baseElement } = render(<CreateBlogPostForm />);
-    expect(baseElement).toBeTruthy();
-  });
-
-  it('投稿ボタンがある', () => {
-    render(<CreateBlogPostForm />);
-    const submitButton = screen.getByRole('button', { name: '投稿' });
-    expect(submitButton).toBeInTheDocument();
-  });
-
   it('投稿ボタンをクリックすると記事の投稿処理が発火する', async () => {
     render(<CreateBlogPostForm />);
     const submitButton = screen.getByRole('button', { name: '投稿' });
