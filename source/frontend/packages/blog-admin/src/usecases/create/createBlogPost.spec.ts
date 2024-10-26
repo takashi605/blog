@@ -7,7 +7,7 @@ const mockRepository: BlogPostRepository = {
 };
 
 describe('ユースケース: 記事の投稿', () => {
-  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', () => {
+  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
     const mockSave = jest.fn().mockReturnValue({
       title: '記事タイトル',
       postDate: '1999-01-01',
@@ -29,7 +29,7 @@ describe('ユースケース: 記事の投稿', () => {
       .addParagraph('段落1');
     const blogPostCreator = new BlogPostCreator(builder, mockRepository);
 
-    const createdBlogPost = blogPostCreator.execute();
+    const createdBlogPost = await blogPostCreator.execute();
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 

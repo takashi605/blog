@@ -12,7 +12,7 @@ export type CreatedBlogPost = {
 };
 
 export type BlogPostRepository = {
-  save(blogPost: BlogPost): CreatedBlogPost;
+  save(blogPost: BlogPost): Promise<CreatedBlogPost>;
 };
 
 export class BlogPostCreator {
@@ -33,9 +33,9 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  execute(): CreatedBlogPost {
+  async execute(): Promise<CreatedBlogPost> {
     const blogPost = this.buildBlogPost();
-    const createdBlogPost = this.repository.save(blogPost);
+    const createdBlogPost = await this.repository.save(blogPost);
     return createdBlogPost;
   }
 }
