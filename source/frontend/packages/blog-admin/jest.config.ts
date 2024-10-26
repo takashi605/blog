@@ -12,6 +12,9 @@ const config: Config = {
   testEnvironmentOptions: {
     customExportConditions: [],
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
   setupFiles: ['./jest.polyfills.mjs'],
 };
 

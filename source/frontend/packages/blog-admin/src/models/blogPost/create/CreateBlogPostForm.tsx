@@ -1,11 +1,11 @@
-import React from 'react'
+import { createBlogPostAction } from '@/models/blogPost/create/formAction';
 
 function CreateBlogPostForm() {
   return (
-    <div>
-      <button>投稿</button>
-    </div>
-  )
+    <form role="form" action={createBlogPostAction}>
+      <button type="submit">投稿</button>
+    </form>
+  );
 }
 
-export default CreateBlogPostForm
+export default CreateBlogPostForm;
