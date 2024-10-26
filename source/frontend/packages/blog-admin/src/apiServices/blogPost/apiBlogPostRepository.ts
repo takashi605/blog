@@ -5,7 +5,7 @@ import type {
 import type { BlogPost } from 'entities/src/blogPost';
 import { z } from 'zod';
 
-const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
+export const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
   title: z.string(),
   postDate: z.string(),
   lastUpdateDate: z.string(),
