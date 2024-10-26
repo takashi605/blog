@@ -1,13 +1,18 @@
+import { createdBlogPosts } from '@/apiMocks/handlers/blogPostHandlers';
+import { mockApiForServer } from '@/apiMocks/serverForNode';
 import CreateBlogPostForm from '@/models/blogPost/create/CreateBlogPostForm';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
-jest.mock('@/models/blogPost/create/formAction', () => ({
-  // サーバーアクションのモック
-  // jest によるテストでは action に文字列以外設定できないため、
-  // 代替案として文字列でモックしている
-  createBlogPostAction: '/mocked-action',
-}));
+beforeAll(() => {
+  mockApiForServer.listen();
+});
+afterEach(async () => {
+  mockApiForServer.resetHandlers();
+});
+afterAll(() => {
+  mockApiForServer.close();
+});
 
 describe('CreateBlogPostForm', () => {
   it('レンダーできる', () => {
@@ -21,11 +26,23 @@ describe('CreateBlogPostForm', () => {
     expect(submitButton).toBeInTheDocument();
   });
 
-  it('投稿ボタンにサーバーアクションが適用されている', () => {
+  it('投稿ボタンをクリックすると記事の投稿処理が発火する', async () => {
     render(<CreateBlogPostForm />);
-    const form = screen.getByRole('form');
+    const submitButton = screen.getByRole('button', { name: '投稿' });
+    submitButton.click();
 
-    // jest 環境では action 属性に関数を設定できない関係上文字列でモックしているため、文字列で比較
-    expect(form).toHaveAttribute('action', '/mocked-action');
+    const today = new Date().toISOString().split('T')[0];
+    await waitFor(() => {
+      expect(createdBlogPosts[0]).toEqual({
+        title: '記事タイトル',
+        postDate: today,
+        lastUpdateDate: today,
+        contents: [
+          { type: 'h2', text: 'h2見出し1' },
+          { type: 'h3', text: 'h3見出し1' },
+          { type: 'paragraph', text: '段落1' },
+        ],
+      });
+    });
   });
 });
