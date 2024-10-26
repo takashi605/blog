@@ -14,7 +14,10 @@ describe('学習用テスト： Zod パッケージ', () => {
       age: z.number(),
     });
 
-    expect(objectSchema.parse({ name: 'Alice', age: 20 })).toEqual({ name: 'Alice', age: 20 });
+    expect(objectSchema.parse({ name: 'Alice', age: 20 })).toEqual({
+      name: 'Alice',
+      age: 20,
+    });
     expect(() => objectSchema.parse({ name: 'Alice', age: '20' })).toThrow();
   });
 

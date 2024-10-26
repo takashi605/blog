@@ -1,8 +1,11 @@
-import type { BlogPostRepository, CreatedBlogPost } from '@/usecases/create/createBlogPost';
+import type {
+  BlogPostRepository,
+  CreatedBlogPost,
+} from '@/usecases/create/createBlogPost';
 import type { BlogPost } from 'entities/src/blogPost';
 import { z } from 'zod';
 
-const blogPostResponseSchema:z.ZodType<CreatedBlogPost> = z.object({
+const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
   title: z.string(),
   postDate: z.string(),
   lastUpdateDate: z.string(),
