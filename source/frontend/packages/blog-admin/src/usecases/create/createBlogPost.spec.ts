@@ -8,7 +8,16 @@ const mockRepository: BlogPostRepository = {
 
 describe('ユースケース: 記事の投稿', () => {
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', () => {
-    const mockSave = jest.fn();
+    const mockSave = jest.fn().mockReturnValue({
+      title: '記事タイトル',
+      postDate: '1999-01-01',
+      lastUpdateDate: '1999-01-02',
+      contents: [
+        { type: 'h2', text: 'h2見出し1' },
+        { type: 'h3', text: 'h3見出し1' },
+        { type: 'paragraph', text: '段落1' },
+      ],
+    });
     const mockRepository: BlogPostRepository = {
       save: mockSave,
     };
@@ -20,17 +29,25 @@ describe('ユースケース: 記事の投稿', () => {
       .addParagraph('段落1');
     const blogPostCreator = new BlogPostCreator(builder, mockRepository);
 
-    blogPostCreator.execute();
+    const createdBlogPost = blogPostCreator.execute();
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    const blogPost = getSaveMethodArg();
-    expect(blogPost.getTitleText()).toBe('記事タイトル');
-    expect(blogPost.getContents()).toHaveLength(3);
-
-    function getSaveMethodArg() {
-      return mockSave.mock.calls[0][0];
-    }
+    expect(createdBlogPost.title).toBe('記事タイトル');
+    expect(createdBlogPost.postDate).toBe('1999-01-01');
+    expect(createdBlogPost.lastUpdateDate).toBe('1999-01-02');
+    expect(createdBlogPost.contents[0]).toEqual({
+      type: 'h2',
+      text: 'h2見出し1',
+    });
+    expect(createdBlogPost.contents[1]).toEqual({
+      type: 'h3',
+      text: 'h3見出し1',
+    });
+    expect(createdBlogPost.contents[2]).toEqual({
+      type: 'paragraph',
+      text: '段落1',
+    });
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {

@@ -1,8 +1,18 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 
+export type CreatedBlogPost = {
+  title: string;
+  postDate: string;
+  lastUpdateDate: string;
+  contents: {
+    type: string;
+    text: string;
+  }[];
+};
+
 export type BlogPostRepository = {
-  save(blogPost: BlogPost): void;
+  save(blogPost: BlogPost): CreatedBlogPost;
 };
 
 export class BlogPostCreator {
@@ -23,8 +33,9 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  execute(): void {
+  execute(): CreatedBlogPost {
     const blogPost = this.buildBlogPost();
-    this.repository.save(blogPost);
+    const createdBlogPost = this.repository.save(blogPost);
+    return createdBlogPost;
   }
 }
