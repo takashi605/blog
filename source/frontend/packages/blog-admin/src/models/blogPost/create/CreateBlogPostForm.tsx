@@ -2,7 +2,9 @@ import React from 'react'
 
 function CreateBlogPostForm() {
   return (
-    <div>CreateBlogPostForm</div>
+    <div>
+      <button>投稿</button>
+    </div>
   )
 }
 
