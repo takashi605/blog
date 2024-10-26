@@ -2,7 +2,8 @@ import { createdBlogPosts } from '@/apiMocks/handlers/blogPostHandlers';
 import { mockApiForServer } from '@/apiMocks/serverForNode';
 import CreateBlogPostForm from '@/models/blogPost/create/CreateBlogPostForm';
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 beforeAll(() => {
   mockApiForServer.listen();
@@ -18,20 +19,18 @@ describe('CreateBlogPostForm', () => {
   it('投稿ボタンをクリックすると記事の投稿処理が発火する', async () => {
     render(<CreateBlogPostForm />);
     const submitButton = screen.getByRole('button', { name: '投稿' });
-    submitButton.click();
+    await userEvent.click(submitButton);
 
     const today = new Date().toISOString().split('T')[0];
-    await waitFor(() => {
-      expect(createdBlogPosts[0]).toEqual({
-        title: '記事タイトル',
-        postDate: today,
-        lastUpdateDate: today,
-        contents: [
-          { type: 'h2', text: 'h2見出し1' },
-          { type: 'h3', text: 'h3見出し1' },
-          { type: 'paragraph', text: '段落1' },
-        ],
-      });
+    expect(createdBlogPosts[0]).toEqual({
+      title: '記事タイトル',
+      postDate: today,
+      lastUpdateDate: today,
+      contents: [
+        { type: 'h2', text: 'h2見出し1' },
+        { type: 'h3', text: 'h3見出し1' },
+        { type: 'paragraph', text: '段落1' },
+      ],
     });
   });
 });
