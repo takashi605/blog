@@ -29,6 +29,8 @@
     "undici": "^5.28.4"
   },
   "dependencies": {
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
     "destyle.css": "^4.0.1",
     "entities": "workspace:*",
     "msw": "^2.4.3",
