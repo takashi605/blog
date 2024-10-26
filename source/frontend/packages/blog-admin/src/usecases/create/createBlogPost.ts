@@ -1,10 +1,27 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 
+export type CreatedBlogPost = {
+  title: string;
+  postDate: string;
+  lastUpdateDate: string;
+  contents: {
+    type: string;
+    text: string;
+  }[];
+};
+
+export type BlogPostRepository = {
+  save(blogPost: BlogPost): Promise<CreatedBlogPost>;
+};
+
 export class BlogPostCreator {
   private builder: BlogPostBuilder;
-  constructor(builder: BlogPostBuilder) {
+  private repository: BlogPostRepository;
+
+  constructor(builder: BlogPostBuilder, repository: BlogPostRepository) {
     this.builder = builder;
+    this.repository = repository;
   }
 
   buildBlogPost(): BlogPost {
@@ -16,19 +33,9 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  buildJson(): string {
+  async execute(): Promise<CreatedBlogPost> {
     const blogPost = this.buildBlogPost();
-
-    return JSON.stringify({
-      title: blogPost.getTitleText(),
-      postDate: blogPost.getPostDate().toISOString().split('T')[0],
-      lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
-      contents: blogPost.getContents().map((content) => {
-        return {
-          type: content.getType(),
-          text: content.getValue(),
-        };
-      }),
-    });
+    const createdBlogPost = await this.repository.save(blogPost);
+    return createdBlogPost;
   }
 }
