@@ -1,3 +1,4 @@
+'use server';
 import { ApiBlogPostRepository } from '@/apiServices/blogPost/apiBlogPostRepository';
 import { BlogPostCreator } from '@/usecases/create/createBlogPost';
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';

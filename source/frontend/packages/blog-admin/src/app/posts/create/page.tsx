@@ -1,3 +1,10 @@
+import CreateBlogPostForm from '@/models/blogPost/create/CreateBlogPostForm';
+
 export default function CreateBlogPostPage() {
-  return <h2>記事投稿ページ</h2>;
+  return (
+    <div>
+      <h2>記事投稿ページ</h2>
+      <CreateBlogPostForm />
+    </div>
+  );
 }
