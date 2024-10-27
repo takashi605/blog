@@ -30,4 +30,13 @@ describe('CreateBlogPostForm', () => {
     await userEvent.click(submitButton);
     expect(createdBlogPosts[1].title).toEqual('再度入力されたタイトル');
   });
+
+  it('h2 ボタンをクリックすると h2 入力インプットが表示される', async () => {
+    render(<CreateBlogPostForm />);
+    const h2Button = screen.getByRole('button', { name: 'h2' });
+
+    expect(screen.queryByRole('textbox', { name: 'h2' })).not.toBeInTheDocument();
+    await userEvent.click(h2Button);
+    expect(screen.getByRole('textbox', { name: 'h2' })).toBeInTheDocument();
+  });
 });
