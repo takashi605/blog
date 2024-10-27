@@ -37,27 +37,37 @@ describe('CreateBlogPostForm', () => {
 
   it('h2 ボタンをクリックすると h2 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
-    const h2Button = screen.getByRole('button', { name: 'h2' });
 
-    expect(
-      screen.queryByRole('textbox', { name: 'h2' }),
-    ).not.toBeInTheDocument();
-    await userEvent.click(h2Button);
-    expect(screen.getByRole('textbox', { name: 'h2' })).toBeInTheDocument();
+    expect(getOnceH2Input()).not.toBeInTheDocument();
+    await userEvent.click(getH2Button());
+    expect(getOnceH2Input()).toBeInTheDocument();
 
-    await userEvent.click(h2Button);
+    await userEvent.click(getH2Button());
 
-    const h2Inputs = screen.getAllByRole('textbox', { name: 'h2' });
-    await userEvent.type(h2Inputs[0], '入力された h2');
-    await userEvent.type(h2Inputs[1], '再度入力された h2');
+    await userEvent.type(getH2Inputs()[0], '入力された h2');
+    await userEvent.type(getH2Inputs()[1], '再度入力された h2');
 
-    const submitButton = screen.getByRole('button', { name: '投稿' });
-    await userEvent.click(submitButton);
+    await userEvent.click(getSubmitButton());
 
-    console.log(createdBlogPosts);
     expect(createdBlogPosts[0].contents[0].type).toEqual('h2');
     expect(createdBlogPosts[0].contents[0].text).toEqual('入力された h2');
     expect(createdBlogPosts[0].contents[1].type).toEqual('h2');
     expect(createdBlogPosts[0].contents[1].text).toEqual('再度入力された h2');
+
+    function getH2Button(): HTMLButtonElement {
+      return screen.getByRole('button', { name: 'h2' });
+    }
+
+    function getOnceH2Input(): HTMLElement | null {
+      return screen.queryByRole('textbox', { name: 'h2' });
+    }
+
+    function getH2Inputs(): HTMLElement[] {
+      return screen.getAllByRole('textbox', { name: 'h2' });
+    }
+
+    function getSubmitButton(): HTMLButtonElement {
+      return screen.getByRole('button', { name: '投稿' });
+    }
   });
 });
