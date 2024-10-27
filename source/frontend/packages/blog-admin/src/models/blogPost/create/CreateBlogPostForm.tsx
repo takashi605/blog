@@ -30,6 +30,9 @@ function CreateBlogPostForm() {
       <button type="button" onClick={() => append({ type: 'h2', text: '' })}>
         h2
       </button>
+      <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
+        h3
+      </button>
       <button type="submit">投稿</button>
     </form>
   );

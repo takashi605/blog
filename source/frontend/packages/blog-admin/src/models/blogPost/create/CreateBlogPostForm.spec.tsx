@@ -70,4 +70,40 @@ describe('CreateBlogPostForm', () => {
       return screen.getByRole('button', { name: '投稿' });
     }
   });
+
+  it('h3 ボタンをクリックすると h3 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
+    render(<CreateBlogPostForm />);
+
+    expect(getOnceH3Input()).not.toBeInTheDocument();
+    await userEvent.click(getH3Button());
+    expect(getOnceH3Input()).toBeInTheDocument();
+
+    await userEvent.click(getH3Button());
+
+    await userEvent.type(getH3Inputs()[0], '入力された h3');
+    await userEvent.type(getH3Inputs()[1], '再度入力された h3');
+
+    await userEvent.click(getSubmitButton());
+
+    expect(createdBlogPosts[0].contents[0].type).toEqual('h3');
+    expect(createdBlogPosts[0].contents[0].text).toEqual('入力された h3');
+    expect(createdBlogPosts[0].contents[1].type).toEqual('h3');
+    expect(createdBlogPosts[0].contents[1].text).toEqual('再度入力された h3');
+
+    function getH3Button(): HTMLButtonElement {
+      return screen.getByRole('button', { name: 'h3' });
+    }
+
+    function getOnceH3Input(): HTMLElement | null {
+      return screen.queryByRole('textbox', { name: 'h3' });
+    }
+
+    function getH3Inputs(): HTMLElement[] {
+      return screen.getAllByRole('textbox', { name: 'h3' });
+    }
+
+    function getSubmitButton(): HTMLButtonElement {
+      return screen.getByRole('button', { name: '投稿' });
+    }
+  });
 });
