@@ -21,9 +21,16 @@ export const createBlogPostAction: SubmitHandler<
 > = async (formData) => {
   const blogPostBuilder = createBlogPostBuilder()
     .setPostTitle(formData.title)
-    .addH2('h2見出し1')
-    .addH3('h3見出し1')
-    .addParagraph('段落1');
+
+  formData.contents.forEach((content) => {
+    if (content.type === 'h2') {
+      blogPostBuilder.addH2(content.text);
+    } else if (content.type === 'h3') {
+      blogPostBuilder.addH3(content.text);
+    } else if (content.type === 'paragraph') {
+      blogPostBuilder.addParagraph(content.text);
+    }
+  });
 
   const blogPostRepository = new ApiBlogPostRepository();
   const blogPostCreator = new BlogPostCreator(
