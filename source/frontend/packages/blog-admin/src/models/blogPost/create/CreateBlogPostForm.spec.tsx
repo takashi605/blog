@@ -106,4 +106,44 @@ describe('CreateBlogPostForm', () => {
       return screen.getByRole('button', { name: '投稿' });
     }
   });
+
+  it('paragraph ボタンをクリックすると paragraph 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
+    render(<CreateBlogPostForm />);
+
+    expect(getOnceParagraphInput()).not.toBeInTheDocument();
+    await userEvent.click(getParagraphButton());
+    expect(getOnceParagraphInput()).toBeInTheDocument();
+
+    await userEvent.click(getParagraphButton());
+
+    await userEvent.type(getParagraphInputs()[0], '入力された paragraph');
+    await userEvent.type(getParagraphInputs()[1], '再度入力された paragraph');
+
+    await userEvent.click(getSubmitButton());
+
+    expect(createdBlogPosts[0].contents[0].type).toEqual('paragraph');
+    expect(createdBlogPosts[0].contents[0].text).toEqual(
+      '入力された paragraph',
+    );
+    expect(createdBlogPosts[0].contents[1].type).toEqual('paragraph');
+    expect(createdBlogPosts[0].contents[1].text).toEqual(
+      '再度入力された paragraph',
+    );
+
+    function getParagraphButton(): HTMLButtonElement {
+      return screen.getByRole('button', { name: 'paragraph' });
+    }
+
+    function getOnceParagraphInput(): HTMLElement | null {
+      return screen.queryByRole('textbox', { name: 'paragraph' });
+    }
+
+    function getParagraphInputs(): HTMLElement[] {
+      return screen.getAllByRole('textbox', { name: 'paragraph' });
+    }
+
+    function getSubmitButton(): HTMLButtonElement {
+      return screen.getByRole('button', { name: '投稿' });
+    }
+  });
 });
