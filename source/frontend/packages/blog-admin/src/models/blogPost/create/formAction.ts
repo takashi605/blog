@@ -1,21 +1,9 @@
 import { ApiBlogPostRepository } from '@/apiServices/blogPost/apiBlogPostRepository';
+import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { BlogPostCreator } from '@/usecases/create/createBlogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
-
-export const createBlogPostFormSchema = z.object({
-  title: z.string(),
-  contents: z
-    .object({
-      type: z.enum(['h2', 'h3', 'paragraph']),
-      text: z.string(),
-    })
-    .array(),
-});
-
-export type CreateBlogPostFormData = z.infer<typeof createBlogPostFormSchema>;
 
 export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
@@ -27,9 +15,7 @@ export const createBlogPostAction: SubmitHandler<
   await blogPostCreator.execute();
 };
 
-function setupBlogPostCreator(
-  builder: BlogPostBuilder
-) {
+function setupBlogPostCreator(builder: BlogPostBuilder) {
   const repository = new ApiBlogPostRepository();
   return new BlogPostCreator(builder, repository);
 }

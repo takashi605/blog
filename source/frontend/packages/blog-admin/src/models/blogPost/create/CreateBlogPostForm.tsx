@@ -1,8 +1,6 @@
-import type { CreateBlogPostFormData } from '@/models/blogPost/create/formAction';
-import {
-  createBlogPostAction,
-  createBlogPostFormSchema,
-} from '@/models/blogPost/create/formAction';
+import { createBlogPostAction } from '@/models/blogPost/create/formAction';
+import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
+import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 
