@@ -1,4 +1,4 @@
-import { FieldArrayFormProvider } from '@/models/blogPost/create/FieldArrayFormProvider';
+import { FieldArrayFormProvider } from '@/components/form/FieldArrayFormProvider';
 import { createBlogPostAction } from '@/models/blogPost/create/formAction';
 import AddContentButton from '@/models/blogPost/create/formParts/AddContentButton';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
