@@ -8,6 +8,13 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+const pushMock = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: pushMock,
+  }),
+}));
+
 beforeAll(() => {
   mockApiForServer.listen();
 });
@@ -20,6 +27,16 @@ afterAll(() => {
 });
 
 describe('CreateBlogPostForm', () => {
+  it('送信が完了するとトップページに遷移する', async () => {
+    render(<CreateBlogPostForm />);
+    const titleInput = screen.getByRole('textbox', { name: 'タイトル' });
+    const submitButton = screen.getByRole('button', { name: '投稿' });
+
+    await userEvent.type(titleInput, '入力されたタイトル');
+    await userEvent.click(submitButton);
+
+    expect(pushMock).toHaveBeenCalledWith('/');
+  });
   it('入力されたタイトルが投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
     const titleInput = screen.getByRole('textbox', { name: 'タイトル' });

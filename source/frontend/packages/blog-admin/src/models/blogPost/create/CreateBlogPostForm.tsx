@@ -6,6 +6,8 @@ import ContentInputList from '@/models/blogPost/create/formParts/ContentInputLis
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import type { SubmitHandler } from 'react-hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 function CreateBlogPostForm() {
@@ -20,9 +22,16 @@ function CreateBlogPostForm() {
     name: 'contents',
   });
 
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<CreateBlogPostFormData> = async (formData) => {
+    await createBlogPostAction(formData);
+    router.push('/');
+  };
+
   return (
     <FieldArrayFormProvider {...form} {...fieldArray}>
-      <form role="form" onSubmit={handleSubmit(createBlogPostAction)}>
+      <form role="form" onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="title">タイトル</label>
 
         <input id="title" {...register('title')} />
