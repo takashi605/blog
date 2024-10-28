@@ -9,3 +9,23 @@ export function AddH2Button() {
     </button>
   );
 }
+
+export function AddH3Button() {
+  const { append } = useFieldArrayFormContext();
+
+  return (
+    <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
+      h3
+    </button>
+  );
+}
+
+export function AddParagraphButton() {
+  const { append } = useFieldArrayFormContext();
+
+  return (
+    <button type="button" onClick={() => append({ type: 'paragraph', text: '' })}>
+      paragraph
+    </button>
+  );
+}
