@@ -1,6 +1,6 @@
 import { FieldArrayFormProvider } from '@/components/form/FieldArrayFormProvider';
 import { createBlogPostAction } from '@/models/blogPost/create/formAction';
-import AddContentButton from '@/models/blogPost/create/formParts/AddContentButton';
+import { AddH2Button } from '@/models/blogPost/create/formParts/AddContentButton';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +35,7 @@ function CreateBlogPostForm() {
           </div>
         ))}
 
-        <AddContentButton />
+        <AddH2Button />
         <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
           h3
         </button>
