@@ -1,4 +1,5 @@
 import { useFieldArrayFormContext } from '@/components/form/FieldArrayFormProvider';
+import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 
 export default function AddContentButtonList() {
   return (
@@ -23,7 +24,7 @@ function AddParagraphButton() {
 }
 
 function AddContentButton(props: { type: 'h2' | 'h3' | 'paragraph' }) {
-  const { append } = useFieldArrayFormContext();
+  const { append } = useFieldArrayFormContext<CreateBlogPostFormData>();
 
   return (
     <button
