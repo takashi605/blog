@@ -1,3 +1,4 @@
+'use client';
 import { FieldArrayFormProvider } from '@/components/form/FieldArrayFormProvider';
 import { createBlogPostAction } from '@/models/blogPost/create/formAction';
 import AddContentButtonList from '@/models/blogPost/create/formParts/AddContentButton';

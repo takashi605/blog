@@ -1,3 +1,4 @@
+'use client';
 import { useFieldArrayFormContext } from '@/components/form/FieldArrayFormProvider';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 
