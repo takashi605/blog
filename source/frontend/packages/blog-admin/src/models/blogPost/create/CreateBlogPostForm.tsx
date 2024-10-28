@@ -1,10 +1,6 @@
 import { FieldArrayFormProvider } from '@/components/form/FieldArrayFormProvider';
 import { createBlogPostAction } from '@/models/blogPost/create/formAction';
-import {
-  AddH2Button,
-  AddH3Button,
-  AddParagraphButton,
-} from '@/models/blogPost/create/formParts/AddContentButton';
+import AddContentButtonList from '@/models/blogPost/create/formParts/AddContentButton';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -39,9 +35,7 @@ function CreateBlogPostForm() {
           </div>
         ))}
 
-        <AddH2Button />
-        <AddH3Button />
-        <AddParagraphButton />
+        <AddContentButtonList />
         <button type="submit">投稿</button>
       </form>
     </FieldArrayFormProvider>

@@ -1,6 +1,16 @@
 import { useFieldArrayFormContext } from '@/components/form/FieldArrayFormProvider';
 
-export function AddH2Button() {
+export default function AddContentButtonList() {
+  return (
+    <>
+      <AddH2Button />
+      <AddH3Button />
+      <AddParagraphButton />
+    </>
+  );
+}
+
+function AddH2Button() {
   const { append } = useFieldArrayFormContext();
 
   return (
@@ -10,7 +20,7 @@ export function AddH2Button() {
   );
 }
 
-export function AddH3Button() {
+function AddH3Button() {
   const { append } = useFieldArrayFormContext();
 
   return (
@@ -20,7 +30,7 @@ export function AddH3Button() {
   );
 }
 
-export function AddParagraphButton() {
+function AddParagraphButton() {
   const { append } = useFieldArrayFormContext();
 
   return (
