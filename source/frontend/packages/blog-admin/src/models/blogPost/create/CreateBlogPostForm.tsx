@@ -1,3 +1,4 @@
+import { FieldArrayFormProvider } from '@/models/blogPost/create/FieldArrayFormProvider';
 import { createBlogPostAction } from '@/models/blogPost/create/formAction';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
@@ -5,39 +6,48 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 function CreateBlogPostForm() {
-  const { register, handleSubmit, control } = useForm<CreateBlogPostFormData>({
+  const form = useForm<CreateBlogPostFormData>({
     resolver: zodResolver(createBlogPostFormSchema),
   });
 
-  const { fields, append } = useFieldArray({
+  const { register, handleSubmit, control } = form;
+
+  const fieldArray = useFieldArray<CreateBlogPostFormData>({
     control,
     name: 'contents',
   });
 
+  const { fields, append } = fieldArray;
+
   return (
-    <form role="form" onSubmit={handleSubmit(createBlogPostAction)}>
-      <label htmlFor="title">タイトル</label>
-      <input id="title" {...register('title')} />
-      {fields.map((field, index) => (
-        <div key={field.id}>
-          <label htmlFor={`contents.${index}.text`}>{field.type}</label>
-          <input
-            id={`contents.${index}.text`}
-            {...register(`contents.${index}.text` as const)}
-          />
-        </div>
-      ))}
-      <button type="button" onClick={() => append({ type: 'h2', text: '' })}>
-        h2
-      </button>
-      <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
-        h3
-      </button>
-      <button type="button" onClick={() => append({ type: 'paragraph', text: '' })}>
-        paragraph
-      </button>
-      <button type="submit">投稿</button>
-    </form>
+    <FieldArrayFormProvider {...form} {...fieldArray}>
+      <form role="form" onSubmit={handleSubmit(createBlogPostAction)}>
+        <label htmlFor="title">タイトル</label>
+        <input id="title" {...register('title')} />
+        {fields.map((field, index) => (
+          <div key={field.id}>
+            <label htmlFor={`contents.${index}.text`}>{field.type}</label>
+            <input
+              id={`contents.${index}.text`}
+              {...register(`contents.${index}.text` as const)}
+            />
+          </div>
+        ))}
+        <button type="button" onClick={() => append({ type: 'h2', text: '' })}>
+          h2
+        </button>
+        <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
+          h3
+        </button>
+        <button
+          type="button"
+          onClick={() => append({ type: 'paragraph', text: '' })}
+        >
+          paragraph
+        </button>
+        <button type="submit">投稿</button>
+      </form>
+    </FieldArrayFormProvider>
   );
 }
 
