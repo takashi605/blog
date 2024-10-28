@@ -11,31 +11,26 @@ export default function AddContentButtonList() {
 }
 
 function AddH2Button() {
-  const { append } = useFieldArrayFormContext();
-
-  return (
-    <button type="button" onClick={() => append({ type: 'h2', text: '' })}>
-      h2
-    </button>
-  );
+  return <AddContentButton type="h2" />;
 }
 
 function AddH3Button() {
-  const { append } = useFieldArrayFormContext();
-
-  return (
-    <button type="button" onClick={() => append({ type: 'h3', text: '' })}>
-      h3
-    </button>
-  );
+  return <AddContentButton type="h3" />;
 }
 
 function AddParagraphButton() {
+  return <AddContentButton type="paragraph" />;
+}
+
+function AddContentButton(props: { type: 'h2' | 'h3' | 'paragraph' }) {
   const { append } = useFieldArrayFormContext();
 
   return (
-    <button type="button" onClick={() => append({ type: 'paragraph', text: '' })}>
-      paragraph
+    <button
+      type="button"
+      onClick={() => append({ type: props.type, text: '' })}
+    >
+      {props.type}
     </button>
   );
 }
