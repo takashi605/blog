@@ -26,7 +26,7 @@ function CreateBlogPostForm() {
 
   const onSubmit: SubmitHandler<CreateBlogPostFormData> = async (formData) => {
     await createBlogPostAction(formData);
-    router.push('/');
+    router.push('/posts/create/success');
   };
 
   return (
