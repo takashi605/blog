@@ -11,7 +11,7 @@ Given('記事投稿ページにアクセスする', async ({ page }) => {
 });
 
 When('記事タイトルのインプットに「タイトル」を入力する', async ({ page }) => {
-  const titleInput = await page.getByRole('textbox', { name: 'title' });
+  const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
   await titleInput.fill('タイトル');
   await expect(titleInput).toHaveValue('タイトル');
 });
@@ -28,17 +28,19 @@ When('h2に「見出しレベル2」と入力する', async ({ page }) => {
   await h2Input.fill('見出しレベル2');
   await expect(h2Input).toHaveValue('見出しレベル2');
 });
-When('「テキスト」ボタンを押す', async ({ page }) => {
-  const addTextButton = await page.getByRole('button', { name: 'text' });
+When('「paragraph」ボタンを押す', async ({ page }) => {
+  const addTextButton = await page.getByRole('button', {
+    name: 'paragraph',
+  });
   await addTextButton.click();
 });
-Then('テキストのインプットが表示される', async ({ page }) => {
-  await expect(page.getByRole('textbox', { name: 'text' })).toBeVisible();
+Then('paragraphのインプットが表示される', async ({ page }) => {
+  await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible();
 });
-When('テキストのインプットに「テキスト入力値」と入力する', async ({ page }) => {
-  const textInput = await page.getByRole('textbox', { name: 'text' });
-  await textInput.fill('テキスト入力値');
-  await expect(textInput).toHaveValue('テキスト入力値');
+When('paragraphのインプットに「paragraph入力値」と入力する', async ({ page }) => {
+  const paragraphInput = await page.getByRole('textbox', { name: 'paragraph' });
+  await paragraphInput.fill('paragraph入力値');
+  await expect(paragraphInput).toHaveValue('paragraph入力値');
 });
 When('「h3」ボタンを押す', async ({ page }) => {
   const addH3Button = await page.getByRole('button', { name: 'h3' });
@@ -53,7 +55,7 @@ When('h3 のインプットに「見出しレベル3」と入力する', async (
   await expect(h3Input).toHaveValue('見出しレベル3');
 });
 When('公開ボタンを押す', async ({ page }) => {
-  const publishButton = await page.getByRole('button', { name: 'publish' });
+  const publishButton = await page.getByRole('button', { name: '投稿' });
   await publishButton.click();
 });
 Then('「記事を公開しました」と表示される', async ({ page }) => {
