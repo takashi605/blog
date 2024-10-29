@@ -1,7 +1,5 @@
-import React from 'react'
-
 function CreateBlogPostSuccessPage() {
   return <div>記事を公開しました</div>;
 }
 
-export default CreateBlogPostSuccessPage
+export default CreateBlogPostSuccessPage;

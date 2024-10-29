@@ -13,7 +13,7 @@ const config: Config = {
     customExportConditions: [],
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFiles: ['./jest.polyfills.mjs'],
 };
