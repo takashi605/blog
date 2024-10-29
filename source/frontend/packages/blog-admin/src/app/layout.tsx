@@ -1,3 +1,4 @@
+import { MSWInitializer } from '@/components/MSWInitializer';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
@@ -24,10 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <MSWInitializer />
         {children}
       </body>
     </html>
