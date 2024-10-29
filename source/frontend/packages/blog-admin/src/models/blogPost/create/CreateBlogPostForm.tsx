@@ -7,7 +7,6 @@ import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema
 import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
 
@@ -29,17 +28,6 @@ function CreateBlogPostForm() {
     await createBlogPostAction(formData);
     router.push('/');
   };
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      (async () => {
-        const { mockApiForClient } = await import(
-          '@/apiMocks/serverForClient'
-        );
-        mockApiForClient.start();
-      })();
-    }
-  }, []);
 
   return (
     <FieldArrayFormProvider {...form} {...fieldArray}>
