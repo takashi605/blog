@@ -84,6 +84,11 @@ jobs:
         run: |
           make helm-install
 
+      - name: "デバッグ用に kubernetes の状態を確認"
+        run: |
+          kubectl get all --all-namespaces
+          kubectl get ingress --all-namespaces
+
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/e2e --timeout=120s
