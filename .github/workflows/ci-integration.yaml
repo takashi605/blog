@@ -82,12 +82,7 @@ jobs:
 
       - name: "Chart のインストール"
         run: |
-          make helm-install
-
-      - name: "デバッグ用に kubernetes の状態を確認"
-        run: |
-          kubectl get all --all-namespaces
-          kubectl get ingress --all-namespaces
+          make helm-install --wait
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
@@ -104,10 +99,6 @@ jobs:
       - name: "テスト対象の Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/web --timeout=120s
-
-      - name: "デバッグ用に kubernetes の状態を確認"
-        run: |
-          kubectl describe all
 
       - name: "e2e テストを実行する"
         run: |
