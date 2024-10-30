@@ -64,7 +64,6 @@ jobs:
         run: |
           make coredns-apply
 
-
       - name: "image の build"
         run: |
           docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
