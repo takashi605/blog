@@ -98,7 +98,7 @@ kube-port-forward-ingress:
 ## 基本的には tilt が管理してくれるのであまり使わない
 ###
 helm-install:
-	helm install blog k8s/blog-chart
+	helm install blog k8s/blog-chart --wait
 
 helm-delete:
 	helm delete blog

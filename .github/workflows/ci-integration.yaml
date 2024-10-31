@@ -82,7 +82,7 @@ jobs:
 
       - name: "Chart のインストール"
         run: |
-          make helm-install --wait
+          make helm-install
 
       - name: "e2e テストを実行する Deployment リソースが準備できるまで待機"
         run: |
