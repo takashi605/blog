@@ -12,10 +12,12 @@
     "web": "pnpm -F web",
     "e2e": "pnpm -F e2e",
     "entities": "pnpm -F entities",
+    "blog-admin": "pnpm -F blog-admin",
     "e2e-test": "pnpm --filter e2e exec bddgen && pnpm --filter e2e exec playwright test",
     "e2e-ui": "pnpm e2e e2e-ui",
     "web-build": "pnpm -F web exec next build",
-    "web-dev": "pnpm -F web exec next dev"
+    "web-dev": "pnpm -F web exec next dev",
+    "admin-dev": "pnpm -F blog-admin exec next dev"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

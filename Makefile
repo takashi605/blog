@@ -125,11 +125,11 @@ frontend-test:
 	$(MAKE) frontend-test-unit
 	$(MAKE) frontend-check
 frontend-check:
-	cd source/frontend/ && pnpm web run check && pnpm entities run check
+	cd source/frontend/ && pnpm web run check && pnpm entities run check && pnpm blog-admin check
 frontend-fix:
-	cd source/frontend && pnpm web run fix && pnpm entities run fix
+	cd source/frontend && pnpm web run fix && pnpm entities run fix && pnpm blog-admin fix
 frontend-test-unit:
-	cd source/frontend && pnpm web run test && pnpm entities run test
+	cd source/frontend && pnpm web run test && pnpm entities run test && pnpm blog-admin run test
 
 ###
 ## e2e 系
@@ -175,3 +175,9 @@ api-test-sh:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
+
+###
+## blog-admin 系
+###
+blog-admin-build:
+	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
