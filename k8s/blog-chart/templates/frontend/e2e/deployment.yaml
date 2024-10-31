@@ -26,8 +26,8 @@ spec:
               memory: {{ .Values.e2e.pod.memoryLimit }}
               cpu: {{ .Values.e2e.pod.cpuLimit }}
             requests:
-              memory: "500Mi"
-              cpu: "300m"
+              memory: {{ .Values.e2e.pod.memoryRequest }}
+              cpu: {{ .Values.e2e.pod.cpuRequest }}
           ports:
             - containerPort: 4000
           env:

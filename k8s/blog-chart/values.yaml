@@ -16,7 +16,7 @@ web:
     memoryLimit: "750Mi"
     cpuLimit: "300m"
     memoryRequest: "250Mi"
-    cpuRequest: "150m"
+    cpuRequest: "100m"
     containerPort: 3000
     env:
       NEXT_PUBLIC_API_URL: "http://api.blog.example"
@@ -47,7 +47,7 @@ admin:
     memoryLimit: "750Mi"
     cpuLimit: "300m"
     memoryRequest: "250Mi"
-    cpuRequest: "150m"
+    cpuRequest: "100m"
     containerPort: 3000
     env:
       NEXT_PUBLIC_API_URL: "http://api.blog.example"
@@ -78,7 +78,7 @@ api:
     memoryLimit: "750Mi"
     cpuLimit: "300m"
     memoryRequest: "250Mi"
-    cpuRequest: "150m"
+    cpuRequest: "100m"
     containerPort: 8000
   service:
     type: ClusterIP
@@ -96,4 +96,6 @@ e2e:
       ADMIN_URL: "http://admin.blog.example"
     memoryLimit: "750Mi"
     cpuLimit: "400m"
+    memoryRequest: "250Mi"
+    cpuRequest: "100m"
 production: false
