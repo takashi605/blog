@@ -2,6 +2,8 @@ import { UsecaseError } from '@/usecases/error';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { ContentBase } from 'entities/src/blogPost/postContents/content';
+import type { Heading } from 'entities/src/blogPost/postContents/heading';
+import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
@@ -15,6 +17,18 @@ type ContentForDTO = {
   readonly value: string;
   readonly type: string;
 };
+
+type HeadingForDTO = Readonly<{
+  id: ReturnType<Heading['getId']>;
+  text: ReturnType<Heading['getValue']>;
+  type: ReturnType<Heading['getType']>;
+}>;
+
+type ParagraphForDTO = Readonly<{
+  id: ReturnType<Paragraph['getId']>;
+  text: ReturnType<Paragraph['getValue']>;
+  type: ReturnType<Paragraph['getType']>;
+}>;
 
 export class BlogPostDTOBuilder {
   private blogPost: BlogPost;
