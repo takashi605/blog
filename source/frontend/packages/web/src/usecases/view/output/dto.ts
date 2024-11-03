@@ -1,7 +1,7 @@
 import { UsecaseError } from '@/usecases/error';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
-import type { ContentBase } from 'entities/src/blogPost/postContents/content';
+import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { Heading } from 'entities/src/blogPost/postContents/heading';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
@@ -12,11 +12,7 @@ export type ViewBlogPostDTO = {
   readonly contents: ReadonlyArray<ContentForDTO>;
 };
 
-type ContentForDTO = {
-  readonly id: number;
-  readonly value: string;
-  readonly type: string;
-};
+type ContentForDTO = HeadingForDTO | ParagraphForDTO;
 
 type HeadingForDTO = Readonly<{
   id: ReturnType<Heading['getId']>;
@@ -61,10 +57,10 @@ export class BlogPostDTOBuilder {
       .map((content) => this.createContentForDTO(content));
   }
 
-  private createContentForDTO(content: ContentBase): ContentForDTO {
+  private createContentForDTO(content: Content): ContentForDTO {
     return {
       id: content.getId(),
-      value: content.getValue(),
+      text: content.getValue(),
       type: content.getType(),
     };
   }
