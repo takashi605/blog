@@ -2,7 +2,7 @@ import {
   createContent,
   type Content,
   type ContentType,
-} from '../../blogPost/postContents/content';
+} from '../postContents/content';
 
 export class ContentBuilder {
   private type: ContentType;

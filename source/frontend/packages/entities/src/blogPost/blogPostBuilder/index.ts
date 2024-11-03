@@ -1,6 +1,6 @@
 import { BlogPost } from '../../blogPost';
-import { ContentBuilder } from '../../blogPost/blogPostBuilder/content';
 import { ContentType } from '../../blogPost/postContents/content';
+import { ContentBuilder } from './contentBuilder';
 
 export class BlogPostBuilder {
   private postTitle = '';

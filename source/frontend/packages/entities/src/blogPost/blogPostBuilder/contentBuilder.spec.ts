@@ -1,5 +1,5 @@
-import { ContentBuilder } from '../../blogPost/blogPostBuilder/content';
-import { ContentType } from '../../blogPost/postContents/content';
+import { ContentType } from '../postContents/content';
+import { ContentBuilder } from './contentBuilder';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('id およびユースケースへの入力値からコンテントを生成できる', () => {
