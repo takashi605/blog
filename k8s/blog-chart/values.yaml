@@ -13,8 +13,8 @@ web:
     # Always だとリモートから pull してしまう
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
-    memoryLimit: "750Mi"
-    cpuLimit: "300m"
+    memoryLimit: "1500Mi"
+    cpuLimit: "750m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
     containerPort: 3000
@@ -44,8 +44,8 @@ admin:
     # Always だとリモートから pull してしまう
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
-    memoryLimit: "750Mi"
-    cpuLimit: "300m"
+    memoryLimit: "1500Mi"
+    cpuLimit: "750m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
     containerPort: 3000
@@ -75,8 +75,8 @@ api:
     # Always だとリモートから pull してしまう
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
-    memoryLimit: "750Mi"
-    cpuLimit: "300m"
+    memoryLimit: "1500Mi"
+    cpuLimit: "750m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
     containerPort: 8000
@@ -94,8 +94,8 @@ e2e:
     env:
       TEST_TARGET_URL: "http://blog.example"
       ADMIN_URL: "http://admin.blog.example"
-    memoryLimit: "750Mi"
-    cpuLimit: "400m"
+    memoryLimit: "2000Mi"
+    cpuLimit: "2000m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
 production: false
