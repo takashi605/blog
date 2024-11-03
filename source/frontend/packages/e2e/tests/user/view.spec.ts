@@ -16,6 +16,11 @@ Then('記事タイトル が表示される', async ({ page }) => {
   await expect(title.textContent).not.toBe('');
 });
 
+Then('記事サムネイル が表示される', async ({ page }) => {
+  const mainVisualImage = page.getByTestId('main-visual-image');
+  await expect(mainVisualImage).toBeVisible();
+});
+
 Then('記事本文 が表示される', async ({ page }) => {
   const p = page.locator('p');
 
@@ -46,6 +51,16 @@ Then('h3見出し が表示される', async ({ page }) => {
 
   for (let i = 0; i < count; i++) {
     await expect(h3.nth(i).textContent).not.toBe('');
+  }
+});
+
+Then('画像コンテンツ が表示される', async ({ page }) => {
+  const contentImages = page.getByTestId('content-image');
+  const count = await contentImages.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    await expect(contentImages.nth(i)).toBeVisible();
   }
 });
 
