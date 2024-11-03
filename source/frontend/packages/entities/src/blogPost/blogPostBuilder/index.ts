@@ -45,9 +45,9 @@ export class BlogPostBuilder {
   }
 
   injectionContentsTo(blogPost: BlogPost) {
-    this.contentBuilders.forEach((content) => {
+    this.contentBuilders.forEach((contentBuilder) => {
       blogPost.addContent(
-        content.createContent(blogPost.getContents().length + 1),
+        contentBuilder.build(blogPost.getContents().length + 1),
       );
     });
   }

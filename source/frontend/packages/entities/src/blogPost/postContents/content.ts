@@ -21,7 +21,7 @@ export const createContent = (params: {
   id: number;
   type: ContentType;
   value: string;
-}): ContentBase => {
+}): Content => {
   switch (params.type) {
     case 'h2':
       return createH2(params.id, params.value);

@@ -1,10 +1,10 @@
 import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
-import type { ContentBase } from './postContents/content';
+import type { Content } from './postContents/content';
 
 export class BlogPost {
   private title: string;
-  private contents: ContentBase[] = [];
+  private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
 
@@ -16,7 +16,7 @@ export class BlogPost {
     return this.title;
   }
 
-  addContent(content: ContentBase) {
+  addContent(content: Content) {
     this.contents.push(content);
     return this;
   }

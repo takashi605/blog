@@ -7,7 +7,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       type: ContentType.H3,
       contentValue: 'h3見出し',
     });
-    const content = contentBuilder.createContent(2);
+    const content = contentBuilder.build(2);
     expect(content.getValue()).toBe('h3見出し');
     expect(content.getType()).toBe('h3');
     expect(content.getId()).toBe(2);
