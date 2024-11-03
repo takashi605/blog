@@ -1,4 +1,5 @@
 import { EntityError } from '../../error/error';
+import type { Heading } from './heading';
 import { createH2, createH3 } from './heading';
 import { Paragraph } from './paragraph';
 
@@ -13,6 +14,8 @@ export type ContentBase = {
   getValue: () => string;
   getType: () => ContentType;
 };
+
+export type Content = Heading | Paragraph;
 
 export const createContent = (params: {
   id: number;
