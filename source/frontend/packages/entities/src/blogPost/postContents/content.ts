@@ -14,9 +14,11 @@ export type ContentBase = {
   getType: () => ContentType;
 };
 
-type ContentParams = { id: number; type: ContentType; value: string };
-
-export const createContent = (params: ContentParams): ContentBase => {
+export const createContent = (params: {
+  id: number;
+  type: ContentType;
+  value: string;
+}): ContentBase => {
   switch (params.type) {
     case 'h2':
       return createH2(params.id, params.value);
