@@ -1,6 +1,6 @@
-import { ContentType, type Content } from './content';
+import { ContentType, type ContentBase } from './content';
 
-export class Paragraph implements Content {
+export class Paragraph implements ContentBase {
   private id: number;
   private text: string;
 

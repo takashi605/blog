@@ -8,7 +8,7 @@ export const enum ContentType {
   Paragraph = 'paragraph',
 }
 
-export type Content = {
+export type ContentBase = {
   getId: () => number;
   getValue: () => string;
   getType: () => ContentType;
@@ -16,7 +16,7 @@ export type Content = {
 
 type ContentParams = { id: number; type: ContentType; value: string };
 
-export const createContent = (params: ContentParams): Content => {
+export const createContent = (params: ContentParams): ContentBase => {
   switch (params.type) {
     case 'h2':
       return createH2(params.id, params.value);

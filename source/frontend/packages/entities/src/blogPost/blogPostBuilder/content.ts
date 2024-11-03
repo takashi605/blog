@@ -1,4 +1,7 @@
-import type { Content, ContentType } from '../../blogPost/postContents/content';
+import type {
+  ContentBase,
+  ContentType,
+} from '../../blogPost/postContents/content';
 
 export class ContentBuilder {
   private type: ContentType;
@@ -9,7 +12,7 @@ export class ContentBuilder {
     this.contentValue = input.contentValue;
   }
 
-  createContent(id: number): Content {
+  createContent(id: number): ContentBase {
     return {
       getId: () => id,
       getValue: () => this.contentValue,

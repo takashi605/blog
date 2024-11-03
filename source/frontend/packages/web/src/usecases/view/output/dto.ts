@@ -1,7 +1,7 @@
 import { UsecaseError } from '@/usecases/error';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
-import type { Content } from 'entities/src/blogPost/postContents/content';
+import type { ContentBase } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
@@ -47,7 +47,7 @@ export class BlogPostDTOBuilder {
       .map((content) => this.createContentForDTO(content));
   }
 
-  private createContentForDTO(content: Content): ContentForDTO {
+  private createContentForDTO(content: ContentBase): ContentForDTO {
     return {
       id: content.getId(),
       value: content.getValue(),
