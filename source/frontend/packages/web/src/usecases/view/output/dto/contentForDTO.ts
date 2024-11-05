@@ -26,6 +26,8 @@ export function createContentToDTOContext(
       return new ContentToDTOContext(new HeadingToDTOStrategy(content));
     case 'paragraph':
       return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
+
+    // TODO カスタムエラーでエラーハンドリングする
     default:
       throw new Error('不明なコンテンツタイプです');
   }
