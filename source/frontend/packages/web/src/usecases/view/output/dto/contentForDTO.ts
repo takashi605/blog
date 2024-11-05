@@ -19,3 +19,13 @@ type ParagraphForDTO = Readonly<{
 type ContentToDTOStrategy = {
   toDTO: (content: Content) => ContentForDTO;
 };
+
+export class ParagraphToDTOStrategy implements ContentToDTOStrategy {
+  toDTO(content: Content): ParagraphForDTO {
+    return {
+      id: content.getId(),
+      text: content.getValue(),
+      type: content.getType(),
+    };
+  }
+}
