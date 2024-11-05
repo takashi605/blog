@@ -16,6 +16,21 @@ type ParagraphForDTO = Readonly<{
   type: ReturnType<Paragraph['getType']>;
 }>;
 
+export function createContentToDTOContext(
+  content: Content,
+): ContentToDTOContext {
+  switch (content.getType()) {
+    case 'h2':
+      return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+    case 'h3':
+      return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+    case 'paragraph':
+      return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
+    default:
+      throw new Error('不明なコンテンツタイプです');
+  }
+}
+
 abstract class ContentToDTOStrategy {
   protected content: Content;
 
