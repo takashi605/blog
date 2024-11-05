@@ -16,26 +16,31 @@ type ParagraphForDTO = Readonly<{
   type: ReturnType<Paragraph['getType']>;
 }>;
 
-type ContentToDTOStrategy = {
-  toDTO: (content: Content) => ContentForDTO;
-};
+abstract class ContentToDTOStrategy {
+  protected content: Content;
 
-export class ParagraphToDTOStrategy implements ContentToDTOStrategy {
-  toDTO(content: Content): ParagraphForDTO {
+  constructor(content: Content) {
+    this.content = content;
+  }
+  abstract toDTO(): ContentForDTO;
+}
+
+export class ParagraphToDTOStrategy extends ContentToDTOStrategy {
+  toDTO(): ParagraphForDTO {
     return {
-      id: content.getId(),
-      text: content.getValue(),
-      type: content.getType(),
+      id: this.content.getId(),
+      text: this.content.getValue(),
+      type: this.content.getType(),
     };
   }
 }
 
-export class HeadingToDTOStrategy implements ContentToDTOStrategy {
-  toDTO(content: Content): HeadingForDTO {
+export class HeadingToDTOStrategy extends ContentToDTOStrategy {
+  toDTO(): HeadingForDTO {
     return {
-      id: content.getId(),
-      text: content.getValue(),
-      type: content.getType(),
+      id: this.content.getId(),
+      text: this.content.getValue(),
+      type: this.content.getType(),
     };
   }
 }
@@ -47,7 +52,7 @@ export class ContentToDTOContext {
     this.strategy = strategy;
   }
 
-  toDTO(content: Content): ContentForDTO {
-    return this.strategy.toDTO(content);
+  toDTO(): ContentForDTO {
+    return this.strategy.toDTO();
   }
 }

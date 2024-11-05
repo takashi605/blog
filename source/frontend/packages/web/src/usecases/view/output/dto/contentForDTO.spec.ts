@@ -16,9 +16,11 @@ describe('contentForDTO', () => {
       value: '段落',
     });
 
-    const context = new ContentToDTOContext(new ParagraphToDTOStrategy());
+    const context = new ContentToDTOContext(
+      new ParagraphToDTOStrategy(content),
+    );
 
-    const dto = context.toDTO(content);
+    const dto = context.toDTO();
 
     expect(dto.id).toBe(1);
     expect(dto.text).toBe('段落');
@@ -32,9 +34,9 @@ describe('contentForDTO', () => {
       value: 'h2見出し',
     });
 
-    const context = new ContentToDTOContext(new HeadingToDTOStrategy());
+    const context = new ContentToDTOContext(new HeadingToDTOStrategy(content));
 
-    const dto = context.toDTO(content);
+    const dto = context.toDTO();
 
     expect(dto.id).toBe(2);
     expect(dto.text).toBe('h2見出し');
