@@ -39,3 +39,15 @@ export class HeadingToDTOStrategy implements ContentToDTOStrategy {
     };
   }
 }
+
+export class ContentToDTOContext {
+  private strategy: ContentToDTOStrategy;
+
+  constructor(strategy: ContentToDTOStrategy) {
+    this.strategy = strategy;
+  }
+
+  toDTO(content: Content): ContentForDTO {
+    return this.strategy.toDTO(content);
+  }
+}

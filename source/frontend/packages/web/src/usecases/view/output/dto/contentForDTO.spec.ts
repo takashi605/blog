@@ -1,4 +1,5 @@
 import {
+  ContentToDTOContext,
   HeadingToDTOStrategy,
   ParagraphToDTOStrategy,
 } from '@/usecases/view/output/dto/contentForDTO';
@@ -15,7 +16,9 @@ describe('contentForDTO', () => {
       value: '段落',
     });
 
-    const dto = new ParagraphToDTOStrategy().toDTO(content);
+    const context = new ContentToDTOContext(new ParagraphToDTOStrategy());
+
+    const dto = context.toDTO(content);
 
     expect(dto.id).toBe(1);
     expect(dto.text).toBe('段落');
@@ -29,7 +32,9 @@ describe('contentForDTO', () => {
       value: 'h2見出し',
     });
 
-    const dto = new HeadingToDTOStrategy().toDTO(content);
+    const context = new ContentToDTOContext(new HeadingToDTOStrategy());
+
+    const dto = context.toDTO(content);
 
     expect(dto.id).toBe(2);
     expect(dto.text).toBe('h2見出し');
