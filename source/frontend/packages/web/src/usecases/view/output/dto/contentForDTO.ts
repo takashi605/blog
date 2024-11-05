@@ -29,3 +29,13 @@ export class ParagraphToDTOStrategy implements ContentToDTOStrategy {
     };
   }
 }
+
+export class HeadingToDTOStrategy implements ContentToDTOStrategy {
+  toDTO(content: Content): HeadingForDTO {
+    return {
+      id: content.getId(),
+      text: content.getValue(),
+      type: content.getType(),
+    };
+  }
+}
