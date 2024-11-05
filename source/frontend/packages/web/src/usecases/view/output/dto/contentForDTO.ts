@@ -1,3 +1,4 @@
+import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { Heading } from 'entities/src/blogPost/postContents/heading';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
@@ -14,3 +15,7 @@ type ParagraphForDTO = Readonly<{
   text: ReturnType<Paragraph['getValue']>;
   type: ReturnType<Paragraph['getType']>;
 }>;
+
+type ContentToDTOStrategy = {
+  toDTO: (content: Content) => ContentForDTO;
+};
