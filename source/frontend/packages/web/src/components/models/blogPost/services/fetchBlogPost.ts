@@ -3,7 +3,7 @@ import {
   type BlogPostResponse,
 } from '@/components/models/blogPost/services/response';
 import { HttpError } from '@/components/models/error/httpError';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/dto';
 
 export const fetchBlogPost = async (id: number): Promise<ViewBlogPostDTO> => {
   const response = await fetchRawBlogPost(id);

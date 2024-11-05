@@ -1,4 +1,4 @@
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/dto';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {
   createBlogPostBuilder,

@@ -3,7 +3,7 @@ import type {
   BlogPostDateProps,
   BlogPostTitleProps,
 } from '@/components/models/blogPost/view/controllers/types';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/dto';
 import { memo } from 'react';
 import styles from './viewBlogPostController.module.scss';
 
