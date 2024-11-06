@@ -1,7 +1,7 @@
 import { ContentType } from '../postContents/content';
 import { ContentBuilder } from './contentBuilder';
 
-describe('ユースケース: 投稿記事の閲覧', () => {
+describe('エンティティ: 投稿記事の閲覧', () => {
   it('id およびユースケースへの入力値からコンテントを生成できる', () => {
     const contentBuilder = new ContentBuilder({
       type: ContentType.H3,

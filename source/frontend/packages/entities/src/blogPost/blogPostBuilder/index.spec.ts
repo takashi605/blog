@@ -1,6 +1,6 @@
 import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
 
-describe('ユースケース: 投稿記事を生成するビルダークラス', () => {
+describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
     const builder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
