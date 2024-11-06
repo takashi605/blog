@@ -25,3 +25,7 @@ type ContentInputBase = { type: ContentType };
 type HeadingInput = { contentValue: string } & ContentInputBase;
 type ParagraphInput = { contentValue: string } & ContentInputBase;
 type ImageInput = { path: string } & ContentInputBase;
+
+type ContentBuildStrategy = {
+  build(id: number): Content;
+}
