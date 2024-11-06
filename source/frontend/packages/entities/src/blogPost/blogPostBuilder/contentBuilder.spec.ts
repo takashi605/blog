@@ -3,6 +3,7 @@ import {
   ContentBuilder,
   H2BuildStrategy,
   H3BuildStrategy,
+  ParagraphBuildStrategy,
 } from './contentBuilder';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
@@ -27,5 +28,11 @@ describe('エンティティ: 投稿記事の閲覧', () => {
     const h3BuildStrategy = new H3BuildStrategy('h3見出し');
     const h3 = h3BuildStrategy.build(1);
     expect(h3.getValue()).toBe('h3見出し');
+  });
+
+  it('paragraph を生成するストラテジー', () => {
+    const paragraphBuildStrategy = new ParagraphBuildStrategy('テキスト');
+    const p = paragraphBuildStrategy.build(1);
+    expect(p.getValue()).toBe('テキスト');
   });
 });
