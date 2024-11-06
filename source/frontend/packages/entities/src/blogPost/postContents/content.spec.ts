@@ -1,3 +1,4 @@
+import { ImageContent } from '../postContents/image';
 import { ContentType, createContent } from './content';
 import type { Heading } from './heading';
 
@@ -43,5 +44,12 @@ describe('エンティティ: 投稿記事のコンテント', () => {
         value: '不明なコンテント',
       }),
     ).toThrow('不明なコンテントタイプです');
+  });
+
+  it('画像を生成できる', () => {
+    const image = new ImageContent(1, 'path/to/image');
+    expect(image.getPath()).toBe('path/to/image');
+    expect(image.getType()).toBe(ContentType.Image);
+    expect(image.getId()).toBe(1);
   });
 });

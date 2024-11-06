@@ -7,6 +7,7 @@ export const enum ContentType {
   H2 = 'h2',
   H3 = 'h3',
   Paragraph = 'paragraph',
+  Image = 'image',
 }
 
 export type ContentBase = {
