@@ -1,4 +1,5 @@
 import { ImageContent } from '../postContents/image';
+import type { Paragraph } from '../postContents/paragraph';
 import { ContentType, createContent } from './content';
 import type { Heading } from './heading';
 
@@ -30,7 +31,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       id: 1,
       type: ContentType.Paragraph,
       value: '段落',
-    });
+    }) as Paragraph;
     expect(paragraph.getValue()).toBe('段落');
     expect(paragraph.getType()).toBe('paragraph');
     expect(paragraph.getId()).toBe(1);

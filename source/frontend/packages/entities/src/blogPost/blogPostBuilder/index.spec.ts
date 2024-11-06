@@ -1,4 +1,6 @@
 import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
+import type { Heading } from '../postContents/heading';
+import type { Paragraph } from '../postContents/paragraph';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
@@ -21,13 +23,17 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
 
     expect(blogPost.getContents().length).toBe(3);
 
-    expect(blogPost.getContents()[0].getValue()).toBe('h2見出し1');
-    expect(blogPost.getContents()[0].getType()).toBe('h2');
+    // TODO 一時的に不適切な定数化をしているので、後で修正する
+    const h2Content = blogPost.getContents()[0] as Heading;
+    expect(h2Content.getValue()).toBe('h2見出し1');
+    expect(h2Content.getType()).toBe('h2');
 
-    expect(blogPost.getContents()[1].getValue()).toBe('h3見出し1');
-    expect(blogPost.getContents()[1].getType()).toBe('h3');
+    const h3Content = blogPost.getContents()[1] as Heading;
+    expect(h3Content.getValue()).toBe('h3見出し1');
+    expect(h3Content.getType()).toBe('h3');
 
-    expect(blogPost.getContents()[2].getValue()).toBe('段落1');
-    expect(blogPost.getContents()[2].getType()).toBe('paragraph');
+    const pContent = blogPost.getContents()[2] as Paragraph;
+    expect(pContent.getValue()).toBe('段落1');
+    expect(pContent.getType()).toBe('paragraph');
   });
 });

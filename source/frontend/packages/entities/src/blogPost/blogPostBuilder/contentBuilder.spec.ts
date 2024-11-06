@@ -1,4 +1,5 @@
 import { ContentType } from '../postContents/content';
+import type { Heading } from '../postContents/heading';
 import {
   ContentBuilder,
   H2BuildStrategy,
@@ -12,7 +13,7 @@ describe('エンティティ: 投稿記事の閲覧', () => {
       type: ContentType.H3,
       contentValue: 'h3見出し',
     });
-    const content = contentBuilder.build(2);
+    const content = contentBuilder.build(2) as Heading;
     expect(content.getValue()).toBe('h3見出し');
     expect(content.getType()).toBe('h3');
     expect(content.getId()).toBe(2);

@@ -58,7 +58,7 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy {
     this.contentValue = contentValue;
   }
 
-  build(id: number): Content {
+  build(id: number): Paragraph {
     return new Paragraph(id, this.contentValue);
   }
 }
