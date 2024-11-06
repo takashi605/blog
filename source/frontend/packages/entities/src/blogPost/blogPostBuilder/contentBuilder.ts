@@ -1,7 +1,7 @@
 import type { ContentType } from '../postContents/content';
 import { createContent, type Content } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
-import { createH2 } from '../postContents/heading';
+import { createH2, createH3 } from '../postContents/heading';
 
 export class ContentBuilder {
   private type: ContentType;
@@ -37,5 +37,16 @@ export class H2BuildStrategy implements ContentBuildStrategy {
 
   build(id: number): Heading {
     return createH2(id, this.contentValue);
+  }
+}
+export class H3BuildStrategy implements ContentBuildStrategy {
+  private contentValue: string;
+
+  constructor(contentValue: string) {
+    this.contentValue = contentValue;
+  }
+
+  build(id: number): Heading {
+    return createH3(id, this.contentValue);
   }
 }

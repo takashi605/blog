@@ -1,5 +1,9 @@
 import { ContentType } from '../postContents/content';
-import { ContentBuilder, H2BuildStrategy } from './contentBuilder';
+import {
+  ContentBuilder,
+  H2BuildStrategy,
+  H3BuildStrategy,
+} from './contentBuilder';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
   it('id およびユースケースへの入力値からコンテントを生成できる', () => {
@@ -17,5 +21,11 @@ describe('エンティティ: 投稿記事の閲覧', () => {
     const h2BuildStrategy = new H2BuildStrategy('h2見出し');
     const h2 = h2BuildStrategy.build(1);
     expect(h2.getValue()).toBe('h2見出し');
+  });
+
+  it('h3 を生成するストラテジー', () => {
+    const h3BuildStrategy = new H3BuildStrategy('h3見出し');
+    const h3 = h3BuildStrategy.build(1);
+    expect(h3.getValue()).toBe('h3見出し');
   });
 });
