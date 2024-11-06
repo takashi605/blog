@@ -4,6 +4,7 @@ import {
   ContentBuilder,
   H2BuildStrategy,
   H3BuildStrategy,
+  ImageBuildStrategy,
   ParagraphBuildStrategy,
 } from './contentBuilder';
 
@@ -35,5 +36,11 @@ describe('エンティティ: 投稿記事の閲覧', () => {
     const paragraphBuildStrategy = new ParagraphBuildStrategy('テキスト');
     const p = paragraphBuildStrategy.build(1);
     expect(p.getValue()).toBe('テキスト');
+  });
+
+  it('image を生成するストラテジー', () => {
+    const imageBuildStrategy = new ImageBuildStrategy('path/to/image');
+    const image = imageBuildStrategy.build(1);
+    expect(image.getPath()).toBe('path/to/image');
   });
 });

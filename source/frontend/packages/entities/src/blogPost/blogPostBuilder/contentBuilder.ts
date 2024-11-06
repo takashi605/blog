@@ -2,6 +2,7 @@ import type { ContentType } from '../postContents/content';
 import { createContent, type Content } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
 import { createH2, createH3 } from '../postContents/heading';
+import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
 
 export class ContentBuilder {
@@ -60,5 +61,16 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy {
 
   build(id: number): Paragraph {
     return new Paragraph(id, this.contentValue);
+  }
+}
+export class ImageBuildStrategy implements ContentBuildStrategy {
+  private path: string;
+
+  constructor(path: string) {
+    this.path = path;
+  }
+
+  build(id: number): ImageContent {
+    return new ImageContent(id, this.path);
   }
 }
