@@ -1,6 +1,6 @@
 import type { Content } from 'entities/src/blogPost/postContents/content';
-import type { Heading } from 'entities/src/blogPost/postContents/heading';
-import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { Heading } from 'entities/src/blogPost/postContents/heading';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 export type ContentForDTO = HeadingForDTO | ParagraphForDTO;
 
@@ -16,16 +16,16 @@ type ParagraphForDTO = Readonly<{
   type: ReturnType<Paragraph['getType']>;
 }>;
 
-abstract class ContentToDTOStrategy {
-  protected content: Content;
+abstract class ContentToDTOStrategy<T extends Content> {
+  protected content: T;
 
-  constructor(content: Content) {
+  constructor(content: T) {
     this.content = content;
   }
   abstract toDTO(): ContentForDTO;
 }
 
-export class ParagraphToDTOStrategy extends ContentToDTOStrategy {
+export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
   toDTO(): ParagraphForDTO {
     return {
       id: this.content.getId(),
@@ -35,7 +35,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy {
   }
 }
 
-export class HeadingToDTOStrategy extends ContentToDTOStrategy {
+export class HeadingToDTOStrategy extends ContentToDTOStrategy<Heading> {
   toDTO(): HeadingForDTO {
     return {
       id: this.content.getId(),
@@ -46,23 +46,15 @@ export class HeadingToDTOStrategy extends ContentToDTOStrategy {
 }
 
 export class ContentToDTOContext {
-  private strategy: ContentToDTOStrategy;
+  private strategy: ContentToDTOStrategy<Content>;
 
   constructor(content: Content) {
-    switch (content.getType()) {
-      case 'h2':
-        this.strategy = new HeadingToDTOStrategy(content);
-        break;
-      case 'h3':
-        this.strategy = new HeadingToDTOStrategy(content);
-        break;
-      case 'paragraph':
-        this.strategy = new ParagraphToDTOStrategy(content);
-        break;
-
-      // TODO カスタムエラーでエラーハンドリングする
-      default:
-        throw new Error('不明なコンテンツタイプです');
+    if (content instanceof Heading) {
+      this.strategy = new HeadingToDTOStrategy(content);
+    } else if (content instanceof Paragraph) {
+      this.strategy = new ParagraphToDTOStrategy(content);
+    } else {
+      throw new Error('Unknown content type.');
     }
   }
 

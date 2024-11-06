@@ -1,5 +1,5 @@
-import type { ImageContent } from '../postContents/image';
 import { EntityError } from '../../error/error';
+import type { ImageContent } from '../postContents/image';
 import type { Heading } from './heading';
 import { createH2, createH3 } from './heading';
 import { Paragraph } from './paragraph';
