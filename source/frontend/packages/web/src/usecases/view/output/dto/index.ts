@@ -1,6 +1,6 @@
 import { UsecaseError } from '@/usecases/error';
 import {
-  createContentToDTOContext,
+  ContentToDTOContext,
   type ContentForDTO,
 } from '@/usecases/view/output/dto/contentForDTO';
 import { formatDate2DigitString } from '@/utils/date';
@@ -46,7 +46,7 @@ export class BlogPostDTOBuilder {
   }
 
   private createContentForDTO(content: Content): ContentForDTO {
-    const dtoCreator = createContentToDTOContext(content);
+    const dtoCreator = new ContentToDTOContext(content);
     return dtoCreator.toDTO();
   }
 

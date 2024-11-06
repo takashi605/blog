@@ -16,23 +16,6 @@ type ParagraphForDTO = Readonly<{
   type: ReturnType<Paragraph['getType']>;
 }>;
 
-export function createContentToDTOContext(
-  content: Content,
-): ContentToDTOContext {
-  switch (content.getType()) {
-    case 'h2':
-      return new ContentToDTOContext(new HeadingToDTOStrategy(content));
-    case 'h3':
-      return new ContentToDTOContext(new HeadingToDTOStrategy(content));
-    case 'paragraph':
-      return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
-
-    // TODO カスタムエラーでエラーハンドリングする
-    default:
-      throw new Error('不明なコンテンツタイプです');
-  }
-}
-
 abstract class ContentToDTOStrategy {
   protected content: Content;
 
@@ -65,8 +48,22 @@ export class HeadingToDTOStrategy extends ContentToDTOStrategy {
 export class ContentToDTOContext {
   private strategy: ContentToDTOStrategy;
 
-  constructor(strategy: ContentToDTOStrategy) {
-    this.strategy = strategy;
+  constructor(content: Content) {
+    switch (content.getType()) {
+      case 'h2':
+        this.strategy = new HeadingToDTOStrategy(content);
+        break;
+      case 'h3':
+        this.strategy = new HeadingToDTOStrategy(content);
+        break;
+      case 'paragraph':
+        this.strategy = new ParagraphToDTOStrategy(content);
+        break;
+
+      // TODO カスタムエラーでエラーハンドリングする
+      default:
+        throw new Error('不明なコンテンツタイプです');
+    }
   }
 
   toDTO(): ContentForDTO {

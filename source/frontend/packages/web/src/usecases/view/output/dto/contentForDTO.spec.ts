@@ -1,4 +1,4 @@
-import { createContentToDTOContext } from '@/usecases/view/output/dto/contentForDTO';
+import { ContentToDTOContext } from '@/usecases/view/output/dto/contentForDTO';
 import {
   ContentType,
   createContent,
@@ -12,7 +12,7 @@ describe('contentForDTO', () => {
       value: '段落',
     });
 
-    const context = createContentToDTOContext(content);
+    const context = new ContentToDTOContext(content);
 
     const dto = context.toDTO();
 
@@ -28,7 +28,7 @@ describe('contentForDTO', () => {
       value: 'h2見出し',
     });
 
-    const context = createContentToDTOContext(content);
+    const context = new ContentToDTOContext(content);
 
     const dto = context.toDTO();
 
