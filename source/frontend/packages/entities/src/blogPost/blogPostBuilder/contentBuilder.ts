@@ -19,7 +19,10 @@ export class ContentBuilder {
   }
 }
 
-type old__ContentInput = HeadingInput | ParagraphInput;
+type old__ContentInput = {
+  type: ContentType;
+  contentValue: string;
+};
 type ContentInput = HeadingInput | ParagraphInput | ImageInput;
 type ContentInputBase = { type: ContentType };
 // TODO rename contentValue->text
@@ -33,8 +36,8 @@ type ContentBuildStrategy = {
 export class H2BuildStrategy implements ContentBuildStrategy {
   private contentValue: string;
 
-  constructor(contentValue: string) {
-    this.contentValue = contentValue;
+  constructor(input: HeadingInput) {
+    this.contentValue = input.contentValue;
   }
 
   build(id: number): Heading {
@@ -44,8 +47,8 @@ export class H2BuildStrategy implements ContentBuildStrategy {
 export class H3BuildStrategy implements ContentBuildStrategy {
   private contentValue: string;
 
-  constructor(contentValue: string) {
-    this.contentValue = contentValue;
+  constructor(input: HeadingInput) {
+    this.contentValue = input.contentValue;
   }
 
   build(id: number): Heading {
@@ -55,8 +58,8 @@ export class H3BuildStrategy implements ContentBuildStrategy {
 export class ParagraphBuildStrategy implements ContentBuildStrategy {
   private contentValue: string;
 
-  constructor(contentValue: string) {
-    this.contentValue = contentValue;
+  constructor(input: ParagraphInput) {
+    this.contentValue = input.contentValue;
   }
 
   build(id: number): Paragraph {
@@ -66,8 +69,8 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy {
 export class ImageBuildStrategy implements ContentBuildStrategy {
   private path: string;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(input: ImageInput) {
+    this.path = input.path;
   }
 
   build(id: number): ImageContent {

@@ -21,25 +21,37 @@ describe('エンティティ: 投稿記事の閲覧', () => {
   });
 
   it('h2 を生成するストラテジー', () => {
-    const h2BuildStrategy = new H2BuildStrategy('h2見出し');
+    const h2BuildStrategy = new H2BuildStrategy({
+      type: ContentType.H2,
+      contentValue: 'h2見出し',
+    });
     const h2 = h2BuildStrategy.build(1);
     expect(h2.getValue()).toBe('h2見出し');
   });
 
   it('h3 を生成するストラテジー', () => {
-    const h3BuildStrategy = new H3BuildStrategy('h3見出し');
+    const h3BuildStrategy = new H3BuildStrategy({
+      type: ContentType.H3,
+      contentValue: 'h3見出し',
+    });
     const h3 = h3BuildStrategy.build(1);
     expect(h3.getValue()).toBe('h3見出し');
   });
 
   it('paragraph を生成するストラテジー', () => {
-    const paragraphBuildStrategy = new ParagraphBuildStrategy('テキスト');
+    const paragraphBuildStrategy = new ParagraphBuildStrategy({
+      type: ContentType.Paragraph,
+      contentValue: 'テキスト',
+    });
     const p = paragraphBuildStrategy.build(1);
     expect(p.getValue()).toBe('テキスト');
   });
 
   it('image を生成するストラテジー', () => {
-    const imageBuildStrategy = new ImageBuildStrategy('path/to/image');
+    const imageBuildStrategy = new ImageBuildStrategy({
+      type: ContentType.Image,
+      path: 'path/to/image',
+    });
     const image = imageBuildStrategy.build(1);
     expect(image.getPath()).toBe('path/to/image');
   });
