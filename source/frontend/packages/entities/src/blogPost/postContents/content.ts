@@ -12,7 +12,6 @@ export const enum ContentType {
 
 export type ContentBase = {
   getId: () => number;
-  getValue: () => string;
   getType: () => ContentType;
 };
 

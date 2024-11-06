@@ -1,6 +1,7 @@
+import type { ContentBase } from '../postContents/content';
 import { ContentType } from '../postContents/content';
 
-export class ImageContent {
+export class ImageContent implements ContentBase {
   private id: number;
   private path: string;
 
@@ -9,13 +10,14 @@ export class ImageContent {
     this.path = path;
   }
 
-  getPath() {
-    return this.path;
-  }
   getType() {
     return ContentType.Image;
   }
   getId() {
     return this.id;
+  }
+
+  getPath() {
+    return this.path;
   }
 }
