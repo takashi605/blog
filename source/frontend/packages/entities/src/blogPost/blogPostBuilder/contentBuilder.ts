@@ -4,7 +4,7 @@ import {
   type Content,
 } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
-import { createH2 } from '../postContents/heading';
+import { createH2, createH3 } from '../postContents/heading';
 
 export class ContentBuilder {
   private type: ContentType;
@@ -55,6 +55,19 @@ export class H2Input implements ContentInput<Heading> {
     return new H2BuildStrategy(this);
   }
 }
+export class H3Input implements ContentInput<Heading> {
+  type: ContentType;
+  contentValue: string;
+
+  constructor(contentValue: string) {
+    this.type = ContentType.H3;
+    this.contentValue = contentValue;
+  }
+
+  buildStrategy(): ContentBuildStrategy<Heading> {
+    return new H3BuildStrategy(this);
+  }
+}
 
 // type ParagraphInput = { contentValue: string } & ContentInputBase;
 // type ImageInput = { path: string } & ContentInputBase;
@@ -73,17 +86,17 @@ export class H2BuildStrategy implements ContentBuildStrategy<Heading> {
     return createH2(id, this.contentValue);
   }
 }
-// export class H3BuildStrategy implements ContentBuildStrategy {
-//   private contentValue: string;
+export class H3BuildStrategy implements ContentBuildStrategy<Heading> {
+  private contentValue: string;
 
-//   constructor(input: HeadingInput) {
-//     this.contentValue = input.contentValue;
-//   }
+  constructor(input: H3Input) {
+    this.contentValue = input.contentValue;
+  }
 
-//   build(id: number): Heading {
-//     return createH3(id, this.contentValue);
-//   }
-// }
+  build(id: number): Heading {
+    return createH3(id, this.contentValue);
+  }
+}
 // export class ParagraphBuildStrategy implements ContentBuildStrategy {
 //   private contentValue: string;
 
