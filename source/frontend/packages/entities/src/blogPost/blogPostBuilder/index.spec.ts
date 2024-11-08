@@ -23,7 +23,6 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
 
     expect(blogPost.getContents().length).toBe(3);
 
-    // TODO 一時的に不適切な定数化をしているので、後で修正する
     const h2Content = blogPost.getContents()[0] as Heading;
     expect(h2Content.getValue()).toBe('h2見出し1');
     expect(h2Content.getType()).toBe('h2');
