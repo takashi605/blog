@@ -1,6 +1,6 @@
 import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
-import type { Heading } from '../postContents/heading';
-import type { Paragraph } from '../postContents/paragraph';
+import { Heading } from '../postContents/heading';
+import { Paragraph } from '../postContents/paragraph';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
@@ -23,16 +23,16 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
 
     expect(blogPost.getContents().length).toBe(3);
 
-    const h2Content = blogPost.getContents()[0] as Heading;
-    expect(h2Content.getValue()).toBe('h2見出し1');
-    expect(h2Content.getType()).toBe('h2');
-
-    const h3Content = blogPost.getContents()[1] as Heading;
-    expect(h3Content.getValue()).toBe('h3見出し1');
-    expect(h3Content.getType()).toBe('h3');
-
-    const pContent = blogPost.getContents()[2] as Paragraph;
-    expect(pContent.getValue()).toBe('段落1');
-    expect(pContent.getType()).toBe('paragraph');
+    blogPost.getContents().forEach((content, index) => {
+      if (content instanceof Heading) {
+        expect(content.getValue()).toBe(`h${index + 2}見出し1`);
+        expect(content.getType()).toBe(`h${index + 2}`);
+      } else if (content instanceof Paragraph) {
+        expect(content.getValue()).toBe('段落1');
+        expect(content.getType()).toBe('paragraph');
+      } else {
+        fail('不正なコンテントが含まれています');
+      }
+    });
   });
 });
