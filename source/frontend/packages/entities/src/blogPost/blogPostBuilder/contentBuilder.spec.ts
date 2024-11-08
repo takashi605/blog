@@ -1,7 +1,4 @@
-import { ContentType } from '../postContents/content';
-import type { Heading } from '../postContents/heading';
 import {
-  ContentBuilder,
   ContentBuildStrategyContext,
   H2Input,
   H3Input,
@@ -10,17 +7,6 @@ import {
 } from './contentBuilder';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
-  it('id およびユースケースへの入力値からコンテントを生成できる', () => {
-    const contentBuilder = new ContentBuilder({
-      type: ContentType.H3,
-      contentValue: 'h3見出し',
-    });
-    const content = contentBuilder.build(2) as Heading;
-    expect(content.getValue()).toBe('h3見出し');
-    expect(content.getType()).toBe('h3');
-    expect(content.getId()).toBe(2);
-  });
-
   it('h2 を生成するストラテジー', () => {
     const h2Input = new H2Input('h2見出し');
     const strategyContext = new ContentBuildStrategyContext(h2Input);

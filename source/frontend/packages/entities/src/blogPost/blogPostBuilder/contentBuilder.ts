@@ -1,31 +1,8 @@
-import {
-  ContentType,
-  createContent,
-  type Content,
-} from '../postContents/content';
+import { ContentType, type Content } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
 import { createH2, createH3 } from '../postContents/heading';
 import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
-
-export class ContentBuilder {
-  private type: ContentType;
-  private contentValue: string;
-
-  constructor(input: old__ContentInput) {
-    this.type = input.type;
-    this.contentValue = input.contentValue;
-  }
-
-  build(id: number): Content {
-    return createContent({ id, type: this.type, value: this.contentValue });
-  }
-}
-
-type old__ContentInput = {
-  type: ContentType;
-  contentValue: string;
-};
 
 export class ContentBuildStrategyContext<T extends Content> {
   private strategy: ContentBuildStrategy<T>;
