@@ -36,4 +36,20 @@ describe('contentForDTO', () => {
     expect(dto.text).toBe('h2見出し');
     expect(dto.type).toBe('h2');
   });
+
+  it('type「h3」を持つコンテントを DTO に変換できる', () => {
+    const content = createContent({
+      id: 3,
+      type: ContentType.H3,
+      value: 'h3見出し',
+    });
+
+    const context = createContentToDTOContext(content);
+
+    const dto = context.toDTO();
+
+    expect(dto.id).toBe(3);
+    expect(dto.text).toBe('h3見出し');
+    expect(dto.type).toBe('h3');
+  });
 });
