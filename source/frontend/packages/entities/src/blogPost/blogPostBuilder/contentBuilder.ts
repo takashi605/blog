@@ -5,6 +5,7 @@ import {
 } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
 import { createH2, createH3 } from '../postContents/heading';
+import { Paragraph } from '../postContents/paragraph';
 
 export class ContentBuilder {
   private type: ContentType;
@@ -68,9 +69,19 @@ export class H3Input implements ContentInput<Heading> {
     return new H3BuildStrategy(this);
   }
 }
+export class ParagraphInput implements ContentInput<Paragraph> {
+  type: ContentType;
+  contentValue: string;
 
-// type ParagraphInput = { contentValue: string } & ContentInputBase;
-// type ImageInput = { path: string } & ContentInputBase;
+  constructor(contentValue: string) {
+    this.type = ContentType.Paragraph;
+    this.contentValue = contentValue;
+  }
+
+  buildStrategy(): ContentBuildStrategy<Paragraph> {
+    return new ParagraphBuildStrategy(this);
+  }
+}
 
 type ContentBuildStrategy<T extends Content> = {
   build(id: number): T;
@@ -97,25 +108,14 @@ export class H3BuildStrategy implements ContentBuildStrategy<Heading> {
     return createH3(id, this.contentValue);
   }
 }
-// export class ParagraphBuildStrategy implements ContentBuildStrategy {
-//   private contentValue: string;
+export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
+  private contentValue: string;
 
-//   constructor(input: ParagraphInput) {
-//     this.contentValue = input.contentValue;
-//   }
+  constructor(input: ParagraphInput) {
+    this.contentValue = input.contentValue;
+  }
 
-//   build(id: number): Paragraph {
-//     return new Paragraph(id, this.contentValue);
-//   }
-// }
-// export class ImageBuildStrategy implements ContentBuildStrategy {
-//   private path: string;
-
-//   constructor(input: ImageInput) {
-//     this.path = input.path;
-//   }
-
-//   build(id: number): ImageContent {
-//     return new ImageContent(id, this.path);
-//   }
-// }
+  build(id: number): Paragraph {
+    return new Paragraph(id, this.contentValue);
+  }
+}

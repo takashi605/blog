@@ -4,6 +4,7 @@ import {
   ContentBuilder,
   H2Input,
   H3Input,
+  ParagraphInput,
   StrategyContext,
 } from './contentBuilder';
 
@@ -33,14 +34,12 @@ describe('エンティティ: 投稿記事の閲覧', () => {
     expect(h3.getValue()).toBe('h3見出し');
   });
 
-  // it('paragraph を生成するストラテジー', () => {
-  //   const paragraphBuildStrategy = new ParagraphBuildStrategy({
-  //     type: ContentType.Paragraph,
-  //     contentValue: 'テキスト',
-  //   });
-  //   const p = paragraphBuildStrategy.build(1);
-  //   expect(p.getValue()).toBe('テキスト');
-  // });
+  it('paragraph を生成するストラテジー', () => {
+    const paragraphInput = new ParagraphInput('テキスト');
+    const strategyContext = new StrategyContext(paragraphInput);
+    const paragraph = strategyContext.build(1);
+    expect(paragraph.getValue()).toBe('テキスト');
+  });
 
   // it('image を生成するストラテジー', () => {
   //   const imageBuildStrategy = new ImageBuildStrategy({
