@@ -85,11 +85,11 @@ export class ParagraphInput implements ContentInput<Paragraph> {
 }
 export class ImageInput implements ContentInput<ImageContent> {
   type: ContentType;
-  contentValue: string;
+  path: string;
 
-  constructor(contentValue: string) {
+  constructor(path: string) {
     this.type = ContentType.Image;
-    this.contentValue = contentValue;
+    this.path = path;
   }
 
   buildStrategy(): ContentBuildStrategy<ImageContent> {
@@ -134,13 +134,13 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
   }
 }
 export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {
-  private contentValue: string;
+  private path: string;
 
   constructor(input: ImageInput) {
-    this.contentValue = input.contentValue;
+    this.path = input.path;
   }
 
   build(id: number): ImageContent {
-    return new ImageContent(id, this.contentValue);
+    return new ImageContent(id, this.path);
   }
 }
