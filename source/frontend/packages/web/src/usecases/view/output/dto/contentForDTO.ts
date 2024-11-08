@@ -48,17 +48,23 @@ export class HeadingToDTOStrategy extends ContentToDTOStrategy<Heading> {
 export class ContentToDTOContext {
   private strategy: ContentToDTOStrategy<Content>;
 
-  constructor(content: Content) {
-    if (content instanceof Heading) {
-      this.strategy = new HeadingToDTOStrategy(content);
-    } else if (content instanceof Paragraph) {
-      this.strategy = new ParagraphToDTOStrategy(content);
-    } else {
-      throw new Error('Unknown content type.');
-    }
+  constructor(strategy: ContentToDTOStrategy<Content>) {
+    this.strategy = strategy;
   }
 
   toDTO(): ContentForDTO {
     return this.strategy.toDTO();
+  }
+}
+
+export function createContentToDTOContext<T extends Content>(
+  content: T,
+): ContentToDTOContext {
+  if (content instanceof Paragraph) {
+    return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
+  } else if (content instanceof Heading) {
+    return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+  } else {
+    throw new Error('Unsupported content type');
   }
 }
