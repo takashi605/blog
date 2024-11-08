@@ -27,7 +27,7 @@ type old__ContentInput = {
   contentValue: string;
 };
 
-export class StrategyContext<T extends Content> {
+export class ContentBuildStrategyContext<T extends Content> {
   private strategy: ContentBuildStrategy<T>;
 
   constructor(input: ContentInput<T>) {
