@@ -57,8 +57,8 @@ export class ContentToDTOContext {
   }
 }
 
-export function createContentToDTOContext<T extends Content>(
-  content: T,
+export function createContentToDTOContext(
+  content: Content,
 ): ContentToDTOContext {
   if (content instanceof Paragraph) {
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
