@@ -5,6 +5,7 @@ import {
 } from '../postContents/content';
 import type { Heading } from '../postContents/heading';
 import { createH2, createH3 } from '../postContents/heading';
+import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
 
 export class ContentBuilder {
@@ -82,6 +83,19 @@ export class ParagraphInput implements ContentInput<Paragraph> {
     return new ParagraphBuildStrategy(this);
   }
 }
+export class ImageInput implements ContentInput<ImageContent> {
+  type: ContentType;
+  contentValue: string;
+
+  constructor(contentValue: string) {
+    this.type = ContentType.Image;
+    this.contentValue = contentValue;
+  }
+
+  buildStrategy(): ContentBuildStrategy<ImageContent> {
+    return new ImageBuildStrategy(this);
+  }
+}
 
 type ContentBuildStrategy<T extends Content> = {
   build(id: number): T;
@@ -117,5 +131,16 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
 
   build(id: number): Paragraph {
     return new Paragraph(id, this.contentValue);
+  }
+}
+export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {
+  private contentValue: string;
+
+  constructor(input: ImageInput) {
+    this.contentValue = input.contentValue;
+  }
+
+  build(id: number): ImageContent {
+    return new ImageContent(id, this.contentValue);
   }
 }
