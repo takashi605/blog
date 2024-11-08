@@ -1,12 +1,17 @@
 import { BlogPost } from '../../blogPost';
-import { ContentType } from '../../blogPost/postContents/content';
-import { ContentBuilder } from './contentBuilder';
+import type { Content } from '../../blogPost/postContents/content';
+import {
+  ContentBuildStrategyContext,
+  H2Input,
+  H3Input,
+  ParagraphInput,
+} from './contentBuilder';
 
 export class BlogPostBuilder {
   private postTitle = '';
   private postDate = '';
   private lastUpdateDate = '';
-  private contentBuilders: ContentBuilder[] = [];
+  private contentBuilders: ContentBuildStrategyContext<Content>[] = [];
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -24,23 +29,23 @@ export class BlogPostBuilder {
   }
 
   addH2(contentValue: string) {
-    this.contentBuilders.push(
-      new ContentBuilder({ type: ContentType.H2, contentValue }),
-    );
+    const h2Input = new H2Input(contentValue);
+    const builder = new ContentBuildStrategyContext(h2Input);
+    this.contentBuilders.push(builder);
     return this;
   }
 
   addH3(contentValue: string) {
-    this.contentBuilders.push(
-      new ContentBuilder({ type: ContentType.H3, contentValue }),
-    );
+    const h3Input = new H3Input(contentValue);
+    const builder = new ContentBuildStrategyContext(h3Input);
+    this.contentBuilders.push(builder);
     return this;
   }
 
   addParagraph(contentValue: string) {
-    this.contentBuilders.push(
-      new ContentBuilder({ type: ContentType.Paragraph, contentValue }),
-    );
+    const paragraphInput = new ParagraphInput(contentValue);
+    const builder = new ContentBuildStrategyContext(paragraphInput);
+    this.contentBuilders.push(builder);
     return this;
   }
 
