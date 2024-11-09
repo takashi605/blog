@@ -1,5 +1,5 @@
 import { ContentType, type Content } from '../postContents/content';
-import type { Heading } from '../postContents/heading';
+import type { H2 } from '../postContents/heading';
 import { createH2, createH3 } from '../postContents/heading';
 import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
@@ -21,7 +21,7 @@ type ContentInput<T extends Content> = {
   buildStrategy(): ContentBuildStrategy<T>;
 };
 // TODO rename contentValue->text
-export class H2Input implements ContentInput<Heading> {
+export class H2Input implements ContentInput<H2> {
   type: ContentType;
   contentValue: string;
 
@@ -30,11 +30,11 @@ export class H2Input implements ContentInput<Heading> {
     this.contentValue = contentValue;
   }
 
-  buildStrategy(): ContentBuildStrategy<Heading> {
+  buildStrategy(): ContentBuildStrategy<H2> {
     return new H2BuildStrategy(this);
   }
 }
-export class H3Input implements ContentInput<Heading> {
+export class H3Input implements ContentInput<H2> {
   type: ContentType;
   contentValue: string;
 
@@ -43,7 +43,7 @@ export class H3Input implements ContentInput<Heading> {
     this.contentValue = contentValue;
   }
 
-  buildStrategy(): ContentBuildStrategy<Heading> {
+  buildStrategy(): ContentBuildStrategy<H2> {
     return new H3BuildStrategy(this);
   }
 }
@@ -77,25 +77,25 @@ export class ImageInput implements ContentInput<ImageContent> {
 type ContentBuildStrategy<T extends Content> = {
   build(id: number): T;
 };
-export class H2BuildStrategy implements ContentBuildStrategy<Heading> {
+export class H2BuildStrategy implements ContentBuildStrategy<H2> {
   private contentValue: string;
 
   constructor(input: H2Input) {
     this.contentValue = input.contentValue;
   }
 
-  build(id: number): Heading {
+  build(id: number): H2 {
     return createH2(id, this.contentValue);
   }
 }
-export class H3BuildStrategy implements ContentBuildStrategy<Heading> {
+export class H3BuildStrategy implements ContentBuildStrategy<H2> {
   private contentValue: string;
 
   constructor(input: H3Input) {
     this.contentValue = input.contentValue;
   }
 
-  build(id: number): Heading {
+  build(id: number): H2 {
     return createH3(id, this.contentValue);
   }
 }

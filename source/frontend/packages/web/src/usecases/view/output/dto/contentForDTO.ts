@@ -1,14 +1,14 @@
 import type { Content } from 'entities/src/blogPost/postContents/content';
-import { Heading } from 'entities/src/blogPost/postContents/heading';
+import { H2 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 export type ContentForDTO = HeadingForDTO | ParagraphForDTO | ImageForDTO;
 
 type HeadingForDTO = Readonly<{
-  id: ReturnType<Heading['getId']>;
-  text: ReturnType<Heading['getValue']>;
-  type: ReturnType<Heading['getType']>;
+  id: ReturnType<H2['getId']>;
+  text: ReturnType<H2['getValue']>;
+  type: ReturnType<H2['getType']>;
 }>;
 
 type ParagraphForDTO = Readonly<{
@@ -42,7 +42,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
   }
 }
 
-export class HeadingToDTOStrategy extends ContentToDTOStrategy<Heading> {
+export class HeadingToDTOStrategy extends ContentToDTOStrategy<H2> {
   toDTO(): HeadingForDTO {
     return {
       id: this.content.getId(),
@@ -65,7 +65,10 @@ export class ContentToDTOContext {
 }
 
 type TypeToStrategyMapping = {
-  [key in ReturnType<Content["getType"]>]: Extract<Content, { getType: () => key }>;
+  [key in ReturnType<Content['getType']>]: Extract<
+    Content,
+    { getType: () => key }
+  >;
 };
 
 export function createContentToDTOContext(
@@ -73,7 +76,7 @@ export function createContentToDTOContext(
 ): ContentToDTOContext {
   if (content instanceof Paragraph) {
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
-  } else if (content instanceof Heading) {
+  } else if (content instanceof H2) {
     return new ContentToDTOContext(new HeadingToDTOStrategy(content));
   } else {
     throw new Error('Unsupported content type');

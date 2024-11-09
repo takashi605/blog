@@ -1,6 +1,6 @@
 import { BlogPost } from './index';
 import { ContentType, createContent } from './postContents/content';
-import type { Heading } from './postContents/heading';
+import type { H2 } from './postContents/heading';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {
@@ -34,17 +34,17 @@ describe('エンティティ: 投稿記事', () => {
     expect(contents.length).toBe(3);
 
     // TODO 一時的に不適切な定数化をしているので、後で修正する
-    const h2Content = contents[0] as Heading;
+    const h2Content = contents[0] as H2;
     expect(h2Content.getValue()).toBe('h2見出し');
     expect(h2Content.getType()).toBe('h2');
     expect(h2Content.getId()).toBe(1);
 
-    const h3Content = contents[1] as Heading;
+    const h3Content = contents[1] as H2;
     expect(h3Content.getValue()).toBe('h3見出し');
     expect(h3Content.getType()).toBe('h3');
     expect(h3Content.getId()).toBe(2);
 
-    const pContent = contents[2] as Heading;
+    const pContent = contents[2] as H2;
     expect(pContent.getValue()).toBe('段落');
     expect(pContent.getType()).toBe('paragraph');
     expect(pContent.getId()).toBe(3);

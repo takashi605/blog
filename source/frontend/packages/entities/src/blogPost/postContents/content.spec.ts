@@ -1,7 +1,7 @@
 import { ImageContent } from '../postContents/image';
 import type { Paragraph } from '../postContents/paragraph';
 import { ContentType, createContent } from './content';
-import type { Heading } from './heading';
+import type { H2 } from './heading';
 
 describe('エンティティ: 投稿記事のコンテント', () => {
   it('コンテント生成関数から h2 見出しを生成できる', () => {
@@ -9,7 +9,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       id: 1,
       type: ContentType.H2,
       value: 'h2見出し',
-    }) as Heading;
+    }) as H2;
     expect(h2.getValue()).toBe('h2見出し');
     expect(h2.getId()).toBe(1);
     expect(h2.getType()).toBe('h2');
@@ -20,7 +20,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       id: 1,
       type: ContentType.H3,
       value: 'h3見出し',
-    }) as Heading;
+    }) as H2;
     expect(h3.getValue()).toBe('h3見出し');
     expect(h3.getId()).toBe(1);
     expect(h3.getType()).toBe('h3');
