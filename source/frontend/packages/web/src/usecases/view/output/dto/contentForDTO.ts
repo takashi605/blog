@@ -28,16 +28,22 @@ type ImageForDTO = Readonly<{
   path: ReturnType<ImageContent['getPath']>;
 }>;
 
-abstract class ContentToDTOStrategy<T extends Content> {
+abstract class ContentToDTOStrategy<
+  T extends Content,
+  U extends ContentForDTO,
+> {
   protected content: T;
 
   constructor(content: T) {
     this.content = content;
   }
-  abstract toDTO(): ContentForDTO;
+  abstract toDTO(): U;
 }
 
-export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
+export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
+  Paragraph,
+  ParagraphForDTO
+> {
   toDTO(): ParagraphForDTO {
     return {
       id: this.content.getId(),
@@ -48,7 +54,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
 }
 
 // TODO H2,H3 を分割する
-export class H2ToDTOStrategy extends ContentToDTOStrategy<H2> {
+export class H2ToDTOStrategy extends ContentToDTOStrategy<H2, H2ForDTO> {
   toDTO(): H2ForDTO {
     return {
       id: this.content.getId(),
@@ -57,7 +63,7 @@ export class H2ToDTOStrategy extends ContentToDTOStrategy<H2> {
     };
   }
 }
-export class H3ToDTOStrategy extends ContentToDTOStrategy<H3> {
+export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3ForDTO> {
   toDTO(): H3ForDTO {
     return {
       id: this.content.getId(),
@@ -67,14 +73,14 @@ export class H3ToDTOStrategy extends ContentToDTOStrategy<H3> {
   }
 }
 
-export class ContentToDTOContext {
-  private strategy: ContentToDTOStrategy<Content>;
+export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
+  private strategy: ContentToDTOStrategy<T, U>;
 
-  constructor(strategy: ContentToDTOStrategy<Content>) {
+  constructor(strategy: ContentToDTOStrategy<T, U>) {
     this.strategy = strategy;
   }
 
-  toDTO(): ContentForDTO {
+  toDTO(): U {
     return this.strategy.toDTO();
   }
 }
@@ -86,9 +92,24 @@ type TypeToStrategyMapping = {
   >;
 };
 
+// コンテキスト生成関数のオーバーロード
+// これにより呼び出し元で返り値の型を自動で推論できる
+// 例: createContentToDTOContext(new Paragraph(1, 'text')).toDTO()
+// 　　の返り値の型は ParagraphForDTO になる
+export function createContentToDTOContext(
+  content: Paragraph,
+): ContentToDTOContext<Paragraph, ParagraphForDTO>;
+export function createContentToDTOContext(
+  content: H2,
+): ContentToDTOContext<H2, H2ForDTO>;
+export function createContentToDTOContext(
+  content: H3,
+): ContentToDTOContext<H3, H3ForDTO>;
+
+// コンテキスト生成関数の実装
 export function createContentToDTOContext(
   content: Content,
-): ContentToDTOContext {
+): ContentToDTOContext<Content, ContentForDTO> {
   if (content instanceof Paragraph) {
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
   } else if (content instanceof H2) {
