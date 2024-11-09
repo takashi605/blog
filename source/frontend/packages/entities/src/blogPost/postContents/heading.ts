@@ -11,9 +11,9 @@ export const createH3 = (id: number, initialText: string): H3 => {
 export class H2 implements ContentBase {
   private id: number;
   private text: string;
-  private type: ContentType.H2 | ContentType.H3;
+  private type: ContentType.H2;
 
-  constructor(id: number, text: string, type: ContentType.H2 | ContentType.H3) {
+  constructor(id: number, text: string, type: ContentType.H2) {
     this.id = id;
     this.text = text;
     this.type = type;
@@ -32,9 +32,9 @@ export class H2 implements ContentBase {
 export class H3 implements ContentBase {
   private id: number;
   private text: string;
-  private type: ContentType.H2 | ContentType.H3;
+  private type: ContentType.H3;
 
-  constructor(id: number, text: string, type: ContentType.H2 | ContentType.H3) {
+  constructor(id: number, text: string, type: ContentType.H3) {
     this.id = id;
     this.text = text;
     this.type = type;
