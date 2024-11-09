@@ -36,6 +36,20 @@ describe('コンポーネント: viewBlogPostController', () => {
     });
   });
 
+  it('サムネイル画像が表示されている', async () => {
+    await renderTestComponent();
+    const mainVisual = screen.getByRole('img', {
+      name: 'サムネイル画像',
+    }) as HTMLImageElement;
+    expect(mainVisual).toBeInTheDocument();
+
+    // サムネイル画像が取得できるまで待機し、path が空文字でないことを確認
+    // TODO localhost/ は環境によって変わるため、動的に取得するように修正する
+    await waitFor(() => {
+      expect(mainVisual.src.replace('http://localhost/', '')).not.toBe('');
+    });
+  });
+
   it('投稿日,更新日が表示されている', async () => {
     await renderTestComponent();
 

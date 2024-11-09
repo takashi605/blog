@@ -19,6 +19,7 @@ function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
       <div className={styles.blogTitle}>
         <BlogPostTitle>{blogPost?.title}</BlogPostTitle>
       </div>
+      <img src={blogPost.thumbnail.path} alt="サムネイル画像" />
       {blogPost?.contents.map((content) => (
         <div key={content.id} className={generateContentClass(content.type)}>
           <ContentRenderer content={content} />
