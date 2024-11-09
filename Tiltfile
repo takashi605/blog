@@ -9,6 +9,7 @@ custom_build(
 
     docker system prune;
     crictl rmi --prune || true;
+    make mk8s-prune
   ''',
   deps=[
     'source/frontend',
@@ -29,6 +30,7 @@ custom_build(
 
     docker system prune;
     crictl rmi --prune || true;
+    make mk8s-prune
   ''',
   deps=[
     'source/frontend',
@@ -49,6 +51,7 @@ custom_build(
 
     docker system prune -f;
     crictl rmi --prune || true;
+    make mk8s-prune
   ''',
   deps=[
     'source/frontend',
@@ -69,6 +72,7 @@ custom_build(
 
     docker system prune -f;
     crictl rmi --prune || true;
+    make mk8s-prune
   ''',
   deps=[
     'source/backend/api',
@@ -89,6 +93,7 @@ custom_build(
 
     docker system prune -f;
     crictl rmi --prune || true;
+    make mk8s-prune
   ''',
   deps=[
     'source/backend/api-test',
