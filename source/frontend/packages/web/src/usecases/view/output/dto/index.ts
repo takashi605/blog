@@ -15,7 +15,7 @@ export type ViewBlogPostDTO = {
   readonly contents: ReadonlyArray<ContentForDTO>;
 };
 
-type thumbnailDTO = {
+export type thumbnailDTO = {
   readonly path: string;
 };
 
