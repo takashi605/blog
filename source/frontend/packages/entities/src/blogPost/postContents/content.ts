@@ -1,6 +1,6 @@
 import { EntityError } from '../../error/error';
 import type { ImageContent } from '../postContents/image';
-import type { H2 } from './heading';
+import type { H2, H3 } from './heading';
 import { createH2, createH3 } from './heading';
 import { Paragraph } from './paragraph';
 
@@ -16,7 +16,7 @@ export type ContentBase = {
   getType: () => ContentType;
 };
 
-export type Content = H2 | Paragraph | ImageContent;
+export type Content = H2 | H3 | Paragraph | ImageContent;
 
 export const createContent = (params: {
   id: number;

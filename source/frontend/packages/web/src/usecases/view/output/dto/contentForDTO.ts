@@ -1,5 +1,5 @@
 import type { Content } from 'entities/src/blogPost/postContents/content';
-import { H2 } from 'entities/src/blogPost/postContents/heading';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
@@ -42,7 +42,8 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
   }
 }
 
-export class HeadingToDTOStrategy extends ContentToDTOStrategy<H2> {
+// TODO H2,H3 を分割する
+export class HeadingToDTOStrategy extends ContentToDTOStrategy<H2 | H3> {
   toDTO(): HeadingForDTO {
     return {
       id: this.content.getId(),
@@ -78,7 +79,9 @@ export function createContentToDTOContext(
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
   } else if (content instanceof H2) {
     return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+  } else if (content instanceof H3) {
+    return new ContentToDTOContext(new HeadingToDTOStrategy(content));
   } else {
-    throw new Error('Unsupported content type');
+    throw new Error('存在しないコンテンツタイプを DTO に変換しようとしました');
   }
 }
