@@ -15,7 +15,7 @@ export class Paragraph implements ContentBase {
   getValue() {
     return this.text;
   }
-  getType() {
+  getType(): ContentType.Paragraph {
     return ContentType.Paragraph;
   }
 }

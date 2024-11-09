@@ -11,9 +11,9 @@ export const createH3 = (id: number, initialText: string): Heading => {
 export class Heading implements ContentBase {
   private id: number;
   private text: string;
-  private type: ContentType;
+  private type: ContentType.H2 | ContentType.H3;
 
-  constructor(id: number, text: string, type: ContentType) {
+  constructor(id: number, text: string, type: ContentType.H2 | ContentType.H3) {
     this.id = id;
     this.text = text;
     this.type = type;

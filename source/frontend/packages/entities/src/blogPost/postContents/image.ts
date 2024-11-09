@@ -10,14 +10,13 @@ export class ImageContent implements ContentBase {
     this.path = path;
   }
 
-  getType() {
-    return ContentType.Image;
-  }
   getId() {
     return this.id;
   }
-
   getPath() {
     return this.path;
+  }
+  getType(): ContentType.Image {
+    return ContentType.Image;
   }
 }

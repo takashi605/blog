@@ -1,8 +1,9 @@
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { Heading } from 'entities/src/blogPost/postContents/heading';
+import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
-export type ContentForDTO = HeadingForDTO | ParagraphForDTO;
+export type ContentForDTO = HeadingForDTO | ParagraphForDTO | ImageForDTO;
 
 type HeadingForDTO = Readonly<{
   id: ReturnType<Heading['getId']>;
@@ -14,6 +15,12 @@ type ParagraphForDTO = Readonly<{
   id: ReturnType<Paragraph['getId']>;
   text: ReturnType<Paragraph['getValue']>;
   type: ReturnType<Paragraph['getType']>;
+}>;
+
+type ImageForDTO = Readonly<{
+  id: ReturnType<ImageContent['getId']>;
+  type: ReturnType<ImageContent['getType']>;
+  path: ReturnType<ImageContent['getPath']>;
 }>;
 
 abstract class ContentToDTOStrategy<T extends Content> {
@@ -56,6 +63,10 @@ export class ContentToDTOContext {
     return this.strategy.toDTO();
   }
 }
+
+type TypeToStrategyMapping = {
+  [key in ReturnType<Content["getType"]>]: Extract<Content, { getType: () => key }>;
+};
 
 export function createContentToDTOContext(
   content: Content,
