@@ -9,9 +9,14 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
+  readonly mainVisual: mainVisualDTO;
   readonly postDate: string;
   readonly lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentForDTO>;
+};
+
+type mainVisualDTO = {
+  readonly path: string;
 };
 
 export class BlogPostDTOBuilder {
@@ -19,6 +24,18 @@ export class BlogPostDTOBuilder {
 
   constructor(blogPost: BlogPost) {
     this.blogPost = blogPost;
+  }
+
+  private extractMainVisualForDTO(): mainVisualDTO {
+    try {
+      return {
+        path: this.blogPost.getMainVisual().getPath(),
+      };
+    } catch {
+      throw new UsecaseError(
+        'メインビジュアルが存在しない記事を生成しようとしました',
+      );
+    }
   }
 
   private extractPostDateForDTO(): string {
@@ -53,6 +70,7 @@ export class BlogPostDTOBuilder {
   build(): ViewBlogPostDTO {
     return {
       title: this.blogPost.getTitleText(),
+      mainVisual: this.extractMainVisualForDTO(),
       postDate: this.extractPostDateForDTO(),
       lastUpdateDate: this.extractLastUpdateDateForDTO(),
       contents: this.extractContentsForDTO(),
