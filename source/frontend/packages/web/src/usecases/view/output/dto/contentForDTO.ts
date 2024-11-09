@@ -3,9 +3,9 @@ import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
-export type ContentForDTO = HeadingForDTO | ParagraphForDTO | ImageForDTO;
+export type ContentForDTO = H2ForDTO | ParagraphForDTO | ImageForDTO;
 
-type HeadingForDTO = Readonly<{
+type H2ForDTO = Readonly<{
   id: ReturnType<H2['getId']>;
   text: ReturnType<H2['getValue']>;
   type: ReturnType<H2['getType']>;
@@ -44,7 +44,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
 
 // TODO H2,H3 を分割する
 export class HeadingToDTOStrategy extends ContentToDTOStrategy<H2 | H3> {
-  toDTO(): HeadingForDTO {
+  toDTO(): H2ForDTO {
     return {
       id: this.content.getId(),
       text: this.content.getValue(),
