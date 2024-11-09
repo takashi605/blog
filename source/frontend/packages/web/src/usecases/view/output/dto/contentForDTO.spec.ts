@@ -1,5 +1,6 @@
 import { createContentToDTOContext } from '@/usecases/view/output/dto/contentForDTO';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 describe('contentForDTO', () => {
@@ -37,5 +38,17 @@ describe('contentForDTO', () => {
     expect(dto.id).toBe(3);
     expect(dto.text).toBe('h3見出し');
     expect(dto.type).toBe('h3');
+  });
+
+  it('type「Image」を持つコンテントを DTO に変換できる', () => {
+    const content = new ImageContent(4, 'path/to/image');
+
+    const context = createContentToDTOContext(content);
+
+    const dto = context.toDTO();
+
+    expect(dto.id).toBe(4);
+    expect(dto.path).toBe('path/to/image');
+    expect(dto.type).toBe('image');
   });
 });

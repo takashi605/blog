@@ -4,6 +4,7 @@ import {
   ContentBuildStrategyContext,
   H2Input,
   H3Input,
+  ImageInput,
   ParagraphInput,
 } from './contentBuilder';
 
@@ -51,6 +52,13 @@ export class BlogPostBuilder {
   addParagraph(contentValue: string) {
     const paragraphInput = new ParagraphInput(contentValue);
     const builder = new ContentBuildStrategyContext(paragraphInput);
+    this.contentBuilders.push(builder);
+    return this;
+  }
+
+  addImage(imagePath: string) {
+    const imageInput = new ImageInput(imagePath);
+    const builder = new ContentBuildStrategyContext(imageInput);
     this.contentBuilders.push(builder);
     return this;
   }

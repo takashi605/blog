@@ -17,7 +17,7 @@ Then('記事タイトル が表示される', async ({ page }) => {
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
-  const thumbnailImage = page.getByTestId('main-visual-image');
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
   await expect(thumbnailImage).toBeVisible();
 });
 
@@ -55,7 +55,7 @@ Then('h3見出し が表示される', async ({ page }) => {
 });
 
 Then('画像コンテンツ が表示される', async ({ page }) => {
-  const contentImages = page.getByTestId('content-image');
+  const contentImages = page.getByRole('img', { name: '画像コンテンツ' });
   const count = await contentImages.count();
   expect(count).toBeGreaterThan(0);
 

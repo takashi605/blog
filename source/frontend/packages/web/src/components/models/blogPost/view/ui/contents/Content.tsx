@@ -1,5 +1,6 @@
 import H2 from '@/components/models/blogPost/view/ui/contents/elements/H2';
 import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
+import ImageContent from '@/components/models/blogPost/view/ui/contents/elements/ImageContent';
 import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
 import type { ContentForDTO } from '@/usecases/view/output/dto/contentForDTO';
 import { memo } from 'react';
@@ -17,7 +18,7 @@ function ContentRenderer({ content }: BlogPostContentProps) {
     case 'paragraph':
       return <Paragraph>{content.text}</Paragraph>;
     case 'image':
-      return <img src={content.path} alt="画像コンテンツ" />;
+      return <ImageContent imageContent={content} />;
     default:
       return null;
   }
