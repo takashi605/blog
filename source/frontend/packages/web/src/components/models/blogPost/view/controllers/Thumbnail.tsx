@@ -7,7 +7,6 @@ type ThumbnailProps = {
 };
 
 function Thumbnail({ thumbnail }: ThumbnailProps) {
-  console.log('Thumbnail', thumbnail);
   return (
     <div>
       <CldImage
