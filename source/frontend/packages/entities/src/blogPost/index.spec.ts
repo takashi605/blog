@@ -1,6 +1,6 @@
+import { Paragraph } from './postContents/paragraph';
 import { BlogPost } from './index';
-import { ContentType, createContent } from './postContents/content';
-import type { H2 } from './postContents/heading';
+import { H2, H3 } from './postContents/heading';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {
@@ -11,21 +11,9 @@ describe('エンティティ: 投稿記事', () => {
 
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
-    const h2 = createContent({
-      id: 1,
-      type: ContentType.H2,
-      value: 'h2見出し',
-    });
-    const h3 = createContent({
-      id: 2,
-      type: ContentType.H3,
-      value: 'h3見出し',
-    });
-    const paragraph1 = createContent({
-      id: 3,
-      type: ContentType.Paragraph,
-      value: '段落',
-    });
+    const h2 = new H2(1, 'h2見出し');
+    const h3 = new H3(2, 'h3見出し');
+    const paragraph1 = new Paragraph(3, '段落');
     const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)

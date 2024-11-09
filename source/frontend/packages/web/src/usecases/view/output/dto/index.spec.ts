@@ -1,28 +1,14 @@
 import { BlogPostDTOBuilder } from '@/usecases/view/output/dto/index';
 import { BlogPost } from 'entities/src/blogPost/index';
-import {
-  ContentType,
-  createContent,
-} from 'entities/src/blogPost/postContents/content';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 describe('DTO の生成', () => {
   it('builder クラスを使って DTO を生成できる', () => {
     const title = '記事タイトル';
-    const h2 = createContent({
-      id: 1,
-      type: ContentType.H2,
-      value: 'h2見出し',
-    });
-    const h3 = createContent({
-      id: 2,
-      type: ContentType.H3,
-      value: 'h3見出し',
-    });
-    const paragraph1 = createContent({
-      id: 3,
-      type: ContentType.Paragraph,
-      value: '段落',
-    });
+    const h2 = new H2(1, 'h2見出し');
+    const h3 = new H3(2, 'h3見出し');
+    const paragraph1 = new Paragraph(3, '段落');
     const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)

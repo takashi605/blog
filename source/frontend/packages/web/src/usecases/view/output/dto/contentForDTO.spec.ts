@@ -1,16 +1,10 @@
 import { createContentToDTOContext } from '@/usecases/view/output/dto/contentForDTO';
-import {
-  ContentType,
-  createContent,
-} from 'entities/src/blogPost/postContents/content';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 describe('contentForDTO', () => {
   it('type「Paragraph」を持つコンテントを DTO に変換できる', () => {
-    const content = createContent({
-      id: 1,
-      type: ContentType.Paragraph,
-      value: '段落',
-    });
+    const content = new Paragraph(1, '段落');
 
     const context = createContentToDTOContext(content);
 
@@ -22,11 +16,7 @@ describe('contentForDTO', () => {
   });
 
   it('type「h2」を持つコンテントを DTO に変換できる', () => {
-    const content = createContent({
-      id: 2,
-      type: ContentType.H2,
-      value: 'h2見出し',
-    });
+    const content = new H2(2, 'h2見出し');
 
     const context = createContentToDTOContext(content);
 
@@ -38,11 +28,7 @@ describe('contentForDTO', () => {
   });
 
   it('type「h3」を持つコンテントを DTO に変換できる', () => {
-    const content = createContent({
-      id: 3,
-      type: ContentType.H3,
-      value: 'h3見出し',
-    });
+    const content = new H3(3, 'h3見出し');
 
     const context = createContentToDTOContext(content);
 
