@@ -9,12 +9,18 @@ import {
 
 export class BlogPostBuilder {
   private postTitle = '';
+  private mainVisualPath = '';
   private postDate = '';
   private lastUpdateDate = '';
   private contentBuilders: ContentBuildStrategyContext<Content>[] = [];
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
+    return this;
+  }
+
+  setMainVisual(mainVisualPath: string) {
+    this.mainVisualPath = mainVisualPath;
     return this;
   }
 
@@ -59,6 +65,7 @@ export class BlogPostBuilder {
 
   build() {
     const blogPost = new BlogPost(this.postTitle)
+      .setMainVisual(this.mainVisualPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);
