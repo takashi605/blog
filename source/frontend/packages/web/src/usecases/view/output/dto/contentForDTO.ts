@@ -5,24 +5,24 @@ import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 export type ContentForDTO = H2ForDTO | H3ForDTO | ParagraphForDTO | ImageForDTO;
 
-type H2ForDTO = Readonly<{
+export type H2ForDTO = Readonly<{
   id: ReturnType<H2['getId']>;
   text: ReturnType<H2['getValue']>;
   type: ReturnType<H2['getType']>;
 }>;
-type H3ForDTO = Readonly<{
+export type H3ForDTO = Readonly<{
   id: ReturnType<H3['getId']>;
   text: ReturnType<H3['getValue']>;
   type: ReturnType<H3['getType']>;
 }>;
 
-type ParagraphForDTO = Readonly<{
+export type ParagraphForDTO = Readonly<{
   id: ReturnType<Paragraph['getId']>;
   text: ReturnType<Paragraph['getValue']>;
   type: ReturnType<Paragraph['getType']>;
 }>;
 
-type ImageForDTO = Readonly<{
+export type ImageForDTO = Readonly<{
   id: ReturnType<ImageContent['getId']>;
   type: ReturnType<ImageContent['getType']>;
   path: ReturnType<ImageContent['getPath']>;
@@ -85,13 +85,6 @@ export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
   }
 }
 
-type TypeToStrategyMapping = {
-  [key in ReturnType<Content['getType']>]: Extract<
-    Content,
-    { getType: () => key }
-  >;
-};
-
 // コンテキスト生成関数のオーバーロード
 // これにより呼び出し元で返り値の型を自動で推論できる
 // 例: createContentToDTOContext(new Paragraph(1, 'text')).toDTO()
@@ -105,6 +98,9 @@ export function createContentToDTOContext(
 export function createContentToDTOContext(
   content: H3,
 ): ContentToDTOContext<H3, H3ForDTO>;
+export function createContentToDTOContext(
+  content: Content,
+): ContentToDTOContext<Content, ContentForDTO>;
 
 // コンテキスト生成関数の実装
 export function createContentToDTOContext(
