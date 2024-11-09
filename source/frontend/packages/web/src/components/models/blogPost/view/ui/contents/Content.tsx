@@ -16,6 +16,8 @@ function ContentRenderer({ content }: BlogPostContentProps) {
       return <H3>{content.text}</H3>;
     case 'paragraph':
       return <Paragraph>{content.text}</Paragraph>;
+    case 'image':
+      return <img src={content.path} alt="画像コンテンツ" />;
     default:
       return null;
   }

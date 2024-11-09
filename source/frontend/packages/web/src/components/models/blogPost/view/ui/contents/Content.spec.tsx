@@ -48,4 +48,19 @@ describe('コンポーネント: viewBlogPostController', () => {
     const p = screen.getByRole('paragraph');
     expect(p).toHaveTextContent('段落');
   });
+
+  it('type に image を渡したとき、img タグを表示する', async () => {
+    render(
+      <ContentRenderer
+        content={{
+          id: 1,
+          type: ContentType.Image,
+          path: 'path/to/image',
+        }}
+      />,
+    );
+
+    const img = screen.getByRole('img');
+    expect(img).toHaveAttribute('src', 'path/to/image');
+  });
 });
