@@ -60,7 +60,7 @@ describe('コンポーネント: viewBlogPostController', () => {
       />,
     );
 
-    const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', 'path/to/image');
+    const img = screen.getByRole('img') as HTMLImageElement;
+    expect(img.src).toMatch('path/to/image');
   });
 });

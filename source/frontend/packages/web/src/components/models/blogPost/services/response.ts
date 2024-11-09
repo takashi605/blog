@@ -1,3 +1,4 @@
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentForDTO';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {
@@ -13,10 +14,7 @@ export type BlogPostResponse = {
   };
   postDate: string;
   lastUpdateDate: string;
-  contents: {
-    type: string;
-    value: string;
-  }[];
+  contents: ContentForDTO[];
 };
 
 export const responseToViewBlogPost = (
@@ -47,11 +45,13 @@ const responseContentToBlogPost = (
 ) => {
   response.contents.forEach((content) => {
     if (content.type === 'h2') {
-      viewBlogPostInput.addH2(content.value);
+      viewBlogPostInput.addH2(content.text);
     } else if (content.type === 'h3') {
-      viewBlogPostInput.addH3(content.value);
+      viewBlogPostInput.addH3(content.text);
     } else if (content.type === 'paragraph') {
-      viewBlogPostInput.addParagraph(content.value);
+      viewBlogPostInput.addParagraph(content.text);
+    } else if (content.type === 'image') {
+      viewBlogPostInput.addImage(content.path);
     }
   });
 };
