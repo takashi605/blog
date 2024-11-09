@@ -181,3 +181,10 @@ api-test-run:
 ###
 blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
+
+
+###
+## デバッグ用
+###
+check-docker-disk-usage:
+	@sudo du -h --max-depth=1 /var/lib/docker | sort -hr
