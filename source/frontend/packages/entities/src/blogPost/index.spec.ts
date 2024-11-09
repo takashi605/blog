@@ -1,6 +1,6 @@
-import { Paragraph } from './postContents/paragraph';
 import { BlogPost } from './index';
 import { H2, H3 } from './postContents/heading';
+import { Paragraph } from './postContents/paragraph';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {

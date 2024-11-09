@@ -1,21 +1,21 @@
 import H2 from '@/components/models/blogPost/view/ui/contents/elements/H2';
 import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
 import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentForDTO';
 import { memo } from 'react';
 
 export type BlogPostContentProps = {
-  type: string;
-  value: string;
+  content: ContentForDTO;
 };
 
-function ContentRenderer({ type, value }: BlogPostContentProps) {
-  switch (type) {
+function ContentRenderer({ content }: BlogPostContentProps) {
+  switch (content.type) {
     case 'h2':
-      return <H2>{value}</H2>;
+      return <H2>{content.text}</H2>;
     case 'h3':
-      return <H3>{value}</H3>;
+      return <H3>{content.text}</H3>;
     case 'paragraph':
-      return <Paragraph>{value}</Paragraph>;
+      return <Paragraph>{content.text}</Paragraph>;
     default:
       return null;
   }

@@ -21,7 +21,7 @@ function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
       </div>
       {blogPost?.contents.map((content) => (
         <div key={content.id} className={generateContentClass(content.type)}>
-          <ContentRenderer type={content.type} value={content.text} />
+          <ContentRenderer content={content} />
         </div>
       ))}
     </article>
