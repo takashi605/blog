@@ -10,7 +10,7 @@ export type BlogPostResponse = {
   title: string;
   thumbnail: {
     path: string;
-  }
+  };
   postDate: string;
   lastUpdateDate: string;
   contents: {
@@ -36,12 +36,12 @@ const responseToViewBlogPostInput = (response: BlogPostResponse) => {
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
 
-  mapResponseContentToBlogPost(response, viewBlogPostInput);
+  responseContentToBlogPost(response, viewBlogPostInput);
 
   return viewBlogPostInput;
 };
 
-const mapResponseContentToBlogPost = (
+const responseContentToBlogPost = (
   response: BlogPostResponse,
   viewBlogPostInput: BlogPostBuilder,
 ) => {
