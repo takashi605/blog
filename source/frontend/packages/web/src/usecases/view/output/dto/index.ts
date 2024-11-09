@@ -17,7 +17,7 @@ export type ViewBlogPostDTO = {
 
 type mainVisualDTO = {
   readonly path: string;
-}
+};
 
 export class BlogPostDTOBuilder {
   private blogPost: BlogPost;
