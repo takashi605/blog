@@ -6,10 +6,12 @@ import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 describe('DTO の生成', () => {
   it('builder クラスを使って DTO を生成できる', () => {
     const title = '記事タイトル';
+    const mainVisualPath = 'path/to/image';
     const h2 = new H2(1, 'h2見出し');
     const h3 = new H3(2, 'h3見出し');
     const paragraph1 = new Paragraph(3, '段落');
     const blogPost = new BlogPost(title)
+      .setMainVisual(mainVisualPath)
       .addContent(h2)
       .addContent(h3)
       .addContent(paragraph1)
@@ -20,6 +22,9 @@ describe('DTO の生成', () => {
     const dto = builder.build();
 
     expect(dto.title).toBe('記事タイトル');
+
+    expect(dto.mainVisual.path).toBe('path/to/image');
+
     expect(dto.contents.length).toBe(3);
 
     const h2DTO = dto.contents[0];
@@ -55,7 +60,9 @@ describe('DTO の生成', () => {
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new BlogPost(title);
+    const blogPost = new BlogPost(title)
+      .setMainVisual('path/to/image')
+      .setLastUpdateDate('2021-01-02');
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '投稿日が存在しない記事を生成しようとしました',
     );
@@ -63,9 +70,21 @@ describe('DTO の生成', () => {
 
   it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new BlogPost(title).setPostDate('2021-01-01');
+    const blogPost = new BlogPost(title)
+      .setMainVisual('path/to/image')
+      .setPostDate('2021-01-01');
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '最終更新日が存在しない記事を生成しようとしました',
+    );
+  });
+
+  it('メインビジュアルが存在しない記事を生成しようとするとエラーが発生する', () => {
+    const title = '記事タイトル';
+    const blogPost = new BlogPost(title)
+      .setPostDate('2021-01-01')
+      .setLastUpdateDate('2021-01-02');
+    expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
+      'メインビジュアルが存在しない記事を生成しようとしました',
     );
   });
 });
