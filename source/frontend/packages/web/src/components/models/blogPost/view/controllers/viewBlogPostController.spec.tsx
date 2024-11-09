@@ -30,6 +30,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
 
+    // タイトルが取得できるまで待機し、空文字でないことを確認
     await waitFor(() => {
       expect(title.textContent).not.toBe('');
     });
