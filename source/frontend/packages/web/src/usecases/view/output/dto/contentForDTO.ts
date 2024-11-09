@@ -3,12 +3,17 @@ import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
-export type ContentForDTO = H2ForDTO | ParagraphForDTO | ImageForDTO;
+export type ContentForDTO = H2ForDTO | H3ForDTO | ParagraphForDTO | ImageForDTO;
 
 type H2ForDTO = Readonly<{
   id: ReturnType<H2['getId']>;
   text: ReturnType<H2['getValue']>;
   type: ReturnType<H2['getType']>;
+}>;
+type H3ForDTO = Readonly<{
+  id: ReturnType<H3['getId']>;
+  text: ReturnType<H3['getValue']>;
+  type: ReturnType<H3['getType']>;
 }>;
 
 type ParagraphForDTO = Readonly<{
@@ -43,8 +48,17 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
 }
 
 // TODO H2,H3 を分割する
-export class H2ToDTOStrategy extends ContentToDTOStrategy<H2 | H3> {
+export class H2ToDTOStrategy extends ContentToDTOStrategy<H2> {
   toDTO(): H2ForDTO {
+    return {
+      id: this.content.getId(),
+      text: this.content.getValue(),
+      type: this.content.getType(),
+    };
+  }
+}
+export class H3ToDTOStrategy extends ContentToDTOStrategy<H3> {
+  toDTO(): H3ForDTO {
     return {
       id: this.content.getId(),
       text: this.content.getValue(),
@@ -80,7 +94,7 @@ export function createContentToDTOContext(
   } else if (content instanceof H2) {
     return new ContentToDTOContext(new H2ToDTOStrategy(content));
   } else if (content instanceof H3) {
-    return new ContentToDTOContext(new H2ToDTOStrategy(content));
+    return new ContentToDTOContext(new H3ToDTOStrategy(content));
   } else {
     throw new Error('存在しないコンテンツタイプを DTO に変換しようとしました');
   }
