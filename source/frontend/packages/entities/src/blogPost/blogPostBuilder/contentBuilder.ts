@@ -1,6 +1,5 @@
 import { ContentType, type Content } from '../postContents/content';
-import type { H2, H3 } from '../postContents/heading';
-import { createH2, createH3 } from '../postContents/heading';
+import { H2, H3 } from '../postContents/heading';
 import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
 
@@ -85,7 +84,7 @@ export class H2BuildStrategy implements ContentBuildStrategy<H2> {
   }
 
   build(id: number): H2 {
-    return createH2(id, this.contentValue);
+    return new H2(id, this.contentValue);
   }
 }
 export class H3BuildStrategy implements ContentBuildStrategy<H3> {
@@ -96,7 +95,7 @@ export class H3BuildStrategy implements ContentBuildStrategy<H3> {
   }
 
   build(id: number): H3 {
-    return createH3(id, this.contentValue);
+    return new H3(id, this.contentValue);
   }
 }
 export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {

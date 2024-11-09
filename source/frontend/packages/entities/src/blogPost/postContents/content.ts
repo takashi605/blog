@@ -1,7 +1,6 @@
 import { EntityError } from '../../error/error';
 import type { ImageContent } from '../postContents/image';
-import type { H2, H3 } from './heading';
-import { createH2, createH3 } from './heading';
+import { H2, H3 } from './heading';
 import { Paragraph } from './paragraph';
 
 export const enum ContentType {
@@ -25,9 +24,9 @@ export const createContent = (params: {
 }): Content => {
   switch (params.type) {
     case 'h2':
-      return createH2(params.id, params.value);
+      return new H2(params.id, params.value);
     case 'h3':
-      return createH3(params.id, params.value);
+      return new H3(params.id, params.value);
     case 'paragraph':
       return new Paragraph(params.id, params.value);
     default:

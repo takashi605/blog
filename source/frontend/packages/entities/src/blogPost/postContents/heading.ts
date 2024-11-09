@@ -1,13 +1,5 @@
 import { ContentType, type ContentBase } from './content';
 
-export const createH2 = (id: number, initialText: string): H2 => {
-  return new H2(id, initialText);
-};
-
-export const createH3 = (id: number, initialText: string): H3 => {
-  return new H3(id, initialText);
-};
-
 export class H2 implements ContentBase {
   private id: number;
   private text: string;
