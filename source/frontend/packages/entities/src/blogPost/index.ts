@@ -1,14 +1,14 @@
 import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
-import { MainVisual } from './mainVisual';
 import type { Content } from './postContents/content';
+import { Thumbnail } from './thumbnail';
 
 export class BlogPost {
   private title: string;
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
-  private mainVisual: MainVisual | null = null;
+  private thumbnail: Thumbnail | null = null;
 
   constructor(title: string) {
     this.title = title;
@@ -18,16 +18,16 @@ export class BlogPost {
     return this.title;
   }
 
-  setMainVisual(path: string) {
-    this.mainVisual = new MainVisual(path);
+  setThumbnail(path: string) {
+    this.thumbnail = new Thumbnail(path);
     return this;
   }
 
-  getMainVisual() {
-    if (!this.mainVisual) {
-      throw new EntityError('メインビジュアルが設定されていません');
+  getThumbnail() {
+    if (!this.thumbnail) {
+      throw new EntityError('サムネイル画像が設定されていません');
     }
-    return this.mainVisual;
+    return this.thumbnail;
   }
 
   addContent(content: Content) {

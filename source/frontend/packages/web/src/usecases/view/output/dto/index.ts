@@ -9,13 +9,13 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
-  readonly mainVisual: mainVisualDTO;
+  readonly thumbnail: thumbnailDTO;
   readonly postDate: string;
   readonly lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentForDTO>;
 };
 
-type mainVisualDTO = {
+type thumbnailDTO = {
   readonly path: string;
 };
 
@@ -26,14 +26,14 @@ export class BlogPostDTOBuilder {
     this.blogPost = blogPost;
   }
 
-  private extractMainVisualForDTO(): mainVisualDTO {
+  private extractThumbnailForDTO(): thumbnailDTO {
     try {
       return {
-        path: this.blogPost.getMainVisual().getPath(),
+        path: this.blogPost.getThumbnail().getPath(),
       };
     } catch {
       throw new UsecaseError(
-        'メインビジュアルが存在しない記事を生成しようとしました',
+        'サムネイル画像が存在しない記事を生成しようとしました',
       );
     }
   }
@@ -70,7 +70,7 @@ export class BlogPostDTOBuilder {
   build(): ViewBlogPostDTO {
     return {
       title: this.blogPost.getTitleText(),
-      mainVisual: this.extractMainVisualForDTO(),
+      thumbnail: this.extractThumbnailForDTO(),
       postDate: this.extractPostDateForDTO(),
       lastUpdateDate: this.extractLastUpdateDateForDTO(),
       contents: this.extractContentsForDTO(),
