@@ -4,10 +4,6 @@ import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
 import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
 import { memo } from 'react';
 
-export type ContentElementProps = {
-  children: string;
-};
-
 function ContentRenderer({ type, value }: BlogPostContentProps) {
   switch (type) {
     case 'h2':

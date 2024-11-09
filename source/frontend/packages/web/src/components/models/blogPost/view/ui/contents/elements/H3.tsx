@@ -1,4 +1,4 @@
-import type { ContentElementProps } from '@/components/models/blogPost/view/ui/contents/Content';
+import type { ContentElementProps } from '@/components/models/blogPost/view/ui/contents/elements/type';
 import Image from 'next/image';
 import { memo } from 'react';
 import styles from './h3.module.scss';
