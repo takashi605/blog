@@ -8,6 +8,9 @@ import {
 export type BlogPostResponse = {
   id: number;
   title: string;
+  thumbnail: {
+    path: string;
+  };
   postDate: string;
   lastUpdateDate: string;
   contents: {
@@ -29,15 +32,16 @@ export const responseToViewBlogPost = (
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
   const viewBlogPostInput = createBlogPostBuilder()
     .setPostTitle(response.title)
+    .setThumbnail(response.thumbnail.path)
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
 
-  mapResponseContentToBlogPost(response, viewBlogPostInput);
+  responseContentToBlogPost(response, viewBlogPostInput);
 
   return viewBlogPostInput;
 };
 
-const mapResponseContentToBlogPost = (
+const responseContentToBlogPost = (
   response: BlogPostResponse,
   viewBlogPostInput: BlogPostBuilder,
 ) => {

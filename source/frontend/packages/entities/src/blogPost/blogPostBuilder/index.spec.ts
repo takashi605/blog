@@ -5,7 +5,7 @@ import { Paragraph } from '../postContents/paragraph';
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
     const builder = createBlogPostBuilder()
-      .setMainVisual('path/to/image')
+      .setThumbnail('path/to/image')
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
@@ -16,7 +16,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
 
-    expect(blogPost.getMainVisual().getPath()).toBe('path/to/image');
+    expect(blogPost.getThumbnail().getPath()).toBe('path/to/image');
 
     const expectedPostDate = new Date('2021-01-01');
     expect(blogPost.getPostDate()).toEqual(expectedPostDate);

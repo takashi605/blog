@@ -9,7 +9,7 @@ import {
 
 export class BlogPostBuilder {
   private postTitle = '';
-  private mainVisualPath = '';
+  private thumbnailPath = '';
   private postDate = '';
   private lastUpdateDate = '';
   private contentBuilders: ContentBuildStrategyContext<Content>[] = [];
@@ -19,8 +19,8 @@ export class BlogPostBuilder {
     return this;
   }
 
-  setMainVisual(mainVisualPath: string) {
-    this.mainVisualPath = mainVisualPath;
+  setThumbnail(thumbnailPath: string) {
+    this.thumbnailPath = thumbnailPath;
     return this;
   }
 
@@ -65,7 +65,7 @@ export class BlogPostBuilder {
 
   build() {
     const blogPost = new BlogPost(this.postTitle)
-      .setMainVisual(this.mainVisualPath)
+      .setThumbnail(this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);

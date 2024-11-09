@@ -17,8 +17,8 @@ Then('記事タイトル が表示される', async ({ page }) => {
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
-  const mainVisualImage = page.getByTestId('main-visual-image');
-  await expect(mainVisualImage).toBeVisible();
+  const thumbnailImage = page.getByTestId('main-visual-image');
+  await expect(thumbnailImage).toBeVisible();
 });
 
 Then('記事本文 が表示される', async ({ page }) => {
@@ -102,4 +102,3 @@ Then(
     await expect(page.getByText(errorMessage)).toBeVisible();
   },
 );
-

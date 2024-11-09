@@ -1,4 +1,4 @@
-export class MainVisual {
+export class Thumbnail {
   private path: string;
 
   constructor(path: string) {
