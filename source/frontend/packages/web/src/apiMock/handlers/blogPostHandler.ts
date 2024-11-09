@@ -21,6 +21,9 @@ export const blogPostHandlers = [
 const successResponse = {
   id: 1,
   title: '初めての技術スタックへの挑戦',
+  thumbnail: {
+    path: '/images/blog/1/thumbnail.jpg',
+  },
   postDate: '2022-01-01',
   lastUpdateDate: '2022-01-02',
   contents: [

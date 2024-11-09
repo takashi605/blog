@@ -13,7 +13,7 @@ afterAll(() => {
 });
 
 describe('投稿記事を取得する', () => {
-  it('ブログ記事構造に変換したデータから投稿日,最終更新日,記事タイトル,コンテンツが取得できる', async () => {
+  it('ブログ記事構造に変換したデータから投稿日,最終更新日,記事タイトル,サムネイル画像,コンテンツが取得できる', async () => {
     const blogPostResponse = await fetchBlogPost(1);
 
     await expect(blogPostResponse.postDate).toMatch(/\d{4}\/\d{1,2}\/\d{1,2}/);
@@ -22,6 +22,7 @@ describe('投稿記事を取得する', () => {
     );
 
     await expect(blogPostResponse.title).not.toBe('');
+    await expect(blogPostResponse.thumbnail.path).not.toBe('');
     await expect(blogPostResponse.contents.length).toBeGreaterThan(0);
   });
 
