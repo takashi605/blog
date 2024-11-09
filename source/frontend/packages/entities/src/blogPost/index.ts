@@ -1,5 +1,6 @@
 import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
+import { MainVisual } from './mainVisual';
 import type { Content } from './postContents/content';
 
 export class BlogPost {
@@ -7,9 +8,7 @@ export class BlogPost {
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
-  private mainVisual: {
-    path: string;
-  } | null = null;
+  private mainVisual: MainVisual | null = null;
 
   constructor(title: string) {
     this.title = title;
@@ -20,9 +19,7 @@ export class BlogPost {
   }
 
   setMainVisual(path: string) {
-    this.mainVisual = {
-      path,
-    };
+    this.mainVisual = new MainVisual(path);
     return this;
   }
 

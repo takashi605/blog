@@ -14,7 +14,9 @@ describe('エンティティ: 投稿記事', () => {
     const blogPost = new BlogPost(title);
     const imagePath = 'path/to/image';
     blogPost.setMainVisual(imagePath);
-    expect(blogPost.getMainVisual().path).toBe(imagePath);
+
+    const mainVisual = blogPost.getMainVisual();
+    expect(mainVisual.getPath()).toBe(imagePath);
   });
 
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
