@@ -1,5 +1,6 @@
 import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
 import { H2, H3 } from '../postContents/heading';
+import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
@@ -11,7 +12,8 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       .setLastUpdateDate('2021-01-02')
       .addH2('h2見出し1')
       .addH3('h3見出し1')
-      .addParagraph('段落1');
+      .addParagraph('段落1')
+      .addImage('path/to/image');
     const blogPost = builder.build();
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
@@ -24,7 +26,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
     const expectedLastUpdateDate = new Date('2021-01-02');
     expect(blogPost.getLastUpdateDate()).toEqual(expectedLastUpdateDate);
 
-    expect(blogPost.getContents().length).toBe(3);
+    expect(blogPost.getContents().length).toBe(4);
 
     blogPost.getContents().forEach((content, index) => {
       if (content instanceof H2) {
@@ -36,6 +38,9 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       } else if (content instanceof Paragraph) {
         expect(content.getValue()).toBe('段落1');
         expect(content.getType()).toBe('paragraph');
+      } else if (content instanceof ImageContent) {
+        expect(content.getPath()).toBe('path/to/image');
+        expect(content.getType()).toBe('image');
       } else {
         fail('不正なコンテントが含まれています');
       }
