@@ -1,28 +1,14 @@
-import { BlogPostDTOBuilder } from '@/usecases/view/output/dto';
+import { BlogPostDTOBuilder } from '@/usecases/view/output/dto/index';
 import { BlogPost } from 'entities/src/blogPost/index';
-import {
-  ContentType,
-  createContent,
-} from 'entities/src/blogPost/postContents/content';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
 describe('DTO の生成', () => {
   it('builder クラスを使って DTO を生成できる', () => {
     const title = '記事タイトル';
-    const h2 = createContent({
-      id: 1,
-      type: ContentType.H2,
-      value: 'h2見出し',
-    });
-    const h3 = createContent({
-      id: 2,
-      type: ContentType.H3,
-      value: 'h3見出し',
-    });
-    const paragraph1 = createContent({
-      id: 3,
-      type: ContentType.Paragraph,
-      value: '段落',
-    });
+    const h2 = new H2(1, 'h2見出し');
+    const h3 = new H3(2, 'h3見出し');
+    const paragraph1 = new Paragraph(3, '段落');
     const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)
@@ -36,17 +22,32 @@ describe('DTO の生成', () => {
     expect(dto.title).toBe('記事タイトル');
     expect(dto.contents.length).toBe(3);
 
-    expect(dto.contents[0].id).toBe(1);
-    expect(dto.contents[0].value).toBe('h2見出し');
-    expect(dto.contents[0].type).toBe('h2');
+    const h2DTO = dto.contents[0];
+    if (h2DTO.type === 'h2') {
+      expect(h2DTO.id).toBe(1);
+      expect(h2DTO.text).toBe('h2見出し');
+      expect(h2DTO.type).toBe('h2');
+    } else {
+      fail('h2 DTO が生成されていません');
+    }
 
-    expect(dto.contents[1].id).toBe(2);
-    expect(dto.contents[1].value).toBe('h3見出し');
-    expect(dto.contents[1].type).toBe('h3');
+    const h3DTO = dto.contents[1];
+    if (h3DTO.type === 'h3') {
+      expect(h3DTO.id).toBe(2);
+      expect(h3DTO.text).toBe('h3見出し');
+      expect(h3DTO.type).toBe('h3');
+    } else {
+      fail('h3 DTO が生成されていません');
+    }
 
-    expect(dto.contents[2].id).toBe(3);
-    expect(dto.contents[2].value).toBe('段落');
-    expect(dto.contents[2].type).toBe('paragraph');
+    const pDTO = dto.contents[2];
+    if (pDTO.type === 'paragraph') {
+      expect(pDTO.id).toBe(3);
+      expect(pDTO.text).toBe('段落');
+      expect(pDTO.type).toBe('paragraph');
+    } else {
+      fail('段落 DTO が生成されていません');
+    }
 
     expect(dto.postDate).toEqual('2021/01/01');
     expect(dto.lastUpdateDate).toEqual('2021/01/02');

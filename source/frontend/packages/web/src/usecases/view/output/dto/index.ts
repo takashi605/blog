@@ -1,4 +1,8 @@
 import { UsecaseError } from '@/usecases/error';
+import {
+  createContentToDTOContext,
+  type ContentForDTO,
+} from '@/usecases/view/output/dto/contentForDTO';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
@@ -8,12 +12,6 @@ export type ViewBlogPostDTO = {
   readonly postDate: string;
   readonly lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentForDTO>;
-};
-
-type ContentForDTO = {
-  readonly id: number;
-  readonly value: string;
-  readonly type: string;
 };
 
 export class BlogPostDTOBuilder {
@@ -48,11 +46,8 @@ export class BlogPostDTOBuilder {
   }
 
   private createContentForDTO(content: Content): ContentForDTO {
-    return {
-      id: content.getId(),
-      value: content.getValue(),
-      type: content.getType(),
-    };
+    const dtoCreator = createContentToDTOContext(content);
+    return dtoCreator.toDTO();
   }
 
   build(): ViewBlogPostDTO {

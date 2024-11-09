@@ -1,9 +1,6 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
-import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
-import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
-import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 
@@ -24,14 +21,7 @@ const renderTestComponent = async () =>
 // まとめたコンポーネント
 async function ViewBlogPostControllerWithDependencies() {
   const blogPost = await fetchBlogPost(1);
-  return (
-    <ViewBlogPostController
-      blogPost={blogPost}
-      Title={BlogPostTitle}
-      Content={ContentRenderer}
-      Date={BlogPostDate}
-    />
-  );
+  return <ViewBlogPostController blogPost={blogPost} />;
 }
 
 describe('コンポーネント: viewBlogPostController', () => {

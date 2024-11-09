@@ -1,6 +1,10 @@
-import type { BlogPostDateProps } from '@/components/models/blogPost/view/controllers/types';
 import { memo } from 'react';
 import styles from './blogPostDate.module.scss';
+
+type BlogPostDateProps = {
+  label: string;
+  date: string;
+};
 
 function BlogPostDate({ label, date }: BlogPostDateProps) {
   return (

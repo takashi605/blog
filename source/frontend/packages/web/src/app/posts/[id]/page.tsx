@@ -1,9 +1,6 @@
 import WithBlogPostErrorForServer from '@/components/models/blogPost/error/WithBlogPostErrorForServer';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
-import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
-import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
-import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
 
 type ViewBlogPostParams = {
   params: {
@@ -17,12 +14,7 @@ async function ViewBlogPost({ params }: ViewBlogPostParams) {
 
   return (
     <div>
-      <ViewBlogPostController
-        blogPost={blogPostResponse}
-        Title={BlogPostTitle}
-        Date={BlogPostDate}
-        Content={ContentRenderer}
-      />
+      <ViewBlogPostController blogPost={blogPostResponse} />
     </div>
   );
 }
