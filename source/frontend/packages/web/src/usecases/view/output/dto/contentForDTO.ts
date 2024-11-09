@@ -43,7 +43,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<Paragraph> {
 }
 
 // TODO H2,H3 を分割する
-export class HeadingToDTOStrategy extends ContentToDTOStrategy<H2 | H3> {
+export class H2ToDTOStrategy extends ContentToDTOStrategy<H2 | H3> {
   toDTO(): H2ForDTO {
     return {
       id: this.content.getId(),
@@ -78,9 +78,9 @@ export function createContentToDTOContext(
   if (content instanceof Paragraph) {
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
   } else if (content instanceof H2) {
-    return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+    return new ContentToDTOContext(new H2ToDTOStrategy(content));
   } else if (content instanceof H3) {
-    return new ContentToDTOContext(new HeadingToDTOStrategy(content));
+    return new ContentToDTOContext(new H2ToDTOStrategy(content));
   } else {
     throw new Error('存在しないコンテンツタイプを DTO に変換しようとしました');
   }
