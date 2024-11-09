@@ -7,6 +7,9 @@ export class BlogPost {
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
+  private mainVisual: {
+    path: string;
+  } | null = null;
 
   constructor(title: string) {
     this.title = title;
@@ -14,6 +17,20 @@ export class BlogPost {
 
   getTitleText() {
     return this.title;
+  }
+
+  setMainVisual(path: string) {
+    this.mainVisual = {
+      path,
+    };
+    return this;
+  }
+
+  getMainVisual() {
+    if (!this.mainVisual) {
+      throw new EntityError('メインビジュアルが設定されていません');
+    }
+    return this.mainVisual;
   }
 
   addContent(content: Content) {

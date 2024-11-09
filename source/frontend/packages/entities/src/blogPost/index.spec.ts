@@ -9,6 +9,14 @@ describe('エンティティ: 投稿記事', () => {
     expect(blogPost.getTitleText()).toBe(title);
   });
 
+  it('メインビジュアルを持っている', () => {
+    const title = '記事タイトル';
+    const blogPost = new BlogPost(title);
+    const imagePath = 'path/to/image';
+    blogPost.setMainVisual(imagePath);
+    expect(blogPost.getMainVisual().path).toBe(imagePath);
+  });
+
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
     const h2 = new H2(1, 'h2見出し');
