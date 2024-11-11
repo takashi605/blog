@@ -32,16 +32,16 @@ function injectContentsToBuilder(
   formData: CreateBlogPostFormData,
   builder: BlogPostBuilder,
 ) {
-  formData.contents.forEach((content) => {
+  formData.contents.forEach((content, index) => {
     switch (content.type) {
       case 'h2':
-        builder.addH2(content.text);
+        builder.addH2(index, content.text);
         break;
       case 'h3':
-        builder.addH3(content.text);
+        builder.addH3(index, content.text);
         break;
       case 'paragraph':
-        builder.addParagraph(content.text);
+        builder.addParagraph(index, content.text);
         break;
     }
   });
