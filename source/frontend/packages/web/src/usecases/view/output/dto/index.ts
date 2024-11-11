@@ -2,7 +2,7 @@ import { UsecaseError } from '@/usecases/error';
 import {
   createContentToDTOContext,
   type ContentForDTO,
-} from '@/usecases/view/output/dto/contentToDTO/contentForDTO';
+} from '@/usecases/view/output/dto/contentToDTO';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';

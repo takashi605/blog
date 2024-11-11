@@ -2,7 +2,7 @@ import H2 from '@/components/models/blogPost/view/ui/contents/elements/H2';
 import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
 import ImageContent from '@/components/models/blogPost/view/ui/contents/elements/ImageContent';
 import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
-import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/contentForDTO';
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO';
 import { memo } from 'react';
 
 export type BlogPostContentProps = {

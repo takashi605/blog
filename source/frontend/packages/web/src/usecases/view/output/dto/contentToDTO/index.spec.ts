@@ -1,4 +1,4 @@
-import { createContentToDTOContext } from '@/usecases/view/output/dto/contentToDTO/contentForDTO';
+import { createContentToDTOContext } from '@/usecases/view/output/dto/contentToDTO';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
