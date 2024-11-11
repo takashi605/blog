@@ -6,7 +6,7 @@ import {
   H3Input,
   ImageInput,
   ParagraphInput,
-} from './contentBuildStrategy/contentBuilder';
+} from './contentBuildStrategy';
 
 export class BlogPostBuilder {
   private postTitle = '';

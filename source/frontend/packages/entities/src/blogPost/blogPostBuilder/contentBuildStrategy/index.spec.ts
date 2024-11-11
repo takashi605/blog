@@ -4,7 +4,7 @@ import {
   H3Input,
   ImageInput,
   ParagraphInput,
-} from './contentBuilder';
+} from '.';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
   it('h2 を生成するストラテジー', () => {
