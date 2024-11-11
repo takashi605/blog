@@ -1,12 +1,12 @@
 import { BlogPost } from '../../blogPost';
 import type { Content } from '../../blogPost/postContents/content';
+import { ContentBuildStrategyContext } from './contentBuildStrategy';
 import {
-  ContentBuildStrategyContext,
   H2Input,
   H3Input,
   ImageInput,
   ParagraphInput,
-} from './contentBuildStrategy';
+} from './contentBuildStrategy/input';
 
 export class BlogPostBuilder {
   private postTitle = '';
