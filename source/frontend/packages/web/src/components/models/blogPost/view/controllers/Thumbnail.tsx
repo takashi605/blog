@@ -9,7 +9,7 @@ type ThumbnailProps = {
 function Thumbnail({ thumbnail }: ThumbnailProps) {
   return (
     <div>
-      {/* <CldImage
+      <CldImage
         src={thumbnail.path}
         alt="サムネイル画像"
         width={100}
@@ -18,8 +18,7 @@ function Thumbnail({ thumbnail }: ThumbnailProps) {
         sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
-      /> */}
-      <img src={thumbnail.path} alt="サムネイル画像" />
+      />
     </div>
   );
 }
