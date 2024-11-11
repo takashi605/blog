@@ -1,7 +1,7 @@
-import { ContentType, type Content } from '../postContents/content';
-import { H2, H3 } from '../postContents/heading';
-import { ImageContent } from '../postContents/image';
-import { Paragraph } from '../postContents/paragraph';
+import { ContentType, type Content } from '../../postContents/content';
+import { H2, H3 } from '../../postContents/heading';
+import { ImageContent } from '../../postContents/image';
+import { Paragraph } from '../../postContents/paragraph';
 
 export class ContentBuildStrategyContext<T extends Content> {
   private strategy: ContentBuildStrategy<T>;
