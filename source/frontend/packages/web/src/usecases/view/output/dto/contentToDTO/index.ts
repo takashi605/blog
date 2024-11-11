@@ -1,4 +1,4 @@
-import type { ContentToDTOStrategy } from '@/usecases/view/output/dto/contentToDTO/strategy';
+import { ContentToDTOContext } from '@/usecases/view/output/dto/contentToDTO/context';
 import {
   H2ToDTOStrategy,
   H3ToDTOStrategy,
@@ -16,18 +16,6 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
-
-export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
-  private strategy: ContentToDTOStrategy<T, U>;
-
-  constructor(strategy: ContentToDTOStrategy<T, U>) {
-    this.strategy = strategy;
-  }
-
-  toDTO(): U {
-    return this.strategy.toDTO();
-  }
-}
 
 // コンテキスト生成関数のオーバーロード
 // これにより呼び出し元で返り値の型を自動で推論できる
