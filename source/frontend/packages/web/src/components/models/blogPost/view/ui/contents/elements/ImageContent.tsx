@@ -1,5 +1,5 @@
 'use client';
-import type { ImageForDTO } from '@/usecases/view/output/dto/contentToDTO';
+import type { ImageForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import { CldImage } from 'next-cloudinary';
 
 type ImageContentProps = {
