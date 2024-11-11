@@ -7,6 +7,7 @@ import type { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
 export type ContentBuildStrategy<T extends Content> = {
   build(): T;
 };
+
 export class H2BuildStrategy implements ContentBuildStrategy<H2> {
   private input: H2Input;
 

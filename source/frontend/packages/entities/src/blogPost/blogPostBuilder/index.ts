@@ -1,6 +1,6 @@
 import { BlogPost } from '../../blogPost';
 import type { Content } from '../../blogPost/postContents/content';
-import { ContentBuildStrategyContext } from './contentBuildStrategy';
+import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
   H2Input,
   H3Input,
