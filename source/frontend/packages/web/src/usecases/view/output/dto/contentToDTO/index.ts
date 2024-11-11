@@ -1,3 +1,10 @@
+import type { ContentToDTOStrategy } from '@/usecases/view/output/dto/contentToDTO/strategy';
+import {
+  H2ToDTOStrategy,
+  H3ToDTOStrategy,
+  ImageToDTOStrategy,
+  ParagraphToDTOStrategy,
+} from '@/usecases/view/output/dto/contentToDTO/strategy';
 import type {
   ContentForDTO,
   H2ForDTO,
@@ -9,64 +16,6 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
-
-abstract class ContentToDTOStrategy<
-  T extends Content,
-  U extends ContentForDTO,
-> {
-  protected content: T;
-
-  constructor(content: T) {
-    this.content = content;
-  }
-  abstract toDTO(): U;
-}
-
-export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
-  Paragraph,
-  ParagraphForDTO
-> {
-  toDTO(): ParagraphForDTO {
-    return {
-      id: this.content.getId(),
-      text: this.content.getValue(),
-      type: this.content.getType(),
-    };
-  }
-}
-
-// TODO H2,H3 を分割する
-export class H2ToDTOStrategy extends ContentToDTOStrategy<H2, H2ForDTO> {
-  toDTO(): H2ForDTO {
-    return {
-      id: this.content.getId(),
-      text: this.content.getValue(),
-      type: this.content.getType(),
-    };
-  }
-}
-export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3ForDTO> {
-  toDTO(): H3ForDTO {
-    return {
-      id: this.content.getId(),
-      text: this.content.getValue(),
-      type: this.content.getType(),
-    };
-  }
-}
-
-export class ImageToDTOStrategy extends ContentToDTOStrategy<
-  ImageContent,
-  ImageForDTO
-> {
-  toDTO(): ImageForDTO {
-    return {
-      id: this.content.getId(),
-      type: this.content.getType(),
-      path: this.content.getPath(),
-    };
-  }
-}
 
 export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
   private strategy: ContentToDTOStrategy<T, U>;
