@@ -16,11 +16,6 @@ Then('記事タイトル が表示される', async ({ page }) => {
   await expect(title.textContent).not.toBe('');
 });
 
-Then('記事サムネイル が表示される', async ({ page }) => {
-  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
-  await expect(thumbnailImage).toBeVisible();
-});
-
 Then('記事本文 が表示される', async ({ page }) => {
   const p = page.locator('p');
 
@@ -70,6 +65,11 @@ Then('投稿日時 が表示される', async ({ page }) => {
 
 Then('更新日時 が表示される', async ({ page }) => {
   await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
+});
+
+Then('記事サムネイル が表示される', async ({ page }) => {
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+  await expect(thumbnailImage).toBeVisible();
 });
 
 Given('投稿日,更新日時が存在しないページにアクセスする', async ({ page }) => {
