@@ -1,4 +1,4 @@
-import type { ContentForDTO } from '@/usecases/view/output/dto/contentForDTO';
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {

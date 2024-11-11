@@ -1,10 +1,5 @@
-import {
-  ContentBuildStrategyContext,
-  H2Input,
-  H3Input,
-  ImageInput,
-  ParagraphInput,
-} from './contentBuilder';
+import { ContentBuildStrategyContext } from './context';
+import { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
   it('h2 を生成するストラテジー', () => {
