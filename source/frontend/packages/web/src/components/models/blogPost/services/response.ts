@@ -43,15 +43,15 @@ const responseContentToBlogPost = (
   response: BlogPostResponse,
   viewBlogPostInput: BlogPostBuilder,
 ) => {
-  response.contents.forEach((content, index) => {
+  response.contents.forEach((content) => {
     if (content.type === 'h2') {
-      viewBlogPostInput.addH2(index, content.text);
+      viewBlogPostInput.addH2(content.id, content.text);
     } else if (content.type === 'h3') {
-      viewBlogPostInput.addH3(index, content.text);
+      viewBlogPostInput.addH3(content.id, content.text);
     } else if (content.type === 'paragraph') {
-      viewBlogPostInput.addParagraph(index, content.text);
+      viewBlogPostInput.addParagraph(content.id, content.text);
     } else if (content.type === 'image') {
-      viewBlogPostInput.addImage(index, content.path);
+      viewBlogPostInput.addImage(content.id, content.path);
     }
   });
 };
