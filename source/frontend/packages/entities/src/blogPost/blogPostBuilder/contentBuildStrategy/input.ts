@@ -1,15 +1,15 @@
-import type { ContentBuildStrategy } from '.';
-import {
-  H2BuildStrategy,
-  H3BuildStrategy,
-  ImageBuildStrategy,
-  ParagraphBuildStrategy,
-} from '.';
 import type { Content } from '../../postContents/content';
 import { ContentType } from '../../postContents/content';
 import type { H2, H3 } from '../../postContents/heading';
 import type { ImageContent } from '../../postContents/image';
 import type { Paragraph } from '../../postContents/paragraph';
+import type { ContentBuildStrategy } from './strategy';
+import {
+  H2BuildStrategy,
+  H3BuildStrategy,
+  ImageBuildStrategy,
+  ParagraphBuildStrategy,
+} from './strategy';
 
 export type ContentInput<T extends Content> = {
   type: ContentType;
