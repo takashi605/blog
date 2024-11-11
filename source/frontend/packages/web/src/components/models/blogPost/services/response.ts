@@ -45,13 +45,13 @@ const responseContentToBlogPost = (
 ) => {
   response.contents.forEach((content) => {
     if (content.type === 'h2') {
-      viewBlogPostInput.addH2(content.text);
+      viewBlogPostInput.addH2(content.id, content.text);
     } else if (content.type === 'h3') {
-      viewBlogPostInput.addH3(content.text);
+      viewBlogPostInput.addH3(content.id, content.text);
     } else if (content.type === 'paragraph') {
-      viewBlogPostInput.addParagraph(content.text);
+      viewBlogPostInput.addParagraph(content.id, content.text);
     } else if (content.type === 'image') {
-      viewBlogPostInput.addImage(content.path);
+      viewBlogPostInput.addImage(content.id, content.path);
     }
   });
 };

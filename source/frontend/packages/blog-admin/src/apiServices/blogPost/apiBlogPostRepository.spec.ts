@@ -21,9 +21,9 @@ describe('apiBlogPostRepository', () => {
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1');
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1');
     const blogPost = blogPostBuilder.build();
 
     const resp = await apiRepository.save(blogPost);
@@ -48,9 +48,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1');
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1');
     const blogPostCreator = new BlogPostCreator(blogPostBuilder, apiRepository);
     const createdBlogPost = await blogPostCreator.execute();
 

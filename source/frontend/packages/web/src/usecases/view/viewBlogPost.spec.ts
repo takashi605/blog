@@ -8,11 +8,11 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1')
-      .addH3('h3見出し2')
-      .addParagraph('段落2');
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1')
+      .addH3(4, 'h3見出し2')
+      .addParagraph(5, '段落2');
 
     const output: ViewBlogPostDTO = viewBlogPost(input);
 

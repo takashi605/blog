@@ -10,8 +10,8 @@ export class ContentBuildStrategyContext<T extends Content> {
     this.strategy = input.buildStrategy();
   }
 
-  build(id: number): T {
-    return this.strategy.build(id);
+  build(): T {
+    return this.strategy.build();
   }
 }
 
@@ -21,10 +21,12 @@ type ContentInput<T extends Content> = {
 };
 // TODO rename contentValue->text
 export class H2Input implements ContentInput<H2> {
+  id: number;
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id: number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.H2;
     this.contentValue = contentValue;
   }
@@ -34,10 +36,12 @@ export class H2Input implements ContentInput<H2> {
   }
 }
 export class H3Input implements ContentInput<H3> {
+  id: number;
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id: number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.H3;
     this.contentValue = contentValue;
   }
@@ -47,10 +51,12 @@ export class H3Input implements ContentInput<H3> {
   }
 }
 export class ParagraphInput implements ContentInput<Paragraph> {
+  id: number;
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id: number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.Paragraph;
     this.contentValue = contentValue;
   }
@@ -60,10 +66,12 @@ export class ParagraphInput implements ContentInput<Paragraph> {
   }
 }
 export class ImageInput implements ContentInput<ImageContent> {
+  id: number;
   type: ContentType;
   path: string;
 
-  constructor(path: string) {
+  constructor(id: number, path: string) {
+    this.id = id;
     this.type = ContentType.Image;
     this.path = path;
   }
@@ -74,49 +82,49 @@ export class ImageInput implements ContentInput<ImageContent> {
 }
 
 type ContentBuildStrategy<T extends Content> = {
-  build(id: number): T;
+  build(): T;
 };
 export class H2BuildStrategy implements ContentBuildStrategy<H2> {
-  private contentValue: string;
+  private input: H2Input;
 
   constructor(input: H2Input) {
-    this.contentValue = input.contentValue;
+    this.input = input;
   }
 
-  build(id: number): H2 {
-    return new H2(id, this.contentValue);
+  build(): H2 {
+    return new H2(this.input.id, this.input.contentValue);
   }
 }
 export class H3BuildStrategy implements ContentBuildStrategy<H3> {
-  private contentValue: string;
+  private input: H3Input;
 
   constructor(input: H3Input) {
-    this.contentValue = input.contentValue;
+    this.input = input;
   }
 
-  build(id: number): H3 {
-    return new H3(id, this.contentValue);
+  build(): H3 {
+    return new H3(this.input.id, this.input.contentValue);
   }
 }
 export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
-  private contentValue: string;
+  private input: ParagraphInput;
 
   constructor(input: ParagraphInput) {
-    this.contentValue = input.contentValue;
+    this.input = input;
   }
 
-  build(id: number): Paragraph {
-    return new Paragraph(id, this.contentValue);
+  build(): Paragraph {
+    return new Paragraph(this.input.id, this.input.contentValue);
   }
 }
 export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {
-  private path: string;
+  private input: ImageInput;
 
   constructor(input: ImageInput) {
-    this.path = input.path;
+    this.input = input;
   }
 
-  build(id: number): ImageContent {
-    return new ImageContent(id, this.path);
+  build(): ImageContent {
+    return new ImageContent(this.input.id, this.input.path);
   }
 }
