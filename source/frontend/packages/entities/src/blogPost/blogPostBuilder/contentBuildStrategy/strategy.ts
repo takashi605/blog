@@ -16,7 +16,7 @@ export class H2BuildStrategy implements ContentBuildStrategy<H2> {
   }
 
   build(): H2 {
-    return new H2(this.input.id, this.input.contentValue);
+    return new H2(this.input.id, this.input.text);
   }
 }
 export class H3BuildStrategy implements ContentBuildStrategy<H3> {
@@ -27,7 +27,7 @@ export class H3BuildStrategy implements ContentBuildStrategy<H3> {
   }
 
   build(): H3 {
-    return new H3(this.input.id, this.input.contentValue);
+    return new H3(this.input.id, this.input.text);
   }
 }
 export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
@@ -38,7 +38,7 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
   }
 
   build(): Paragraph {
-    return new Paragraph(this.input.id, this.input.contentValue);
+    return new Paragraph(this.input.id, this.input.text);
   }
 }
 export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {

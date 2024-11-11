@@ -16,16 +16,15 @@ export type ContentInput<T extends Content> = {
   buildStrategy(): ContentBuildStrategy<T>;
 };
 
-// TODO rename contentValue->text
 export class H2Input implements ContentInput<H2> {
   id: number;
   type: ContentType;
-  contentValue: string;
+  text: string;
 
   constructor(id: number, contentValue: string) {
     this.id = id;
     this.type = ContentType.H2;
-    this.contentValue = contentValue;
+    this.text = contentValue;
   }
 
   buildStrategy(): ContentBuildStrategy<H2> {
@@ -35,12 +34,12 @@ export class H2Input implements ContentInput<H2> {
 export class H3Input implements ContentInput<H3> {
   id: number;
   type: ContentType;
-  contentValue: string;
+  text: string;
 
   constructor(id: number, contentValue: string) {
     this.id = id;
     this.type = ContentType.H3;
-    this.contentValue = contentValue;
+    this.text = contentValue;
   }
 
   buildStrategy(): ContentBuildStrategy<H3> {
@@ -50,12 +49,12 @@ export class H3Input implements ContentInput<H3> {
 export class ParagraphInput implements ContentInput<Paragraph> {
   id: number;
   type: ContentType;
-  contentValue: string;
+  text: string;
 
   constructor(id: number, contentValue: string) {
     this.id = id;
     this.type = ContentType.Paragraph;
-    this.contentValue = contentValue;
+    this.text = contentValue;
   }
 
   buildStrategy(): ContentBuildStrategy<Paragraph> {
