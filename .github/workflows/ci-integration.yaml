@@ -86,6 +86,7 @@ jobs:
           file: ./containers/frontend/web/Dockerfile
           target: prod
           push: false
+          load: true
           tags: |
             web:v0.0.0
           build-args: |
