@@ -44,7 +44,7 @@ jobs:
       - name: "git の最新タグを GITHUB_ENV に追加"
         run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
 
-      - name: "DockerImage の Build と Push"
+      - name: "web Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -55,8 +55,12 @@ jobs:
             ghcr.io/${{ github.repository }}-web:${{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
+          build-args: |
+            "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}"
+            "NEXT_PUBLIC_CLOUDINARY_API_KEY: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}"
+            "CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}"
 
-      - name: "DockerImage の Build と Push"
+      - name: "api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
           context: .

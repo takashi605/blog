@@ -72,11 +72,26 @@ jobs:
 
       - name: "image の build"
         run: |
-          docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
           docker image build -f containers/frontend/e2e/Dockerfile -t e2e:v0.0.0 .
           docker image build --target prod -f containers/backend/api/Dockerfile -t api:v0.0.0 .
           docker image build -f containers/backend/api-test/Dockerfile -t api-test:v0.0.0 .
           docker image build --target prod -f containers/frontend/blog-admin/Dockerfile -t blog-admin:v0.0.0 .
+
+      # docker image build --target prod -f containers/frontend/web/Dockerfile -t web:v0.0.0 .
+      # 環境変数を設定したいので可読性を考慮して build-action を使っている
+      - name: "web Image の Build"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/web/Dockerfile
+          target: prod
+          push: false
+          tags: |
+            web:v0.0.0
+          build-args: |
+            "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}"
+            "NEXT_PUBLIC_CLOUDINARY_API_KEY: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}"
+            "CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}"
 
       - name: "image の load"
         run: |
