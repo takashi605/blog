@@ -21,10 +21,12 @@ type ContentInput<T extends Content> = {
 };
 // TODO rename contentValue->text
 export class H2Input implements ContentInput<H2> {
+  id: number;
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id:number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.H2;
     this.contentValue = contentValue;
   }
@@ -34,10 +36,12 @@ export class H2Input implements ContentInput<H2> {
   }
 }
 export class H3Input implements ContentInput<H3> {
+  id: number
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id:number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.H3;
     this.contentValue = contentValue;
   }
@@ -47,10 +51,12 @@ export class H3Input implements ContentInput<H3> {
   }
 }
 export class ParagraphInput implements ContentInput<Paragraph> {
+  id: number;
   type: ContentType;
   contentValue: string;
 
-  constructor(contentValue: string) {
+  constructor(id:number, contentValue: string) {
+    this.id = id;
     this.type = ContentType.Paragraph;
     this.contentValue = contentValue;
   }
@@ -60,10 +66,12 @@ export class ParagraphInput implements ContentInput<Paragraph> {
   }
 }
 export class ImageInput implements ContentInput<ImageContent> {
+  id: number;
   type: ContentType;
   path: string;
 
-  constructor(path: string) {
+  constructor(id:number, path: string) {
+    this.id = id;
     this.type = ContentType.Image;
     this.path = path;
   }

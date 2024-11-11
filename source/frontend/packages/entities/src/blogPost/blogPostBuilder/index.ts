@@ -36,28 +36,28 @@ export class BlogPostBuilder {
   }
 
   addH2(contentValue: string) {
-    const h2Input = new H2Input(contentValue);
+    const h2Input = new H2Input(1, contentValue);
     const builder = new ContentBuildStrategyContext(h2Input);
     this.contentBuilders.push(builder);
     return this;
   }
 
   addH3(contentValue: string) {
-    const h3Input = new H3Input(contentValue);
+    const h3Input = new H3Input(1, contentValue);
     const builder = new ContentBuildStrategyContext(h3Input);
     this.contentBuilders.push(builder);
     return this;
   }
 
   addParagraph(contentValue: string) {
-    const paragraphInput = new ParagraphInput(contentValue);
+    const paragraphInput = new ParagraphInput(1, contentValue);
     const builder = new ContentBuildStrategyContext(paragraphInput);
     this.contentBuilders.push(builder);
     return this;
   }
 
   addImage(imagePath: string) {
-    const imageInput = new ImageInput(imagePath);
+    const imageInput = new ImageInput(1, imagePath);
     const builder = new ContentBuildStrategyContext(imageInput);
     this.contentBuilders.push(builder);
     return this;
