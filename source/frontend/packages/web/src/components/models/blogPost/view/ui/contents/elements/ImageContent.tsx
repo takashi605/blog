@@ -8,12 +8,15 @@ type ImageContentProps = {
 
 function ImageContent({ imageContent }: ImageContentProps) {
   return (
-    <CldImage
-      src={imageContent.path}
-      width={500}
-      height={500}
-      alt="画像コンテンツ"
-    />
+    <>
+      {/* <CldImage
+        src={imageContent.path}
+        width={500}
+        height={500}
+        alt="画像コンテンツ"
+      /> */}
+      <img src={imageContent.path} alt="画像コンテンツ" />
+    </>
   );
 }
 
