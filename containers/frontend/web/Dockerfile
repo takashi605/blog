@@ -37,6 +37,7 @@ CMD ["pnpm", "run", "web-dev"]
 
 # / ビルド用ステージ /
 FROM dev as builder
+ENV NODE_ENV=""
 
 USER node
 
@@ -67,7 +68,7 @@ RUN pnpm exec next build
 # / 本番環境用ステージ /
 FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ARG FRONTEND_DIR=source/frontend
 ARG WEB_DIR=$FRONTEND_DIR/packages/web
 
