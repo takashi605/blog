@@ -56,9 +56,9 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
           build-args: |
-            "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}"
-            "NEXT_PUBLIC_CLOUDINARY_API_KEY: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}"
-            "CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}"
+            NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+            NEXT_PUBLIC_CLOUDINARY_API_KEY=${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
 
       - name: "api Image の Build と Push"
         uses: docker/build-push-action@v5
