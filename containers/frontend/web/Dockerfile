@@ -79,8 +79,15 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/publi
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/standalone/packages/pruned ./
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/static ./.next/static
 
+# ビルド引数を再度宣言
+ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+ARG NEXT_PUBLIC_CLOUDINARY_API_KEY
+ARG CLOUDINARY_API_SECRET
+
 # 環境変数を設定
-ENV CLOUDINARY_API_SECRET="${CLOUDINARY_API_SECRET}"
+ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}" \
+    NEXT_PUBLIC_CLOUDINARY_API_KEY="${NEXT_PUBLIC_CLOUDINARY_API_KEY}" \
+    CLOUDINARY_API_SECRET="${CLOUDINARY_API_SECRET}"
 
 # ポートを開放
 EXPOSE 3000
