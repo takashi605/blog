@@ -4,18 +4,6 @@ import { createBdd } from 'playwright-bdd';
 const { Given, Then } = createBdd();
 
 Given('正常な記事が取得できるページにアクセスする', async ({ page }) => {
-  // コンソールメッセージをキャプチャ
-  page.on('console', (msg) => {
-    console.log(`ブラウザコンソールログ: ${msg.type()}: ${msg.text()}`);
-  });
-
-  // クライアントサイドの例外をキャプチャ
-  page.on('pageerror', (err) => {
-    console.log(
-      `ブラウザページエラー: ${err.toString()}\nスタックトレース:\n${err.stack}`,
-    );
-  });
-
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
