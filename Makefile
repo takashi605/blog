@@ -36,6 +36,10 @@ mk8s-delete-tilt-images:
 	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove || true
 	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -r -I {} docker rmi {} || true
 
+# 参考：https://discuss.kubernetes.io/t/microk8s-images-prune-utility-for-production-servers/15874/2
+mk8s-prune:
+	crictl -r unix:///var/snap/microk8s/common/run/containerd.sock rmi --prune
+
 ###
 ## ingress 系
 ###
@@ -181,3 +185,12 @@ api-test-run:
 ###
 blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
+
+
+###
+## デバッグ用
+###
+check-docker-disk-usage:
+	@sudo du -h --max-depth=1 /var/lib/docker | sort -hr
+check-mk8s-disk-usage:
+	@sudo du -h --max-depth=1 /var/snap/microk8s/common | sort -hr

@@ -1,5 +1,6 @@
 import { BlogPost } from './index';
-import { ContentType, createContent } from './postContents/content';
+import { H2, H3 } from './postContents/heading';
+import { Paragraph } from './postContents/paragraph';
 
 describe('エンティティ: 投稿記事', () => {
   it('記事タイトルを生成できる', () => {
@@ -8,23 +9,21 @@ describe('エンティティ: 投稿記事', () => {
     expect(blogPost.getTitleText()).toBe(title);
   });
 
+  it('サムネイル画像を持っている', () => {
+    const title = '記事タイトル';
+    const blogPost = new BlogPost(title);
+    const imagePath = 'path/to/image';
+    blogPost.setThumbnail(imagePath);
+
+    const thumbnail = blogPost.getThumbnail();
+    expect(thumbnail.getPath()).toBe(imagePath);
+  });
+
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
-    const h2 = createContent({
-      id: 1,
-      type: ContentType.H2,
-      value: 'h2見出し',
-    });
-    const h3 = createContent({
-      id: 2,
-      type: ContentType.H3,
-      value: 'h3見出し',
-    });
-    const paragraph1 = createContent({
-      id: 3,
-      type: ContentType.Paragraph,
-      value: '段落',
-    });
+    const h2 = new H2(1, 'h2見出し');
+    const h3 = new H3(2, 'h3見出し');
+    const paragraph1 = new Paragraph(3, '段落');
     const blogPost = new BlogPost(title)
       .addContent(h2)
       .addContent(h3)
@@ -32,17 +31,21 @@ describe('エンティティ: 投稿記事', () => {
     const contents = blogPost.getContents();
     expect(contents.length).toBe(3);
 
-    expect(contents[0].getValue()).toBe('h2見出し');
-    expect(contents[0].getType()).toBe('h2');
-    expect(contents[0].getId()).toBe(1);
+    // TODO 一時的に不適切な定数化をしているので、後で修正する
+    const h2Content = contents[0] as H2;
+    expect(h2Content.getValue()).toBe('h2見出し');
+    expect(h2Content.getType()).toBe('h2');
+    expect(h2Content.getId()).toBe(1);
 
-    expect(contents[1].getValue()).toBe('h3見出し');
-    expect(contents[1].getType()).toBe('h3');
-    expect(contents[1].getId()).toBe(2);
+    const h3Content = contents[1] as H2;
+    expect(h3Content.getValue()).toBe('h3見出し');
+    expect(h3Content.getType()).toBe('h3');
+    expect(h3Content.getId()).toBe(2);
 
-    expect(contents[2].getValue()).toBe('段落');
-    expect(contents[2].getType()).toBe('paragraph');
-    expect(contents[2].getId()).toBe(3);
+    const pContent = contents[2] as H2;
+    expect(pContent.getValue()).toBe('段落');
+    expect(pContent.getType()).toBe('paragraph');
+    expect(pContent.getId()).toBe(3);
   });
 
   it('記事の投稿日付を取得できる', () => {

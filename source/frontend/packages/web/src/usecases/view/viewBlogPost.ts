@@ -1,7 +1,7 @@
 import {
   BlogPostDTOBuilder,
   type ViewBlogPostDTO,
-} from '@/usecases/view/output/dto';
+} from '@/usecases/view/output/dto/index';
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder/index';
 

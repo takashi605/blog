@@ -1,42 +1,29 @@
-import type {
-  BlogPostContentProps,
-  BlogPostDateProps,
-  BlogPostTitleProps,
-} from '@/components/models/blogPost/view/controllers/types';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import Thumbnail from '@/components/models/blogPost/view/controllers/Thumbnail';
+import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
+import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
+import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { memo } from 'react';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
   blogPost: ViewBlogPostDTO;
-  Title: Title;
-  Date: Date;
-  Content: Content;
 };
 
-// render props するコンポーネントのインターフェースを定義
-type Content = React.ComponentType<BlogPostContentProps>;
-type Title = React.ComponentType<BlogPostTitleProps>;
-type Date = React.ComponentType<BlogPostDateProps>;
-
-function ViewBlogPostController({
-  blogPost,
-  Title,
-  Date,
-  Content,
-}: ViewBlogPostControllerProps) {
+function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
   return (
     <article className={styles.article}>
       <div className={styles.datesWrapper}>
-        <Date label="投稿日" date={blogPost.postDate} />
-        <Date label="更新日" date={blogPost.lastUpdateDate} />
+        <BlogPostDate label="投稿日" date={blogPost.postDate} />
+        <BlogPostDate label="更新日" date={blogPost.lastUpdateDate} />
       </div>
       <div className={styles.blogTitle}>
-        <Title>{blogPost?.title}</Title>
+        <BlogPostTitle>{blogPost?.title}</BlogPostTitle>
       </div>
+      <Thumbnail thumbnail={blogPost.thumbnail} />
       {blogPost?.contents.map((content) => (
         <div key={content.id} className={generateContentClass(content.type)}>
-          <Content type={content.type} value={content.value} />
+          <ContentRenderer content={content} />
         </div>
       ))}
     </article>

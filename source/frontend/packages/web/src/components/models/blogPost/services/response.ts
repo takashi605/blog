@@ -1,4 +1,5 @@
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto';
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
+import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {
   createBlogPostBuilder,
@@ -8,12 +9,12 @@ import {
 export type BlogPostResponse = {
   id: number;
   title: string;
+  thumbnail: {
+    path: string;
+  };
   postDate: string;
   lastUpdateDate: string;
-  contents: {
-    type: string;
-    value: string;
-  }[];
+  contents: ContentForDTO[];
 };
 
 export const responseToViewBlogPost = (
@@ -29,25 +30,28 @@ export const responseToViewBlogPost = (
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
   const viewBlogPostInput = createBlogPostBuilder()
     .setPostTitle(response.title)
+    .setThumbnail(response.thumbnail.path)
     .setPostDate(response.postDate)
     .setLastUpdateDate(response.lastUpdateDate);
 
-  mapResponseContentToBlogPost(response, viewBlogPostInput);
+  responseContentToBlogPost(response, viewBlogPostInput);
 
   return viewBlogPostInput;
 };
 
-const mapResponseContentToBlogPost = (
+const responseContentToBlogPost = (
   response: BlogPostResponse,
   viewBlogPostInput: BlogPostBuilder,
 ) => {
   response.contents.forEach((content) => {
     if (content.type === 'h2') {
-      viewBlogPostInput.addH2(content.value);
+      viewBlogPostInput.addH2(content.id, content.text);
     } else if (content.type === 'h3') {
-      viewBlogPostInput.addH3(content.value);
+      viewBlogPostInput.addH3(content.id, content.text);
     } else if (content.type === 'paragraph') {
-      viewBlogPostInput.addParagraph(content.value);
+      viewBlogPostInput.addParagraph(content.id, content.text);
+    } else if (content.type === 'image') {
+      viewBlogPostInput.addImage(content.id, content.path);
     }
   });
 };

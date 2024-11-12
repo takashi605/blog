@@ -1,30 +1,17 @@
-import { EntityError } from '../../error/error';
-import { createH2, createH3 } from './heading';
-import { Paragraph } from './paragraph';
+import type { ImageContent } from '../postContents/image';
+import type { H2, H3 } from './heading';
+import type { Paragraph } from './paragraph';
 
 export const enum ContentType {
   H2 = 'h2',
   H3 = 'h3',
   Paragraph = 'paragraph',
+  Image = 'image',
 }
 
-export type Content = {
+export type ContentBase = {
   getId: () => number;
-  getValue: () => string;
   getType: () => ContentType;
 };
 
-type ContentParams = { id: number; type: ContentType; value: string };
-
-export const createContent = (params: ContentParams): Content => {
-  switch (params.type) {
-    case 'h2':
-      return createH2(params.id, params.value);
-    case 'h3':
-      return createH3(params.id, params.value);
-    case 'paragraph':
-      return new Paragraph(params.id, params.value);
-    default:
-      throw new EntityError('不明なコンテントタイプです');
-  }
-};
+export type Content = H2 | H3 | Paragraph | ImageContent;

@@ -10,6 +10,13 @@ Given('正常な記事が取得できるページにアクセスする', async (
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/1`);
 });
 
+Then('記事サムネイル が表示される', async ({ page }) => {
+  const htmlContent = await page.content();
+  console.log('ページのHTML内容:', htmlContent);
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+  await expect(thumbnailImage).toBeVisible();
+});
+
 Then('記事タイトル が表示される', async ({ page }) => {
   const title = page.locator('h1');
 
@@ -46,6 +53,16 @@ Then('h3見出し が表示される', async ({ page }) => {
 
   for (let i = 0; i < count; i++) {
     await expect(h3.nth(i).textContent).not.toBe('');
+  }
+});
+
+Then('画像コンテンツ が表示される', async ({ page }) => {
+  const contentImages = page.getByRole('img', { name: '画像コンテンツ' });
+  const count = await contentImages.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    await expect(contentImages.nth(i)).toBeVisible();
   }
 });
 
@@ -87,4 +104,3 @@ Then(
     await expect(page.getByText(errorMessage)).toBeVisible();
   },
 );
-

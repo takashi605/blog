@@ -1,17 +1,24 @@
 import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
+import { H2, H3 } from '../postContents/heading';
+import { ImageContent } from '../postContents/image';
+import { Paragraph } from '../postContents/paragraph';
 
-describe('ユースケース: 投稿記事を生成するビルダークラス', () => {
+describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
     const builder = createBlogPostBuilder()
+      .setThumbnail('path/to/image')
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1');
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1')
+      .addImage(4, 'path/to/image');
     const blogPost = builder.build();
 
     expect(blogPost.getTitleText()).toBe('記事タイトル');
+
+    expect(blogPost.getThumbnail().getPath()).toBe('path/to/image');
 
     const expectedPostDate = new Date('2021-01-01');
     expect(blogPost.getPostDate()).toEqual(expectedPostDate);
@@ -19,15 +26,24 @@ describe('ユースケース: 投稿記事を生成するビルダークラス',
     const expectedLastUpdateDate = new Date('2021-01-02');
     expect(blogPost.getLastUpdateDate()).toEqual(expectedLastUpdateDate);
 
-    expect(blogPost.getContents().length).toBe(3);
+    expect(blogPost.getContents().length).toBe(4);
 
-    expect(blogPost.getContents()[0].getValue()).toBe('h2見出し1');
-    expect(blogPost.getContents()[0].getType()).toBe('h2');
-
-    expect(blogPost.getContents()[1].getValue()).toBe('h3見出し1');
-    expect(blogPost.getContents()[1].getType()).toBe('h3');
-
-    expect(blogPost.getContents()[2].getValue()).toBe('段落1');
-    expect(blogPost.getContents()[2].getType()).toBe('paragraph');
+    blogPost.getContents().forEach((content, index) => {
+      if (content instanceof H2) {
+        expect(content.getValue()).toBe(`h${index + 2}見出し1`);
+        expect(content.getType()).toBe(`h${index + 2}`);
+      } else if (content instanceof H3) {
+        expect(content.getValue()).toBe('h3見出し1');
+        expect(content.getType()).toBe('h3');
+      } else if (content instanceof Paragraph) {
+        expect(content.getValue()).toBe('段落1');
+        expect(content.getType()).toBe('paragraph');
+      } else if (content instanceof ImageContent) {
+        expect(content.getPath()).toBe('path/to/image');
+        expect(content.getType()).toBe('image');
+      } else {
+        fail('不正なコンテントが含まれています');
+      }
+    });
   });
 });

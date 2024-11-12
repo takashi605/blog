@@ -1,19 +1,20 @@
 import { UsecaseError } from '@/usecases/error';
+import { createContentToDTOContext } from '@/usecases/view/output/dto/contentToDTO';
+import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 
 export type ViewBlogPostDTO = {
   readonly title: string;
+  readonly thumbnail: thumbnailDTO;
   readonly postDate: string;
   readonly lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentForDTO>;
 };
 
-type ContentForDTO = {
-  readonly id: number;
-  readonly value: string;
-  readonly type: string;
+export type thumbnailDTO = {
+  readonly path: string;
 };
 
 export class BlogPostDTOBuilder {
@@ -21,6 +22,18 @@ export class BlogPostDTOBuilder {
 
   constructor(blogPost: BlogPost) {
     this.blogPost = blogPost;
+  }
+
+  private extractThumbnailForDTO(): thumbnailDTO {
+    try {
+      return {
+        path: this.blogPost.getThumbnail().getPath(),
+      };
+    } catch {
+      throw new UsecaseError(
+        'サムネイル画像が存在しない記事を生成しようとしました',
+      );
+    }
   }
 
   private extractPostDateForDTO(): string {
@@ -48,16 +61,14 @@ export class BlogPostDTOBuilder {
   }
 
   private createContentForDTO(content: Content): ContentForDTO {
-    return {
-      id: content.getId(),
-      value: content.getValue(),
-      type: content.getType(),
-    };
+    const dtoCreator = createContentToDTOContext(content);
+    return dtoCreator.toDTO();
   }
 
   build(): ViewBlogPostDTO {
     return {
       title: this.blogPost.getTitleText(),
+      thumbnail: this.extractThumbnailForDTO(),
       postDate: this.extractPostDateForDTO(),
       lastUpdateDate: this.extractLastUpdateDateForDTO(),
       contents: this.extractContentsForDTO(),

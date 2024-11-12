@@ -1,9 +1,6 @@
 import { mockApiForServer } from '@/apiMock/serverForNode';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
-import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
-import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
-import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 
@@ -24,14 +21,7 @@ const renderTestComponent = async () =>
 // まとめたコンポーネント
 async function ViewBlogPostControllerWithDependencies() {
   const blogPost = await fetchBlogPost(1);
-  return (
-    <ViewBlogPostController
-      blogPost={blogPost}
-      Title={BlogPostTitle}
-      Content={ContentRenderer}
-      Date={BlogPostDate}
-    />
-  );
+  return <ViewBlogPostController blogPost={blogPost} />;
 }
 
 describe('コンポーネント: viewBlogPostController', () => {
@@ -40,8 +30,23 @@ describe('コンポーネント: viewBlogPostController', () => {
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
 
+    // タイトルが取得できるまで待機し、空文字でないことを確認
     await waitFor(() => {
       expect(title.textContent).not.toBe('');
+    });
+  });
+
+  it('サムネイル画像が表示されている', async () => {
+    await renderTestComponent();
+    const mainVisual = screen.getByRole('img', {
+      name: 'サムネイル画像',
+    }) as HTMLImageElement;
+    expect(mainVisual).toBeInTheDocument();
+
+    // サムネイル画像が取得できるまで待機し、path が空文字でないことを確認
+    // TODO localhost/ は環境によって変わるため、動的に取得するように修正する
+    await waitFor(() => {
+      expect(mainVisual.src.replace('http://localhost/', '')).not.toBe('');
     });
   });
 
@@ -85,6 +90,13 @@ describe('コンポーネント: viewBlogPostController', () => {
 
       const p = await screen.findAllByRole('paragraph');
       expect(p).not.toHaveLength(0);
+    });
+
+    it('画像が表示されている', async () => {
+      await renderTestComponent();
+
+      const img = await screen.findAllByRole('img', { name: '画像コンテンツ' });
+      expect(img).not.toHaveLength(0);
     });
   });
 });

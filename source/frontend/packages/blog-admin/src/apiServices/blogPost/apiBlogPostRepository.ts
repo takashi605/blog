@@ -3,6 +3,7 @@ import type {
   CreatedBlogPost,
 } from '@/usecases/create/createBlogPost';
 import type { BlogPost } from 'entities/src/blogPost';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { z } from 'zod';
 
 export const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
@@ -50,6 +51,14 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       postDate: blogPost.getPostDate().toISOString().split('T')[0],
       lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
       contents: blogPost.getContents().map((content) => {
+        // TODO: ここで instanceof を使っているのは役割が集中して良くないので、
+        // ストラテジークラスなどを使って責務を分離する
+        if (content instanceof ImageContent) {
+          return {
+            type: 'image',
+            text: content.getPath(),
+          };
+        }
         return {
           type: content.getType(),
           text: content.getValue(),

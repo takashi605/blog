@@ -24,9 +24,9 @@ describe('ユースケース: 記事の投稿', () => {
 
     const builder = createBlogPostBuilder()
       .setPostTitle('記事タイトル')
-      .addH2('h2見出し1')
-      .addH3('h3見出し1')
-      .addParagraph('段落1');
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1');
     const blogPostCreator = new BlogPostCreator(builder, mockRepository);
 
     const createdBlogPost = await blogPostCreator.execute();
