@@ -37,7 +37,7 @@ CMD ["pnpm", "run", "web-dev"]
 
 # / ビルド用ステージ /
 FROM dev as builder
-ENV NODE_ENV produciton
+ENV NODE_ENV production
 
 USER node
 
