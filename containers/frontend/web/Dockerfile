@@ -79,6 +79,9 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/publi
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/standalone/packages/pruned ./
 COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/static ./.next/static
 
+# 環境変数を設定
+ENV CLOUDINARY_API_SECRET="${CLOUDINARY_API_SECRET}"
+
 # ポートを開放
 EXPOSE 3000
 ENV PORT 3000
