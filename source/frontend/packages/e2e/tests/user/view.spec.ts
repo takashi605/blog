@@ -11,13 +11,17 @@ Given('正常な記事が取得できるページにアクセスする', async (
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
+  const htmlContent = await page.content();
+  console.log('ページのHTML内容:', htmlContent);
+  // デバッグ用：ページのHTML内容をログ出力
   // コンソールメッセージをキャプチャ
   page.on('console', (msg) => {
     console.log(`ブラウザコンソールログ: ${msg.type()}: ${msg.text()}`);
   });
-  // デバッグ用：ページのHTML内容をログ出力
-  const htmlContent = await page.content();
-  console.log('ページのHTML内容:', htmlContent);
+  // クライアントサイドの例外をキャプチャ
+  page.on('pageerror', (err) => {
+    console.log(`ブラウザページエラー: ${err.toString()}`);
+  });
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
   await expect(thumbnailImage).toBeVisible();
 });
