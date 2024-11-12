@@ -11,6 +11,10 @@ Given('正常な記事が取得できるページにアクセスする', async (
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
+  // コンソールメッセージをキャプチャ
+  page.on('console', (msg) => {
+    console.log(`ブラウザコンソールログ: ${msg.type()}: ${msg.text()}`);
+  });
   // デバッグ用：ページのHTML内容をログ出力
   const htmlContent = await page.content();
   console.log('ページのHTML内容:', htmlContent);
