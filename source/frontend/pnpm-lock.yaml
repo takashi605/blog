@@ -132,6 +132,12 @@ importers:
 
   packages/entities: {}
 
+  packages/service:
+    dependencies:
+      entities:
+        specifier: workspace:*
+        version: link:../entities
+
   packages/web:
     dependencies:
       destyle.css:
