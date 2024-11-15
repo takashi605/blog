@@ -18,6 +18,7 @@ describe('apiBlogPostRepository', () => {
     const apiRepository = new ApiBlogPostRepository();
 
     const blogPostBuilder = createBlogPostBuilder()
+      .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
@@ -29,12 +30,13 @@ describe('apiBlogPostRepository', () => {
     const resp = await apiRepository.save(blogPost);
     expect(resp).toEqual({
       title: '記事タイトル',
+      thumbnail: { path: 'path/to/thumbnail' },
       postDate: '1999-01-01',
       lastUpdateDate: '1999-01-02',
       contents: [
-        { type: 'h2', text: 'h2見出し1' },
-        { type: 'h3', text: 'h3見出し1' },
-        { type: 'paragraph', text: '段落1' },
+        { id: 1, type: 'h2', text: 'h2見出し1' },
+        { id: 2, type: 'h3', text: 'h3見出し1' },
+        { id: 3, type: 'paragraph', text: '段落1' },
       ],
     });
   });
@@ -45,6 +47,7 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     const apiRepository = new ApiBlogPostRepository();
 
     const blogPostBuilder = createBlogPostBuilder()
+      .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
@@ -57,12 +60,13 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     const today = onlyYMD(new Date());
     expect(createdBlogPost).toEqual({
       title: '記事タイトル',
+      thumbnail: { path: 'path/to/thumbnail' },
       postDate: today,
       lastUpdateDate: today,
       contents: [
-        { type: 'h2', text: 'h2見出し1' },
-        { type: 'h3', text: 'h3見出し1' },
-        { type: 'paragraph', text: '段落1' },
+        { id: 1, type: 'h2', text: 'h2見出し1' },
+        { id: 2, type: 'h3', text: 'h3見出し1' },
+        { id: 3, type: 'paragraph', text: '段落1' },
       ],
     });
   });

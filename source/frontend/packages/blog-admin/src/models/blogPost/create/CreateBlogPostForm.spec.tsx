@@ -67,8 +67,19 @@ describe('CreateBlogPostForm', () => {
 
     await userEvent.click(getSubmitButton());
 
+    if (createdBlogPosts[0].contents[0].type !== 'h2') {
+      throw new Error(
+        `h2 コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[0].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[0].type).toEqual('h2');
     expect(createdBlogPosts[0].contents[0].text).toEqual('入力された h2');
+
+    if (createdBlogPosts[0].contents[1].type !== 'h2') {
+      throw new Error(
+        `h2 コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[1].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[1].type).toEqual('h2');
     expect(createdBlogPosts[0].contents[1].text).toEqual('再度入力された h2');
 
@@ -103,8 +114,19 @@ describe('CreateBlogPostForm', () => {
 
     await userEvent.click(getSubmitButton());
 
+    if (createdBlogPosts[0].contents[0].type !== 'h3') {
+      throw new Error(
+        `h3 コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[0].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[0].type).toEqual('h3');
     expect(createdBlogPosts[0].contents[0].text).toEqual('入力された h3');
+
+    if (createdBlogPosts[0].contents[1].type !== 'h3') {
+      throw new Error(
+        `h3 コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[1].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[1].type).toEqual('h3');
     expect(createdBlogPosts[0].contents[1].text).toEqual('再度入力された h3');
 
@@ -139,10 +161,21 @@ describe('CreateBlogPostForm', () => {
 
     await userEvent.click(getSubmitButton());
 
+    if (createdBlogPosts[0].contents[0].type !== 'paragraph') {
+      throw new Error(
+        `paragraph コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[0].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[0].type).toEqual('paragraph');
     expect(createdBlogPosts[0].contents[0].text).toEqual(
       '入力された paragraph',
     );
+
+    if (createdBlogPosts[0].contents[1].type !== 'paragraph') {
+      throw new Error(
+        `paragraph コンテントを期待しましたが、別のコンテントタイプでした: ${createdBlogPosts[0].contents[1].type}`,
+      );
+    }
     expect(createdBlogPosts[0].contents[1].type).toEqual('paragraph');
     expect(createdBlogPosts[0].contents[1].text).toEqual(
       '再度入力された paragraph',
