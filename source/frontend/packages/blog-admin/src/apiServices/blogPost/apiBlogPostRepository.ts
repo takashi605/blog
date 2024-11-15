@@ -1,12 +1,12 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type {
+  BlogPostDTO,
   BlogPostRepository,
-  CreatedBlogPost,
 } from 'service/src/blogPostRepository';
 import { z } from 'zod';
 
-export const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
+export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({
   title: z.string(),
   postDate: z.string(),
   lastUpdateDate: z.string(),
@@ -19,7 +19,7 @@ export const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({
 });
 
 export class ApiBlogPostRepository implements BlogPostRepository {
-  async save(blogPost: BlogPost): Promise<CreatedBlogPost> {
+  async save(blogPost: BlogPost): Promise<BlogPostDTO> {
     const body = this.blogPostToJson(blogPost);
     const response = await this.post(body);
 

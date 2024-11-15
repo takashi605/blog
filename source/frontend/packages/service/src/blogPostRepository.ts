@@ -1,6 +1,6 @@
 import type { BlogPost } from 'entities/src/blogPost';
 
-export type CreatedBlogPost = {
+export type BlogPostDTO = {
   title: string;
   postDate: string;
   lastUpdateDate: string;
@@ -11,5 +11,5 @@ export type CreatedBlogPost = {
 };
 
 export type BlogPostRepository = {
-  save(blogPost: BlogPost): Promise<CreatedBlogPost>;
+  save(blogPost: BlogPost): Promise<BlogPostDTO>;
 };

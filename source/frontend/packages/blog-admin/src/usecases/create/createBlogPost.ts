@@ -1,8 +1,8 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type {
+  BlogPostDTO,
   BlogPostRepository,
-  CreatedBlogPost,
 } from 'service/src/blogPostRepository';
 
 export class BlogPostCreator {
@@ -23,7 +23,7 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  async execute(): Promise<CreatedBlogPost> {
+  async execute(): Promise<BlogPostDTO> {
     const blogPost = this.buildBlogPost();
     const createdBlogPost = await this.repository.save(blogPost);
     return createdBlogPost;
