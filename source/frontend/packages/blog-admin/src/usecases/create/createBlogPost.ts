@@ -1,7 +1,7 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 
 export class BlogPostCreator {
   private builder: BlogPostBuilder;
