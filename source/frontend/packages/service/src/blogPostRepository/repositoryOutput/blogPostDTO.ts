@@ -1,4 +1,4 @@
-import type { ContentForDTO } from './contentToDTO/types';
+import type { ContentForDTO } from './contentDTO';
 
 export type BlogPostDTO = {
   readonly title: string;
