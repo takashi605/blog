@@ -1,9 +1,7 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
-import type {
-  BlogPostDTO,
-  BlogPostRepository,
-} from 'service/src/blogPostRepository';
+import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/repositoryOutput/blogPostDTO';
 import { z } from 'zod';
 
 export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({

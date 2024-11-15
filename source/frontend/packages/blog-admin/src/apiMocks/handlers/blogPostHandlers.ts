@@ -1,6 +1,6 @@
 import { blogPostResponseSchema } from '@/apiServices/blogPost/apiBlogPostRepository';
 import { http, HttpResponse } from 'msw';
-import type { BlogPostDTO } from 'service/src/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/repositoryOutput/blogPostDTO';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
 export const clearCreatedBlogPosts = () => {
