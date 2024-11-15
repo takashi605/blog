@@ -1,9 +1,9 @@
+import type { BlogPost } from 'entities/src/blogPost';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type {
   BlogPostRepository,
   CreatedBlogPost,
-} from '@/usecases/create/createBlogPost';
-import type { BlogPost } from 'entities/src/blogPost';
-import { ImageContent } from 'entities/src/blogPost/postContents/image';
+} from 'service/src/blogPostRepository';
 import { z } from 'zod';
 
 export const blogPostResponseSchema: z.ZodType<CreatedBlogPost> = z.object({

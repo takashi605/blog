@@ -1,6 +1,6 @@
 import { blogPostResponseSchema } from '@/apiServices/blogPost/apiBlogPostRepository';
-import type { CreatedBlogPost } from '@/usecases/create/createBlogPost';
 import { http, HttpResponse } from 'msw';
+import type { CreatedBlogPost } from 'service/src/blogPostRepository';
 
 export const createdBlogPosts: CreatedBlogPost[] = [];
 export const clearCreatedBlogPosts = () => {

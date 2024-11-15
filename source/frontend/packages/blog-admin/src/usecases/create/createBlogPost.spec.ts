@@ -1,5 +1,5 @@
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
-import type { BlogPostRepository } from './createBlogPost';
+import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import { BlogPostCreator } from './createBlogPost';
 
 const mockRepository: BlogPostRepository = {
