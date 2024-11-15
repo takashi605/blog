@@ -58,7 +58,6 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   private async post(blogPostJson: string): Promise<Response> {
-    console.log('post 内部：', blogPostJson);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
       method: 'POST',
       headers: {
