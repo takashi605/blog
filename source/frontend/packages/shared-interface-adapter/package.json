@@ -9,6 +9,8 @@
     "check": "prettier --check . && eslint . && tsc --noEmit"
   },
   "dependencies": {
-    "entities": "workspace:*"
+    "entities": "workspace:*",
+    "service": "workspace:*",
+    "zod": "^3.23.8"
   }
 }
