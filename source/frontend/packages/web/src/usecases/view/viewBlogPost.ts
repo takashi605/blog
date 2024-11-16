@@ -13,3 +13,15 @@ export const viewBlogPost = (
   const dto = new BlogPostDTOBuilder(blogPost).build();
   return dto;
 };
+
+export class ViewBlogPostUseCase {
+  private blogPostBuilder: BlogPostBuilder;
+
+  constructor(blogPostBuilder: BlogPostBuilder) {
+    this.blogPostBuilder = blogPostBuilder;
+  }
+
+  execute(): ViewBlogPostDTO {
+    return viewBlogPost(this.blogPostBuilder);
+  }
+}
