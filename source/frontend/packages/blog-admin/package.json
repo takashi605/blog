@@ -31,6 +31,7 @@
     "@hookform/resolvers": "^3.9.0",
     "destyle.css": "^4.0.1",
     "entities": "workspace:*",
+    "shared-interface-adapter": "workspace:*",
     "service": "workspace:*",
     "msw": "^2.4.3",
     "next": "14.2.4",

@@ -1,12 +1,24 @@
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { mockApiForServer } from '../../apiMocks/serverForNode';
 import { BlogPostCreator } from './createBlogPost';
 
-const mockRepository: BlogPostRepository = {
-  save: jest.fn(),
-};
+beforeAll(() => {
+  mockApiForServer.listen();
+});
+afterEach(async () => {
+  mockApiForServer.resetHandlers();
+});
+afterAll(() => {
+  mockApiForServer.close();
+});
 
 describe('ユースケース: 記事の投稿', () => {
+  const mockRepository: BlogPostRepository = {
+    save: jest.fn(),
+  };
+
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
     const mockSave = jest.fn().mockReturnValue({
       title: '記事タイトル',
@@ -64,6 +76,38 @@ describe('ユースケース: 記事の投稿', () => {
 
     expect(postDate).toBe(today);
     expect(lastUpdateDate).toBe(today);
+  });
+});
+
+describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
+  it('api を通じて JSON 形式の記録データが保存できる', async () => {
+    const apiRepository = new ApiBlogPostRepository(
+      process.env.NEXT_PUBLIC_API_URL!,
+    );
+
+    const blogPostBuilder = createBlogPostBuilder()
+      .setThumbnail('path/to/thumbnail')
+      .setPostTitle('記事タイトル')
+      .setPostDate('1999-01-01')
+      .setLastUpdateDate('1999-01-02')
+      .addH2(1, 'h2見出し1')
+      .addH3(2, 'h3見出し1')
+      .addParagraph(3, '段落1');
+    const blogPostCreator = new BlogPostCreator(blogPostBuilder, apiRepository);
+    const createdBlogPost = await blogPostCreator.execute();
+
+    const today = onlyYMD(new Date());
+    expect(createdBlogPost).toEqual({
+      title: '記事タイトル',
+      thumbnail: { path: 'path/to/thumbnail' },
+      postDate: today,
+      lastUpdateDate: today,
+      contents: [
+        { id: 1, type: 'h2', text: 'h2見出し1' },
+        { id: 2, type: 'h3', text: 'h3見出し1' },
+        { id: 3, type: 'paragraph', text: '段落1' },
+      ],
+    });
   });
 });
 

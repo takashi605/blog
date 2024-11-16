@@ -15,7 +15,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  setupFiles: ['./jest.polyfills.mjs'],
+  setupFiles: ['./jest.polyfills.mjs', './jest.setup.ts'],
 };
 
 export default createJestConfig(config);
