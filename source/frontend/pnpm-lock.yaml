@@ -141,6 +141,12 @@ importers:
         specifier: workspace:*
         version: link:../entities
 
+  packages/shared-interface-adapter:
+    dependencies:
+      entities:
+        specifier: workspace:*
+        version: link:../entities
+
   packages/web:
     dependencies:
       destyle.css:
