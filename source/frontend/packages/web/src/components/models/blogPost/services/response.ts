@@ -1,10 +1,10 @@
 import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
-import { viewBlogPost } from '@/usecases/view/viewBlogPost';
 import {
   createBlogPostBuilder,
   type BlogPostBuilder,
 } from 'entities/src/blogPost/blogPostBuilder/index';
+import { ViewBlogPostUseCase } from '../../../../usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
   id: number;
@@ -22,7 +22,7 @@ export const responseToViewBlogPost = (
 ): ViewBlogPostDTO => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
-  const blogPost = viewBlogPost(viewBlogPostInput);
+  const blogPost = new ViewBlogPostUseCase(viewBlogPostInput).execute();
 
   return blogPost;
 };
