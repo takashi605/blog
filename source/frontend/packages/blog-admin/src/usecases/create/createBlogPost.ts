@@ -3,7 +3,7 @@ import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 
-export class BlogPostCreator {
+export class CreateBlogPostUseCase {
   private builder: BlogPostBuilder;
   private repository: BlogPostRepository;
 

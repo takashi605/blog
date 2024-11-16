@@ -2,7 +2,7 @@ import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import { BlogPostCreator } from './createBlogPost';
+import { CreateBlogPostUseCase } from './createBlogPost';
 
 const mockApiForServer = setupMockApiForServer(
   process.env.NEXT_PUBLIC_API_URL!,
@@ -42,7 +42,7 @@ describe('ユースケース: 記事の投稿', () => {
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
       .addParagraph(3, '段落1');
-    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
 
     const createdBlogPost = await blogPostCreator.execute();
 
@@ -70,7 +70,7 @@ describe('ユースケース: 記事の投稿', () => {
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02');
-    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
     const blogPost = blogPostCreator.buildBlogPost();
 
     const today = onlyYMD(new Date());
@@ -96,7 +96,10 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
       .addParagraph(3, '段落1');
-    const blogPostCreator = new BlogPostCreator(blogPostBuilder, apiRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(
+      blogPostBuilder,
+      apiRepository,
+    );
     const createdBlogPost = await blogPostCreator.execute();
 
     const today = onlyYMD(new Date());
