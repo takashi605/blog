@@ -9,6 +9,7 @@
     "check": "prettier --check . && eslint . && tsc --noEmit"
   },
   "dependencies": {
-    "entities": "workspace:*"
+    "entities": "workspace:*",
+    "uuid": "^11.0.3"
   }
 }
