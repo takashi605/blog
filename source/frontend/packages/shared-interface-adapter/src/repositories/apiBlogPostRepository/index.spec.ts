@@ -2,6 +2,7 @@ import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import { ApiBlogPostRepository } from '.';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 
+// TODO このパッケージ内で setupMockApiForServer の利用箇所が増えたら共通化する
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');
 beforeAll(() => {
   mockApiForServer.listen();
