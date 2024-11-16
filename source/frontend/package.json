@@ -36,5 +36,8 @@
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "dependencies": {
+    "jest-fixed-jsdom": "^0.0.9"
   }
 }

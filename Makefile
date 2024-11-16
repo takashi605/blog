@@ -149,6 +149,12 @@ frontend-test-unit:
 	cd source/frontend && pnpm shared-interface-adapter run test
 # & cd source/frontend && pnpm service run test
 
+frontend-test-unit-serial:
+	cd source/frontend && pnpm web run test \
+	&& pnpm entities run test \
+	&& pnpm blog-admin run test \
+	&& pnpm shared-interface-adapter run test
+
 ###
 ## e2e 系
 ###
