@@ -141,12 +141,12 @@ frontend-fix:
 
 frontend-test-unit:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n shared-interface-adapter\n" | \
+	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" | \
 	xargs -n 1 -P 5 -I {} pnpm {} run test
 
 frontend-test-unit-serialize:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n shared-interface-adapter\n" | \
+	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" | \
 	xargs -n 1 -P 1 -I {} pnpm {} run test
 
 ###
