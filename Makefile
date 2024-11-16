@@ -129,31 +129,23 @@ frontend-test:
 	$(MAKE) frontend-test-unit
 	$(MAKE) frontend-check
 frontend-check:
-	cd source/frontend/ && pnpm web run check & \
-	cd source/frontend/ && pnpm entities run check & \
-	cd source/frontend/ && pnpm blog-admin check & \
-	cd source/frontend/ && pnpm service check & \
-	cd source/frontend/ && pnpm shared-interface-adapter check
+	cd source/frontend/ && \
+	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" | \
+	xargs -n 1 -P 5 -I {} pnpm {} run check
 frontend-fix:
-	cd source/frontend/ && pnpm web run fix\
-	&& pnpm entities run fix\
-	&& pnpm blog-admin fix\
-	&& pnpm service fix\
-	&& pnpm shared-interface-adapter fix
+	cd source/frontend/ && \
+	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" | \
+	xargs -n 1 -P 5 -I {} pnpm {} run fix
 
-# テストがないパッケージはいったんコメントアウト
 frontend-test-unit:
-	cd source/frontend && pnpm web run test & \
-	cd source/frontend && pnpm entities run test & \
-	cd source/frontend && pnpm blog-admin run test & \
-	cd source/frontend && pnpm shared-interface-adapter run test
-# & cd source/frontend && pnpm service run test
+	cd source/frontend/ && \
+	printf "web\n entities\n blog-admin\n shared-interface-adapter\n" | \
+	xargs -n 1 -P 5 -I {} pnpm {} run test
 
-frontend-test-unit-serial:
-	cd source/frontend && pnpm web run test \
-	&& pnpm entities run test \
-	&& pnpm blog-admin run test \
-	&& pnpm shared-interface-adapter run test
+frontend-test-unit-serialize:
+	cd source/frontend/ && \
+	printf "web\n entities\n blog-admin\n shared-interface-adapter\n" | \
+	xargs -n 1 -P 1 -I {} pnpm {} run test
 
 ###
 ## e2e 系
