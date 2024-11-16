@@ -30,11 +30,13 @@ mk8s-make-local-cluster:
 
 mk8s-import-image:
 	docker save $(image_name) | sudo microk8s.ctr image import -
+
+# TODO 以下2つのコマンドを使わない形でイメージが整理できるか試している。使わなくてもよさそうなら削除する
 mk8s-get-tilt-images:
 	@sudo microk8s.ctr image list | grep $(image_name):tilt- | awk '{print $$1}'
 mk8s-delete-tilt-images:
 	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove || true
-	docker images --format '{{.Repository}}:{{ .Tag }}' | grep $(image_name):tilt- | xargs -r -I {} docker rmi {} || true
+	docker images --format '{{.Repository}}:{{ .Tag }}' | grep web:tilt-build | xargs -I {} docker images --format '{{.ID}}' --filter "reference={}" | xargs -r -I {} docker rmi -f {} || true
 
 # 参考：https://discuss.kubernetes.io/t/microk8s-images-prune-utility-for-production-servers/15874/2
 mk8s-prune:
@@ -203,6 +205,6 @@ blog-admin-build:
 ## デバッグ用
 ###
 check-docker-disk-usage:
-	@sudo du -h --max-depth=1 /var/lib/docker | sort -hr
+	@sudo du -h --max-depth=1 /var/lib/docker/overlay2 | sort -hr
 check-mk8s-disk-usage:
-	@sudo du -h --max-depth=1 /var/snap/microk8s/common | sort -hr
+	@sudo du -h --max-depth=1 /var/snap/microk8s/common/default-storage/container-registry-registry-claim-pvc-c6c5b40e-0bb8-443b-8b70-49f4ead98b6c/docker/registry/v2/blobs/sha256 | sort -hr
