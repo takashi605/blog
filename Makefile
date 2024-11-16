@@ -135,19 +135,19 @@ frontend-check:
 	cd source/frontend/ && pnpm service check & \
 	cd source/frontend/ && pnpm shared-interface-adapter check
 frontend-fix:
-	cd source/frontend/ && pnpm web run fix & \
-	cd source/frontend/ && pnpm entities run fix & \
-	cd source/frontend/ && pnpm blog-admin fix & \
-	cd source/frontend/ && pnpm service fix & \
-	cd source/frontend/ && pnpm shared-interface-adapter fix
+	cd source/frontend/ && pnpm web run fix\
+	&& pnpm entities run fix\
+	&& pnpm blog-admin fix\
+	&& pnpm service fix\
+	&& pnpm shared-interface-adapter fix
 
 # テストがないパッケージはいったんコメントアウト
 frontend-test-unit:
 	cd source/frontend && pnpm web run test & \
 	cd source/frontend && pnpm entities run test & \
-	cd source/frontend && pnpm blog-admin run test
+	cd source/frontend && pnpm blog-admin run test & \
+	cd source/frontend && pnpm shared-interface-adapter run test
 # & cd source/frontend && pnpm service run test
-# & cd source/frontend && pnpm shared-interface-adapter run test
 
 ###
 ## e2e 系

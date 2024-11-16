@@ -1,6 +1,6 @@
-import { mockApiForServer } from '@/apiMocks/serverForNode';
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import { ApiBlogPostRepository } from '.';
+import { mockApiForServer } from '../../apiMocks/serverForNode';
 
 beforeAll(() => {
   mockApiForServer.listen();
@@ -13,8 +13,8 @@ afterAll(() => {
 });
 
 describe('apiBlogPostRepository', () => {
-  it.skip('api を通じて JSON 形式の記録データが保存できる', async () => {
-    const apiRepository = new ApiBlogPostRepository();
+  it('api を通じて JSON 形式の記録データが保存できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
     const blogPostBuilder = createBlogPostBuilder()
       .setThumbnail('path/to/thumbnail')
