@@ -3,4 +3,4 @@ import { createAllHandlers } from './handlers';
 
 export const setupMockApiForServer = (baseUrl: string) => {
   return setupServer(...createAllHandlers(baseUrl));
-}
+};

@@ -1,4 +1,6 @@
 import { setupWorker } from 'msw/browser';
-import { allHandlers } from './handlers';
+import { createAllHandlers } from './handlers';
 
-export const mockApiForClient = setupWorker(...allHandlers);
+export const setupMockApiForServer = (baseUrl: string) => {
+  return setupWorker(...createAllHandlers(baseUrl));
+};
