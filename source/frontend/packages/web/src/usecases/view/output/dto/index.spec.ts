@@ -10,7 +10,7 @@ describe('DTO の生成', () => {
     const h2 = new H2(1, 'h2見出し');
     const h3 = new H3(2, 'h3見出し');
     const paragraph1 = new Paragraph(3, '段落');
-    const blogPost = new BlogPost(title)
+    const blogPost = new BlogPost(1, title)
       .setThumbnail(thumbnailPath)
       .addContent(h2)
       .addContent(h3)
@@ -60,7 +60,7 @@ describe('DTO の生成', () => {
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new BlogPost(title)
+    const blogPost = new BlogPost(1, title)
       .setThumbnail('path/to/image')
       .setLastUpdateDate('2021-01-02');
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
@@ -70,7 +70,7 @@ describe('DTO の生成', () => {
 
   it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new BlogPost(title)
+    const blogPost = new BlogPost(1, title)
       .setThumbnail('path/to/image')
       .setPostDate('2021-01-01');
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
@@ -80,7 +80,7 @@ describe('DTO の生成', () => {
 
   it('サムネイル画像が存在しない記事を生成しようとするとエラーが発生する', () => {
     const title = '記事タイトル';
-    const blogPost = new BlogPost(title)
+    const blogPost = new BlogPost(1, title)
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02');
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(

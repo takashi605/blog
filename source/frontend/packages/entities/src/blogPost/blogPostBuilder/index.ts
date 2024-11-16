@@ -70,7 +70,8 @@ export class BlogPostBuilder {
   }
 
   build() {
-    const blogPost = new BlogPost(this.postTitle)
+    // TODO id をメソッドチェーン等で設定できるようにする
+    const blogPost = new BlogPost(1, this.postTitle)
       .setThumbnail(this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
