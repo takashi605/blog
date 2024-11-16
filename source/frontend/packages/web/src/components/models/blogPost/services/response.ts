@@ -29,6 +29,7 @@ export const responseToViewBlogPost = (
 
 const responseToViewBlogPostInput = (response: BlogPostResponse) => {
   const viewBlogPostInput = createBlogPostBuilder()
+    .setId(response.id)
     .setPostTitle(response.title)
     .setThumbnail(response.thumbnail.path)
     .setPostDate(response.postDate)

@@ -42,6 +42,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   return blogPostHandlers;
 };
 
+// TODO id が 1 のデータを使いまわしているので、連番になるように修正する
 const successResponseForGet = {
   id: 1,
   title: '初めての技術スタックへの挑戦',

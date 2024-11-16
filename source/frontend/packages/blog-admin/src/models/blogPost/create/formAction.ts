@@ -9,6 +9,9 @@ export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
 > = async (formData) => {
   const blogPostBuilder = createBlogPostBuilder();
+
+  // TODO いったん id 1 で固定だが、UUID を生成するようにする
+  blogPostBuilder.setId(1);
   injectFormDataToBuilder(formData, blogPostBuilder);
 
   const blogPostCreator = setupBlogPostCreator(blogPostBuilder);

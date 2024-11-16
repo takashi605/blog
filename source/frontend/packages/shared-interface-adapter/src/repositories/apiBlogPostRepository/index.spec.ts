@@ -19,6 +19,7 @@ describe('apiBlogPostRepository', () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
     const blogPostBuilder = createBlogPostBuilder()
+      .setId(1)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
