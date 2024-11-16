@@ -6,7 +6,7 @@ WORKDIR /$FRONTEND_DIR
 COPY ./$FRONTEND_DIR ./
 RUN rm -rf /$FRONTEND_DIR/packages/web
 
-FROM mcr.microsoft.com/playwright:v1.46.1-jammy
+FROM mcr.microsoft.com/playwright:v1.48.2-jammy
 ARG FRONTEND_DIR=source/frontend
 ARG E2E_DIR=$FRONTEND_DIR/packages/e2e
 

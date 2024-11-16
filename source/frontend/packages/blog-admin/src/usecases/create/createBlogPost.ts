@@ -1,19 +1,7 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
-
-export type CreatedBlogPost = {
-  title: string;
-  postDate: string;
-  lastUpdateDate: string;
-  contents: {
-    type: string;
-    text: string;
-  }[];
-};
-
-export type BlogPostRepository = {
-  save(blogPost: BlogPost): Promise<CreatedBlogPost>;
-};
+import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 
 export class BlogPostCreator {
   private builder: BlogPostBuilder;
@@ -33,7 +21,7 @@ export class BlogPostCreator {
     return builder.build();
   }
 
-  async execute(): Promise<CreatedBlogPost> {
+  async execute(): Promise<BlogPostDTO> {
     const blogPost = this.buildBlogPost();
     const createdBlogPost = await this.repository.save(blogPost);
     return createdBlogPost;

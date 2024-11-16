@@ -1,7 +1,10 @@
-import { mockApiForServer } from '@/apiMock/serverForNode';
 import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import { HttpError } from '@/components/models/error/httpError';
+import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 
+const mockApiForServer = setupMockApiForServer(
+  process.env.NEXT_PUBLIC_API_URL!,
+);
 beforeAll(() => {
   mockApiForServer.listen();
 });

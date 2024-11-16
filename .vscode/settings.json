@@ -8,8 +8,8 @@
     "source.addMissingImports": "explicit", // 保存時に型の import を追加する
     "source.fixAll.eslint": "explicit" //  保存時に ESLint によるフォーマットを行う
   },
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
   "eslint.useESLintClass": true,
   "rust-analyzer.linkedProjects": [
     "source/backend/api/Cargo.toml",

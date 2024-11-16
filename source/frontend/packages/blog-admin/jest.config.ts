@@ -8,14 +8,11 @@ const createJestConfig = nextJest({
 
 const config: Config = {
   coverageProvider: 'v8',
-  testEnvironment: 'jsdom',
-  testEnvironmentOptions: {
-    customExportConditions: [],
-  },
+  testEnvironment: 'jest-fixed-jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  setupFiles: ['./jest.polyfills.mjs'],
+  setupFiles: ['../../jest.setup.ts'],
 };
 
 export default createJestConfig(config);

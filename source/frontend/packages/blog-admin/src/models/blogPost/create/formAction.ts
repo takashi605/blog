@@ -1,9 +1,9 @@
-import { ApiBlogPostRepository } from '@/apiServices/blogPost/apiBlogPostRepository';
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { BlogPostCreator } from '@/usecases/create/createBlogPost';
 import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { SubmitHandler } from 'react-hook-form';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
 export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
@@ -16,7 +16,10 @@ export const createBlogPostAction: SubmitHandler<
 };
 
 function setupBlogPostCreator(builder: BlogPostBuilder) {
-  const repository = new ApiBlogPostRepository();
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('API の URL が設定されていません');
+  }
+  const repository = new ApiBlogPostRepository(process.env.NEXT_PUBLIC_API_URL);
   return new BlogPostCreator(builder, repository);
 }
 

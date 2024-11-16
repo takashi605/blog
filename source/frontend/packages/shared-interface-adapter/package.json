@@ -1,0 +1,17 @@
+{
+  "name": "shared-interface-adapter",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "fix": "prettier --write . && eslint . --fix",
+    "check": "prettier --check . && eslint . && tsc --noEmit"
+  },
+  "dependencies": {
+    "entities": "workspace:*",
+    "service": "workspace:*",
+    "zod": "^3.23.8",
+    "msw": "^2.4.3"
+  }
+}

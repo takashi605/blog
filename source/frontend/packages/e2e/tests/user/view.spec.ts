@@ -11,8 +11,6 @@ Given('正常な記事が取得できるページにアクセスする', async (
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
-  const htmlContent = await page.content();
-  console.log('ページのHTML内容:', htmlContent);
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
   await expect(thumbnailImage).toBeVisible();
 });

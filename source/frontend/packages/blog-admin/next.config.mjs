@@ -7,6 +7,7 @@ const nextConfig = {
   // 参考: https://github.com/mswjs/msw/issues/1801
   webpack: (config, { isServer }) => {
     if (isServer) {
+      config.externals.push('_http_common');
       // サーバービルドの時は msw/browser を無視
       if (Array.isArray(config.resolve.alias)) {
         config.resolve.alias.push({
@@ -28,8 +29,9 @@ const nextConfig = {
   },
   experimental: {
     instrumentationHook: true,
+    serverComponentsExternalPackages: ['@vercel/otel'],
   },
-  transpilePackages: ['entities'],
+  transpilePackages: ['entities', 'service', 'shared-interface-adapter'],
 };
 
 export default nextConfig;

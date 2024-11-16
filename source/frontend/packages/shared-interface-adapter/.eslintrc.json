@@ -1,0 +1,6 @@
+{
+  // extends はルールの on,off を外部から読み込む
+  "extends": [
+    "../../.eslintrc.json" // ルート全体の設定を引き継ぐ
+  ]
+}

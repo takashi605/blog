@@ -1,24 +1,48 @@
+import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
-export const blogPostHandlers = [
-  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1`, () => {
-    return HttpResponse.json(successResponse);
-  }),
-  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/2`, () => {
-    return HttpResponse.json({
-      ...successResponse,
-      postDate: '',
-      lastUpdateDate: '',
-    });
-  }),
-  http.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/1000`, () => {
-    return new HttpResponse('Not found', {
-      status: 404,
-    });
-  }),
-];
+export const createdBlogPosts: BlogPostDTO[] = [];
+export const clearCreatedBlogPosts = () => {
+  createdBlogPosts.splice(0, createdBlogPosts.length);
+};
 
-const successResponse = {
+export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
+  const blogPostHandlers = [
+    http.post(`${baseUrl}/posts`, async ({ request }) => {
+      let newPost: DefaultBodyType;
+      try {
+        newPost = await request.json();
+      } catch {
+        return HttpResponse.json(
+          { message: 'リクエストを json に変換できませんでした。' },
+          { status: 400 },
+        );
+      }
+      createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
+      return HttpResponse.json(newPost, { status: 200 });
+    }),
+    http.get(`${baseUrl}/blog/posts/1`, () => {
+      return HttpResponse.json(successResponseForGet);
+    }),
+    http.get(`${baseUrl}/blog/posts/2`, () => {
+      return HttpResponse.json({
+        ...successResponseForGet,
+        postDate: '',
+        lastUpdateDate: '',
+      });
+    }),
+    http.get(`${baseUrl}/blog/posts/1000`, () => {
+      return new HttpResponse('Not found', {
+        status: 404,
+      });
+    }),
+  ];
+  return blogPostHandlers;
+};
+
+const successResponseForGet = {
   id: 1,
   title: '初めての技術スタックへの挑戦',
   thumbnail: {
