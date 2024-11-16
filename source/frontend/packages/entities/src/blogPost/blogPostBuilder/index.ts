@@ -9,14 +9,14 @@ import {
 } from './contentBuildStrategy/input';
 
 export class BlogPostBuilder {
-  private id: number | null = null;
+  private id: string | null = null;
   private postTitle = '';
   private thumbnailPath = '';
   private postDate = '';
   private lastUpdateDate = '';
   private contentBuilders: ContentBuildStrategyContext<Content>[] = [];
 
-  setId(id: number) {
+  setId(id: string) {
     this.id = id;
     return this;
   }

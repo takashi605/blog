@@ -5,7 +5,7 @@ import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
     const blogPostBuilder = createBlogPostBuilder()
-      .setId(1)
+      .setId('1')
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')

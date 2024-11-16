@@ -7,7 +7,7 @@ import {
 import { ViewBlogPostUseCase } from '../../../../usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
-  id: number;
+  id: string;
   title: string;
   thumbnail: {
     path: string;

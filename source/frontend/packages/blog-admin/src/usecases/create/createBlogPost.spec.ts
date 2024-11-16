@@ -38,7 +38,7 @@ describe('ユースケース: 記事の投稿', () => {
     };
 
     const builder = createBlogPostBuilder()
-      .setId(1)
+      .setId('1')
       .setPostTitle('記事タイトル')
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
@@ -68,7 +68,7 @@ describe('ユースケース: 記事の投稿', () => {
 
   it('投稿日時と更新日時が今日の日付になる', () => {
     const builder = createBlogPostBuilder()
-      .setId(1)
+      .setId('1')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02');
@@ -91,7 +91,7 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     );
 
     const blogPostBuilder = createBlogPostBuilder()
-      .setId(1)
+      .setId('1')
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
