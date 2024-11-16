@@ -1,9 +1,12 @@
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import { mockApiForServer } from '../../apiMocks/serverForNode';
 import { BlogPostCreator } from './createBlogPost';
 
+const mockApiForServer = setupMockApiForServer(
+  process.env.NEXT_PUBLIC_API_URL!,
+);
 beforeAll(() => {
   mockApiForServer.listen();
 });

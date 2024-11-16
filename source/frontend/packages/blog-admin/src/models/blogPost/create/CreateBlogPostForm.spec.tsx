@@ -1,12 +1,12 @@
-import {
-  clearCreatedBlogPosts,
-  createdBlogPosts,
-} from '@/apiMocks/handlers/blogPostHandlers';
-import { mockApiForServer } from '@/apiMocks/serverForNode';
 import CreateBlogPostForm from '@/models/blogPost/create/CreateBlogPostForm';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import {
+  clearCreatedBlogPosts,
+  createdBlogPosts,
+} from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
+import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 
 const pushMock = jest.fn();
 jest.mock('next/navigation', () => ({
@@ -15,6 +15,9 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+const mockApiForServer = setupMockApiForServer(
+  process.env.NEXT_PUBLIC_API_URL!,
+);
 beforeAll(() => {
   mockApiForServer.listen();
 });
