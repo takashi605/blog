@@ -1,9 +1,12 @@
-import { mockApiForServer } from '@/apiMock/serverForNode';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import Home from './page';
 
+const mockApiForServer = setupMockApiForServer(
+  process.env.NEXT_PUBLIC_API_URL!,
+);
 beforeAll(() => {
   mockApiForServer.listen();
 });
