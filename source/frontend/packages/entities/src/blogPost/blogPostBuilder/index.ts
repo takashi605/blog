@@ -9,11 +9,17 @@ import {
 } from './contentBuildStrategy/input';
 
 export class BlogPostBuilder {
+  private id: number | null = null;
   private postTitle = '';
   private thumbnailPath = '';
   private postDate = '';
   private lastUpdateDate = '';
   private contentBuilders: ContentBuildStrategyContext<Content>[] = [];
+
+  setId(id: number) {
+    this.id = id;
+    return this;
+  }
 
   setPostTitle(postTitle: string) {
     this.postTitle = postTitle;
@@ -70,8 +76,10 @@ export class BlogPostBuilder {
   }
 
   build() {
-    // TODO id をメソッドチェーン等で設定できるようにする
-    const blogPost = new BlogPost(1, this.postTitle)
+    if (!this.id) {
+      throw new Error('ID が設定されていません');
+    }
+    const blogPost = new BlogPost(this.id, this.postTitle)
       .setThumbnail(this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
