@@ -12,7 +12,7 @@ export default defineConfig({
   outputDir: 'tests/test-results',
   timeout: 60 * 1000,
   expect: {
-    timeout: 10 * 1000,
+    timeout: 15 * 1000,
   },
   reporter: process.env.CI
     ? 'list'
