@@ -1,3 +1,5 @@
-import { blogPostHandlers } from './handlers/blogPostHandlers';
+import { createBlogPostHandlers } from './handlers/blogPostHandlers';
 
-export const allHandlers = [...blogPostHandlers];
+export const createAllHandlers = (baseUrl: string) => {
+  return [...createBlogPostHandlers(baseUrl)];
+}

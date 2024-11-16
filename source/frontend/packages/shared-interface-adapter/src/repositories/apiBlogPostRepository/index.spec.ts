@@ -1,7 +1,8 @@
 import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import { ApiBlogPostRepository } from '.';
-import { mockApiForServer } from '../../apiMocks/serverForNode';
+import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 
+const mockApiForServer = setupMockApiForServer('http://localhost:8000');
 beforeAll(() => {
   mockApiForServer.listen();
 });

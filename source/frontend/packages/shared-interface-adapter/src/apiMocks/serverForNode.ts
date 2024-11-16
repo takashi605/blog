@@ -1,4 +1,6 @@
 import { setupServer } from 'msw/node';
-import { allHandlers } from './handlers';
+import { createAllHandlers } from './handlers';
 
-export const mockApiForServer = setupServer(...allHandlers);
+export const setupMockApiForServer = (baseUrl: string) => {
+  return setupServer(...createAllHandlers(baseUrl));
+}
