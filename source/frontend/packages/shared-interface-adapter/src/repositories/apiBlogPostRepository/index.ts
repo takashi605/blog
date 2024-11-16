@@ -39,6 +39,12 @@ export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({
 });
 
 export class ApiBlogPostRepository implements BlogPostRepository {
+  private baseUrl: string;
+
+  constructor(url: string) {
+    this.baseUrl = url;
+  }
+
   async save(blogPost: BlogPost): Promise<BlogPostDTO> {
     const body = this.blogPostToJson(blogPost);
     const response = await this.post(body);
@@ -58,7 +64,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   private async post(blogPostJson: string): Promise<Response> {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+    const response = await fetch(`${this.baseUrl}/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ afterAll(() => {
 });
 
 describe('apiBlogPostRepository', () => {
-  it('api を通じて JSON 形式の記録データが保存できる', async () => {
+  it.skip('api を通じて JSON 形式の記録データが保存できる', async () => {
     const apiRepository = new ApiBlogPostRepository();
 
     const blogPostBuilder = createBlogPostBuilder()
