@@ -1,9 +1,7 @@
 import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
-import {
-  createBlogPostBuilder,
-  type BlogPostBuilder,
-} from 'entities/src/blogPost/blogPostBuilder/index';
+import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { ViewBlogPostUseCase } from '../../../../usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {

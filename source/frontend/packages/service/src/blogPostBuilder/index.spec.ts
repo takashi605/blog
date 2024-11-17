@@ -1,7 +1,7 @@
-import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
-import { H2, H3 } from '../postContents/heading';
-import { ImageContent } from '../postContents/image';
-import { Paragraph } from '../postContents/paragraph';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { createBlogPostBuilder } from '.';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {

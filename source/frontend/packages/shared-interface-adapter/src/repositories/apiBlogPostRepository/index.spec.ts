@@ -1,4 +1,4 @@
-import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { ApiBlogPostRepository } from '.';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 

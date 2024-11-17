@@ -3,7 +3,7 @@ import {
   type ViewBlogPostDTO,
 } from '@/usecases/view/output/dto/index';
 import type { BlogPost } from 'entities/src/blogPost';
-import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder/index';
+import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
 
 export class ViewBlogPostUseCase {
   private blogPostBuilder: BlogPostBuilder;

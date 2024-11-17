@@ -1,8 +1,8 @@
 import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
 import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
-import type { BlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
-import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
 import type { SubmitHandler } from 'react-hook-form';
+import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
 export const createBlogPostAction: SubmitHandler<

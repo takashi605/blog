@@ -1,8 +1,8 @@
-import type { Content } from '../../postContents/content';
-import { ContentType } from '../../postContents/content';
-import type { H2, H3 } from '../../postContents/heading';
-import type { ImageContent } from '../../postContents/image';
-import type { Paragraph } from '../../postContents/paragraph';
+import type { Content } from 'entities/src/blogPost/postContents/content';
+import { ContentType } from 'entities/src/blogPost/postContents/content';
+import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import type { ImageContent } from 'entities/src/blogPost/postContents/image';
+import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type { ContentBuildStrategy } from './strategy';
 import {
   H2BuildStrategy,

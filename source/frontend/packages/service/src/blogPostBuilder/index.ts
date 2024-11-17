@@ -1,5 +1,5 @@
-import { BlogPost } from '../../blogPost';
-import type { Content } from '../../blogPost/postContents/content';
+import { BlogPost } from 'entities/src/blogPost';
+import type { Content } from 'entities/src/blogPost/postContents/content';
 import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
   H2Input,
