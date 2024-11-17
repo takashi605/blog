@@ -1,4 +1,5 @@
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 
@@ -18,8 +19,9 @@ describe('apiBlogPostRepository', () => {
   it('api を通じて JSON 形式の記録データが保存できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
+    const id = createUUIDv4();
     const blogPostBuilder = createBlogPostBuilder()
-      .setId('1')
+      .setId(id)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')

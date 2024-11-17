@@ -1,11 +1,13 @@
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
+    const id = createUUIDv4();
     const blogPostBuilder = createBlogPostBuilder()
-      .setId('1')
+      .setId(id)
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')

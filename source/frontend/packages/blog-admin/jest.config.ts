@@ -11,6 +11,7 @@ const config: Config = {
   testEnvironment: 'jest-fixed-jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^uuid$': require.resolve('uuid'),
   },
   setupFiles: ['../../jest.setup.ts'],
 };

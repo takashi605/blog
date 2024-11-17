@@ -1,5 +1,6 @@
 import { BlogPost } from 'entities/src/blogPost';
 import type { Content } from 'entities/src/blogPost/postContents/content';
+import { uuidv4Regex } from '../utils/uuid';
 import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
   H2Input,
@@ -77,7 +78,10 @@ export class BlogPostBuilder {
 
   build() {
     if (!this.id) {
-      throw new Error('ID が設定されていません');
+      throw new Error('記事の id は必須です');
+    }
+    if (uuidv4Regex().test(this.id) === false) {
+      throw new Error('記事の id は UUIDv4 の形式で設定してください');
     }
     const blogPost = new BlogPost(this.id, this.postTitle)
       .setThumbnail(this.thumbnailPath)

@@ -1,5 +1,6 @@
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { CreateBlogPostUseCase } from './createBlogPost';
@@ -37,8 +38,9 @@ describe('ユースケース: 記事の投稿', () => {
       save: mockSave,
     };
 
+    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
-      .setId('1')
+      .setId(id)
       .setPostTitle('記事タイトル')
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
@@ -67,8 +69,9 @@ describe('ユースケース: 記事の投稿', () => {
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {
+    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
-      .setId('1')
+      .setId(id)
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02');
@@ -90,8 +93,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       process.env.NEXT_PUBLIC_API_URL!,
     );
 
+    const id = createUUIDv4();
     const blogPostBuilder = createBlogPostBuilder()
-      .setId('1')
+      .setId(id)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')

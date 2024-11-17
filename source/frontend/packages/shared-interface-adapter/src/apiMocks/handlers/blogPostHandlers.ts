@@ -1,6 +1,7 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
@@ -44,7 +45,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
 
 // TODO id が 1 のデータを使いまわしているので、連番になるように修正する
 const successResponseForGet = {
-  id: '1',
+  id: createUUIDv4(),
   title: '初めての技術スタックへの挑戦',
   thumbnail: {
     path: 'test-coffee',

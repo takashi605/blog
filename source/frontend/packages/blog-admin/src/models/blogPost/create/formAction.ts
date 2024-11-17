@@ -3,6 +3,7 @@ import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
 import type { SubmitHandler } from 'react-hook-form';
 import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
 export const createBlogPostAction: SubmitHandler<
@@ -10,8 +11,7 @@ export const createBlogPostAction: SubmitHandler<
 > = async (formData) => {
   const blogPostBuilder = createBlogPostBuilder();
 
-  // TODO いったん id 1 で固定だが、UUID を生成するようにする
-  blogPostBuilder.setId('1');
+  blogPostBuilder.setId(createUUIDv4());
   injectFormDataToBuilder(formData, blogPostBuilder);
 
   const blogPostCreator = setupBlogPostCreator(blogPostBuilder);
