@@ -13,6 +13,8 @@ async function ViewBlogPost({ params }: ViewBlogPostParams) {
   const { id: postId } = params;
 
   // TODO コントローラに移動する
+  // 移動するときには container/presenter パターンにする必要がありそう
+  // 参考：https://azukiazusa.dev/blog/server-components-testing/
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('API URL が設定されていません');
   }
