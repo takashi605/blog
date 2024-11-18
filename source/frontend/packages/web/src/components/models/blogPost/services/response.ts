@@ -1,7 +1,7 @@
 import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 import { ViewBlogPostUseCase } from '../../../../usecases/view/viewBlogPost';
 
 export type BlogPostResponse = {
@@ -17,7 +17,7 @@ export type BlogPostResponse = {
 
 export const responseToViewBlogPost = (
   response: BlogPostResponse,
-): ViewBlogPostDTO => {
+): BlogPostDTO => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
   const blogPost = new ViewBlogPostUseCase(viewBlogPostInput).old__execute();

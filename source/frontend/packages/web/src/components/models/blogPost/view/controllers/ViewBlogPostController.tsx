@@ -2,12 +2,12 @@ import Thumbnail from '@/components/models/blogPost/view/controllers/Thumbnail';
 import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
 import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { memo } from 'react';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
-  blogPost: ViewBlogPostDTO;
+  blogPost: BlogPostDTO;
 };
 
 function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {

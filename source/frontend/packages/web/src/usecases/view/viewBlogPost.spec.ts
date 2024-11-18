@@ -1,7 +1,7 @@
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
@@ -18,7 +18,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       .addH3(4, 'h3見出し2')
       .addParagraph(5, '段落2');
 
-    const blogPostDTO: ViewBlogPostDTO = new ViewBlogPostUseCase(
+    const blogPostDTO: BlogPostDTO = new ViewBlogPostUseCase(
       blogPostBuilder,
     ).old__execute();
 
@@ -72,10 +72,13 @@ describe('ユースケース: 投稿記事の閲覧', () => {
   });
 
   it('データリポジトリからデータを取得し、ブログ記事の構造として返却する', async () => {
-    const expectedDTOMock = {
+    const id = createUUIDv4();
+    const fetchedDTOMock = {
+      id,
       title: '記事タイトル',
       postDate: '2021-01-01',
       lastUpdateDate: '2021-01-02',
+      thumbnail: { path: 'path/to/thumbnail' },
       contents: [
         { id: 1, type: 'h2', text: 'h2見出し1' },
         { id: 2, type: 'h3', text: 'h3見出し1' },
@@ -86,7 +89,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     };
     const mockRepository: BlogPostRepository = {
       save: jest.fn(),
-      fetch: jest.fn().mockReturnValue(expectedDTOMock),
+      fetch: jest.fn().mockReturnValue(fetchedDTOMock),
     };
 
     const viewBlogPostUsecase = new ViewBlogPostUseCase(
@@ -96,6 +99,10 @@ describe('ユースケース: 投稿記事の閲覧', () => {
 
     // TODO UUID で取得するように変更
     const blogPostDTO = await viewBlogPostUsecase.execute('1');
-    expect(blogPostDTO).toEqual(expectedDTOMock);
+    expect(blogPostDTO).toEqual({
+      ...fetchedDTOMock,
+      postDate: '2021/01/01',
+      lastUpdateDate: '2021/01/02',
+    });
   });
 });
