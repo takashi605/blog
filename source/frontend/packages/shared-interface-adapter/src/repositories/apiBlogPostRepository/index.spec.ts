@@ -1,8 +1,8 @@
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
-import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 import { baseUUID } from '../../apiMocks/handlers/blogPostHandlers';
+import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 
 // TODO このパッケージ内で setupMockApiForServer の利用箇所が増えたら共通化する
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');

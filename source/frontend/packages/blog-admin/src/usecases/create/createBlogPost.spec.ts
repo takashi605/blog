@@ -21,7 +21,7 @@ afterAll(() => {
 describe('ユースケース: 記事の投稿', () => {
   const mockRepository: BlogPostRepository = {
     save: jest.fn(),
-    fetch: jest.fn()
+    fetch: jest.fn(),
   };
 
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
@@ -37,7 +37,7 @@ describe('ユースケース: 記事の投稿', () => {
     });
     const mockRepository: BlogPostRepository = {
       save: mockSave,
-      fetch: jest.fn()
+      fetch: jest.fn(),
     };
 
     const id = createUUIDv4();

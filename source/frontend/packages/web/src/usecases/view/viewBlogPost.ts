@@ -7,11 +7,11 @@ import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
 
 export class ViewBlogPostUseCase {
-  private blogPostBuilder: BlogPostBuilder;
+  private blogPostBuilder: BlogPostBuilder | null;
   private blogPostRepository: BlogPostRepository | null;
 
   constructor(
-    blogPostBuilder: BlogPostBuilder,
+    blogPostBuilder: BlogPostBuilder | null = null,
     blogPostRepository: BlogPostRepository | null = null,
   ) {
     this.blogPostBuilder = blogPostBuilder;
@@ -19,7 +19,7 @@ export class ViewBlogPostUseCase {
   }
 
   old__execute(): ViewBlogPostDTO {
-    const blogPost: BlogPost = this.blogPostBuilder.build();
+    const blogPost: BlogPost = this.blogPostBuilder!.build();
 
     const dto = new BlogPostDTOBuilder(blogPost).build();
     return dto;
