@@ -1,8 +1,9 @@
-import { fetchBlogPost } from '@/components/models/blogPost/services/fetchBlogPost';
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
 
 const mockApiForServer = setupMockApiForServer(
   process.env.NEXT_PUBLIC_API_URL!,
@@ -23,8 +24,17 @@ const renderTestComponent = async () =>
 // テスト対象コンポーネントと依存するコンポーネントやロジックを
 // まとめたコンポーネント
 async function ViewBlogPostControllerWithDependencies() {
-  const blogPost = await fetchBlogPost(1);
-  return <ViewBlogPostController blogPost={blogPost} />;
+  // TODO 以下の処理はコントローラに移動する予定なので、移動したら消す
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('API URL が設定されていません');
+  }
+  const blogPostRepository = new ApiBlogPostRepository(
+    process.env.NEXT_PUBLIC_API_URL,
+  );
+  const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
+    '1',
+  );
+  return <ViewBlogPostController blogPost={blogPostDTO} />;
 }
 
 describe('コンポーネント: viewBlogPostController', () => {

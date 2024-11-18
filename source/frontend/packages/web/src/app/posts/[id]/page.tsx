@@ -19,10 +19,9 @@ async function ViewBlogPost({ params }: ViewBlogPostParams) {
   const blogPostRepository = new ApiBlogPostRepository(
     process.env.NEXT_PUBLIC_API_URL,
   );
-  const blogPostDTO = await new ViewBlogPostUseCase(
-    null,
-    blogPostRepository,
-  ).execute(postId);
+  const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
+    postId,
+  );
 
   return (
     <div>

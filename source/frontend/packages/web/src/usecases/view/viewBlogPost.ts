@@ -8,23 +8,10 @@ import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 
 export class ViewBlogPostUseCase {
-  private blogPostBuilder: BlogPostBuilder | null;
   private blogPostRepository: BlogPostRepository | null;
 
-  constructor(
-    blogPostBuilder: BlogPostBuilder | null = null,
-    blogPostRepository: BlogPostRepository | null = null,
-  ) {
-    this.blogPostBuilder = blogPostBuilder;
+  constructor(blogPostRepository: BlogPostRepository | null = null) {
     this.blogPostRepository = blogPostRepository;
-  }
-
-  // TODO 削除する
-  old__execute(): BlogPostDTO {
-    const blogPost: BlogPost = this.blogPostBuilder!.build();
-
-    const dto = new BlogPostDTOBuilder(blogPost).build();
-    return dto;
   }
 
   async execute(id: string): Promise<BlogPostDTO> {
