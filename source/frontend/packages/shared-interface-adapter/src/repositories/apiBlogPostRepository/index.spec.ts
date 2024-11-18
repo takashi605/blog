@@ -3,6 +3,7 @@ import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
 import { baseUUID } from '../../apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
+import { HttpError } from '../../error/httpError';
 
 // TODO このパッケージ内で setupMockApiForServer の利用箇所が増えたら共通化する
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');
@@ -58,5 +59,17 @@ describe('apiBlogPostRepository', () => {
     expect(resp.postDate).not.toBeUndefined();
     expect(resp.lastUpdateDate).not.toBeUndefined();
     expect(resp.contents.length).toBeGreaterThan(0);
+  });
+
+  it('404 エラーレスポンスが返るとエラーが throw される', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+    try {
+      await apiRepository.fetch('1000');
+    } catch (error) {
+      expect(error instanceof HttpError).toBeTruthy();
+      const httpError = error as HttpError;
+      expect(httpError.message).toBe('記事データが存在しませんでした');
+      expect(httpError.status).toBe(404);
+    }
   });
 });

@@ -4,6 +4,7 @@ import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 import { z } from 'zod';
+import { HttpError } from '../../error/httpError';
 
 const contentSchema = z.discriminatedUnion('type', [
   z.object({
@@ -66,9 +67,8 @@ export class ApiBlogPostRepository implements BlogPostRepository {
 
   async fetch(id: string): Promise<BlogPostDTO> {
     const response = await fetch(`${this.baseUrl}/blog/posts/${id}`);
-
-    if (!response.ok) {
-      throw new Error('ブログ記事の取得に失敗しました');
+    if (response.status === 404) {
+      throw new HttpError('記事データが存在しませんでした', response.status);
     }
 
     const validatedResponse = blogPostResponseSchema.parse(

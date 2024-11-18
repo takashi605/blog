@@ -11,7 +11,8 @@ type ViewBlogPostParams = {
 
 async function ViewBlogPost({ params }: ViewBlogPostParams) {
   const { id: postId } = params;
-  // const blogPostResponse = await fetchBlogPost(postId);
+
+  // TODO コントローラに移動する
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('API URL が設定されていません');
   }
