@@ -1,10 +1,11 @@
 import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
-  it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
+  it('【旧】記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
     const id = createUUIDv4();
     const blogPostBuilder = createBlogPostBuilder()
       .setId(id)
@@ -19,7 +20,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
 
     const blogPostDTO: ViewBlogPostDTO = new ViewBlogPostUseCase(
       blogPostBuilder,
-    ).execute();
+    ).old__execute();
 
     expect(blogPostDTO.title).toBe('記事タイトル');
 
@@ -68,5 +69,33 @@ describe('ユースケース: 投稿記事の閲覧', () => {
     } else {
       fail('段落 DTO が生成されていません');
     }
+  });
+
+  it('データリポジトリからデータを取得し、ブログ記事の構造として返却する', async () => {
+    const expectedDTOMock = {
+      title: '記事タイトル',
+      postDate: '2021-01-01',
+      lastUpdateDate: '2021-01-02',
+      contents: [
+        { id: 1, type: 'h2', text: 'h2見出し1' },
+        { id: 2, type: 'h3', text: 'h3見出し1' },
+        { id: 3, type: 'paragraph', text: '段落1' },
+        { id: 4, type: 'h3', text: 'h3見出し2' },
+        { id: 5, type: 'paragraph', text: '段落2' },
+      ],
+    };
+    const mockRepository: BlogPostRepository = {
+      save: jest.fn(),
+      fetch: jest.fn().mockReturnValue(expectedDTOMock),
+    };
+
+    const viewBlogPostUsecase = new ViewBlogPostUseCase(
+      createBlogPostBuilder(), // TODO 削除する
+      mockRepository,
+    );
+
+    // TODO UUID で取得するように変更
+    const blogPostDTO = await viewBlogPostUsecase.execute('1');
+    expect(blogPostDTO).toEqual(expectedDTOMock);
   });
 });

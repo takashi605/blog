@@ -20,7 +20,7 @@ export const responseToViewBlogPost = (
 ): ViewBlogPostDTO => {
   const viewBlogPostInput = responseToViewBlogPostInput(response);
 
-  const blogPost = new ViewBlogPostUseCase(viewBlogPostInput).execute();
+  const blogPost = new ViewBlogPostUseCase(viewBlogPostInput).old__execute();
 
   return blogPost;
 };
