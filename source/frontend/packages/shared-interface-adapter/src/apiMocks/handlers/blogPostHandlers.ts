@@ -49,11 +49,11 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   return blogPostHandlers;
 };
 
+// TODO UUID を扱うオブジェクトにして変数名で区別できるように変更。UUID1 が post/1 に紐づく id を返すような感じ
 // 末尾に2桁の連番を付与して使う
 // 例：baseUUID + '01'
 // 　  baseUUID + '02'
-const baseUUID = '672f2772-72b5-404a-8895-b1fbbf3108';
-
+export const baseUUID = '672f2772-72b5-404a-8895-b1fbbf3108';
 const successResponseForGet = {
   id: baseUUID, // 上書きしないとエラーする
   title: '初めての技術スタックへの挑戦',

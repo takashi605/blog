@@ -36,6 +36,7 @@ describe('ユースケース: 記事の投稿', () => {
     });
     const mockRepository: BlogPostRepository = {
       save: mockSave,
+      fetch: jest.fn()
     };
 
     const id = createUUIDv4();
@@ -111,6 +112,7 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
 
     const today = onlyYMD(new Date());
     expect(createdBlogPost).toEqual({
+      id,
       title: '記事タイトル',
       thumbnail: { path: 'path/to/thumbnail' },
       postDate: today,

@@ -2,6 +2,7 @@ import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
+import { baseUUID } from '../../apiMocks/handlers/blogPostHandlers';
 
 // TODO このパッケージ内で setupMockApiForServer の利用箇所が増えたら共通化する
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');
@@ -16,7 +17,7 @@ afterAll(() => {
 });
 
 describe('apiBlogPostRepository', () => {
-  it('api を通じて JSON 形式の記録データが保存できる', async () => {
+  it('api を通じて JSON 形式の記事データが保存できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
     const id = createUUIDv4();
@@ -33,6 +34,7 @@ describe('apiBlogPostRepository', () => {
 
     const resp = await apiRepository.save(blogPost);
     expect(resp).toEqual({
+      id,
       title: '記事タイトル',
       thumbnail: { path: 'path/to/thumbnail' },
       postDate: '1999-01-01',
@@ -43,5 +45,17 @@ describe('apiBlogPostRepository', () => {
         { id: 3, type: 'paragraph', text: '段落1' },
       ],
     });
+  });
+
+  it('api から JSON 形式の記事データを取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetch('1');
+    expect(resp.id).toBe(baseUUID + '01');
+    expect(resp.title).not.toBeUndefined();
+    expect(resp.thumbnail).not.toBeUndefined();
+    expect(resp.postDate).not.toBeUndefined();
+    expect(resp.lastUpdateDate).not.toBeUndefined();
+    expect(resp.contents.length).toBeGreaterThan(0);
   });
 });
