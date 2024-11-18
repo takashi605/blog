@@ -1,7 +1,6 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
@@ -11,6 +10,7 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
+    // 以下 post メソッドのモック
     http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
@@ -24,12 +24,18 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
+
+    // 以下 get メソッドのモック
     http.get(`${baseUrl}/blog/posts/1`, () => {
-      return HttpResponse.json(successResponseForGet);
+      return HttpResponse.json({
+        ...successResponseForGet,
+        id: baseUUID + '01',
+      });
     }),
     http.get(`${baseUrl}/blog/posts/2`, () => {
       return HttpResponse.json({
         ...successResponseForGet,
+        id: baseUUID + '02',
         postDate: '',
         lastUpdateDate: '',
       });
@@ -43,9 +49,13 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   return blogPostHandlers;
 };
 
-// TODO id が 1 のデータを使いまわしているので、連番になるように修正する
+// 末尾に2桁の連番を付与して使う
+// 例：baseUUID + '01'
+// 　  baseUUID + '02'
+const baseUUID = '672f2772-72b5-404a-8895-b1fbbf3108';
+
 const successResponseForGet = {
-  id: createUUIDv4(),
+  id: baseUUID, // 上書きしないとエラーする
   title: '初めての技術スタックへの挑戦',
   thumbnail: {
     path: 'test-coffee',
