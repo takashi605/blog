@@ -26,13 +26,13 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
     }),
 
     // 以下 get メソッドのモック
-    http.get(`${baseUrl}/blog/posts/1`, () => {
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID1}`, () => {
       return HttpResponse.json({
         ...successResponseForGet,
         id: UUIDList.UUID1,
       });
     }),
-    http.get(`${baseUrl}/blog/posts/2`, () => {
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID2}`, () => {
       return HttpResponse.json({
         ...successResponseForGet,
         id: UUIDList.UUID2,
@@ -40,7 +40,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         lastUpdateDate: '',
       });
     }),
-    http.get(`${baseUrl}/blog/posts/1000`, () => {
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID3}`, () => {
       return new HttpResponse('Not found', {
         status: 404,
       });
@@ -52,6 +52,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
 export const UUIDList = {
   UUID1: '672f2772-72b5-404a-8895-b1fbbf310801',
   UUID2: '475ea693-3885-4e2f-80d5-fe28adc08bad',
+  UUID3: 'dfde1b9e-a1f0-406d-a342-4599158fb5f4',
 };
 const successResponseForGet = {
   id: '', // 上書きしないとエラーする

@@ -1,6 +1,7 @@
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
   it('データリポジトリからデータを取得し、ブログ記事の構造として返却する', async () => {
@@ -26,8 +27,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
 
     const viewBlogPostUsecase = new ViewBlogPostUseCase(mockRepository);
 
-    // TODO UUID で取得するように変更
-    const blogPostDTO = await viewBlogPostUsecase.execute('1');
+    const blogPostDTO = await viewBlogPostUsecase.execute(UUIDList.UUID1);
     expect(blogPostDTO).toEqual({
       ...fetchedDTOMock,
       postDate: '2021/01/01',

@@ -51,8 +51,7 @@ describe('apiBlogPostRepository', () => {
   it('api から JSON 形式の記事データを取得できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
-    // TODO UUID を指定して取得するように変更
-    const resp = await apiRepository.fetch('1');
+    const resp = await apiRepository.fetch(UUIDList.UUID1);
     expect(resp.id).toBe(UUIDList.UUID1);
     expect(resp.title).not.toBeUndefined();
     expect(resp.thumbnail).not.toBeUndefined();
@@ -64,7 +63,7 @@ describe('apiBlogPostRepository', () => {
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
     try {
-      await apiRepository.fetch('1000');
+      await apiRepository.fetch(UUIDList.UUID3);
     } catch (error) {
       expect(error instanceof HttpError).toBeTruthy();
       const httpError = error as HttpError;

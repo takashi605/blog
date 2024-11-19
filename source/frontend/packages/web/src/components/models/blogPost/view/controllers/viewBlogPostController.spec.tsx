@@ -1,6 +1,7 @@
 import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
@@ -32,7 +33,7 @@ async function ViewBlogPostControllerWithDependencies() {
     process.env.NEXT_PUBLIC_API_URL,
   );
   const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
-    '1',
+    UUIDList.UUID1,
   );
   return <ViewBlogPostController blogPost={blogPostDTO} />;
 }
