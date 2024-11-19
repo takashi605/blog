@@ -1,7 +1,7 @@
 import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
-import { baseUUID } from '../../apiMocks/handlers/blogPostHandlers';
+import { UUIDList } from '../../apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 import { HttpError } from '../../error/httpError';
 
@@ -53,7 +53,7 @@ describe('apiBlogPostRepository', () => {
 
     // TODO UUID を指定して取得するように変更
     const resp = await apiRepository.fetch('1');
-    expect(resp.id).toBe(baseUUID + '01');
+    expect(resp.id).toBe(UUIDList.UUID1);
     expect(resp.title).not.toBeUndefined();
     expect(resp.thumbnail).not.toBeUndefined();
     expect(resp.postDate).not.toBeUndefined();
