@@ -1,12 +1,15 @@
 {
   "name": "shared-interface-adapter",
   "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "fix": "prettier --write . && eslint . --fix",
-    "check": "prettier --check . && eslint . && tsc --noEmit"
+    "check": "prettier --check . && eslint . && tsc --noEmit",
+    "tsc": "tsc"
   },
   "dependencies": {
     "entities": "workspace:*",

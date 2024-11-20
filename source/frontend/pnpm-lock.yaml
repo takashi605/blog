@@ -129,6 +129,13 @@ importers:
         version: 5.28.4
 
   packages/e2e:
+    dependencies:
+      entities:
+        specifier: workspace:*
+        version: link:../entities
+      shared-interface-adapter:
+        specifier: workspace:*
+        version: link:../shared-interface-adapter
     devDependencies:
       '@playwright/test':
         specifier: ^1.46.1

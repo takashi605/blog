@@ -10,6 +10,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
+  "dependencies": {
+    "shared-interface-adapter": "workspace:*"
+  },
   "devDependencies": {
     "@playwright/test": "^1.46.1",
     "@types/node": "^22.5.1",

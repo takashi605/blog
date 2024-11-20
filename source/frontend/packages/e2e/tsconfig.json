@@ -2,9 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "paths": {
-      "@/*": ["./tests/*"]
-    }
   },
   // プログラムに含めるファイル
   "include": ["**/*.ts"],
