@@ -6,6 +6,7 @@ import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutpu
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
 import styles from './viewBlogPostController.module.scss';
+import WithBlogPostErrorForServer from '../../error/WithBlogPostErrorForServer';
 
 type ViewBlogPostControllerProps = {
   postId: string;
@@ -25,7 +26,7 @@ async function ViewBlogPostController({ postId }: ViewBlogPostControllerProps) {
   return <ViewBlogPostPresenter blogPost={blogPostDTO} />;
 }
 
-export default ViewBlogPostController;
+export default WithBlogPostErrorForServer(ViewBlogPostController);
 
 type ViewBlogPostPresenterProps = {
   blogPost: BlogPostDTO;
