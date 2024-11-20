@@ -12,6 +12,14 @@ type ViewBlogPostControllerProps = {
 
 function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
   return (
+    <ViewBlogPostPresenter blogPost={blogPost} />
+  );
+}
+
+export default memo(ViewBlogPostController);
+
+function ViewBlogPostPresenter({ blogPost }: ViewBlogPostControllerProps) {
+  return (
     <article className={styles.article}>
       <div className={styles.datesWrapper}>
         <BlogPostDate label="投稿日" date={blogPost.postDate} />
@@ -30,7 +38,6 @@ function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
   );
 }
 
-export default memo(ViewBlogPostController);
 
 function generateContentClass(type: string): string | undefined {
   switch (type) {
