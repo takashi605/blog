@@ -1,11 +1,14 @@
-import { createBlogPostBuilder } from '../../blogPost/blogPostBuilder';
-import { H2, H3 } from '../postContents/heading';
-import { ImageContent } from '../postContents/image';
-import { Paragraph } from '../postContents/paragraph';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { createBlogPostBuilder } from '.';
+import { createUUIDv4 } from '../utils/uuid';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {
+    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
+      .setId(id)
       .setThumbnail('path/to/image')
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
@@ -16,6 +19,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       .addImage(4, 'path/to/image');
     const blogPost = builder.build();
 
+    expect(blogPost.getId()).toBe(id);
     expect(blogPost.getTitleText()).toBe('記事タイトル');
 
     expect(blogPost.getThumbnail().getPath()).toBe('path/to/image');
@@ -45,5 +49,18 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
         fail('不正なコンテントが含まれています');
       }
     });
+  });
+
+  it('id が未設定もしくは UUIDv4 の形式ではない場合、データ生成時にエラーが発生する', () => {
+    expect(() => {
+      createBlogPostBuilder()
+        .setId('invalid-id')
+        .setPostDate('2021-01-01')
+        .setLastUpdateDate('2021-01-02')
+        .build();
+    }).toThrow('記事の id は UUIDv4 の形式で設定してください');
+    expect(() => {
+      createBlogPostBuilder().build();
+    }).toThrow('記事の id は必須です');
   });
 });

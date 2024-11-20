@@ -1,7 +1,7 @@
-import type { Content } from '../../postContents/content';
-import { H2, H3 } from '../../postContents/heading';
-import { ImageContent } from '../../postContents/image';
-import { Paragraph } from '../../postContents/paragraph';
+import type { Content } from 'entities/src/blogPost/postContents/content';
+import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import { ImageContent } from 'entities/src/blogPost/postContents/image';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
 
 export type ContentBuildStrategy<T extends Content> = {

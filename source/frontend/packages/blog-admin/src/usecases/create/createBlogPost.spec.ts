@@ -1,8 +1,9 @@
-import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import { BlogPostCreator } from './createBlogPost';
+import { CreateBlogPostUseCase } from './createBlogPost';
 
 const mockApiForServer = setupMockApiForServer(
   process.env.NEXT_PUBLIC_API_URL!,
@@ -20,6 +21,7 @@ afterAll(() => {
 describe('ユースケース: 記事の投稿', () => {
   const mockRepository: BlogPostRepository = {
     save: jest.fn(),
+    fetch: jest.fn(),
   };
 
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
@@ -35,14 +37,17 @@ describe('ユースケース: 記事の投稿', () => {
     });
     const mockRepository: BlogPostRepository = {
       save: mockSave,
+      fetch: jest.fn(),
     };
 
+    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
+      .setId(id)
       .setPostTitle('記事タイトル')
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
       .addParagraph(3, '段落1');
-    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
 
     const createdBlogPost = await blogPostCreator.execute();
 
@@ -66,11 +71,13 @@ describe('ユースケース: 記事の投稿', () => {
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {
+    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
+      .setId(id)
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02');
-    const blogPostCreator = new BlogPostCreator(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
     const blogPost = blogPostCreator.buildBlogPost();
 
     const today = onlyYMD(new Date());
@@ -88,7 +95,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       process.env.NEXT_PUBLIC_API_URL!,
     );
 
+    const id = createUUIDv4();
     const blogPostBuilder = createBlogPostBuilder()
+      .setId(id)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
@@ -96,11 +105,15 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       .addH2(1, 'h2見出し1')
       .addH3(2, 'h3見出し1')
       .addParagraph(3, '段落1');
-    const blogPostCreator = new BlogPostCreator(blogPostBuilder, apiRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(
+      blogPostBuilder,
+      apiRepository,
+    );
     const createdBlogPost = await blogPostCreator.execute();
 
     const today = onlyYMD(new Date());
     expect(createdBlogPost).toEqual({
+      id,
       title: '記事タイトル',
       thumbnail: { path: 'path/to/thumbnail' },
       postDate: today,

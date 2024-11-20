@@ -1,67 +1,37 @@
-import type { ViewBlogPostDTO } from '@/usecases/view/output/dto/index';
-import { viewBlogPost } from '@/usecases/view/viewBlogPost';
-import { createBlogPostBuilder } from 'entities/src/blogPost/blogPostBuilder';
+import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
+import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { createUUIDv4 } from 'service/src/utils/uuid';
+import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 
 describe('ユースケース: 投稿記事の閲覧', () => {
-  it('記事のデータを入力値として受け取り、ブログ記事の構造として返却する', () => {
-    const input = createBlogPostBuilder()
-      .setPostTitle('記事タイトル')
-      .setPostDate('2021-01-01')
-      .setLastUpdateDate('2021-01-02')
-      .addH2(1, 'h2見出し1')
-      .addH3(2, 'h3見出し1')
-      .addParagraph(3, '段落1')
-      .addH3(4, 'h3見出し2')
-      .addParagraph(5, '段落2');
+  it('データリポジトリからデータを取得し、ブログ記事の構造として返却する', async () => {
+    const id = createUUIDv4();
+    const fetchedDTOMock = {
+      id,
+      title: '記事タイトル',
+      postDate: '2021-01-01',
+      lastUpdateDate: '2021-01-02',
+      thumbnail: { path: 'path/to/thumbnail' },
+      contents: [
+        { id: 1, type: 'h2', text: 'h2見出し1' },
+        { id: 2, type: 'h3', text: 'h3見出し1' },
+        { id: 3, type: 'paragraph', text: '段落1' },
+        { id: 4, type: 'h3', text: 'h3見出し2' },
+        { id: 5, type: 'paragraph', text: '段落2' },
+      ],
+    };
+    const mockRepository: BlogPostRepository = {
+      save: jest.fn(),
+      fetch: jest.fn().mockReturnValue(fetchedDTOMock),
+    };
 
-    const output: ViewBlogPostDTO = viewBlogPost(input);
+    const viewBlogPostUsecase = new ViewBlogPostUseCase(mockRepository);
 
-    expect(output.title).toBe('記事タイトル');
-
-    expect(output.postDate).toEqual('2021/01/01');
-    expect(output.lastUpdateDate).toEqual('2021/01/02');
-
-    const contents = output.contents;
-    expect(contents.length).toBe(5);
-
-    if (contents[0].type === 'h2') {
-      expect(contents[0].id).toBe(1);
-      expect(contents[0].text).toBe('h2見出し1');
-      expect(contents[0].type).toBe('h2');
-    } else {
-      fail('h2 DTO が生成されていません');
-    }
-
-    if (contents[1].type === 'h3') {
-      expect(contents[1].id).toBe(2);
-      expect(contents[1].text).toBe('h3見出し1');
-      expect(contents[1].type).toBe('h3');
-    } else {
-      fail('h3 DTO が生成されていません');
-    }
-
-    if (contents[2].type === 'paragraph') {
-      expect(contents[2].id).toBe(3);
-      expect(contents[2].text).toBe('段落1');
-      expect(contents[2].type).toBe('paragraph');
-    } else {
-      fail('段落 DTO が生成されていません');
-    }
-
-    if (contents[3].type === 'h3') {
-      expect(contents[3].id).toBe(4);
-      expect(contents[3].text).toBe('h3見出し2');
-      expect(contents[3].type).toBe('h3');
-    } else {
-      fail('h3 DTO が生成されていません');
-    }
-
-    if (contents[4].type === 'paragraph') {
-      expect(contents[4].id).toBe(5);
-      expect(contents[4].text).toBe('段落2');
-      expect(contents[4].type).toBe('paragraph');
-    } else {
-      fail('段落 DTO が生成されていません');
-    }
+    const blogPostDTO = await viewBlogPostUsecase.execute(UUIDList.UUID1);
+    expect(blogPostDTO).toEqual({
+      ...fetchedDTOMock,
+      postDate: '2021/01/01',
+      lastUpdateDate: '2021/01/02',
+    });
   });
 });

@@ -10,6 +10,9 @@ const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jest-fixed-jsdom',
   setupFiles: ['../../jest.setup.ts'],
+  moduleNameMapper: {
+    '^uuid$': require.resolve('uuid'),
+  },
 };
 
 export default createJestConfig(config);

@@ -5,4 +5,7 @@ module.exports = {
   testEnvironmentOptions: {
     customExportConditions: [''],
   },
+  moduleNameMapper: {
+    '^uuid$': require.resolve('uuid'),
+  },
 };

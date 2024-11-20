@@ -1,4 +1,4 @@
-import { HttpError } from '@/components/models/error/httpError';
+import { HttpError } from './httpError';
 
 const throwErrorFunction = () => {
   throw new HttpError('HTTP 通信でエラーが発生しました', 500);

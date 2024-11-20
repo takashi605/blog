@@ -1,5 +1,8 @@
 import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
+// TODO dist を直接指定するのは若干微妙なので、修正する
+import pkg from 'shared-interface-adapter/dist/src/apiMocks/handlers/blogPostHandlers.js';
+const { UUIDList } = pkg;
 
 const { Given, Then } = createBdd();
 
@@ -7,7 +10,7 @@ Given('正常な記事が取得できるページにアクセスする', async (
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/1`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID1}`);
 });
 
 Then('記事サムネイル が表示される', async ({ page }) => {
@@ -76,7 +79,7 @@ Given('投稿日,更新日時が存在しないページにアクセスする', 
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/2`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID2}`);
 });
 
 Then(
@@ -92,7 +95,7 @@ Given(
     if (!process.env.TEST_TARGET_URL) {
       throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
     }
-    await page.goto(`${process.env.TEST_TARGET_URL}/posts/1000`);
+    await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID3}`);
   },
 );
 

@@ -1,4 +1,4 @@
-import { type Content } from '../../postContents/content';
+import { type Content } from 'entities/src/blogPost/postContents/content';
 import type { ContentInput } from './input';
 import type { ContentBuildStrategy } from './strategy';
 

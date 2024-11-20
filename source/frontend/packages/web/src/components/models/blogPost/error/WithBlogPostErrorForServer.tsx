@@ -1,6 +1,6 @@
-import { HttpError } from '@/components/models/error/httpError';
 import { UsecaseError } from '@/usecases/error';
 import { EntityError } from 'entities/src/error/error';
+import { HttpError } from 'shared-interface-adapter/src/error/httpError';
 
 function WithErrorHandlingServer<T>(
   Component: (props: T) => Promise<JSX.Element>,

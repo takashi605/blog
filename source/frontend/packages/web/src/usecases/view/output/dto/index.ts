@@ -4,14 +4,7 @@ import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/type
 import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
-
-export type ViewBlogPostDTO = {
-  readonly title: string;
-  readonly thumbnail: thumbnailDTO;
-  readonly postDate: string;
-  readonly lastUpdateDate: string;
-  readonly contents: ReadonlyArray<ContentForDTO>;
-};
+import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 
 export type thumbnailDTO = {
   readonly path: string;
@@ -54,7 +47,7 @@ export class BlogPostDTOBuilder {
     }
   }
 
-  private extractContentsForDTO(): ViewBlogPostDTO['contents'] {
+  private extractContentsForDTO(): BlogPostDTO['contents'] {
     return this.blogPost
       .getContents()
       .map((content) => this.createContentForDTO(content));
@@ -65,8 +58,9 @@ export class BlogPostDTOBuilder {
     return dtoCreator.toDTO();
   }
 
-  build(): ViewBlogPostDTO {
+  build(): BlogPostDTO {
     return {
+      id: this.blogPost.getId(),
       title: this.blogPost.getTitleText(),
       thumbnail: this.extractThumbnailForDTO(),
       postDate: this.extractPostDateForDTO(),

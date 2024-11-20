@@ -10,6 +10,7 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
+    // 以下 post メソッドのモック
     http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
@@ -23,17 +24,23 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
-    http.get(`${baseUrl}/blog/posts/1`, () => {
-      return HttpResponse.json(successResponseForGet);
-    }),
-    http.get(`${baseUrl}/blog/posts/2`, () => {
+
+    // 以下 get メソッドのモック
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID1}`, () => {
       return HttpResponse.json({
         ...successResponseForGet,
+        id: UUIDList.UUID1,
+      });
+    }),
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID2}`, () => {
+      return HttpResponse.json({
+        ...successResponseForGet,
+        id: UUIDList.UUID2,
         postDate: '',
         lastUpdateDate: '',
       });
     }),
-    http.get(`${baseUrl}/blog/posts/1000`, () => {
+    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID3}`, () => {
       return new HttpResponse('Not found', {
         status: 404,
       });
@@ -42,8 +49,13 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   return blogPostHandlers;
 };
 
+export const UUIDList = {
+  UUID1: '672f2772-72b5-404a-8895-b1fbbf310801',
+  UUID2: '475ea693-3885-4e2f-80d5-fe28adc08bad',
+  UUID3: 'dfde1b9e-a1f0-406d-a342-4599158fb5f4',
+};
 const successResponseForGet = {
-  id: 1,
+  id: '', // 上書きしないとエラーする
   title: '初めての技術スタックへの挑戦',
   thumbnail: {
     path: 'test-coffee',
