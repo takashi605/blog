@@ -3,8 +3,6 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
 
 const mockApiForServer = setupMockApiForServer(
   process.env.NEXT_PUBLIC_API_URL!,
@@ -19,28 +17,12 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
-const renderTestComponent = async () =>
-  render(await ViewBlogPostControllerWithDependencies());
+const renderPresenter = async () =>
+  render(await ViewBlogPostController({ postId: UUIDList.UUID1 }));
 
-// テスト対象コンポーネントと依存するコンポーネントやロジックを
-// まとめたコンポーネント
-async function ViewBlogPostControllerWithDependencies() {
-  // TODO 以下の処理はコントローラに移動する予定なので、移動したら消す
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error('API URL が設定されていません');
-  }
-  const blogPostRepository = new ApiBlogPostRepository(
-    process.env.NEXT_PUBLIC_API_URL,
-  );
-  const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
-    UUIDList.UUID1,
-  );
-  return <ViewBlogPostController blogPost={blogPostDTO} />;
-}
-
-describe('コンポーネント: viewBlogPostController', () => {
+describe('コンポーネント: ViewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {
-    await renderTestComponent();
+    await renderPresenter();
     const title = screen.getByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
 
@@ -51,7 +33,7 @@ describe('コンポーネント: viewBlogPostController', () => {
   });
 
   it('サムネイル画像が表示されている', async () => {
-    await renderTestComponent();
+    await renderPresenter();
     const mainVisual = screen.getByRole('img', {
       name: 'サムネイル画像',
     }) as HTMLImageElement;
@@ -65,7 +47,7 @@ describe('コンポーネント: viewBlogPostController', () => {
   });
 
   it('投稿日,更新日が表示されている', async () => {
-    await renderTestComponent();
+    await renderPresenter();
 
     const postDateSection = screen.getByText('投稿日:');
 
@@ -86,28 +68,28 @@ describe('コンポーネント: viewBlogPostController', () => {
 
   describe('コンテンツ', () => {
     it('h2 が表示されている', async () => {
-      await renderTestComponent();
+      await renderPresenter();
 
       const h2 = await screen.findAllByRole('heading', { level: 2 });
       expect(h2).not.toHaveLength(0);
     });
 
     it('h3 が表示されている', async () => {
-      await renderTestComponent();
+      await renderPresenter();
 
       const h3 = await screen.findAllByRole('heading', { level: 3 });
       expect(h3).not.toHaveLength(0);
     });
 
     it('p が表示されている', async () => {
-      await renderTestComponent();
+      await renderPresenter();
 
       const p = await screen.findAllByRole('paragraph');
       expect(p).not.toHaveLength(0);
     });
 
     it('画像が表示されている', async () => {
-      await renderTestComponent();
+      await renderPresenter();
 
       const img = await screen.findAllByRole('img', { name: '画像コンテンツ' });
       expect(img).not.toHaveLength(0);

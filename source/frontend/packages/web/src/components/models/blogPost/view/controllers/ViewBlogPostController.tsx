@@ -2,23 +2,39 @@ import Thumbnail from '@/components/models/blogPost/view/controllers/Thumbnail';
 import BlogPostDate from '@/components/models/blogPost/view/ui/BlogPostDate';
 import BlogPostTitle from '@/components/models/blogPost/view/ui/BlogPostTitle';
 import ContentRenderer from '@/components/models/blogPost/view/ui/contents/Content';
-import { memo } from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
 import styles from './viewBlogPostController.module.scss';
 
 type ViewBlogPostControllerProps = {
+  postId: string;
+};
+
+async function ViewBlogPostController({ postId }: ViewBlogPostControllerProps) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('API URL が設定されていません');
+  }
+  const blogPostRepository = new ApiBlogPostRepository(
+    process.env.NEXT_PUBLIC_API_URL,
+  );
+  const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
+    postId,
+  );
+
+  return <ViewBlogPostPresenter blogPost={blogPostDTO} />;
+}
+
+export default ViewBlogPostController;
+
+type ViewBlogPostPresenterProps = {
   blogPost: BlogPostDTO;
 };
 
-function ViewBlogPostController({ blogPost }: ViewBlogPostControllerProps) {
-  return (
-    <ViewBlogPostPresenter blogPost={blogPost} />
-  );
-}
-
-export default memo(ViewBlogPostController);
-
-function ViewBlogPostPresenter({ blogPost }: ViewBlogPostControllerProps) {
+// TODO メモ化する
+export function ViewBlogPostPresenter({
+  blogPost,
+}: ViewBlogPostPresenterProps) {
   return (
     <article className={styles.article}>
       <div className={styles.datesWrapper}>
@@ -37,7 +53,6 @@ function ViewBlogPostPresenter({ blogPost }: ViewBlogPostControllerProps) {
     </article>
   );
 }
-
 
 function generateContentClass(type: string): string | undefined {
   switch (type) {
