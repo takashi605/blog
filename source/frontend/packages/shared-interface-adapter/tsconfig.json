@@ -9,5 +9,5 @@
   // プログラムに含めるファイル
   "include": ["**/*.ts"],
   // include から除外するファイル
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
