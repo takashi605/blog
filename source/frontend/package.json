@@ -15,11 +15,12 @@
     "blog-admin": "pnpm -F blog-admin",
     "service": "pnpm -F service",
     "shared-interface-adapter": "pnpm -F shared-interface-adapter",
-    "e2e-test": "pnpm e2e e2e-test",
-    "e2e-ui": "pnpm e2e e2e-ui",
+    "e2e-test": "pnpm tsc && pnpm e2e e2e-test",
+    "e2e-ui": "pnpm tsc && pnpm e2e e2e-ui",
     "web-build": "pnpm -F web exec next build",
     "web-dev": "pnpm -F web exec next dev",
-    "admin-dev": "pnpm -F blog-admin exec next dev"
+    "admin-dev": "pnpm -F blog-admin exec next dev",
+    "tsc": "pnpm shared-interface-adapter tsc"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
