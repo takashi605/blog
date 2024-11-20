@@ -130,9 +130,6 @@ importers:
 
   packages/e2e:
     dependencies:
-      entities:
-        specifier: workspace:*
-        version: link:../entities
       shared-interface-adapter:
         specifier: workspace:*
         version: link:../shared-interface-adapter
