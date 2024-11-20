@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
+// TODO dist を直接指定するのは若干微妙なので、修正する
 import pkg from 'shared-interface-adapter/dist/src/apiMocks/handlers/blogPostHandlers.js';
 const { UUIDList } = pkg;
 
