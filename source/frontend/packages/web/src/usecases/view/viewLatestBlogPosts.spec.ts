@@ -19,9 +19,8 @@ describe('viewLatestBlogPosts', () => {
 
     expect(blogPosts[0].id).toBeDefined();
     expect(blogPosts[0].title).toBe('dto1記事タイトル');
-    // TODO /区切りに直す
-    expect(blogPosts[0].postDate).toBe('2021-01-01');
-    expect(blogPosts[0].lastUpdateDate).toBe('2021-01-02');
+    expect(blogPosts[0].postDate).toBe('2021/01/01');
+    expect(blogPosts[0].lastUpdateDate).toBe('2021/01/02');
     expect(blogPosts[0].thumbnail.path).toBe('path/to/thumbnail1');
 
     if (blogPosts[0].contents[0].type !== ContentType.H2) {
@@ -40,9 +39,8 @@ describe('viewLatestBlogPosts', () => {
 
     expect(blogPosts[1].id).toBeDefined();
     expect(blogPosts[1].title).toBe('dto2記事タイトル');
-    // TODO /区切りに直す
-    expect(blogPosts[1].postDate).toBe('2021-02-01');
-    expect(blogPosts[1].lastUpdateDate).toBe('2021-02-02');
+    expect(blogPosts[1].postDate).toBe('2021/02/01');
+    expect(blogPosts[1].lastUpdateDate).toBe('2021/02/02');
     expect(blogPosts[1].thumbnail.path).toBe('path/to/thumbnail2');
 
     if (blogPosts[1].contents[0].type !== ContentType.H2) {
