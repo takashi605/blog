@@ -1,13 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "dist",
-    "declaration": true,
-    "noEmit": false
+    "baseUrl": "."
   },
   // プログラムに含めるファイル
   "include": ["**/*.ts"],
   // include から除外するファイル
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules"]
 }
