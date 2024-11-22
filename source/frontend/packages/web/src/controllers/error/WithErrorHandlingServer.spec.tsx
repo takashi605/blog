@@ -1,6 +1,6 @@
-import WithErrorHandlingServer from '@/components/error/WithErrorHandlingServer';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
+import WithErrorHandlingServer from './WithErrorHandlingServer';
 
 async function ErrorComponent() {
   throw new Error('エラー！！');

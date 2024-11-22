@@ -1,4 +1,4 @@
-import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
+import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
 import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
 import type { SubmitHandler } from 'react-hook-form';
 import type { BlogPostBuilder } from 'service/src/blogPostBuilder';

@@ -1,8 +1,8 @@
-import ViewBlogPostController from '@/components/models/blogPost/view/controllers/ViewBlogPostController';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import ViewBlogPostController from './ViewBlogPostController';
 
 const mockApiForServer = setupMockApiForServer(
   process.env.NEXT_PUBLIC_API_URL!,

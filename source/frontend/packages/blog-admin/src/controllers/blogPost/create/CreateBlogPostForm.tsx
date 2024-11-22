@@ -1,10 +1,10 @@
 'use client';
 import { FieldArrayFormProvider } from '@/components/form/FieldArrayFormProvider';
-import { createBlogPostAction } from '@/models/blogPost/create/formAction';
-import AddContentButtonList from '@/models/blogPost/create/formParts/AddContentButton';
-import ContentInputList from '@/models/blogPost/create/formParts/ContentInputList';
-import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
-import { createBlogPostFormSchema } from '@/models/blogPost/create/formSchema';
+import { createBlogPostAction } from '@/controllers/blogPost/create/formAction';
+import AddContentButtonList from '@/controllers/blogPost/create/formParts/AddContentButton';
+import ContentInputList from '@/controllers/blogPost/create/formParts/ContentInputList';
+import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
+import { createBlogPostFormSchema } from '@/controllers/blogPost/create/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import type { SubmitHandler } from 'react-hook-form';

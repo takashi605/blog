@@ -1,4 +1,4 @@
-import type { ContentElementProps } from '@/components/models/blogPost/view/ui/contents/elements/type';
+import type { ContentElementProps } from '@/controllers/blogPost/view/ui/contents/elements/type';
 import { memo } from 'react';
 import styles from './paragraph.module.scss';
 
