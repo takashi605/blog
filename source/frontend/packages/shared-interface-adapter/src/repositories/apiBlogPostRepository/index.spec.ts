@@ -60,6 +60,19 @@ describe('apiBlogPostRepository', () => {
     expect(resp.contents.length).toBeGreaterThan(0);
   });
 
+  it('api から新着記事の一覧を取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchLatests();
+    expect(resp.length).toBeGreaterThan(0);
+
+    for (let i = 0; i < resp.length - 1; i++) {
+      expect(
+        new Date(resp[i].postDate) <= new Date(resp[i + 1].postDate),
+      ).toBeTruthy();
+    }
+  });
+
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
     try {
