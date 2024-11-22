@@ -21,5 +21,9 @@ function ViewLatestBlogPostsPresenter({
 }: {
   blogPosts: BlogPostDTO[];
 }) {
-  return <div>viewLatestBlogPostsPresenter</div>;
+  return (
+    <div>
+      <h2>新着記事一覧</h2>
+    </div>
+  );
 }

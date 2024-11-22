@@ -10,6 +10,10 @@ Given('新着記事を一覧表示するページにアクセスする', async (
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/latests`);
 });
 
+Then('ページタイトルが表示される', async ({ page }) => {
+  expect(page.getByRole('heading', { level: 2 })).toHaveText('新着記事一覧');
+});
+
 Then('複数の記事が表示される', async ({ page }) => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
@@ -23,7 +27,7 @@ Then('各記事に記事タイトルが表示される', async ({ page }) => {
   // 各記事に対して h2 要素が存在するかを確認
   await Promise.all(
     Array.from(Array(count), (_, i) =>
-      expect(posts.nth(i).getByRole('heading', { level: 2 })).toBeVisible(),
+      expect(posts.nth(i).getByRole('heading', { level: 3 })).toBeVisible(),
     ),
   );
 });
