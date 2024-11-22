@@ -1,6 +1,6 @@
 'use client';
 import { useFieldArrayFormContext } from '@/components/form/FieldArrayFormProvider';
-import type { CreateBlogPostFormData } from '@/models/blogPost/create/formSchema';
+import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
 
 export default function ContentInputList() {
   const { fields } = useFieldArrayFormContext<CreateBlogPostFormData>();

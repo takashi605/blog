@@ -1,4 +1,4 @@
-import CreateBlogPostForm from '@/models/blogPost/create/CreateBlogPostForm';
+import CreateBlogPostForm from '@/controllers/blogPost/create/CreateBlogPostForm';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
