@@ -79,8 +79,16 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async fetchLatests(): Promise<BlogPostDTO[]> {
-    // TODO: fetchLatests の実装を追加する
-    throw new Error('fetchLatests はまだ実装されていません');
+    const response = await fetch(`${this.baseUrl}/blog/posts/latests`);
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
+
+    const sortedResponse = validatedResponse.sort((a, b) => {
+      return new Date(a.postDate).getTime() - new Date(b.postDate).getTime();
+    });
+
+    return sortedResponse;
   }
 
   private async post(blogPostJson: string): Promise<Response> {
