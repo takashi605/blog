@@ -1,7 +1,7 @@
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import { ViewBlogPostUseCase } from '../../../../../usecases/view/viewBlogPost';
-import WithBlogPostErrorForServer from '../../error/WithBlogPostErrorForServer';
-import ViewBlogPostPresenter from '../ui/ViewBlogPostPresenter';
+import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
+import WithBlogPostErrorForServer from '../error/WithBlogPostErrorForServer';
+import ViewBlogPostPresenter from './ui/ViewBlogPostPresenter';
 
 type ViewBlogPostControllerProps = {
   postId: string;

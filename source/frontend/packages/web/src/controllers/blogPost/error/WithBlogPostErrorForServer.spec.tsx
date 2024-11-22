@@ -1,9 +1,9 @@
-import WithBlogPostErrorForServer from '@/components/models/blogPost/error/WithBlogPostErrorForServer';
 import { UsecaseError } from '@/usecases/error';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { EntityError } from 'entities/src/error/error';
 import { HttpError } from 'shared-interface-adapter/src/error/httpError';
+import WithBlogPostErrorForServer from './WithBlogPostErrorForServer';
 
 async function ErrorComponent() {
   throw new Error('エラー！！');

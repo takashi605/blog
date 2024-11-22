@@ -1,9 +1,9 @@
 import React from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
-import Thumbnail from '../controllers/Thumbnail';
 import BlogPostDate from './BlogPostDate';
 import BlogPostTitle from './BlogPostTitle';
 import ContentRenderer from './contents/Content';
+import Thumbnail from './Thumbnail';
 import styles from './viewBlogPostPresenter.module.scss';
 
 type ViewBlogPostPresenterProps = {

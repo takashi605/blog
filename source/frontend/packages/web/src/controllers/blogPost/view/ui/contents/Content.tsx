@@ -1,7 +1,7 @@
-import H2 from '@/components/models/blogPost/view/ui/contents/elements/H2';
-import H3 from '@/components/models/blogPost/view/ui/contents/elements/H3';
-import ImageContent from '@/components/models/blogPost/view/ui/contents/elements/ImageContent';
-import Paragraph from '@/components/models/blogPost/view/ui/contents/elements/Paragraph';
+import H2 from '@/controllers/blogPost/view/ui/contents/elements/H2';
+import H3 from '@/controllers/blogPost/view/ui/contents/elements/H3';
+import ImageContent from '@/controllers/blogPost/view/ui/contents/elements/ImageContent';
+import Paragraph from '@/controllers/blogPost/view/ui/contents/elements/Paragraph';
 import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import { memo } from 'react';
 
