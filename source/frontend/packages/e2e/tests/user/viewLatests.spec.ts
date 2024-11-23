@@ -11,7 +11,7 @@ Given('新着記事を一覧表示するページにアクセスする', async (
 });
 
 Then('ページタイトルが表示される', async ({ page }) => {
-  expect(page.getByRole('heading', { level: 2 })).toHaveText('新着記事一覧');
+  expect(page.getByRole('heading', { level: 2 })).toHaveText('新着記事');
 });
 
 Then('複数の記事が表示される', async ({ page }) => {
