@@ -50,6 +50,10 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         {
           ...successResponseForGet,
           id: UUIDList.UUID3,
+          title: 'クリーンアーキテクチャの自分流ディレクトリ構成',
+          thumbnail: {
+            path: 'test-book',
+          },
           postDate: '2023-01-01',
           lastUpdateDate: '2022-01-02',
         },
@@ -62,6 +66,10 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         {
           ...successResponseForGet,
           id: UUIDList.UUID2,
+          title: 'Kubernetes わからんつらたん',
+          thumbnail: {
+            path: 'test-mechanical',
+          },
           postDate: '2022-02-01',
           lastUpdateDate: '2022-01-02',
         },
