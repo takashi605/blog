@@ -78,6 +78,19 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  async fetchLatests(): Promise<BlogPostDTO[]> {
+    const response = await fetch(`${this.baseUrl}/blog/posts/latests`);
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
+
+    const sortedResponse = validatedResponse.sort((a, b) => {
+      return new Date(a.postDate).getTime() - new Date(b.postDate).getTime();
+    });
+
+    return sortedResponse;
+  }
+
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/posts`, {
       method: 'POST',

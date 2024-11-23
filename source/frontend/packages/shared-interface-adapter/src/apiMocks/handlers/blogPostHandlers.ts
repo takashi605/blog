@@ -45,6 +45,36 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         status: 404,
       });
     }),
+    http.get(`${baseUrl}/blog/posts/latests`, () => {
+      return HttpResponse.json([
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID3,
+          title: 'クリーンアーキテクチャの自分流ディレクトリ構成',
+          thumbnail: {
+            path: 'test-book',
+          },
+          postDate: '2023-01-01',
+          lastUpdateDate: '2022-01-02',
+        },
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID1,
+          postDate: '2022-01-01',
+          lastUpdateDate: '2022-01-02',
+        },
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID2,
+          title: 'Kubernetes わからんつらたん',
+          thumbnail: {
+            path: 'test-mechanical',
+          },
+          postDate: '2022-02-01',
+          lastUpdateDate: '2022-01-02',
+        },
+      ]);
+    }),
   ];
   return blogPostHandlers;
 };
