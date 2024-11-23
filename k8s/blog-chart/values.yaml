@@ -94,8 +94,8 @@ e2e:
     env:
       TEST_TARGET_URL: "http://blog.example"
       ADMIN_URL: "http://admin.blog.example"
-    memoryLimit: "2000Mi"
-    cpuLimit: "2000m"
+    memoryLimit: "3000Mi"
+    cpuLimit: "3000m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
 production: false

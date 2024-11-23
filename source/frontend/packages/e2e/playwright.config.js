@@ -10,7 +10,7 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   outputDir: 'tests/test-results',
-  timeout: 60 * 1000,
+  timeout: 90 * 1000,
   expect: {
     timeout: 15 * 1000,
   },

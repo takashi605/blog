@@ -1,6 +1,6 @@
-import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { ViewLatestBlogPostsUseCase } from '../../../usecases/view/viewLatestBlogPosts';
+import ViewLatestBlogPostsPresenter from './ViewLatestBlogPostsPresenter';
 
 async function ViewLatestBlogPostsController() {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -15,11 +15,3 @@ async function ViewLatestBlogPostsController() {
 }
 
 export default ViewLatestBlogPostsController;
-
-function ViewLatestBlogPostsPresenter({
-  blogPosts,
-}: {
-  blogPosts: BlogPostDTO[];
-}) {
-  return <div>viewLatestBlogPostsPresenter</div>;
-}
