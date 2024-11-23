@@ -8,18 +8,16 @@ type ThumbnailProps = {
 
 function Thumbnail({ thumbnail }: ThumbnailProps) {
   return (
-    <div>
-      <CldImage
-        src={thumbnail.path}
-        alt="サムネイル画像"
-        width={100}
-        height={100}
-        style={{ width: '100%', height: '500px', objectFit: 'cover' }}
-        sizes="(max-width: 768px) 100vw,
+    <CldImage
+      src={thumbnail.path}
+      alt="サムネイル画像"
+      width={100}
+      height={100}
+      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
-      />
-    </div>
+    />
   );
 }
 
