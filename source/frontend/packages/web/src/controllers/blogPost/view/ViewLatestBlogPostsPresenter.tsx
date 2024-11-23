@@ -1,4 +1,5 @@
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import Thumbnail from './ui/Thumbnail';
 
 type ViewLatestBlogPostsPresenterProps = {
   blogPosts: BlogPostDTO[];
@@ -15,7 +16,7 @@ function ViewLatestBlogPostsPresenter({
           <li key={blogPost.id}>
             <h3>{blogPost.title}</h3>
             <p>投稿日:{blogPost.postDate}</p>
-            <img src={blogPost.thumbnail.path} alt="サムネイル画像" />
+            <Thumbnail thumbnail={blogPost.thumbnail} />
           </li>
         ))}
       </ul>
