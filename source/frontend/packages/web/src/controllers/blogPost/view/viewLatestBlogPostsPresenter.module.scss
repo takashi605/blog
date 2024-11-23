@@ -1,10 +1,13 @@
 .pageTitle {
+  font-family: ryo-gothic-plusn, sans-serif;
+  font-weight: bold;
+
   font-size: 42px;
   margin-bottom: 20px;
   letter-spacing: 6px;
 }
 
-.blogPostList{
+.blogPostList {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -15,7 +18,7 @@
   margin-bottom: 20px;
 }
 
-.thumbnail{
+.thumbnail {
   width: 100%;
   aspect-ratio: 5 / 3;
   position: relative;
@@ -23,6 +26,8 @@
 }
 
 .postDate {
+  font-family: source-han-serif-japanese, serif;
+  font-weight: bold;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -31,5 +36,7 @@
 }
 
 .blogPostTitle {
+  font-family: ryo-gothic-plusn, sans-serif;
+  font-weight: bold;
   font-size: 20px;
 }
