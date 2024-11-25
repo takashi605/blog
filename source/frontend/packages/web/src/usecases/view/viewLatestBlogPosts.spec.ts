@@ -26,14 +26,14 @@ describe('viewLatestBlogPosts', () => {
     if (blogPosts[0].contents[0].type !== ContentType.H2) {
       throw new Error('ContentType が H2 ではありません');
     }
-    expect(blogPosts[0].contents[0].id).toBe(1);
+    expect(blogPosts[0].contents[0].id).toBe('1');
     expect(blogPosts[0].contents[0].type).toBe('h2');
     expect(blogPosts[0].contents[0].text).toBe('h2見出し1');
 
     if (blogPosts[0].contents[1].type !== ContentType.H3) {
       throw new Error('ContentType が H3 ではありません');
     }
-    expect(blogPosts[0].contents[1].id).toBe(2);
+    expect(blogPosts[0].contents[1].id).toBe('2');
     expect(blogPosts[0].contents[1].type).toBe('h3');
     expect(blogPosts[0].contents[1].text).toBe('h3見出し1');
 
@@ -46,14 +46,14 @@ describe('viewLatestBlogPosts', () => {
     if (blogPosts[1].contents[0].type !== ContentType.H2) {
       throw new Error('ContentType が H2 ではありません');
     }
-    expect(blogPosts[1].contents[0].id).toBe(3);
+    expect(blogPosts[1].contents[0].id).toBe('3');
     expect(blogPosts[1].contents[0].type).toBe('h2');
     expect(blogPosts[1].contents[0].text).toBe('h2見出し2');
 
     if (blogPosts[1].contents[1].type !== ContentType.H3) {
       throw new Error('ContentType が H3 ではありません');
     }
-    expect(blogPosts[1].contents[1].id).toBe(4);
+    expect(blogPosts[1].contents[1].id).toBe('4');
     expect(blogPosts[1].contents[1].type).toBe('h3');
     expect(blogPosts[1].contents[1].text).toBe('h3見出し2');
   });
@@ -67,8 +67,8 @@ function createFetchedDTOMock(): BlogPostDTO[] {
     lastUpdateDate: '2021-01-02',
     thumbnail: { path: 'path/to/thumbnail1' },
     contents: [
-      { id: 1, type: ContentType.H2, text: 'h2見出し1' },
-      { id: 2, type: ContentType.H3, text: 'h3見出し1' },
+      { id: '1', type: ContentType.H2, text: 'h2見出し1' },
+      { id: '2', type: ContentType.H3, text: 'h3見出し1' },
     ],
   };
 
@@ -79,8 +79,8 @@ function createFetchedDTOMock(): BlogPostDTO[] {
     lastUpdateDate: '2021-02-02',
     thumbnail: { path: 'path/to/thumbnail2' },
     contents: [
-      { id: 3, type: ContentType.H2, text: 'h2見出し2' },
-      { id: 4, type: ContentType.H3, text: 'h3見出し2' },
+      { id: '3', type: ContentType.H2, text: 'h2見出し2' },
+      { id: '4', type: ContentType.H3, text: 'h3見出し2' },
     ],
   };
 

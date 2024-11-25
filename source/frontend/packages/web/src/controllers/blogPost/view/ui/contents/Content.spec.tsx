@@ -8,7 +8,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     render(
       <ContentRenderer
         content={{
-          id: 1,
+          id: '1',
           type: ContentType.H2,
           text: 'h2見出し',
         }}
@@ -23,7 +23,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     render(
       <ContentRenderer
         content={{
-          id: 1,
+          id: '1',
           type: ContentType.H3,
           text: 'h3見出し',
         }}
@@ -38,7 +38,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     render(
       <ContentRenderer
         content={{
-          id: 1,
+          id: '1',
           type: ContentType.Paragraph,
           text: '段落',
         }}
@@ -53,7 +53,7 @@ describe('コンポーネント: viewBlogPostController', () => {
     render(
       <ContentRenderer
         content={{
-          id: 1,
+          id: '1',
           type: ContentType.Image,
           path: 'path/to/image',
         }}

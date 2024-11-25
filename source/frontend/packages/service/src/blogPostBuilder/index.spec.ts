@@ -13,10 +13,10 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
-      .addH2(1, 'h2見出し1')
-      .addH3(2, 'h3見出し1')
-      .addParagraph(3, '段落1')
-      .addImage(4, 'path/to/image');
+      .addH2('1', 'h2見出し1')
+      .addH3('2', 'h3見出し1')
+      .addParagraph('3', '段落1')
+      .addImage('4', 'path/to/image');
     const blogPost = builder.build();
 
     expect(blogPost.getId()).toBe(id);

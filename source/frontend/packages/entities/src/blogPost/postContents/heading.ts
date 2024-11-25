@@ -1,11 +1,11 @@
 import { ContentType, type ContentBase } from './content';
 
 export class H2 implements ContentBase {
-  private id: number;
+  private id: string;
   private text: string;
   private type: ContentType.H2 = ContentType.H2;
 
-  constructor(id: number, text: string) {
+  constructor(id: string, text: string) {
     this.id = id;
     this.text = text;
   }
@@ -21,11 +21,11 @@ export class H2 implements ContentBase {
   }
 }
 export class H3 implements ContentBase {
-  private id: number;
+  private id: string;
   private text: string;
   private type: ContentType.H3 = ContentType.H3;
 
-  constructor(id: number, text: string) {
+  constructor(id: string, text: string) {
     this.id = id;
     this.text = text;
   }

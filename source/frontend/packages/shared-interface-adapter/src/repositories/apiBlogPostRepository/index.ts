@@ -9,22 +9,22 @@ import { HttpError } from '../../error/httpError';
 const contentSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ContentType.H2),
-    id: z.number(),
+    id: z.string(),
     text: z.string(),
   }),
   z.object({
     type: z.literal(ContentType.H3),
-    id: z.number(),
+    id: z.string(),
     text: z.string(),
   }),
   z.object({
     type: z.literal(ContentType.Paragraph),
-    id: z.number(),
+    id: z.string(),
     text: z.string(),
   }),
   z.object({
     type: z.literal(ContentType.Image),
-    id: z.number(),
+    id: z.string(),
     path: z.string(),
   }),
 ]);

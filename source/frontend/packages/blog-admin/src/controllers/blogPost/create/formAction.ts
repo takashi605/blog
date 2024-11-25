@@ -41,13 +41,13 @@ function injectContentsToBuilder(
   formData.contents.forEach((content, index) => {
     switch (content.type) {
       case 'h2':
-        builder.addH2(index, content.text);
+        builder.addH2(index.toString(), content.text);
         break;
       case 'h3':
-        builder.addH3(index, content.text);
+        builder.addH3(index.toString(), content.text);
         break;
       case 'paragraph':
-        builder.addParagraph(index, content.text);
+        builder.addParagraph(index.toString(), content.text);
         break;
     }
   });
