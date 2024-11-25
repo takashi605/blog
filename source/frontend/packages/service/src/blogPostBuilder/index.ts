@@ -77,23 +77,31 @@ export class BlogPostBuilder {
   }
 
   build() {
-    if (!this.id) {
-      throw new Error('記事の id は必須です');
-    }
-    if (uuidv4Regex().test(this.id) === false) {
-      throw new Error('記事の id は UUIDv4 の形式で設定してください');
-    }
-    const blogPost = new BlogPost(this.id, this.postTitle)
+    this.validateId();
+    const blogPost = new BlogPost(this.id!, this.postTitle)
       .setThumbnail(this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);
+    this.validateBlogPostId(blogPost);
+    return blogPost;
+  }
+
+  validateId() {
+    if (!this.id) {
+      throw new Error('記事の id は必須です');
+    }
+    if (!uuidv4Regex().test(this.id)) {
+      throw new Error('記事の id は UUIDv4 の形式で設定してください');
+    }
+  }
+
+  validateBlogPostId(blogPost: BlogPost) {
     blogPost.getContents().forEach((content) => {
       if (!uuidv4Regex().test(content.getId())) {
         throw new Error('コンテントの id は UUIDv4 の形式で設定してください');
       }
     });
-    return blogPost;
   }
 }
 
