@@ -88,6 +88,11 @@ export class BlogPostBuilder {
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);
+    blogPost.getContents().forEach((content) => {
+      if (!uuidv4Regex().test(content.getId())) {
+        throw new Error('コンテントの id は UUIDv4 の形式で設定してください');
+      }
+    });
     return blogPost;
   }
 }

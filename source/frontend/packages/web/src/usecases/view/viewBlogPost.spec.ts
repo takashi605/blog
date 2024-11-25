@@ -13,11 +13,11 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       lastUpdateDate: '2021-01-02',
       thumbnail: { path: 'path/to/thumbnail' },
       contents: [
-        { id: 1, type: 'h2', text: 'h2見出し1' },
-        { id: 2, type: 'h3', text: 'h3見出し1' },
-        { id: 3, type: 'paragraph', text: '段落1' },
-        { id: 4, type: 'h3', text: 'h3見出し2' },
-        { id: 5, type: 'paragraph', text: '段落2' },
+        { id: createUUIDv4(), type: 'h2', text: 'h2見出し1' },
+        { id: createUUIDv4(), type: 'h3', text: 'h3見出し1' },
+        { id: createUUIDv4(), type: 'paragraph', text: '段落1' },
+        { id: createUUIDv4(), type: 'h3', text: 'h3見出し2' },
+        { id: createUUIDv4(), type: 'paragraph', text: '段落2' },
       ],
     };
     const mockRepository: BlogPostRepository = {
