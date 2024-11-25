@@ -15,8 +15,8 @@ describe('blogPostDTOToEntity', () => {
         path: 'path/to/thumbnail',
       },
       contents: [
-        { id: 1, type: ContentType.H2, text: 'h2 text' },
-        { id: 2, type: ContentType.H3, text: 'h3 text' },
+        { id: createUUIDv4(), type: ContentType.H2, text: 'h2 text' },
+        { id: createUUIDv4(), type: ContentType.H3, text: 'h3 text' },
       ],
     };
     const entity = fetchedDataToEntity(dto);

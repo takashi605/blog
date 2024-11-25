@@ -1,6 +1,7 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import { createUUIDv4 } from 'service/src/utils/uuid';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
@@ -94,24 +95,24 @@ const successResponseForGet = {
   lastUpdateDate: '2022-01-02',
   contents: [
     {
-      id: 1,
+      id: createUUIDv4(),
       type: 'paragraph',
       text: '新しい技術スタックに挑戦することは、いつも冒険と学びの場です。\
             未経験の技術に取り組むたびに、新たな可能性が広がり、成長を実感します。\
             未知のフレームワークやツールを使いこなしていく過程で、技術と一体になる感覚を得ることができます。',
     },
     {
-      id: 2,
+      id: createUUIDv4(),
       type: 'h2',
       text: '最初のステップ',
     },
     {
-      id: 3,
+      id: createUUIDv4(),
       type: 'h3',
       text: '学習環境の準備',
     },
     {
-      id: 4,
+      id: createUUIDv4(),
       type: 'paragraph',
       text: 'すべては一歩から始まります。既存の快適な環境を離れ、新しい技術への挑戦を始めます。\
             最初はドキュメントを読み、サンプルコードを試しながら理解を深めていきます。コードを読むことは、詳細なロジックを理解するための重要な歩準です。\
@@ -120,17 +121,17 @@ const successResponseForGet = {
             最初の図書の読み方やツールの使い方を学んでいく中で、学ぶことの楽しさが潤しみ、目標に向かう過程がより愉快なものに変わっていきます。',
     },
     {
-      id: 5,
+      id: createUUIDv4(),
       type: 'h2',
       text: '学びの中での気づき',
     },
     {
-      id: 6,
+      id: createUUIDv4(),
       type: 'h3',
       text: '試行錯誤の重要性',
     },
     {
-      id: 7,
+      id: createUUIDv4(),
       type: 'paragraph',
       text: '試行錯誤は技術習得において欠かせないプロセスです。一度でうまくいかないことがほとんどですが、その失敗から学ぶことで次のステップへのヒントを得ることができます。\
             新しい技術を学ぶ過程では、複数のアプローチを試してみて、何が効果的で何がそうでないかを確認することが非常に重要です。\
@@ -138,17 +139,17 @@ const successResponseForGet = {
             新しいコードを試し、デバッグしながら学ぶことで、単なる理論以上の実践的なスキルを身に付けることができます。',
     },
     {
-      id: 8,
+      id: createUUIDv4(),
       type: 'h3',
       text: '課題に対処するプロセス',
     },
     {
-      id: 9,
+      id: createUUIDv4(),
       type: 'image',
       path: 'test-book',
     },
     {
-      id: 10,
+      id: createUUIDv4(),
       type: 'paragraph',
       text: '技術の習得には多くの時間と試行錯誤が必要です。\
             途中でエラーに遭遇したり、思った通りに動作しないこともありますが、それが学びの一部です。\

@@ -21,9 +21,9 @@ describe('エンティティ: 投稿記事', () => {
 
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const title = '記事タイトル';
-    const h2 = new H2(1, 'h2見出し');
-    const h3 = new H3(2, 'h3見出し');
-    const paragraph1 = new Paragraph(3, '段落');
+    const h2 = new H2('1', 'h2見出し');
+    const h3 = new H3('2', 'h3見出し');
+    const paragraph1 = new Paragraph('3', '段落');
     const blogPost = new BlogPost('1', title)
       .addContent(h2)
       .addContent(h3)
@@ -35,17 +35,17 @@ describe('エンティティ: 投稿記事', () => {
     const h2Content = contents[0] as H2;
     expect(h2Content.getValue()).toBe('h2見出し');
     expect(h2Content.getType()).toBe('h2');
-    expect(h2Content.getId()).toBe(1);
+    expect(h2Content.getId()).toBe('1');
 
     const h3Content = contents[1] as H2;
     expect(h3Content.getValue()).toBe('h3見出し');
     expect(h3Content.getType()).toBe('h3');
-    expect(h3Content.getId()).toBe(2);
+    expect(h3Content.getId()).toBe('2');
 
     const pContent = contents[2] as H2;
     expect(pContent.getValue()).toBe('段落');
     expect(pContent.getType()).toBe('paragraph');
-    expect(pContent.getId()).toBe(3);
+    expect(pContent.getId()).toBe('3');
   });
 
   it('記事の投稿日付を取得できる', () => {

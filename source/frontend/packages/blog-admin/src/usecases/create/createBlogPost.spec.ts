@@ -46,9 +46,9 @@ describe('ユースケース: 記事の投稿', () => {
     const builder = createBlogPostBuilder()
       .setId(id)
       .setPostTitle('記事タイトル')
-      .addH2(1, 'h2見出し1')
-      .addH3(2, 'h3見出し1')
-      .addParagraph(3, '段落1');
+      .addH2(createUUIDv4(), 'h2見出し1')
+      .addH3(createUUIDv4(), 'h3見出し1')
+      .addParagraph(createUUIDv4(), '段落1');
     const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
 
     const createdBlogPost = await blogPostCreator.execute();
@@ -98,15 +98,16 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     );
 
     const id = createUUIDv4();
+    const contentIds = [createUUIDv4(), createUUIDv4(), createUUIDv4()];
     const blogPostBuilder = createBlogPostBuilder()
       .setId(id)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
-      .addH2(1, 'h2見出し1')
-      .addH3(2, 'h3見出し1')
-      .addParagraph(3, '段落1');
+      .addH2(contentIds[0], 'h2見出し1')
+      .addH3(contentIds[1], 'h3見出し1')
+      .addParagraph(contentIds[2], '段落1');
     const blogPostCreator = new CreateBlogPostUseCase(
       blogPostBuilder,
       apiRepository,
@@ -121,9 +122,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       postDate: today,
       lastUpdateDate: today,
       contents: [
-        { id: 1, type: 'h2', text: 'h2見出し1' },
-        { id: 2, type: 'h3', text: 'h3見出し1' },
-        { id: 3, type: 'paragraph', text: '段落1' },
+        { id: contentIds[0], type: 'h2', text: 'h2見出し1' },
+        { id: contentIds[1], type: 'h3', text: 'h3見出し1' },
+        { id: contentIds[2], type: 'paragraph', text: '段落1' },
       ],
     });
   });

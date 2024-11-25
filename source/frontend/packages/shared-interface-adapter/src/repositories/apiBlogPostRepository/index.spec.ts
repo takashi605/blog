@@ -22,15 +22,16 @@ describe('apiBlogPostRepository', () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
     const id = createUUIDv4();
+    const contentIds = [createUUIDv4(), createUUIDv4(), createUUIDv4()];
     const blogPostBuilder = createBlogPostBuilder()
       .setId(id)
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
-      .addH2(1, 'h2見出し1')
-      .addH3(2, 'h3見出し1')
-      .addParagraph(3, '段落1');
+      .addH2(contentIds[0], 'h2見出し1')
+      .addH3(contentIds[1], 'h3見出し1')
+      .addParagraph(contentIds[2], '段落1');
     const blogPost = blogPostBuilder.build();
 
     const resp = await apiRepository.save(blogPost);
@@ -41,9 +42,9 @@ describe('apiBlogPostRepository', () => {
       postDate: '1999-01-01',
       lastUpdateDate: '1999-01-02',
       contents: [
-        { id: 1, type: 'h2', text: 'h2見出し1' },
-        { id: 2, type: 'h3', text: 'h3見出し1' },
-        { id: 3, type: 'paragraph', text: '段落1' },
+        { id: contentIds[0], type: 'h2', text: 'h2見出し1' },
+        { id: contentIds[1], type: 'h3', text: 'h3見出し1' },
+        { id: contentIds[2], type: 'paragraph', text: '段落1' },
       ],
     });
   });

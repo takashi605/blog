@@ -17,11 +17,11 @@ export type ContentInput<T extends Content> = {
 };
 
 export class H2Input implements ContentInput<H2> {
-  id: number;
+  id: string;
   type: ContentType;
   text: string;
 
-  constructor(id: number, contentValue: string) {
+  constructor(id: string, contentValue: string) {
     this.id = id;
     this.type = ContentType.H2;
     this.text = contentValue;
@@ -32,11 +32,11 @@ export class H2Input implements ContentInput<H2> {
   }
 }
 export class H3Input implements ContentInput<H3> {
-  id: number;
+  id: string;
   type: ContentType;
   text: string;
 
-  constructor(id: number, contentValue: string) {
+  constructor(id: string, contentValue: string) {
     this.id = id;
     this.type = ContentType.H3;
     this.text = contentValue;
@@ -47,11 +47,11 @@ export class H3Input implements ContentInput<H3> {
   }
 }
 export class ParagraphInput implements ContentInput<Paragraph> {
-  id: number;
+  id: string;
   type: ContentType;
   text: string;
 
-  constructor(id: number, contentValue: string) {
+  constructor(id: string, contentValue: string) {
     this.id = id;
     this.type = ContentType.Paragraph;
     this.text = contentValue;
@@ -62,11 +62,11 @@ export class ParagraphInput implements ContentInput<Paragraph> {
   }
 }
 export class ImageInput implements ContentInput<ImageContent> {
-  id: number;
+  id: string;
   type: ContentType;
   path: string;
 
-  constructor(id: number, path: string) {
+  constructor(id: string, path: string) {
     this.id = id;
     this.type = ContentType.Image;
     this.path = path;

@@ -1,10 +1,10 @@
 import { ContentType, type ContentBase } from './content';
 
 export class Paragraph implements ContentBase {
-  private id: number;
+  private id: string;
   private text: string;
 
-  constructor(id: number, text: string) {
+  constructor(id: string, text: string) {
     this.id = id;
     this.text = text;
   }

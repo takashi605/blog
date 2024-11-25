@@ -42,28 +42,28 @@ export class BlogPostBuilder {
     return this;
   }
 
-  addH2(id: number, contentValue: string) {
+  addH2(id: string, contentValue: string) {
     const h2Input = new H2Input(id, contentValue);
     const builder = new ContentBuildStrategyContext(h2Input);
     this.contentBuilders.push(builder);
     return this;
   }
 
-  addH3(id: number, contentValue: string) {
+  addH3(id: string, contentValue: string) {
     const h3Input = new H3Input(id, contentValue);
     const builder = new ContentBuildStrategyContext(h3Input);
     this.contentBuilders.push(builder);
     return this;
   }
 
-  addParagraph(id: number, contentValue: string) {
+  addParagraph(id: string, contentValue: string) {
     const paragraphInput = new ParagraphInput(id, contentValue);
     const builder = new ContentBuildStrategyContext(paragraphInput);
     this.contentBuilders.push(builder);
     return this;
   }
 
-  addImage(id: number, imagePath: string) {
+  addImage(id: string, imagePath: string) {
     const imageInput = new ImageInput(id, imagePath);
     const builder = new ContentBuildStrategyContext(imageInput);
     this.contentBuilders.push(builder);
@@ -77,18 +77,31 @@ export class BlogPostBuilder {
   }
 
   build() {
-    if (!this.id) {
-      throw new Error('記事の id は必須です');
-    }
-    if (uuidv4Regex().test(this.id) === false) {
-      throw new Error('記事の id は UUIDv4 の形式で設定してください');
-    }
-    const blogPost = new BlogPost(this.id, this.postTitle)
+    this.validateId();
+    const blogPost = new BlogPost(this.id!, this.postTitle)
       .setThumbnail(this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);
+    this.validateBlogPostId(blogPost);
     return blogPost;
+  }
+
+  validateId() {
+    if (!this.id) {
+      throw new Error('記事の id は必須です');
+    }
+    if (!uuidv4Regex().test(this.id)) {
+      throw new Error('記事の id は UUIDv4 の形式で設定してください');
+    }
+  }
+
+  validateBlogPostId(blogPost: BlogPost) {
+    blogPost.getContents().forEach((content) => {
+      if (!uuidv4Regex().test(content.getId())) {
+        throw new Error('コンテントの id は UUIDv4 の形式で設定してください');
+      }
+    });
   }
 }
 
