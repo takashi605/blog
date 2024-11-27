@@ -3,7 +3,7 @@ import { createBdd } from 'playwright-bdd';
 
 const { Given, When, Then } = createBdd();
 
-Given('トップページにアクセスする', async ({ page }) => {
+Given('トップページにアクセス!', async ({ page }) => {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
