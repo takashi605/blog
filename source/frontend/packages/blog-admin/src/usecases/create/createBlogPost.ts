@@ -1,5 +1,5 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
+import type { BlogPostBuilder } from 'service/src/blogPostEntityBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
 import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
 
