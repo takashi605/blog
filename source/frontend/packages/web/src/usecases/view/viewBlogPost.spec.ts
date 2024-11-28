@@ -24,6 +24,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       save: jest.fn(),
       fetch: jest.fn().mockReturnValue(fetchedDTOMock),
       fetchLatests: jest.fn(),
+      fetchTopTechPick: jest.fn(),
     };
 
     const viewBlogPostUsecase = new ViewBlogPostUseCase(mockRepository);

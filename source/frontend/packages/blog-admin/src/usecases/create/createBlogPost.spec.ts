@@ -23,6 +23,7 @@ describe('ユースケース: 記事の投稿', () => {
     save: jest.fn(),
     fetch: jest.fn(),
     fetchLatests: jest.fn(),
+    fetchTopTechPick: jest.fn(),
   };
 
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
@@ -40,6 +41,7 @@ describe('ユースケース: 記事の投稿', () => {
       save: mockSave,
       fetch: jest.fn(),
       fetchLatests: jest.fn(),
+      fetchTopTechPick: jest.fn(),
     };
 
     const id = createUUIDv4();

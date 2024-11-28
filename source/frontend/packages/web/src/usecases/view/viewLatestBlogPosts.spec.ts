@@ -11,6 +11,7 @@ describe('viewLatestBlogPosts', () => {
       save: jest.fn(),
       fetch: jest.fn(),
       fetchLatests: fetchLatestsMock,
+      fetchTopTechPick: jest.fn(),
     };
 
     const viewLatestsUseCase = new ViewLatestBlogPostsUseCase(mockRepository);
