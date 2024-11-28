@@ -1,5 +1,5 @@
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
-import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 

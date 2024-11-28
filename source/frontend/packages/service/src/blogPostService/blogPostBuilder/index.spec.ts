@@ -2,7 +2,7 @@ import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import { createBlogPostBuilder } from '.';
-import { createUUIDv4 } from '../utils/uuid';
+import { createUUIDv4 } from '../../utils/uuid';
 
 describe('エンティティ: 投稿記事を生成するビルダークラス', () => {
   it('BlogPost エンティティを生成できる', () => {

@@ -1,6 +1,6 @@
 import { BlogPost } from 'entities/src/blogPost';
 import type { Content } from 'entities/src/blogPost/postContents/content';
-import { uuidv4Regex } from '../utils/uuid';
+import { uuidv4Regex } from '../../utils/uuid';
 import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
   H2Input,

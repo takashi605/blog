@@ -1,5 +1,5 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import { createUUIDv4 } from '../../utils/uuid';
+import { createUUIDv4 } from '../../../utils/uuid';
 import type { BlogPostDTO } from './blogPostDTO';
 import { fetchedDataToEntity } from './blogPostDTOToEntity';
 

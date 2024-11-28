@@ -1,5 +1,5 @@
-import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
-import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import { createBlogPostBuilder } from 'service/src/blogPostService/blogPostBuilder';
+import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';

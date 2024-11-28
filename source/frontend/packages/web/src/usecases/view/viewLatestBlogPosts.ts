@@ -1,6 +1,6 @@
-import type { BlogPostRepository } from 'service/src/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
-import { fetchedDataToEntity } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTOToEntity';
+import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
+import { fetchedDataToEntity } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTOToEntity';
 import { BlogPostDTOBuilder } from './output/dto';
 
 export class ViewLatestBlogPostsUseCase {
