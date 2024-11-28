@@ -1,4 +1,4 @@
-import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
 import Thumbnail from './ui/Thumbnail';
 import styles from './viewLatestBlogPostsPresenter.module.scss';
 

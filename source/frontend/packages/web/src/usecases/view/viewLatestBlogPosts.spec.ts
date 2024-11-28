@@ -1,6 +1,6 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
+import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ViewLatestBlogPostsUseCase } from './viewLatestBlogPosts';
 

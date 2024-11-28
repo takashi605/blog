@@ -1,4 +1,4 @@
-import { createBlogPostBuilder } from 'service/src/blogPostService/blogPostEntityBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
 import { UUIDList } from '../../apiMocks/handlers/blogPostHandlers';

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
 import BlogPostDate from './ui/BlogPostDate';
 import BlogPostTitle from './ui/BlogPostTitle';
 import Thumbnail from './ui/Thumbnail';

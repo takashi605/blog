@@ -1,7 +1,7 @@
 import { BlogPostDTOBuilder } from '@/usecases/view/output/dto/index';
-import type { BlogPostRepository } from 'service/src/blogPostService/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTO';
-import { fetchedDataToEntity } from 'service/src/blogPostService/blogPostRepository/repositoryOutput/blogPostDTOToEntity';
+import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
+import { fetchedDataToEntity } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTOToEntity';
 
 export class ViewBlogPostUseCase {
   private blogPostRepository: BlogPostRepository | null;
