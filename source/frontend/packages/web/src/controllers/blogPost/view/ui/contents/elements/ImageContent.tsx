@@ -1,6 +1,6 @@
 'use client';
-import type { ImageForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import { CldImage } from 'next-cloudinary';
+import type { ImageForDTO } from 'service/src/blogPostService/dto/contentDTO';
 
 type ImageContentProps = {
   imageContent: ImageForDTO;

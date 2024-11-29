@@ -1,6 +1,6 @@
 import { TopTechPickSelector } from 'service/src/blogPostService/businessLogic/topTechPickSelector';
+import { BlogPostDTOBuilder } from 'service/src/blogPostService/dto/blogPostDTOBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
-import { BlogPostDTOBuilder } from './output/dto';
 
 export class ViewTopTechPickUseCase {
   private blogPostRepository: BlogPostRepository;
