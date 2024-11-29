@@ -92,7 +92,12 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async fetchTopTechPick(): Promise<BlogPostDTO> {
-    throw new Error('fetchTopTechPick は未実装です');
+    const response = await fetch(`${this.baseUrl}/blog/posts/top-tech-pick`);
+    const validatedResponse = blogPostResponseSchema.parse(
+      await response.json(),
+    );
+
+    return validatedResponse;
   }
 
   private async post(blogPostJson: string): Promise<Response> {

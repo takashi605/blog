@@ -46,6 +46,14 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         status: 404,
       });
     }),
+    http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
+      return HttpResponse.json({
+        ...successResponseForGet,
+        id: UUIDList.UUID1,
+        postDate: '2022-01-01',
+        lastUpdateDate: '2022-01-02',
+      });
+    }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {
       return HttpResponse.json([
         {

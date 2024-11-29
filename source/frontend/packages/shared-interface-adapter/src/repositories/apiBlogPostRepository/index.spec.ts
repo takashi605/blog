@@ -74,6 +74,18 @@ describe('apiBlogPostRepository', () => {
     }
   });
 
+  it('api からトップテックピック記事を取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchTopTechPick();
+    expect(resp.id).toBeDefined();
+    expect(resp.title).toBeDefined();
+    expect(resp.thumbnail).toBeDefined();
+    expect(resp.postDate).toBeDefined();
+    expect(resp.lastUpdateDate).toBeDefined();
+    expect(resp.contents.length).toBeGreaterThan(0);
+  });
+
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
     try {
