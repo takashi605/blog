@@ -1,6 +1,6 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
-import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 

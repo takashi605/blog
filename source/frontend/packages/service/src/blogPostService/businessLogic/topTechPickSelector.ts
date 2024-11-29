@@ -1,5 +1,5 @@
+import { fetchedDataToEntity } from '../dto/blogPostDTOToEntity';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
-import { fetchedDataToEntity } from '../repository/repositoryOutput/blogPostDTOToEntity';
 
 export class TopTechPickSelector {
   private blogPostRepository: BlogPostRepository;

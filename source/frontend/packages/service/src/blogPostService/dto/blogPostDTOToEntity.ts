@@ -1,6 +1,6 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import type { BlogPostBuilder } from '../../entityBuilder/blogPostBuilder';
-import { createBlogPostBuilder } from '../../entityBuilder/blogPostBuilder';
+import type { BlogPostBuilder } from '../entityBuilder/blogPostBuilder';
+import { createBlogPostBuilder } from '../entityBuilder/blogPostBuilder';
 import type { BlogPostDTO } from './blogPostDTO';
 
 export function fetchedDataToEntity(dto: BlogPostDTO): BlogPost {

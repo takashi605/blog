@@ -1,6 +1,6 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ViewTopTechPickUseCase } from './viewTopTechPick';
 
