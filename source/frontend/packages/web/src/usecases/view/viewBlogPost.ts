@@ -1,6 +1,6 @@
 import { BlogPostDTOBuilder } from '@/usecases/view/output/dto/index';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { fetchedDataToEntity } from 'service/src/blogPostService/dto/blogPostDTOToEntity';
+import { blogPostDTOToEntity } from 'service/src/blogPostService/dto/blogPostDTOToEntity';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 
 export class ViewBlogPostUseCase {
@@ -16,7 +16,7 @@ export class ViewBlogPostUseCase {
     }
 
     const fetchedData = await this.blogPostRepository.fetch(id);
-    const entity = fetchedDataToEntity(fetchedData);
+    const entity = blogPostDTOToEntity(fetchedData);
     const dto = new BlogPostDTOBuilder(entity).build();
     return dto;
   }

@@ -1,7 +1,7 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from './blogPostDTO';
-import { fetchedDataToEntity } from './blogPostDTOToEntity';
+import { blogPostDTOToEntity } from './blogPostDTOToEntity';
 
 describe('blogPostDTOToEntity', () => {
   it('DTO からエンティティに変換する', () => {
@@ -19,7 +19,7 @@ describe('blogPostDTOToEntity', () => {
         { id: createUUIDv4(), type: ContentType.H3, text: 'h3 text' },
       ],
     };
-    const entity = fetchedDataToEntity(dto);
+    const entity = blogPostDTOToEntity(dto);
 
     expect(entity).toHaveProperty('id', id);
     expect(entity).toHaveProperty('title', 'title');
