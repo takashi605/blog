@@ -1,3 +1,4 @@
+import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
@@ -5,8 +6,8 @@ import type { BlogPostDTO } from '../repository/repositoryOutput/blogPostDTO';
 import { TopTechPickSelector } from './topTechPickSelector';
 
 describe('topTechPickSelector', () => {
-  it('データリポジトリからデータを受け取れる', async () => {
-    const expectedFetchTopTechPick = buildTopTechPickEntity();
+  it('看板記事のエンティティデータを受け取れる', async () => {
+    const expectedFetchTopTechPick = buildTopTechPickDTO();
     const fetchTopTechPick = jest
       .fn()
       .mockReturnValue(expectedFetchTopTechPick);
@@ -17,17 +18,22 @@ describe('topTechPickSelector', () => {
       fetchTopTechPick,
     };
     const topTechPickSelector = new TopTechPickSelector(mockBlogPostRepository);
-    const topTechPickBlogPost = await topTechPickSelector.execute();
+    const topTechPickBlogPost: BlogPost = await topTechPickSelector.execute();
     expect(fetchTopTechPick).toHaveBeenCalled();
-    expect(topTechPickBlogPost.id).toBeDefined();
-    expect(topTechPickBlogPost.title).toBe('記事タイトル');
-    expect(topTechPickBlogPost.postDate).toBe('2021-01-01');
-    expect(topTechPickBlogPost.lastUpdateDate).toBe('2021-01-02');
-    expect(topTechPickBlogPost.thumbnail).toBeDefined();
+    expect(topTechPickBlogPost.getId()).toBeDefined();
+    expect(topTechPickBlogPost.getTitleText()).toBe('記事タイトル');
+    expect(topTechPickBlogPost.getPostDate()).toStrictEqual(
+      new Date('2021-01-01'),
+    );
+    expect(topTechPickBlogPost.getLastUpdateDate()).toStrictEqual(
+      new Date('2021-01-02'),
+    );
+    expect(topTechPickBlogPost.getThumbnail()).toBeDefined();
+    expect(topTechPickBlogPost.getContents()).toHaveLength(3);
   });
 });
 
-function buildTopTechPickEntity(): BlogPostDTO {
+function buildTopTechPickDTO(): BlogPostDTO {
   return {
     id: createUUIDv4(),
     title: '記事タイトル',
@@ -38,8 +44,6 @@ function buildTopTechPickEntity(): BlogPostDTO {
       { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し1' },
       { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し1' },
       { id: createUUIDv4(), type: ContentType.Paragraph, text: '段落1' },
-      { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し2' },
-      { id: createUUIDv4(), type: ContentType.Paragraph, text: '段落2' },
     ],
   };
 }
