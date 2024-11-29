@@ -1,9 +1,9 @@
-import H2 from '@/controllers/blogPost/view/ui/contents/elements/H2';
-import H3 from '@/controllers/blogPost/view/ui/contents/elements/H3';
-import ImageContent from '@/controllers/blogPost/view/ui/contents/elements/ImageContent';
-import Paragraph from '@/controllers/blogPost/view/ui/contents/elements/Paragraph';
 import { memo } from 'react';
 import type { ContentForDTO } from 'service/src/blogPostService/dto/contentDTO';
+import H2 from './elements/H2';
+import H3 from './elements/H3';
+import ImageContent from './elements/ImageContent';
+import Paragraph from './elements/Paragraph';
 
 export type BlogPostContentProps = {
   content: ContentForDTO;

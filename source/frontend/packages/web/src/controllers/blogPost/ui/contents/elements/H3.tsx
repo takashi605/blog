@@ -1,7 +1,7 @@
-import type { ContentElementProps } from '@/controllers/blogPost/view/ui/contents/elements/type';
 import Image from 'next/image';
 import { memo } from 'react';
 import styles from './h3.module.scss';
+import type { ContentElementProps } from './type';
 
 export function H3({ children }: ContentElementProps) {
   return (
