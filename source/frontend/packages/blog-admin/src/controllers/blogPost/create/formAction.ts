@@ -1,8 +1,8 @@
 import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
 import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BlogPostBuilder } from 'service/src/blogPostBuilder';
-import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import type { BlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
