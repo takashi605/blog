@@ -1,5 +1,6 @@
-import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { TopTechPickSelector } from 'service/src/blogPostService/businessLogic/topTechPickSelector';
+import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import { BlogPostDTOBuilder } from './output/dto';
 
 export class ViewTopTechPickUseCase {
   private blogPostRepository: BlogPostRepository;
@@ -10,6 +11,8 @@ export class ViewTopTechPickUseCase {
 
   async execute() {
     const selector = new TopTechPickSelector(this.blogPostRepository);
-    return await selector.execute();
+    const entity = await selector.execute();
+    const dto = new BlogPostDTOBuilder(entity).build();
+    return dto;
   }
 }
