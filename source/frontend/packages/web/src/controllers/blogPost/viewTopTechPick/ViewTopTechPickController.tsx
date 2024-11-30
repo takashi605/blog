@@ -1,21 +1,16 @@
-import { ContentType } from 'entities/src/blogPost/postContents/content';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { createUUIDv4 } from 'service/src/utils/uuid';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ViewTopTechPickUseCase } from '../../../usecases/view/viewTopTechPick';
 import ViewTopTechPickPresenter from './ViewTopTechPickPresenter';
 
 async function ViewTopTechPickController() {
-  const dto: BlogPostDTO = {
-    id: createUUIDv4(),
-    title: '記事タイトル',
-    postDate: '2021-01-01',
-    lastUpdateDate: '2021-01-02',
-    thumbnail: { path: 'path/to/thumbnail' },
-    contents: [
-      { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し1' },
-      { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し1' },
-      { id: createUUIDv4(), type: ContentType.Paragraph, text: '段落1' },
-    ],
-  };
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('API URL が設定されていません');
+  }
+  const blogPostRepository = new ApiBlogPostRepository(
+    process.env.NEXT_PUBLIC_API_URL,
+  );
+  const usecase = new ViewTopTechPickUseCase(blogPostRepository);
+  const dto = await usecase.execute();
 
   return <ViewTopTechPickPresenter blogPostDTO={dto} />;
 }
