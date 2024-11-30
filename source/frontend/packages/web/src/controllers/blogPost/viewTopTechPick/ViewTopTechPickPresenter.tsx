@@ -1,9 +1,9 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { useExcerpted } from '../hooks/useExcerpted';
 import BlogPostTitle from '../ui/BlogPostTitle';
+import { Paragraph } from '../ui/contents/elements/Paragraph';
 import Thumbnail from '../ui/Thumbnail';
 import styles from './viewTopTechPick.module.scss';
-import { Paragraph } from '../ui/contents/elements/Paragraph';
 
 type ViewTopTechPickPresenterProps = {
   blogPostDTO: BlogPostDTO;
@@ -19,7 +19,7 @@ function ViewTopTechPickPresenter({
     <div>
       <div className={styles.titleWrapper}>
         <span className={styles.sectionTitle}>TOP TECH PICK!</span>
-        <BlogPostTitle size='large'>{blogPostDTO.title}</BlogPostTitle>
+        <BlogPostTitle size="large">{blogPostDTO.title}</BlogPostTitle>
       </div>
       <div className={styles.contentSummary}>
         <div className={styles.thumbnail}>

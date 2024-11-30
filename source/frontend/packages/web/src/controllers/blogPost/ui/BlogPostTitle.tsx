@@ -6,7 +6,7 @@ type BlogPostTitleProps = {
   size?: 'large' | 'semiLarge';
 };
 
-function BlogPostTitle({ children,size='semiLarge' }: BlogPostTitleProps) {
+function BlogPostTitle({ children, size = 'semiLarge' }: BlogPostTitleProps) {
   return <h1 className={`${styles.title} ${styles[size]}`}>{children}</h1>;
 }
 
