@@ -6,35 +6,39 @@ import { useExcerpted } from './useExcerpted';
 
 describe('useExcerpted', () => {
   it('ブログ記事本文の DTO から最初の段落要素を抽出する', () => {
-    const contentDTOMock: ContentForDTO[] = [
-      {
-        id: createUUIDv4(),
-        type: ContentType.H2,
-        text: 'h2見出し',
-      },
-      {
-        id: createUUIDv4(),
-        type: ContentType.Image,
-        path: 'path/to/image',
-      },
-      {
-        id: createUUIDv4(),
-        type: ContentType.Paragraph,
-        text: '段落1',
-      },
-      {
-        id: createUUIDv4(),
-        type: ContentType.H3,
-        text: 'h3見出し',
-      },
-      {
-        id: createUUIDv4(),
-        type: ContentType.Paragraph,
-        text: '段落2',
-      },
-    ];
+    const contentDTOMock = createContentDTOMock();
 
     const { result } = renderHook(() => useExcerpted(contentDTOMock));
     expect(result.current).toBe('段落1');
   });
 });
+
+function createContentDTOMock(): ContentForDTO[] {
+  return [
+    {
+      id: createUUIDv4(),
+      type: ContentType.H2,
+      text: 'h2見出し',
+    },
+    {
+      id: createUUIDv4(),
+      type: ContentType.Image,
+      path: 'path/to/image',
+    },
+    {
+      id: createUUIDv4(),
+      type: ContentType.Paragraph,
+      text: '段落1',
+    },
+    {
+      id: createUUIDv4(),
+      type: ContentType.H3,
+      text: 'h3見出し',
+    },
+    {
+      id: createUUIDv4(),
+      type: ContentType.Paragraph,
+      text: '段落2',
+    },
+  ];
+}
