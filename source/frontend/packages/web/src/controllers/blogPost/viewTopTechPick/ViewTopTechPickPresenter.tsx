@@ -7,8 +7,9 @@ type ViewTopTechPickPresenterProps = {
 function ViewTopTechPickPresenter({
   blogPostDTO,
 }: ViewTopTechPickPresenterProps) {
-  console.log(blogPostDTO);
-  return <div></div>;
+  return <div>
+    <h2>{blogPostDTO.title}</h2>
+  </div>;
 }
 
 export default ViewTopTechPickPresenter;
