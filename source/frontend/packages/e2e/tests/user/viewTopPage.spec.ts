@@ -25,7 +25,7 @@ Then(
 Then(
   'トップテックピック記事の記事タイトルが表示されている',
   async ({ page }) => {
-    const title = page.locator('h2');
+    const title = page.locator('h1');
 
     expect(await title.textContent()).not.toBe('');
   },
