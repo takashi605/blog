@@ -32,7 +32,7 @@ describe('ViewTopTechPickController', () => {
 
   it('記事のタイトルが表示されている', async () => {
     await renderController();
-    const title = screen.getByRole('heading', { level: 2 });
+    const title = screen.getByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
   });
 
