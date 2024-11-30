@@ -8,9 +8,9 @@ type BlogPostDateProps = {
 
 function BlogPostDate({ label, date }: BlogPostDateProps) {
   return (
-    <p className={styles.date}>
+    <span className={styles.date}>
       {label}:<time dateTime={date}>{date}</time>
-    </p>
+    </span>
   );
 }
 
