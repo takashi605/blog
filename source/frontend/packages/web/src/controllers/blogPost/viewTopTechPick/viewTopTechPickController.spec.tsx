@@ -35,4 +35,16 @@ describe('ViewTopTechPickController', () => {
     const title = screen.getByRole('heading', { level: 2 });
     expect(title).toBeInTheDocument();
   });
+
+  it('記事のサムネイル画像が表示されている', async () => {
+    await renderController();
+    const thumbnail = await screen.findByRole('img', { name: 'サムネイル画像' });
+    expect(thumbnail).toBeInTheDocument();
+  });
+
+  it('記事の投稿日が表示されている', async () => {
+    await renderController();
+    const postDate = await screen.findByText(/\d{4}\/\d{1,2}\/\d{1,2}/);
+    expect(postDate).toBeInTheDocument();
+  });
 });
