@@ -1,10 +1,9 @@
-import { UsecaseError } from '@/usecases/error';
-import { createContentToDTOContext } from '@/usecases/view/output/dto/contentToDTO';
-import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
-import { formatDate2DigitString } from '@/utils/date';
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
-import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
+import { formatDate2DigitString } from '../../../utils/date';
+import type { BlogPostDTO } from '../blogPostDTO';
+import type { ContentForDTO } from '../contentDTO';
+import { createContentToDTOContext } from './contentToDTO';
 
 export type thumbnailDTO = {
   readonly path: string;
@@ -23,9 +22,7 @@ export class BlogPostDTOBuilder {
         path: this.blogPost.getThumbnail().getPath(),
       };
     } catch {
-      throw new UsecaseError(
-        'サムネイル画像が存在しない記事を生成しようとしました',
-      );
+      throw new Error('サムネイル画像が存在しない記事を生成しようとしました');
     }
   }
 
@@ -33,7 +30,7 @@ export class BlogPostDTOBuilder {
     try {
       return formatDate2DigitString(this.blogPost.getPostDate());
     } catch {
-      throw new UsecaseError('投稿日が存在しない記事を生成しようとしました');
+      throw new Error('投稿日が存在しない記事を生成しようとしました');
     }
   }
 
@@ -41,9 +38,7 @@ export class BlogPostDTOBuilder {
     try {
       return formatDate2DigitString(this.blogPost.getLastUpdateDate());
     } catch {
-      throw new UsecaseError(
-        '最終更新日が存在しない記事を生成しようとしました',
-      );
+      throw new Error('最終更新日が存在しない記事を生成しようとしました');
     }
   }
 

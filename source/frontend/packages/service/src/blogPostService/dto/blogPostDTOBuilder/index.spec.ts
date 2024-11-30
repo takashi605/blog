@@ -1,7 +1,7 @@
-import { BlogPostDTOBuilder } from '@/usecases/view/output/dto/index';
 import { BlogPost } from 'entities/src/blogPost/index';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { BlogPostDTOBuilder } from '.';
 
 describe('DTO の生成', () => {
   it('builder クラスを使って DTO を生成できる', () => {

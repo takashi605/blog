@@ -1,14 +1,14 @@
+import type { Content } from 'entities/src/blogPost/postContents/content';
+import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
+import type { ImageContent } from 'entities/src/blogPost/postContents/image';
+import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type {
   ContentForDTO,
   H2ForDTO,
   H3ForDTO,
   ImageForDTO,
   ParagraphForDTO,
-} from '@/usecases/view/output/dto/contentToDTO/types';
-import type { Content } from 'entities/src/blogPost/postContents/content';
-import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
-import type { ImageContent } from 'entities/src/blogPost/postContents/image';
-import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+} from './types';
 
 export abstract class ContentToDTOStrategy<
   T extends Content,

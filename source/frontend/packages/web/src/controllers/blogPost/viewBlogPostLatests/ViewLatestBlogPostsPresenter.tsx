@@ -1,5 +1,5 @@
-import type { BlogPostDTO } from 'service/src/blogPostService/repository/repositoryOutput/blogPostDTO';
-import Thumbnail from './ui/Thumbnail';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import Thumbnail from '../ui/Thumbnail';
 import styles from './viewLatestBlogPostsPresenter.module.scss';
 
 type ViewLatestBlogPostsPresenterProps = {

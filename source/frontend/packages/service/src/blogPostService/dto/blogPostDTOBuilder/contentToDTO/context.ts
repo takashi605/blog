@@ -1,6 +1,6 @@
-import type { ContentToDTOStrategy } from '@/usecases/view/output/dto/contentToDTO/strategy';
-import type { ContentForDTO } from '@/usecases/view/output/dto/contentToDTO/types';
 import type { Content } from 'entities/src/blogPost/postContents/content';
+import type { ContentToDTOStrategy } from './strategy';
+import type { ContentForDTO } from './types';
 
 export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
   private strategy: ContentToDTOStrategy<T, U>;

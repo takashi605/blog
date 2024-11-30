@@ -17,7 +17,7 @@ Then(
   'トップテックピック記事のサムネイル画像が表示されている',
   async ({ page }) => {
     const thumbnailImage = page.getByRole('img', {
-      name: '看板記事のサムネイル画像',
+      name: 'サムネイル画像',
     });
     await expect(thumbnailImage).toBeVisible();
   },
@@ -27,14 +27,14 @@ Then(
   async ({ page }) => {
     const title = page.locator('h2');
 
-    await expect(title.textContent).not.toBe('');
+    expect(await title.textContent()).not.toBe('');
   },
 );
 Then(
   'トップテックピック記事の記事本文の抜粋が表示されている',
   async ({ page }) => {
     const thumbnailImage = page.getByRole('img', {
-      name: '看板記事のサムネイル画像',
+      name: 'サムネイル画像',
     });
     const topTechPickSection = page.locator('section', {
       has: thumbnailImage,
@@ -47,11 +47,11 @@ Then(
 
 Then('トップテックピック記事の投稿日時が表示されている', async ({ page }) => {
   const thumbnailImage = page.getByRole('img', {
-    name: '看板記事のサムネイル画像',
+    name: 'サムネイル画像',
   });
   const topTechPickSection = page.locator('section', {
     has: thumbnailImage,
   });
 
-  expect(topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
+  await expect(topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
 });

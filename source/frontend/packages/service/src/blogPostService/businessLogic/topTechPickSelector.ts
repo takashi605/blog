@@ -1,5 +1,5 @@
+import { blogPostDTOToEntity } from '../dto/blogPostDTOToEntity';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
-import { fetchedDataToEntity } from '../repository/repositoryOutput/blogPostDTOToEntity';
 
 export class TopTechPickSelector {
   private blogPostRepository: BlogPostRepository;
@@ -10,6 +10,6 @@ export class TopTechPickSelector {
 
   async execute() {
     const fetchedDTO = await this.blogPostRepository.fetchTopTechPick();
-    return fetchedDataToEntity(fetchedDTO);
+    return blogPostDTOToEntity(fetchedDTO);
   }
 }

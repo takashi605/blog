@@ -1,6 +1,6 @@
 'use client';
-import type { thumbnailDTO } from '@/usecases/view/output/dto';
 import { CldImage } from 'next-cloudinary';
+import type { thumbnailDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 
 type ThumbnailProps = {
   thumbnail: thumbnailDTO;

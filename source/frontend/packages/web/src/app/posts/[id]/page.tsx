@@ -1,4 +1,4 @@
-import ViewBlogPostController from '../../../controllers/blogPost/view/ViewBlogPostController';
+import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
 
 type ViewBlogPostParams = {
   params: {

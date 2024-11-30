@@ -1,8 +1,8 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { createUUIDv4 } from '../../utils/uuid';
+import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
-import type { BlogPostDTO } from '../repository/repositoryOutput/blogPostDTO';
 import { TopTechPickSelector } from './topTechPickSelector';
 
 describe('topTechPickSelector', () => {

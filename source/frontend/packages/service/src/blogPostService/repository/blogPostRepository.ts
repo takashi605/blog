@@ -1,5 +1,5 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import type { BlogPostDTO } from './repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from '../dto/blogPostDTO';
 
 export type BlogPostRepository = {
   save(blogPost: BlogPost): Promise<BlogPostDTO>;

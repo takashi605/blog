@@ -1,9 +1,9 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import type { BlogPostBuilder } from '../../entityBuilder/blogPostBuilder';
-import { createBlogPostBuilder } from '../../entityBuilder/blogPostBuilder';
+import type { BlogPostBuilder } from '../entityBuilder/blogPostBuilder';
+import { createBlogPostBuilder } from '../entityBuilder/blogPostBuilder';
 import type { BlogPostDTO } from './blogPostDTO';
 
-export function fetchedDataToEntity(dto: BlogPostDTO): BlogPost {
+export function blogPostDTOToEntity(dto: BlogPostDTO): BlogPost {
   const entityBuilder = createBlogPostBuilder()
     .setId(dto.id)
     .setPostTitle(dto.title)
@@ -11,14 +11,11 @@ export function fetchedDataToEntity(dto: BlogPostDTO): BlogPost {
     .setPostDate(dto.postDate)
     .setLastUpdateDate(dto.lastUpdateDate);
 
-  fetchedContentToEntity(dto, entityBuilder);
+  contentToEntity(dto, entityBuilder);
   return entityBuilder.build();
 }
 
-function fetchedContentToEntity(
-  dto: BlogPostDTO,
-  entityBuilder: BlogPostBuilder,
-) {
+function contentToEntity(dto: BlogPostDTO, entityBuilder: BlogPostBuilder) {
   dto.contents.forEach((content) => {
     if (content.type === 'h2') {
       entityBuilder.addH2(content.id, content.text);
