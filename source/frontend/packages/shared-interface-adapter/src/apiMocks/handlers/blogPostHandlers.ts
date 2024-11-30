@@ -1,6 +1,6 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
-import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
@@ -44,6 +44,14 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
     http.get(`${baseUrl}/blog/posts/${UUIDList.UUID3}`, () => {
       return new HttpResponse('Not found', {
         status: 404,
+      });
+    }),
+    http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
+      return HttpResponse.json({
+        ...successResponseForGet,
+        id: UUIDList.UUID1,
+        postDate: '2022-01-01',
+        lastUpdateDate: '2022-01-02',
       });
     }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {

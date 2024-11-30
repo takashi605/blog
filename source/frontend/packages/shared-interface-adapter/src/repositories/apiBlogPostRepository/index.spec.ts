@@ -1,4 +1,4 @@
-import { createBlogPostBuilder } from 'service/src/blogPostBuilder';
+import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from '.';
 import { UUIDList } from '../../apiMocks/handlers/blogPostHandlers';
@@ -72,6 +72,18 @@ describe('apiBlogPostRepository', () => {
         new Date(resp[i].postDate) <= new Date(resp[i + 1].postDate),
       ).toBeTruthy();
     }
+  });
+
+  it('api からトップテックピック記事を取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchTopTechPick();
+    expect(resp.id).toBeDefined();
+    expect(resp.title).toBeDefined();
+    expect(resp.thumbnail).toBeDefined();
+    expect(resp.postDate).toBeDefined();
+    expect(resp.lastUpdateDate).toBeDefined();
+    expect(resp.contents.length).toBeGreaterThan(0);
   });
 
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {

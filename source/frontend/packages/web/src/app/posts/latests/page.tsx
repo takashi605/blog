@@ -1,4 +1,4 @@
-import ViewLatestBlogPostsController from '../../../controllers/blogPost/view/ViewLatestBlogPostsController';
+import ViewLatestBlogPostsController from '../../../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う
 // こうしないと MSW によるモックサーバーが機能しない

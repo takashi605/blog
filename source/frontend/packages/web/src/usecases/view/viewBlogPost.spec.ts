@@ -1,5 +1,5 @@
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
-import type { BlogPostRepository } from 'service/src/blogPostRepository';
+import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-interface-adapter/src/apiMocks/handlers/blogPostHandlers';
 
@@ -24,6 +24,7 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       save: jest.fn(),
       fetch: jest.fn().mockReturnValue(fetchedDTOMock),
       fetchLatests: jest.fn(),
+      fetchTopTechPick: jest.fn(),
     };
 
     const viewBlogPostUsecase = new ViewBlogPostUseCase(mockRepository);

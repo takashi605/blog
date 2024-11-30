@@ -1,8 +1,8 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
-import type { BlogPostRepository } from 'service/src/blogPostRepository';
-import type { BlogPostDTO } from 'service/src/blogPostRepository/repositoryOutput/blogPostDTO';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { z } from 'zod';
 import { HttpError } from '../../error/httpError';
 
@@ -89,6 +89,15 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     });
 
     return sortedResponse;
+  }
+
+  async fetchTopTechPick(): Promise<BlogPostDTO> {
+    const response = await fetch(`${this.baseUrl}/blog/posts/top-tech-pick`);
+    const validatedResponse = blogPostResponseSchema.parse(
+      await response.json(),
+    );
+
+    return validatedResponse;
   }
 
   private async post(blogPostJson: string): Promise<Response> {
