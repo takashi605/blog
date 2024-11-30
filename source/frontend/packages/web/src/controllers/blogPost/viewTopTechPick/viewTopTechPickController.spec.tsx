@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
@@ -38,7 +38,9 @@ describe('ViewTopTechPickController', () => {
 
   it('記事のサムネイル画像が表示されている', async () => {
     await renderController();
-    const thumbnail = await screen.findByRole('img', { name: 'サムネイル画像' });
+    const thumbnail = await screen.findByRole('img', {
+      name: 'サムネイル画像',
+    });
     expect(thumbnail).toBeInTheDocument();
   });
 
@@ -46,5 +48,11 @@ describe('ViewTopTechPickController', () => {
     await renderController();
     const postDate = await screen.findByText(/\d{4}\/\d{1,2}\/\d{1,2}/);
     expect(postDate).toBeInTheDocument();
+  });
+
+  it('記事本文の抜粋が表示されている', async () => {
+    await renderController();
+    const content = await screen.findByRole('paragraph');
+    expect(content).toBeInTheDocument();
   });
 });
