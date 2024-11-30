@@ -9,6 +9,7 @@ type ViewTopTechPickPresenterProps = {
 function ViewTopTechPickPresenter({
   blogPostDTO,
 }: ViewTopTechPickPresenterProps) {
+  // TODO Presenter にロジックが混入しているため、フロントエンドの構造を変更する
   const excerpted = useExcerpted(blogPostDTO.contents);
   return (
     <div>
