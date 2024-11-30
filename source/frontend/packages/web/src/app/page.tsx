@@ -3,8 +3,9 @@ import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/V
 export default async function Home() {
   return (
     <main>
-      <h2>トップページ</h2>
-      <ViewTopTechPickController />
+      <section>
+        <ViewTopTechPickController />
+      </section>
     </main>
   );
 }
