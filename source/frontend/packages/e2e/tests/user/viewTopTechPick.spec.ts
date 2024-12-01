@@ -18,7 +18,9 @@ Given(
 Then(
   'トップテックピック記事のサムネイル画像が表示されている',
   async ({ page }) => {
-    const thumbnailImage = page.getByRole('img', {
+    const sectionTitle = page.getByText('TOP TECH PICK!');
+    const section = page.locator('section', { has: sectionTitle });
+    const thumbnailImage = section.getByRole('img', {
       name: 'サムネイル画像',
     });
     await expect(thumbnailImage).toBeVisible();
@@ -55,5 +57,7 @@ Then('トップテックピック記事の投稿日時が表示されている',
     has: thumbnailImage,
   });
 
-  await expect(topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
+  await expect(
+    topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/),
+  ).toBeVisible();
 });
