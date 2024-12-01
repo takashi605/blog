@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "e2e-test": "pnpm exec bddgen && pnpm exec playwright test",
+    "e2e-test": "npx cucumber-js --config cucumber.mjs --exit",
     "e2e-ui": "pnpm exec bddgen && pnpm exec playwright test --ui",
     "e2e-report": "pnpm exec playwright show-report tests/report --host 0.0.0.0 --port 9323",
     "lint": "eslint .",
@@ -14,8 +14,9 @@
     "shared-interface-adapter": "workspace:*"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^11.1.0",
     "@playwright/test": "^1.46.1",
-    "@types/node": "^22.5.1",
-    "playwright-bdd": "^6.6.0"
+    "@types/node": "^22.9.0",
+    "ts-node": "^10.9.2"
   }
 }

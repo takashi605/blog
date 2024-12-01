@@ -1,6 +1,4 @@
-import { createBdd } from 'playwright-bdd';
-
-const { Given, Then } = createBdd();
+import { Given, Then } from '@cucumber/cucumber';
 
 Given('トップページにアクセスしてピックアップ記事を閲覧する', () => {});
 Then('ピックアップ記事が3件表示されている', () => {});
