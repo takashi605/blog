@@ -21,7 +21,7 @@
     "web-build": "pnpm -F web exec next build",
     "web-dev": "pnpm -F web exec next dev",
     "admin-dev": "pnpm -F blog-admin exec next dev",
-    "tsc": "pnpm shared-interface-adapter tsc"
+    "tsc": "pnpm shared-test-data tsc"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

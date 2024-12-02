@@ -1,9 +1,7 @@
 import { Before, Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
-// TODO dist を直接指定するのは若干微妙なので、修正する
-import pkg from 'shared-interface-adapter/dist/src/apiMocks/handlers/blogPostHandlers.js';
-const { UUIDList } = pkg;
+import { UUIDList } from 'shared-test-data';
 
 let page: Page;
 
@@ -28,7 +26,7 @@ Then('記事サムネイル が表示される', async () => {
 Then('記事タイトル が表示される', async () => {
   const title = page.locator('h1');
 
-  await expect(title.textContent).not.toBe('');
+  expect(title.textContent).not.toBe('');
 });
 
 Then('記事本文 が表示される', async () => {
@@ -38,7 +36,7 @@ Then('記事本文 が表示される', async () => {
   expect(count).toBeGreaterThan(0);
 
   for (let i = 0; i < count; i++) {
-    await expect(p.nth(i).textContent).not.toBe('');
+    expect(p.nth(i).textContent).not.toBe('');
   }
 });
 
@@ -49,7 +47,7 @@ Then('h2見出し が表示される', async () => {
   expect(count).toBeGreaterThan(0);
 
   for (let i = 0; i < count; i++) {
-    await expect(h2.nth(i).textContent).not.toBe('');
+    expect(h2.nth(i).textContent).not.toBe('');
   }
 });
 

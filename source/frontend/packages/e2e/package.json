@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "shared-interface-adapter": "workspace:*"
+    "shared-test-data": "workspace:*"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^11.1.0",

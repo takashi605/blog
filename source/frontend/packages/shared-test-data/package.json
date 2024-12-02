@@ -2,6 +2,7 @@
   "name": "shared-test-data",
   "version": "0.1.0",
   "type": "module",
+  "exports": "./dist/src/index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
@@ -10,6 +11,5 @@
     "check": "prettier --check . && eslint . && tsc --noEmit",
     "tsc": "rm -rf dist && tsc --project tsconfig.build.json"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
