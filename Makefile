@@ -128,6 +128,7 @@ frontend-install-with-container:
 	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- pnpm install
 
 frontend-test:
+	$(MAKE) frontend-tsc
 	$(MAKE) frontend-test-unit
 	$(MAKE) frontend-check
 frontend-check:
@@ -148,6 +149,9 @@ frontend-test-unit-serialize:
 	cd source/frontend/ && \
 	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
 	xargs -n 1 -P 1 -I {} pnpm {} run test
+
+frontend-tsc:
+	cd source/frontend/ && pnpm tsc
 
 ###
 ## e2e 系
@@ -199,7 +203,6 @@ api-test-run:
 ###
 blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
-
 
 ###
 ## デバッグ用
