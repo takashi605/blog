@@ -20,12 +20,9 @@ Given(
   },
 );
 
-// TODO alt にサムネイル画像が含まれる画像はほかにもあるので、
-// 「TOP TECH PICK!」のテキスト取得→その親要素のセクション要素を取得→そのセクション要素内にある img 要素を取得のようにとる
 Then('トップテックピック記事のサムネイル画像が表示されている', async () => {
-  const sectionTitle = page.getByText('TOP TECH PICK!');
-  const section = page.locator('section', { has: sectionTitle });
-  const thumbnailImage = section.getByRole('img', {
+  const topTechPickSection = getTopTechPickSection(page);
+  const thumbnailImage = topTechPickSection.getByRole('img', {
     name: 'サムネイル画像',
   });
   await expect(thumbnailImage).toBeVisible();
@@ -36,26 +33,21 @@ Then('トップテックピック記事の記事タイトルが表示されて�
   expect(await title.textContent()).not.toBe('');
 });
 Then('トップテックピック記事の記事本文の抜粋が表示されている', async () => {
-  const thumbnailImage = page.getByRole('img', {
-    name: 'サムネイル画像',
-  });
-  const topTechPickSection = page.locator('section', {
-    has: thumbnailImage,
-  });
+  const topTechPickSection = getTopTechPickSection(page);
   const p = topTechPickSection.locator('p');
 
   expect(await p.textContent()).not.toBe('');
 });
 
 Then('トップテックピック記事の投稿日時が表示されている', async () => {
-  const thumbnailImage = page.getByRole('img', {
-    name: 'サムネイル画像',
-  });
-  const topTechPickSection = page.locator('section', {
-    has: thumbnailImage,
-  });
+  const topTechPickSection = getTopTechPickSection(page);
 
   await expect(
     topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/),
   ).toBeVisible();
 });
+
+function getTopTechPickSection(page: Page) {
+  const sectionTitle = page.getByText('TOP TECH PICK!');
+  return page.locator('section', { has: sectionTitle });
+}
