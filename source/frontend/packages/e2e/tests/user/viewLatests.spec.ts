@@ -1,26 +1,33 @@
-import { expect } from '@playwright/test';
-import { createBdd } from 'playwright-bdd';
+import { Before, Given, Then } from '@cucumber/cucumber';
+import type { Page } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 
-const { Given, Then } = createBdd();
+let page: Page;
 
-Given('新着記事を一覧表示するページにアクセスする', async ({ page }) => {
+Before(async () => {
+  const browser = await chromium.launch({ headless: false });
+  const context = await browser.newContext();
+  page = await context.newPage();
+});
+
+Given('新着記事を一覧表示するページにアクセスする', async () => {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/latests`);
 });
 
-Then('ページタイトルが表示される', async ({ page }) => {
+Then('ページタイトルが表示される', async () => {
   expect(page.getByRole('heading', { level: 2 })).toHaveText('新着記事');
 });
 
-Then('複数の記事が表示される', async ({ page }) => {
+Then('複数の記事が表示される', async () => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
   expect(count).toBeGreaterThan(1);
 });
 
-Then('各記事に記事タイトルが表示される', async ({ page }) => {
+Then('各記事に記事タイトルが表示される', async () => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -32,7 +39,7 @@ Then('各記事に記事タイトルが表示される', async ({ page }) => {
   );
 });
 
-Then('各記事に記事サムネイルが表示される', async ({ page }) => {
+Then('各記事に記事サムネイルが表示される', async () => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -44,7 +51,7 @@ Then('各記事に記事サムネイルが表示される', async ({ page }) => 
   );
 });
 
-Then('各記事に投稿日が表示される', async ({ page }) => {
+Then('各記事に投稿日が表示される', async () => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -58,7 +65,7 @@ Then('各記事に投稿日が表示される', async ({ page }) => {
   );
 });
 
-Then('各記事は新着順で並んでいる', async ({ page }) => {
+Then('各記事は新着順で並んでいる', async () => {
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -79,7 +86,7 @@ Then('各記事は新着順で並んでいる', async ({ page }) => {
     const replacedPostDate = postDate.replace('投稿日:', '');
 
     return new Date(replacedPostDate);
-  })
+  });
 
   const resolvedPostDates = await Promise.all(postDates);
 
