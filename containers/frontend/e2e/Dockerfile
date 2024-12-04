@@ -22,6 +22,7 @@ WORKDIR /$FRONTEND_DIR
 COPY --from=base --chown=pwuser:pwuser ./$FRONTEND_DIR ./
 
 RUN pnpm install
+RUN pnpm tsc
 
 # 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
 CMD ["sleep", "infinity"]

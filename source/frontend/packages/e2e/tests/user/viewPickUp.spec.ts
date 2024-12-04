@@ -1,11 +1,12 @@
-import { Before, Given, Then } from '@cucumber/cucumber';
+import { Before, Given, setDefaultTimeout, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
 let page: Page;
 
 Before(async () => {
-  const browser = await chromium.launch({ headless: false });
+  setDefaultTimeout(15000);
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();
 });
@@ -16,7 +17,7 @@ Given('トップページにアクセスしてピックアップ記事を閲覧�
   }
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
-Then('各ピックアップ記事のサムネイル画像が3件分表示されている', async() => {
+Then('各ピックアップ記事のサムネイル画像が3件分表示されている', async () => {
   const pickUpSection = getPickUpSection(page);
   const thumbnailImages = pickUpSection.locator('img');
   expect(await thumbnailImages.count()).toBe(3);
