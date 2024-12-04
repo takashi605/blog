@@ -1,5 +1,6 @@
 import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
@@ -19,12 +20,7 @@ afterAll(() => {
 });
 
 describe('ユースケース: 記事の投稿', () => {
-  const mockRepository: BlogPostRepository = {
-    save: jest.fn(),
-    fetch: jest.fn(),
-    fetchLatests: jest.fn(),
-    fetchTopTechPick: jest.fn(),
-  };
+  const mockRepository: BlogPostRepository = mockBlogPostRepository;
 
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
     const mockSave = jest.fn().mockReturnValue({
@@ -38,10 +34,8 @@ describe('ユースケース: 記事の投稿', () => {
       ],
     });
     const mockRepository: BlogPostRepository = {
+      ...mockBlogPostRepository,
       save: mockSave,
-      fetch: jest.fn(),
-      fetchLatests: jest.fn(),
-      fetchTopTechPick: jest.fn(),
     };
 
     const id = createUUIDv4();
