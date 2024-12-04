@@ -3,6 +3,7 @@ import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
+import { PickUpPostSelector } from './pickUpPostSelector';
 
 describe('pickUpPostSelector', () => {
   it('ピックアップ記事に設定されている記事のエンティティデータを取得できる', async () => {
