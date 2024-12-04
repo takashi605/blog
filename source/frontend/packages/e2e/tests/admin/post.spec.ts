@@ -1,11 +1,18 @@
-import { Before, Given, Then, When } from '@cucumber/cucumber';
+import {
+  Before,
+  Given,
+  setDefaultTimeout,
+  Then,
+  When,
+} from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
 let page: Page;
 
 Before(async () => {
-  const browser = await chromium.launch({ headless: false });
+  setDefaultTimeout(15000);
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();
 });
