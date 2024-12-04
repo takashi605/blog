@@ -1,3 +1,4 @@
+import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
 import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/ViewTopTechPickController';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う
@@ -7,8 +8,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   return (
-    <section>
-      <ViewTopTechPickController />
-    </section>
+    <>
+      <section>
+        <ViewTopTechPickController />
+      </section>
+      <section>
+        <ViewPickUpPostsController />
+      </section>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Before, Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
-import { chromium } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 
 let page: Page;
 
@@ -16,15 +16,15 @@ Given('トップページにアクセスしてピックアップ記事を閲覧�
   }
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
-Then('各ピックアップ記事のサムネイル画像が3件分表示されている', () => {
+Then('各ピックアップ記事のサムネイル画像が3件分表示されている', async() => {
   const pickUpSection = getPickUpSection(page);
   const thumbnailImages = pickUpSection.locator('img');
-  expect(thumbnailImages.count()).toBe(3);
+  expect(await thumbnailImages.count()).toBe(3);
 });
-Then('各ピックアップ記事の記事タイトルが3件分表示されている', () => {
+Then('各ピックアップ記事の記事タイトルが3件分表示されている', async () => {
   const pickUpSection = getPickUpSection(page);
   const titles = pickUpSection.locator('h3');
-  expect(titles.count()).toBe(3);
+  expect(await titles.count()).toBe(3);
 });
 
 function getPickUpSection(page: Page) {
