@@ -6,6 +6,7 @@ export default defineConfig({
   expect: {
     timeout: 15 * 1000,
   },
+  workers: process.env.CI ? 1 : 3,
   reporter: process.env.CI
     ? 'list'
     : [
