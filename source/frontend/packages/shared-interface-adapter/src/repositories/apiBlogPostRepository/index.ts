@@ -100,6 +100,10 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  async fetchPickUpPosts(): Promise<BlogPostDTO[]> {
+    throw new Error('このメソッドは未実装です');
+  }
+
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/posts`, {
       method: 'POST',

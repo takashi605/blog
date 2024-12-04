@@ -6,7 +6,7 @@ import type { BlogPostRepository } from '../repository/blogPostRepository';
 
 describe('pickUpPostSelector', () => {
   it('ピックアップ記事に設定されている記事のエンティティデータを取得できる', async () => {
-    const expectedPickUpPost:BlogPostDTO[] = buildPickUpPostDTO();
+    const expectedPickUpPost: BlogPostDTO[] = buildPickUpPostDTO();
     const fetchPickUpPosts = jest.fn().mockReturnValue(expectedPickUpPost);
     const mockBlogPostRepository: BlogPostRepository = {
       save: jest.fn(),
