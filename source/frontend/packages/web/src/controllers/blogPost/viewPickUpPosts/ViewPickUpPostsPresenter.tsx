@@ -10,7 +10,10 @@ function ViewPickUpPostsPresenter({
 }: ViewPickUpPostsPresenterProps) {
   return (
     <div>
-      <h2>PICK UP!!</h2>
+      <div>
+        <span>PICK UP!!</span>
+        <h2>注目記事</h2>
+      </div>
       {blogPostsDTO.map((blogPostDTO) => (
         <div key={blogPostDTO.id}>
           <h3>{blogPostDTO.title}</h3>
