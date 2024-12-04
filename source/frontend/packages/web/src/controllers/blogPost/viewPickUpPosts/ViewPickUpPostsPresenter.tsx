@@ -13,6 +13,10 @@ function ViewPickUpPostsPresenter({
       <div>
         <span>PICK UP!!</span>
         <h2>注目記事</h2>
+        <div>
+          <p>幅広い人におすすめの記事です。</p>
+          <p>このブログの雰囲気を掴んでいただけると思います。</p>
+        </div>
       </div>
       {blogPostsDTO.map((blogPostDTO) => (
         <div key={blogPostDTO.id}>
