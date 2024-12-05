@@ -29,6 +29,6 @@ Then('各ピックアップ記事の記事タイトルが3件分表示されて�
 });
 
 function getPickUpSection(page: Page) {
-  const pickUpSectionTitle = page.locator('h2', { hasText: 'PICK UP!!' });
+  const pickUpSectionTitle = page.locator('h2', { hasText: '注目記事' });
   return page.locator('section', { has: pickUpSectionTitle });
 }
