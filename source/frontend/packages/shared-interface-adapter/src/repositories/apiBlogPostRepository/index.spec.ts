@@ -1,7 +1,7 @@
 import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import { UUIDList } from 'shared-test-data';
 import { ApiBlogPostRepository } from '.';
-import { UUIDList } from '../../apiMocks/handlers/blogPostHandlers';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 import { HttpError } from '../../error/httpError';
 
@@ -84,6 +84,22 @@ describe('apiBlogPostRepository', () => {
     expect(resp.postDate).toBeDefined();
     expect(resp.lastUpdateDate).toBeDefined();
     expect(resp.contents.length).toBeGreaterThan(0);
+  });
+
+  it('api からピックアップ記事を複数件取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchPickUpPosts(3);
+    expect(resp.length).toBe(3);
+
+    resp.forEach((pickUpPost) => {
+      expect(pickUpPost.id).toBeDefined();
+      expect(pickUpPost.title).toBeDefined();
+      expect(pickUpPost.thumbnail).toBeDefined();
+      expect(pickUpPost.postDate).toBeDefined();
+      expect(pickUpPost.lastUpdateDate).toBeDefined();
+      expect(pickUpPost.contents.length).toBeGreaterThan(0);
+    });
   });
 
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {

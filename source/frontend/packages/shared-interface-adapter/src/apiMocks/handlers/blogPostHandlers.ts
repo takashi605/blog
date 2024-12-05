@@ -2,6 +2,7 @@ import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import { UUIDList } from 'shared-test-data';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
@@ -54,6 +55,39 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         lastUpdateDate: '2022-01-02',
       });
     }),
+
+    // TODO クエリパラメータの扱い方を適切なものにする
+    // 参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
+    http.get(`${baseUrl}/blog/posts/pickup?quantity=3`, () => {
+      return HttpResponse.json([
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID1,
+          postDate: '2022-01-01',
+          lastUpdateDate: '2022-01-02',
+        },
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID3,
+          title: 'クリーンアーキテクチャの自分流ディレクトリ構成',
+          thumbnail: {
+            path: 'test-book',
+          },
+          postDate: '2023-01-01',
+          lastUpdateDate: '2022-01-02',
+        },
+        {
+          ...successResponseForGet,
+          id: UUIDList.UUID2,
+          title: 'Kubernetes わからんつらたん',
+          thumbnail: {
+            path: 'test-mechanical',
+          },
+          postDate: '2022-02-01',
+          lastUpdateDate: '2022-01-02',
+        },
+      ]);
+    }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {
       return HttpResponse.json([
         {
@@ -88,11 +122,6 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   return blogPostHandlers;
 };
 
-export const UUIDList = {
-  UUID1: '672f2772-72b5-404a-8895-b1fbbf310801',
-  UUID2: '475ea693-3885-4e2f-80d5-fe28adc08bad',
-  UUID3: 'dfde1b9e-a1f0-406d-a342-4599158fb5f4',
-};
 const successResponseForGet = {
   id: '', // 上書きしないとエラーする
   title: '初めての技術スタックへの挑戦',

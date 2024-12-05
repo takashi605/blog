@@ -1,6 +1,7 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ViewTopTechPickUseCase } from './viewTopTechPick';
 
@@ -19,6 +20,7 @@ describe('viewTopTechPick', () => {
       ],
     };
     const mockRepository: BlogPostRepository = {
+      ...mockBlogPostRepository,
       save: jest.fn(),
       fetch: jest.fn(),
       fetchLatests: jest.fn(),

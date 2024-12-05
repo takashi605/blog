@@ -23,6 +23,7 @@ COPY --chown=node:node ./$FRONTEND_DIR ./
 RUN rm -rf /$FRONTEND_DIR/packages/e2e
 
 RUN pnpm install
+RUN pnpm tsc
 
 # / 開発環境用ステージ /
 FROM base AS dev

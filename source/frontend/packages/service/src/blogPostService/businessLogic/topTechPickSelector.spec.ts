@@ -1,5 +1,6 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
+import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
@@ -11,13 +12,11 @@ describe('topTechPickSelector', () => {
     const fetchTopTechPick = jest
       .fn()
       .mockReturnValue(expectedFetchTopTechPick);
-    const mockBlogPostRepository: BlogPostRepository = {
-      save: jest.fn(),
-      fetch: jest.fn(),
-      fetchLatests: jest.fn(),
+    const mockRepository: BlogPostRepository = {
+      ...mockBlogPostRepository,
       fetchTopTechPick,
     };
-    const topTechPickSelector = new TopTechPickSelector(mockBlogPostRepository);
+    const topTechPickSelector = new TopTechPickSelector(mockRepository);
     const topTechPickBlogPost: BlogPost = await topTechPickSelector.execute();
     expect(fetchTopTechPick).toHaveBeenCalled();
     expect(topTechPickBlogPost.getId()).toBeDefined();

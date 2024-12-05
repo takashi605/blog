@@ -100,6 +100,17 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  async fetchPickUpPosts(quantity: number): Promise<BlogPostDTO[]> {
+    const response = await fetch(
+      `${this.baseUrl}/blog/posts/pickup?quantity=${quantity}`,
+    );
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
+
+    return validatedResponse;
+  }
+
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/posts`, {
       method: 'POST',

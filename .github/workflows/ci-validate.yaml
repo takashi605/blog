@@ -32,6 +32,9 @@ jobs:
       - name: "モジュールの install"
         run: make frontend-install
 
+      - name: "一部パッケージのトランスパイル"
+        run: make frontend-tsc
+
       - name: "単体テストの実行"
         run: make frontend-test-unit
   check:
@@ -52,6 +55,9 @@ jobs:
 
       - name: "モジュールの install"
         run: make frontend-install
+
+      - name: "一部パッケージのトランスパイル"
+        run: make frontend-tsc
 
       - name: "静的チェックの実行"
         run: make frontend-check

@@ -1,7 +1,8 @@
 {
-  "name": "shared-interface-adapter",
+  "name": "shared-test-data",
   "version": "0.1.0",
   "type": "module",
+  "exports": "./dist/src/index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
@@ -10,11 +11,5 @@
     "check": "prettier --check . && eslint . && tsc --noEmit",
     "tsc": "rm -rf dist && tsc --project tsconfig.build.json"
   },
-  "dependencies": {
-    "entities": "workspace:*",
-    "service": "workspace:*",
-    "shared-test-data": "workspace:*",
-    "zod": "^3.23.8",
-    "msw": "^2.4.3"
-  }
+  "dependencies": {}
 }

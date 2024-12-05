@@ -6,4 +6,5 @@ export type BlogPostRepository = {
   fetch(id: string): Promise<BlogPostDTO>;
   fetchLatests: () => Promise<BlogPostDTO[]>;
   fetchTopTechPick: () => Promise<BlogPostDTO>;
+  fetchPickUpPosts: (quantity: number) => Promise<BlogPostDTO[]>;
 };

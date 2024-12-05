@@ -1,6 +1,7 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ViewLatestBlogPostsUseCase } from './viewLatestBlogPosts';
 
@@ -8,10 +9,8 @@ describe('viewLatestBlogPosts', () => {
   it('DTO 形式のブログ記事構造を複数件返す', async () => {
     const fetchLatestsMock = jest.fn().mockReturnValue(createFetchedDTOMock());
     const mockRepository: BlogPostRepository = {
-      save: jest.fn(),
-      fetch: jest.fn(),
+      ...mockBlogPostRepository,
       fetchLatests: fetchLatestsMock,
-      fetchTopTechPick: jest.fn(),
     };
 
     const viewLatestsUseCase = new ViewLatestBlogPostsUseCase(mockRepository);
