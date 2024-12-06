@@ -84,7 +84,7 @@ Given('投稿日,更新日時が存在しないページにアクセスする', 
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID2}`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID4}`);
 });
 
 Then(
