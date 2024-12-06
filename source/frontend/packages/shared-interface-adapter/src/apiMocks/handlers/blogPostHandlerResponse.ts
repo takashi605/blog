@@ -1,7 +1,7 @@
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
 
-const blogPostResponses = [
+export const blogPostResponses = [
   {
     ...createResponseBase(),
     id: UUIDList.UUID1,
