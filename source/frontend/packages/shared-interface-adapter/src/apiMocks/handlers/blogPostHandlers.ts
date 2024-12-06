@@ -38,13 +38,17 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       return HttpResponse.json(blogPostResponses);
     }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {
-      return HttpResponse.json(blogPostResponses);
+      const sortedBlogPosts = blogPostResponses.sort((a, b) => {
+        return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
+      });
+      const filteredBlogPosts = sortedBlogPosts.filter((blogPost) => {
+        return blogPost.postDate !== '' && blogPost.lastUpdateDate != '';
+      });
+      return HttpResponse.json(filteredBlogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
       const userId = params.userId?.toString();
-      const blogPost = blogPostResponses.find(
-        (post) => post.id === userId,
-      );
+      const blogPost = blogPostResponses.find((post) => post.id === userId);
       return HttpResponse.json(blogPost);
     }),
   ];
