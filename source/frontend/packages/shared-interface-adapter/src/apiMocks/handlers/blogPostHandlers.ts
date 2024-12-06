@@ -27,28 +27,11 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       return HttpResponse.json(newPost, { status: 200 });
     }),
 
-    // 以下 get メソッドのモック
-    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID1}`, () => {
-      return HttpResponse.json(
-        blogPostResponses.find((post) => post.id === UUIDList.UUID1),
-      );
-    }),
-    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID2}`, () => {
-      return HttpResponse.json(
-        blogPostResponses.find((post) => post.id === UUIDList.UUID2),
-      );
-    }),
-    http.get(`${baseUrl}/blog/posts/${UUIDList.UUID3}`, () => {
-      return HttpResponse.json(
-        blogPostResponses.find((post) => post.id === UUIDList.UUID3),
-      );
-    }),
     http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
       );
     }),
-
     // TODO クエリパラメータの扱い方を適切なものにする
     // 参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
     http.get(`${baseUrl}/blog/posts/pickup?quantity=3`, () => {
@@ -56,6 +39,13 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
     }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {
       return HttpResponse.json(blogPostResponses);
+    }),
+    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
+      const userId = params.userId?.toString();
+      const blogPost = blogPostResponses.find(
+        (post) => post.id === userId,
+      );
+      return HttpResponse.json(blogPost);
     }),
   ];
   return blogPostHandlers;

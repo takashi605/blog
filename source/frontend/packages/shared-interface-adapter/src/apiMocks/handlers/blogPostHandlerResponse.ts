@@ -2,6 +2,7 @@ import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
 
 export const blogPostResponses = [
+  // 正常データ1
   {
     ...createResponseBase(),
     id: UUIDList.UUID1,
@@ -12,6 +13,8 @@ export const blogPostResponses = [
     postDate: '2022-01-01',
     lastUpdateDate: '2022-01-02',
   },
+
+  // 正常データ2
   {
     ...createResponseBase(),
     id: UUIDList.UUID2,
@@ -22,6 +25,8 @@ export const blogPostResponses = [
     postDate: '2022-02-01',
     lastUpdateDate: '2022-01-02',
   },
+
+  // 正常データ2
   {
     ...createResponseBase(),
     id: UUIDList.UUID3,
@@ -31,6 +36,14 @@ export const blogPostResponses = [
     },
     postDate: '2023-01-01',
     lastUpdateDate: '2022-01-02',
+  },
+
+  // 不正なデータ1：投稿日・更新日が空のデータ
+  {
+    ...createResponseBase(),
+    id: UUIDList.UUID4,
+    postDate: '',
+    lastUpdateDate: '',
   },
 ];
 
