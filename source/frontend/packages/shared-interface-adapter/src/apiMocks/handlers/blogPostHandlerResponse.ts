@@ -38,6 +38,18 @@ export const blogPostResponses = [
     lastUpdateDate: '2022-01-02',
   },
 
+  // 正常データ4
+  {
+    ...createResponseBase(),
+    id: UUIDList.UUID5,
+    title: 'ペアプログラミングのススメ',
+    thumbnail: {
+      path: 'test-book',
+    },
+    postDate: '2021-01-15',
+    lastUpdateDate: '2022-02-02',
+  },
+
   // 不正なデータ1：投稿日・更新日が空のデータ
   {
     ...createResponseBase(),
