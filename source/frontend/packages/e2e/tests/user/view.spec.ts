@@ -98,7 +98,7 @@ Given('対応する記事データが存在しないページにアクセスす�
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID3}`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/nodata`);
 });
 
 Then(

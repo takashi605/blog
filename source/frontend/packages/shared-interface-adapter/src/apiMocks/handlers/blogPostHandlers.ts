@@ -57,6 +57,11 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
     http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
       const userId = params.userId?.toString();
       const blogPost = blogPostResponses.find((post) => post.id === userId);
+      if (blogPost === undefined) {
+        return new HttpResponse('Not found', {
+          status: 404,
+        });
+      }
       return HttpResponse.json(blogPost);
     }),
   ];
