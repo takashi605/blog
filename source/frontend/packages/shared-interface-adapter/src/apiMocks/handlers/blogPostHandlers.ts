@@ -32,10 +32,15 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
       );
     }),
-    // TODO クエリパラメータの扱い方を適切なものにする
-    // 参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
-    http.get(`${baseUrl}/blog/posts/pickup?quantity=3`, () => {
-      return HttpResponse.json(blogPostResponses);
+    // クエリパラメータの扱い方の参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
+    http.get(`${baseUrl}/blog/posts/pickup?quantity=3`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(blogPostResponses);
+      }
+      const blogPosts = blogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {
       const sortedBlogPosts = blogPostResponses.sort((a, b) => {
