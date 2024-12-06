@@ -3,7 +3,10 @@ import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { UUIDList } from 'shared-test-data';
 import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
-import { blogPostResponses } from './blogPostHandlerResponse';
+import {
+  blogPostResponses,
+  pickupBlogPostResponses,
+} from './blogPostHandlerResponse';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
 export const clearCreatedBlogPosts = () => {
@@ -37,9 +40,9 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       const url = new URL(request.url);
       const quantity = url.searchParams.get('quantity');
       if (!quantity) {
-        return HttpResponse.json(blogPostResponses);
+        return HttpResponse.json(pickupBlogPostResponses);
       }
-      const blogPosts = blogPostResponses.slice(0, Number(quantity));
+      const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
       return HttpResponse.json(blogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/latests`, () => {

@@ -26,7 +26,7 @@ export const blogPostResponses = [
     lastUpdateDate: '2022-01-02',
   },
 
-  // 正常データ2
+  // 正常データ3
   {
     ...createResponseBase(),
     id: UUIDList.UUID3,
@@ -46,6 +46,8 @@ export const blogPostResponses = [
     lastUpdateDate: '',
   },
 ];
+
+export const pickupBlogPostResponses = blogPostResponses.slice(0, 3);
 
 function createResponseBase() {
   return {
