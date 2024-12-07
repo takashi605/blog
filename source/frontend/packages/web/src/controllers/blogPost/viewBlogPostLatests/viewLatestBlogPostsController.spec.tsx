@@ -41,8 +41,10 @@ describe('viewLatestBlogPostsController', () => {
     });
   });
 
-  it("取得するデータ数を指定した場合、その数だけの記事データが取得される", async () => {
-    const { props } = (await ViewLatestBlogPostsController({quantity:3})) as ReactElement;
+  it('取得するデータ数を指定した場合、その数だけの記事データが取得される', async () => {
+    const { props } = (await ViewLatestBlogPostsController({
+      quantity: 3,
+    })) as ReactElement;
     const dtoList = props.blogPosts as BlogPostDTO[];
     expect(dtoList).toBeDefined();
     expect(dtoList.length).toBe(3);
