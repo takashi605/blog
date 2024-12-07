@@ -4,6 +4,7 @@ CLUSTER_NAME = blog
 ## tilt 系
 ###
 tilt-up:
+	$(MAKE) tilt-down
 	tilt up
 tilt-down:
 	tilt down

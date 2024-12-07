@@ -5,13 +5,17 @@ import type { BlogPostRepository } from 'service/src/blogPostService/repository/
 
 export class ViewLatestBlogPostsUseCase {
   private blogPostRepository: BlogPostRepository;
+  private quantity: number | undefined = undefined;
 
   constructor(blogPostRepository: BlogPostRepository) {
     this.blogPostRepository = blogPostRepository;
   }
 
   async execute(): Promise<BlogPostDTO[]> {
-    const fetchedData = await this.blogPostRepository.fetchLatests();
+    console.log('quantity:', this.quantity);
+    const fetchedData = await this.blogPostRepository.fetchLatests(
+      this.quantity,
+    );
     const blogPosts = fetchedData.map((dto) => {
       return blogPostDTOToEntity(dto);
     });
@@ -19,5 +23,10 @@ export class ViewLatestBlogPostsUseCase {
       return new BlogPostDTOBuilder(blogPost).build();
     });
     return blogPostDTOs;
+  }
+
+  setQuantity(quantity: number | undefined): ViewLatestBlogPostsUseCase {
+    this.quantity = quantity;
+    return this;
   }
 }

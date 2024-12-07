@@ -74,6 +74,19 @@ describe('apiBlogPostRepository', () => {
     }
   });
 
+  it('api から新着記事の一覧を取得できる（取得数を指定）', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchLatests(3);
+    expect(resp.length).toBe(3);
+
+    for (let i = 0; i < resp.length - 1; i++) {
+      expect(
+        new Date(resp[i].postDate) <= new Date(resp[i + 1].postDate),
+      ).toBeTruthy();
+    }
+  });
+
   it('api からトップテックピック記事を取得できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 

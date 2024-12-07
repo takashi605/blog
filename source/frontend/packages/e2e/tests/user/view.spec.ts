@@ -1,4 +1,4 @@
-import { Before, Given, setDefaultTimeout, Then } from '@cucumber/cucumber';
+import { Before, Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 import { UUIDList } from 'shared-test-data';
@@ -6,7 +6,6 @@ import { UUIDList } from 'shared-test-data';
 let page: Page;
 
 Before(async () => {
-  setDefaultTimeout(15000);
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();
@@ -85,7 +84,7 @@ Given('投稿日,更新日時が存在しないページにアクセスする', 
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID2}`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID4}`);
 });
 
 Then(
@@ -99,7 +98,7 @@ Given('対応する記事データが存在しないページにアクセスす�
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID3}`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/nodata`);
 });
 
 Then(
