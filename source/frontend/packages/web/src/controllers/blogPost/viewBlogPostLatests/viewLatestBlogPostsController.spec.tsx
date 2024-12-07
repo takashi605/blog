@@ -18,7 +18,7 @@ afterAll(() => {
 
 describe('viewLatestBlogPostsController', () => {
   it('レンダリングするコンポーネントに記事データの DTO 配列が渡されている', async () => {
-    const { props } = (await ViewLatestBlogPostsController()) as ReactElement;
+    const { props } = (await ViewLatestBlogPostsController({})) as ReactElement;
     const dtoList = props.blogPosts as BlogPostDTO[];
     expect(dtoList).toBeDefined();
     expect(dtoList.length).toBeGreaterThan(0);
@@ -39,5 +39,12 @@ describe('viewLatestBlogPostsController', () => {
         }
       });
     });
+  });
+
+  it("取得するデータ数を指定した場合、その数だけの記事データが取得される", async () => {
+    const { props } = (await ViewLatestBlogPostsController({quantity:3})) as ReactElement;
+    const dtoList = props.blogPosts as BlogPostDTO[];
+    expect(dtoList).toBeDefined();
+    expect(dtoList.length).toBe(3);
   });
 });
