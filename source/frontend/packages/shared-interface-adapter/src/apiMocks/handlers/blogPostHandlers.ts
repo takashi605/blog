@@ -36,7 +36,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       );
     }),
     // クエリパラメータの扱い方の参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
-    http.get(`${baseUrl}/blog/posts/pickup?quantity=3`, ({ request }) => {
+    http.get(`${baseUrl}/blog/posts/pickup`, ({ request }) => {
       const url = new URL(request.url);
       const quantity = url.searchParams.get('quantity');
       if (!quantity) {
