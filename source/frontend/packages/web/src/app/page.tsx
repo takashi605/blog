@@ -1,3 +1,4 @@
+import ViewLatestBlogPostsController from '../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
 import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
 import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/ViewTopTechPickController';
 
@@ -11,6 +12,9 @@ export default async function Home() {
     <>
       <section>
         <ViewTopTechPickController />
+      </section>
+      <section>
+        <ViewLatestBlogPostsController quantity={3} />
       </section>
       <section>
         <ViewPickUpPostsController />
