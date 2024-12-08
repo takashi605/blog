@@ -1,9 +1,10 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
+import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
-import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
+import { PopularPostSelector } from './popularPostSelector';
 
 describe('popularPostSelector', () => {
   it('人気記事に設定されている記事のエンティティデータを取得できる', async () => {

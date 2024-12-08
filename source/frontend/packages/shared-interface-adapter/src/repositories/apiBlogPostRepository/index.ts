@@ -114,7 +114,9 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
-  async fetchPopularPosts(quantity?: number | undefined): Promise<BlogPostDTO[]> {
+  async fetchPopularPosts(
+    quantity?: number | undefined,
+  ): Promise<BlogPostDTO[]> {
     throw new Error('このメソッドは未実装です');
   }
 
