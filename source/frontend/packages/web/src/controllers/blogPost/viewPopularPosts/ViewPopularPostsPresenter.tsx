@@ -11,14 +11,14 @@ function ViewPopularPostsPresenter({
 }: ViewPopularPostsPresenterProps) {
   return (
     <div className={styles.flexContainer}>
-      {/* <div className={styles.flexItem}>
-        <span className={styles.sectionCatchPhrases}>PICK UP!!</span>
-        <h2 className={styles.sectionTitle}>注目記事</h2>
+      <div className={styles.flexItem}>
+        <span className={styles.sectionCatchPhrases}>Popular!!</span>
+        <h2 className={styles.sectionTitle}>人気記事</h2>
         <div className={styles.sectionDescription}>
-          <p>幅広い人におすすめの記事です。</p>
-          <p>このブログの雰囲気を掴んでいただけると思います。</p>
+          <p>ここ最近で人気の記事です。</p>
+          <p>大体3ヶ月に1回くらい更新します。</p>
         </div>
-      </div> */}
+      </div>
       {blogPostsDTO.map((blogPostDTO) => (
         <div className={styles.flexItem} key={blogPostDTO.id}>
           <div className={styles.thumbnail}>
