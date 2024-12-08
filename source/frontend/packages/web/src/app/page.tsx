@@ -2,6 +2,7 @@ import ViewLatestBlogPostsController from '../controllers/blogPost/viewBlogPostL
 import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
 import ViewPopularPostsController from '../controllers/blogPost/viewPopularPosts/ViewPopularPostsController';
 import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/ViewTopTechPickController';
+import styles from './page.module.scss';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う
 // こうしないと MSW によるモックサーバーが機能しない
@@ -11,16 +12,16 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   return (
     <>
-      <section>
+      <section className={styles.viewTopTechPickSection}>
         <ViewTopTechPickController />
       </section>
-      <section>
+      <section className={styles.viewLatestsSection}>
         <ViewLatestBlogPostsController quantity={3} />
       </section>
-      <section>
+      <section className={styles.viewPickUpPostsSection}>
         <ViewPickUpPostsController />
       </section>
-      <section>
+      <section className={styles.viewPopularPostsSection}>
         <ViewPopularPostsController />
       </section>
     </>
