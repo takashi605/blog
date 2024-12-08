@@ -1,5 +1,6 @@
 import ViewLatestBlogPostsController from '../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
 import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
+import ViewPopularPostsController from '../controllers/blogPost/viewPopularPosts/ViewPopularPostsController';
 import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/ViewTopTechPickController';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う
@@ -18,6 +19,9 @@ export default async function Home() {
       </section>
       <section>
         <ViewPickUpPostsController />
+      </section>
+      <section>
+        <ViewPopularPostsController />
       </section>
     </>
   );
