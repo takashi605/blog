@@ -4,20 +4,18 @@ import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
 import { PickUpPostSelector } from './pickUpPostSelector';
+import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
 
 describe('pickUpPostSelector', () => {
   it('ピックアップ記事に設定されている記事のエンティティデータを取得できる', async () => {
     const expectedPickUpPost: BlogPostDTO[] = buildPickUpPostDTO();
     const fetchPickUpPosts = jest.fn().mockReturnValue(expectedPickUpPost);
-    const mockBlogPostRepository: BlogPostRepository = {
-      save: jest.fn(),
-      fetch: jest.fn(),
-      fetchLatests: jest.fn(),
-      fetchTopTechPick: jest.fn(),
+    const mockRepository: BlogPostRepository = {
+      ...mockBlogPostRepository,
       fetchPickUpPosts,
     };
 
-    const pickUpPostSelector = new PickUpPostSelector(mockBlogPostRepository);
+    const pickUpPostSelector = new PickUpPostSelector(mockRepository);
     const pickUpPosts: BlogPost[] = await pickUpPostSelector.getPickUpPosts(3);
 
     expect(fetchPickUpPosts).toHaveBeenCalled();
