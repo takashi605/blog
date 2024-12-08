@@ -6,6 +6,7 @@ import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository
 import {
   blogPostResponses,
   pickupBlogPostResponses,
+  popularBlogPostResponses,
 } from './blogPostHandlerResponse';
 
 export const createdBlogPosts: BlogPostDTO[] = [];
@@ -43,6 +44,15 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         return HttpResponse.json(pickupBlogPostResponses);
       }
       const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
+    }),
+    http.get(`${baseUrl}/blog/posts/popular`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(popularBlogPostResponses);
+      }
+      const blogPosts = popularBlogPostResponses.slice(0, Number(quantity));
       return HttpResponse.json(blogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/latests`, ({ request }) => {

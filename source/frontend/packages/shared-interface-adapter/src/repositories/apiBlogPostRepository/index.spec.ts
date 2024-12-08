@@ -115,6 +115,22 @@ describe('apiBlogPostRepository', () => {
     });
   });
 
+  it('api から人気記事を複数件取得できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const resp = await apiRepository.fetchPopularPosts(3);
+    expect(resp.length).toBe(3);
+
+    resp.forEach((pickUpPost) => {
+      expect(pickUpPost.id).toBeDefined();
+      expect(pickUpPost.title).toBeDefined();
+      expect(pickUpPost.thumbnail).toBeDefined();
+      expect(pickUpPost.postDate).toBeDefined();
+      expect(pickUpPost.lastUpdateDate).toBeDefined();
+      expect(pickUpPost.contents.length).toBeGreaterThan(0);
+    });
+  });
+
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
     try {

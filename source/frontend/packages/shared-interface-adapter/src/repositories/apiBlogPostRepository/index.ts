@@ -117,7 +117,15 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   async fetchPopularPosts(
     quantity?: number | undefined,
   ): Promise<BlogPostDTO[]> {
-    throw new Error('このメソッドは未実装です');
+    const queryParam = quantity ? `?quantity=${quantity}` : '';
+    const response = await fetch(
+      `${this.baseUrl}/blog/posts/popular${queryParam}`,
+    );
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
+
+    return validatedResponse;
   }
 
   private async post(blogPostJson: string): Promise<Response> {
