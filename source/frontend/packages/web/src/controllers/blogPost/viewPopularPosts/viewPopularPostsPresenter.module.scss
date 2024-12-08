@@ -7,8 +7,8 @@
   font-family: ryo-gothic-plusn, sans-serif;
 
   &:nth-child(1) {
-    order: 2;
-    text-align: right;
+    order: 1;
+    text-align: left;
     align-content: end;
     margin-bottom: 22px;
   }
@@ -27,7 +27,7 @@
   font-size: 72px;
 
   display: inline-block;
-  transform: rotate(5deg);
+  transform: rotate(-5deg);
 
   margin-bottom: 40px;
 }
