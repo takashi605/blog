@@ -60,6 +60,11 @@ export const blogPostResponses = [
 ];
 
 export const pickupBlogPostResponses = blogPostResponses.slice(0, 3);
+export const popularBlogPostResponses = [
+  blogPostResponses[3],
+  blogPostResponses[0],
+  blogPostResponses[1],
+];
 
 function createResponseBase() {
   return {

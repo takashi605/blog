@@ -4,35 +4,36 @@ import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
 import type { BlogPostRepository } from '../repository/blogPostRepository';
-import { PickUpPostSelector } from './pickUpPostSelector';
+import { PopularPostSelector } from './popularPostSelector';
 
-describe('pickUpPostSelector', () => {
-  it('ピックアップ記事に設定されている記事のエンティティデータを取得できる', async () => {
-    const expectedPickUpPost: BlogPostDTO[] = buildPickUpPostDTO();
-    const fetchPickUpPosts = jest.fn().mockReturnValue(expectedPickUpPost);
+describe('popularPostSelector', () => {
+  it('人気記事に設定されている記事のエンティティデータを取得できる', async () => {
+    const expectedPopularPost: BlogPostDTO[] = buildPopularPostDTO();
+    const fetchPopularPosts = jest.fn().mockReturnValue(expectedPopularPost);
     const mockRepository: BlogPostRepository = {
       ...mockBlogPostRepository,
-      fetchPickUpPosts,
+      fetchPopularPosts,
     };
 
-    const pickUpPostSelector = new PickUpPostSelector(mockRepository);
-    const pickUpPosts: BlogPost[] = await pickUpPostSelector.getPickUpPosts(3);
+    const popularPostSelector = new PopularPostSelector(mockRepository);
+    const popularPosts: BlogPost[] =
+      await popularPostSelector.getPopularPosts(3);
 
-    expect(fetchPickUpPosts).toHaveBeenCalled();
-    expect(pickUpPosts).toHaveLength(3);
+    expect(fetchPopularPosts).toHaveBeenCalled();
+    expect(popularPosts).toHaveLength(3);
 
-    pickUpPosts.forEach((pickUpPost) => {
-      expect(pickUpPost.getId()).toBeDefined();
-      expect(pickUpPost.getTitleText()).toBeDefined();
-      expect(pickUpPost.getPostDate()).toBeDefined();
-      expect(pickUpPost.getLastUpdateDate()).toBeDefined();
-      expect(pickUpPost.getThumbnail()).toBeDefined();
-      expect(pickUpPost.getContents()).toBeDefined();
+    popularPosts.forEach((popularPost) => {
+      expect(popularPost.getId()).toBeDefined();
+      expect(popularPost.getTitleText()).toBeDefined();
+      expect(popularPost.getPostDate()).toBeDefined();
+      expect(popularPost.getLastUpdateDate()).toBeDefined();
+      expect(popularPost.getThumbnail()).toBeDefined();
+      expect(popularPost.getContents()).toBeDefined();
     });
   });
 });
 
-function buildPickUpPostDTO(): BlogPostDTO[] {
+function buildPopularPostDTO(): BlogPostDTO[] {
   const baseMockData: BlogPostDTO = {
     id: createUUIDv4(),
     title: '記事タイトル',
