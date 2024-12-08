@@ -12,7 +12,6 @@ export class ViewLatestBlogPostsUseCase {
   }
 
   async execute(): Promise<BlogPostDTO[]> {
-    console.log('quantity:', this.quantity);
     const fetchedData = await this.blogPostRepository.fetchLatests(
       this.quantity,
     );
