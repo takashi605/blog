@@ -4,6 +4,7 @@ import { Paragraph } from '../../blogPost/postContents/paragraph';
 import { RichText, RichTextPart } from '../../blogPost/postContents/richText';
 
 // blogPost の mock データを生成するクラス
+// 注意：タイトルは '記事タイトル' + id となる(記事タイトル1, 記事タイトル2, ...)
 export class mockBlogPost {
   public mockParts: mockBlogPostParts;
   private id: string;
@@ -13,18 +14,32 @@ export class mockBlogPost {
     this.mockParts = new mockBlogPostParts(id);
   }
 
-  public getMock(): BlogPost {
+  public successfulMock(): BlogPost {
+    return this.mockBase()
+      .setPostDate(this.mockParts.getMockPostDate())
+      .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
+  }
+
+  public unsetPostDateMock(): BlogPost {
+    return this.mockBase().setLastUpdateDate(
+      this.mockParts.getMockLastUpdateDate(),
+    );
+  }
+
+  public unsetLastUpdateDateMock(): BlogPost {
+    return this.mockBase().setPostDate(this.mockParts.getMockPostDate());
+  }
+
+  mockBase(): BlogPost {
     return new BlogPost(this.id, this.mockParts.getMockTitle())
       .setThumbnail(this.mockParts.getMockImagePath())
-      .setPostDate(this.mockParts.getMockPostDate())
-      .setLastUpdateDate(this.mockParts.getMockLastUpdateDate())
       .addContent(this.mockParts.getMockH2())
       .addContent(this.mockParts.getMockH3())
       .addContent(this.mockParts.getMockParagraph());
   }
 }
 
-// 各構成要素の mock
+// blogPost の各構成要素の mock
 class mockBlogPostParts {
   private id: string;
 
@@ -40,6 +55,7 @@ class mockBlogPostParts {
     return '2021-01-02';
   }
 
+  // id が連結されるので注意
   public getMockTitle(): string {
     return `記事タイトル${this.id}`;
   }
