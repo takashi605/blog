@@ -1,5 +1,6 @@
 import { BlogPost } from '../../blogPost';
 import { H2, H3 } from '../../blogPost/postContents/heading';
+import { ImageContent } from '../../blogPost/postContents/image';
 import { Paragraph } from '../../blogPost/postContents/paragraph';
 import { RichText, RichTextPart } from '../../blogPost/postContents/richText';
 
@@ -32,10 +33,11 @@ export class mockBlogPost {
 
   mockBase(): BlogPost {
     return new BlogPost(this.id, this.mockParts.getMockTitle())
-      .setThumbnail(this.mockParts.getMockImagePath())
+      .setThumbnail(this.mockParts.getMockThumbnailPath())
       .addContent(this.mockParts.getMockH2())
       .addContent(this.mockParts.getMockH3())
-      .addContent(this.mockParts.getMockParagraph());
+      .addContent(this.mockParts.getMockParagraph())
+      .addContent(this.mockParts.getMockImageContent());
   }
 }
 
@@ -60,6 +62,10 @@ class mockBlogPostParts {
     return `記事タイトル${this.id}`;
   }
 
+  public getMockThumbnailPath(): string {
+    return 'path/to/image';
+  }
+
   public getMockH2(): H2 {
     return new H2('1', 'h2見出し');
   }
@@ -72,7 +78,7 @@ class mockBlogPostParts {
     return new Paragraph('3', new RichText([new RichTextPart('段落')]));
   }
 
-  public getMockImagePath(): string {
-    return 'path/to/image';
+  public getMockImageContent(): ImageContent {
+    return new ImageContent('1', 'path/to/image');
   }
 }

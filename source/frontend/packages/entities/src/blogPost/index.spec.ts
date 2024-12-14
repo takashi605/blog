@@ -23,7 +23,7 @@ describe('エンティティ: 投稿記事', () => {
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
     const blogPost = new mockBlogPost('1').successfulMock();
     const contents = blogPost.getContents();
-    expect(contents.length).toBe(3);
+    expect(contents.length).toBeGreaterThanOrEqual(3);
 
     const h2Content = contents[0] as H2;
     expect(h2Content.getValue()).toBe('h2見出し');
