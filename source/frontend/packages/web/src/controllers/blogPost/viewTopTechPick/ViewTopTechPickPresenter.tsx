@@ -26,7 +26,7 @@ function ViewTopTechPickPresenter({
           <Thumbnail thumbnail={blogPostDTO.thumbnail} />
         </div>
         <div className={styles.contentSummaryTexts}>
-          <Paragraph>{excerpted}</Paragraph>
+          <Paragraph richText={excerpted} />
           <time className={styles.postDate}>{blogPostDTO.postDate}</time>
         </div>
       </div>

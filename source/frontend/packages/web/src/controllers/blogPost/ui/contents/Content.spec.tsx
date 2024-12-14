@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import ContentRenderer from './Content';
+import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
 
 describe('コンポーネント: viewBlogPostController', () => {
   it('type に h2 を渡したとき、h2 タグを表示する', async () => {
@@ -34,19 +35,19 @@ describe('コンポーネント: viewBlogPostController', () => {
     expect(h3).toHaveTextContent('h3見出し');
   });
 
-  it('type に paragraph を渡したとき、p タグを表示する', async () => {
+  it('type に paragraph を渡したとき、RichText 配列が連結された文字列を表示する', async () => {
     render(
       <ContentRenderer
         content={{
           id: '1',
           type: ContentType.Paragraph,
-          text: '段落',
+          text: mockRichTextForDTO(),
         }}
       />,
     );
 
     const p = screen.getByRole('paragraph');
-    expect(p).toHaveTextContent('段落');
+    expect(p).toHaveTextContent('これはテストテキストです');
   });
 
   it('type に image を渡したとき、img タグを表示する', async () => {

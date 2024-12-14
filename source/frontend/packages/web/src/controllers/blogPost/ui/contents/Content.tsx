@@ -16,7 +16,7 @@ function ContentRenderer({ content }: BlogPostContentProps) {
     case 'h3':
       return <H3>{content.text}</H3>;
     case 'paragraph':
-      return <Paragraph>{content.text}</Paragraph>;
+      return <Paragraph richText={content.text} />;
     case 'image':
       return <ImageContent imageContent={content} />;
     default:
