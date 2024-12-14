@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import ContentRenderer from './Content';
 import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
+import ContentRenderer from './Content';
 
 describe('コンポーネント: viewBlogPostController', () => {
   it('type に h2 を渡したとき、h2 タグを表示する', async () => {

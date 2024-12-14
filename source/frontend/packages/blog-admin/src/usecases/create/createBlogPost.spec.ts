@@ -1,6 +1,9 @@
 import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
-import { mockBlogPostDTO, mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
+import {
+  mockBlogPostDTO,
+  mockRichTextForDTO,
+} from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
@@ -42,7 +45,7 @@ describe('ユースケース: 記事の投稿', () => {
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    expect(createdBlogPost.title).toBeDefined()
+    expect(createdBlogPost.title).toBeDefined();
     expect(createdBlogPost.postDate).toBeDefined();
     expect(createdBlogPost.lastUpdateDate).toBeDefined();
 

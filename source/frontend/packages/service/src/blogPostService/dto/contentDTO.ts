@@ -31,5 +31,5 @@ export type RichTextForDTO = ReadonlyArray<{
   text: string;
   styles?: {
     bold: boolean;
-  }
-}>
+  };
+}>;

@@ -31,7 +31,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
     const richTextDTO = richText.getText().map((richTextPart) => {
       return {
         text: richTextPart.getText(),
-        styles: { bold: richTextPart.getStyles().bold},
+        styles: { bold: richTextPart.getStyles().bold },
       };
     });
     return {
