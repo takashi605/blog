@@ -2,6 +2,7 @@ import { ImageContent } from '../postContents/image';
 import { Paragraph } from '../postContents/paragraph';
 import { ContentType } from './content';
 import { H2, H3 } from './heading';
+import { RichText, RichTextPart } from './richText';
 
 describe('エンティティ: 投稿記事のコンテント', () => {
   it('h2 見出しを生成できる', () => {
@@ -19,8 +20,13 @@ describe('エンティティ: 投稿記事のコンテント', () => {
   });
 
   it('段落を生成できる', () => {
-    const paragraph = new Paragraph('1', '段落');
-    expect(paragraph.getValue()).toBe('段落');
+    const paragraph = new Paragraph(
+      '1',
+      new RichText([new RichTextPart('段落')]),
+    );
+    expect(paragraph.getValue()).toEqual(
+      new RichText([new RichTextPart('段落')]),
+    );
     expect(paragraph.getType()).toBe('paragraph');
     expect(paragraph.getId()).toBe('1');
   });
