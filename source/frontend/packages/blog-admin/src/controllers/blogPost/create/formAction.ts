@@ -3,6 +3,7 @@ import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
 import type { SubmitHandler } from 'react-hook-form';
 import type { BlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
+import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
@@ -46,8 +47,9 @@ function injectContentsToBuilder(
       case 'h3':
         builder.addH3(createUUIDv4(), content.text);
         break;
+      // TODO: いったんモックデータで対応しているので、適切なタイミングで修正
       case 'paragraph':
-        builder.addParagraph(createUUIDv4(), content.text);
+        builder.addParagraph(createUUIDv4(), mockRichTextForDTO());
         break;
     }
   });
