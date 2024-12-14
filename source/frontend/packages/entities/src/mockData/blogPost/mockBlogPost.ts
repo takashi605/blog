@@ -6,13 +6,13 @@ import { RichText, RichTextPart } from '../../blogPost/postContents/richText';
 
 // blogPost の mock データを生成するクラス
 // 注意：タイトルは '記事タイトル' + id となる(記事タイトル1, 記事タイトル2, ...)
-export class mockBlogPost {
-  public mockParts: mockBlogPostParts;
+export class MockBlogPost {
+  public mockParts: MockBlogPostParts;
   private id: string;
 
   constructor(id: string) {
     this.id = id;
-    this.mockParts = new mockBlogPostParts(id);
+    this.mockParts = new MockBlogPostParts(id);
   }
 
   successfulMock(): BlogPost {
@@ -50,7 +50,7 @@ export class mockBlogPost {
 }
 
 // blogPost の各構成要素の mock
-class mockBlogPostParts {
+class MockBlogPostParts {
   private id: string;
 
   constructor(id: string) {

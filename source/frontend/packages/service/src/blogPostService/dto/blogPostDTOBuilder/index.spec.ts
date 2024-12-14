@@ -1,9 +1,9 @@
-import { mockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
+import { MockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
 import { BlogPostDTOBuilder } from '.';
 
 describe('DTO の生成', () => {
   it('builder クラスを使って DTO を生成できる', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
 
     const builder = new BlogPostDTOBuilder(blogPost);
     const dto = builder.build();
@@ -46,14 +46,14 @@ describe('DTO の生成', () => {
   });
 
   it('投稿日が存在しない記事を生成しようとするとエラーが発生する', () => {
-    const blogPost = new mockBlogPost('1').unsetPostDateMock();
+    const blogPost = new MockBlogPost('1').unsetPostDateMock();
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '投稿日が存在しない記事を生成しようとしました',
     );
   });
 
   it('最終更新日が存在しない記事を生成しようとするとエラーが発生する', () => {
-    const blogPost = new mockBlogPost('1').unsetLastUpdateDateMock();
+    const blogPost = new MockBlogPost('1').unsetLastUpdateDateMock();
 
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       '最終更新日が存在しない記事を生成しようとしました',
@@ -61,7 +61,7 @@ describe('DTO の生成', () => {
   });
 
   it('サムネイル画像が存在しない記事を生成しようとするとエラーが発生する', () => {
-    const blogPost = new mockBlogPost('1').unsetThumbnailMock();
+    const blogPost = new MockBlogPost('1').unsetThumbnailMock();
 
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       'サムネイル画像が存在しない記事を生成しようとしました',

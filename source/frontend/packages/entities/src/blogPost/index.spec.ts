@@ -1,4 +1,4 @@
-import { mockBlogPost } from '../mockData/blogPost/mockBlogPost';
+import { MockBlogPost } from '../mockData/blogPost/mockBlogPost';
 import { BlogPost } from './index';
 import type { H2, H3 } from './postContents/heading';
 import type { Paragraph } from './postContents/paragraph';
@@ -6,13 +6,13 @@ import { RichText, RichTextPart } from './postContents/richText';
 
 describe('エンティティ: 投稿記事', () => {
   it('id と記事タイトルを渡すと記事データを生成できる', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
     expect(blogPost.getId()).toBe('1');
     expect(blogPost.getTitleText()).toBe('記事タイトル1');
   });
 
   it('サムネイル画像を持っている', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
     const imagePath = 'path/to/image';
     blogPost.setThumbnail(imagePath);
 
@@ -21,7 +21,7 @@ describe('エンティティ: 投稿記事', () => {
   });
 
   it('コンテンツとして h2,h3 及び段落を持つ記事を生成できる', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
     const contents = blogPost.getContents();
     expect(contents.length).toBeGreaterThanOrEqual(3);
 
@@ -44,23 +44,23 @@ describe('エンティティ: 投稿記事', () => {
   });
 
   it('記事の投稿日付を取得できる', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
     expect(blogPost.getPostDate()).toEqual(new Date('2021-01-01'));
   });
 
   it('記事の投稿日付が空の時に取得するとエラーが発生する', () => {
-    const blogPost = new mockBlogPost('1').unsetPostDateMock();
+    const blogPost = new MockBlogPost('1').unsetPostDateMock();
 
     expect(() => blogPost.getPostDate()).toThrow('投稿日が設定されていません');
   });
 
   it('記事の最終更新日を取得できる', () => {
-    const blogPost = new mockBlogPost('1').successfulMock();
+    const blogPost = new MockBlogPost('1').successfulMock();
     expect(blogPost.getLastUpdateDate()).toEqual(new Date('2021-01-02'));
   });
 
   it('記事の最終更新日が空の時に取得するとエラーが発生する', () => {
-    const blogPost = new mockBlogPost('1').unsetLastUpdateDateMock();
+    const blogPost = new MockBlogPost('1').unsetLastUpdateDateMock();
     expect(() => blogPost.getLastUpdateDate()).toThrow(
       '最終更新日が設定されていません',
     );
