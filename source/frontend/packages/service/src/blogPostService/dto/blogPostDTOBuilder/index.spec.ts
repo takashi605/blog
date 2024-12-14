@@ -1,4 +1,3 @@
-import { BlogPost } from 'entities/src/blogPost/index';
 import { mockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
 import { BlogPostDTOBuilder } from '.';
 
@@ -62,10 +61,8 @@ describe('DTO の生成', () => {
   });
 
   it('サムネイル画像が存在しない記事を生成しようとするとエラーが発生する', () => {
-    const title = '記事タイトル';
-    const blogPost = new BlogPost('1', title)
-      .setPostDate('2021-01-01')
-      .setLastUpdateDate('2021-01-02');
+    const blogPost = new mockBlogPost('1').unsetThumbnailMock();
+
     expect(() => new BlogPostDTOBuilder(blogPost).build()).toThrow(
       'サムネイル画像が存在しない記事を生成しようとしました',
     );

@@ -15,25 +15,33 @@ export class mockBlogPost {
     this.mockParts = new mockBlogPostParts(id);
   }
 
-  public successfulMock(): BlogPost {
+  successfulMock(): BlogPost {
+    return this.mockBase()
+      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setPostDate(this.mockParts.getMockPostDate())
+      .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
+  }
+
+  unsetPostDateMock(): BlogPost {
+    return this.mockBase()
+      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
+  }
+
+  unsetLastUpdateDateMock(): BlogPost {
+    return this.mockBase()
+      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setPostDate(this.mockParts.getMockPostDate());
+  }
+
+  unsetThumbnailMock(): BlogPost {
     return this.mockBase()
       .setPostDate(this.mockParts.getMockPostDate())
       .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
   }
 
-  public unsetPostDateMock(): BlogPost {
-    return this.mockBase().setLastUpdateDate(
-      this.mockParts.getMockLastUpdateDate(),
-    );
-  }
-
-  public unsetLastUpdateDateMock(): BlogPost {
-    return this.mockBase().setPostDate(this.mockParts.getMockPostDate());
-  }
-
-  mockBase(): BlogPost {
+  private mockBase(): BlogPost {
     return new BlogPost(this.id, this.mockParts.getMockTitle())
-      .setThumbnail(this.mockParts.getMockThumbnailPath())
       .addContent(this.mockParts.getMockH2())
       .addContent(this.mockParts.getMockH3())
       .addContent(this.mockParts.getMockParagraph())
