@@ -12,8 +12,14 @@ export class RichText {
 
 export class RichTextPart {
   private text: string;
+  private styles: RichTextStyles;
 
-  constructor(text: string) {
+  constructor(text: string, styles?: RichTextStyles) {
     this.text = text;
+    this.styles = styles || {};
   }
+}
+
+type RichTextStyles = {
+  bold?: boolean;
 }
