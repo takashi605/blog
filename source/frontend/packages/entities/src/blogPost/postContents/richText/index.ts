@@ -5,8 +5,8 @@ export class RichText {
     this.text = text;
   }
 
-  getText() {
-    return this.text.map((part) => part.getText());
+  getText(): RichTextPart[] {
+    return this.text;
   }
 }
 
@@ -15,9 +15,5 @@ export class RichTextPart {
 
   constructor(text: string) {
     this.text = text;
-  }
-
-  getText() {
-    return this.text;
   }
 }
