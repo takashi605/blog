@@ -11,6 +11,30 @@ describe('コンポーネント： Paragraph', () => {
     expect(p).toHaveTextContent('これはテストテキストです');
   });
 
+  it('太字フォーマットが含まれる RichText 配列が渡された場合、strong タグによる太字対応がされている', async () => {
+    render(
+      <Paragraph
+        richText={[
+          {
+            text: 'これは',
+            styles: { bold: false },
+          },
+          {
+            text: 'テストテキスト',
+            styles: { bold: true },
+          },
+          {
+            text: 'です',
+            styles: { bold: false },
+          },
+        ]}
+      />,
+    );
+
+    const strong = screen.getByRole('strong');
+    expect(strong).toHaveTextContent('テストテキスト');
+  });
+
   it('RichText 配列が空の場合、空文字列を表示する', async () => {
     render(<Paragraph richText={[]} />);
 
