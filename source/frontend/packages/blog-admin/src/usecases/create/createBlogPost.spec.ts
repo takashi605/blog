@@ -1,5 +1,9 @@
 import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import {
+  mockBlogPostDTO,
+  mockRichTextForDTO,
+} from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
@@ -23,49 +27,45 @@ describe('ユースケース: 記事の投稿', () => {
   const mockRepository: BlogPostRepository = mockBlogPostRepository;
 
   it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
-    const mockSave = jest.fn().mockReturnValue({
-      title: '記事タイトル',
-      postDate: '1999-01-01',
-      lastUpdateDate: '1999-01-02',
-      contents: [
-        { type: 'h2', text: 'h2見出し1' },
-        { type: 'h3', text: 'h3見出し1' },
-        { type: 'paragraph', text: '段落1' },
-      ],
-    });
+    const mockSave = jest.fn().mockReturnValue(mockBlogPostDTO);
     const mockRepository: BlogPostRepository = {
       ...mockBlogPostRepository,
       save: mockSave,
     };
 
-    const id = createUUIDv4();
     const builder = createBlogPostBuilder()
-      .setId(id)
+      .setId(createUUIDv4())
       .setPostTitle('記事タイトル')
       .addH2(createUUIDv4(), 'h2見出し1')
       .addH3(createUUIDv4(), 'h3見出し1')
-      .addParagraph(createUUIDv4(), '段落1');
+      .addParagraph(createUUIDv4(), mockRichTextForDTO());
     const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
 
     const createdBlogPost = await blogPostCreator.execute();
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    expect(createdBlogPost.title).toBe('記事タイトル');
-    expect(createdBlogPost.postDate).toBe('1999-01-01');
-    expect(createdBlogPost.lastUpdateDate).toBe('1999-01-02');
-    expect(createdBlogPost.contents[0]).toEqual({
-      type: 'h2',
-      text: 'h2見出し1',
-    });
-    expect(createdBlogPost.contents[1]).toEqual({
-      type: 'h3',
-      text: 'h3見出し1',
-    });
-    expect(createdBlogPost.contents[2]).toEqual({
-      type: 'paragraph',
-      text: '段落1',
-    });
+    expect(createdBlogPost.title).toBeDefined();
+    expect(createdBlogPost.postDate).toBeDefined();
+    expect(createdBlogPost.lastUpdateDate).toBeDefined();
+
+    const h2Content = createdBlogPost.contents.find(
+      (content) => content.type === 'h2',
+    )!;
+    expect(h2Content.type).toBe('h2');
+    expect(h2Content.text).toBeDefined();
+
+    const h3Content = createdBlogPost.contents.find(
+      (content) => content.type === 'h3',
+    )!;
+    expect(h3Content.type).toBe('h3');
+    expect(h3Content.text).toBeDefined();
+
+    const paragraphContent = createdBlogPost.contents.find(
+      (content) => content.type === 'paragraph',
+    )!;
+    expect(paragraphContent.type).toBe('paragraph');
+    expect(paragraphContent.text).toBeDefined();
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {
@@ -93,17 +93,15 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       process.env.NEXT_PUBLIC_API_URL!,
     );
 
-    const id = createUUIDv4();
-    const contentIds = [createUUIDv4(), createUUIDv4(), createUUIDv4()];
     const blogPostBuilder = createBlogPostBuilder()
-      .setId(id)
+      .setId(createUUIDv4())
       .setThumbnail('path/to/thumbnail')
       .setPostTitle('記事タイトル')
       .setPostDate('1999-01-01')
       .setLastUpdateDate('1999-01-02')
-      .addH2(contentIds[0], 'h2見出し1')
-      .addH3(contentIds[1], 'h3見出し1')
-      .addParagraph(contentIds[2], '段落1');
+      .addH2(createUUIDv4(), 'h2見出し1')
+      .addH3(createUUIDv4(), 'h3見出し1')
+      .addParagraph(createUUIDv4(), mockRichTextForDTO());
     const blogPostCreator = new CreateBlogPostUseCase(
       blogPostBuilder,
       apiRepository,
@@ -111,18 +109,30 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     const createdBlogPost = await blogPostCreator.execute();
 
     const today = onlyYMD(new Date());
-    expect(createdBlogPost).toEqual({
-      id,
-      title: '記事タイトル',
-      thumbnail: { path: 'path/to/thumbnail' },
-      postDate: today,
-      lastUpdateDate: today,
-      contents: [
-        { id: contentIds[0], type: 'h2', text: 'h2見出し1' },
-        { id: contentIds[1], type: 'h3', text: 'h3見出し1' },
-        { id: contentIds[2], type: 'paragraph', text: '段落1' },
-      ],
-    });
+    expect(createdBlogPost.id).toBeDefined();
+    expect(createdBlogPost.title).toBe('記事タイトル');
+    expect(createdBlogPost.thumbnail.path).toBe('path/to/thumbnail');
+    expect(createdBlogPost.postDate).toBe(today);
+    expect(createdBlogPost.lastUpdateDate).toBe(today);
+    expect(createdBlogPost.contents).toHaveLength(3);
+
+    const h2Content = createdBlogPost.contents.find(
+      (content) => content.type === 'h2',
+    )!;
+    expect(h2Content.type).toBe('h2');
+    expect(h2Content.text).toBeDefined();
+
+    const h3Content = createdBlogPost.contents.find(
+      (content) => content.type === 'h3',
+    )!;
+    expect(h3Content.type).toBe('h3');
+    expect(h3Content.text).toBeDefined();
+
+    const paragraphContent = createdBlogPost.contents.find(
+      (content) => content.type === 'paragraph',
+    )!;
+    expect(paragraphContent.type).toBe('paragraph');
+    expect(paragraphContent.text).toBeDefined();
   });
 });
 

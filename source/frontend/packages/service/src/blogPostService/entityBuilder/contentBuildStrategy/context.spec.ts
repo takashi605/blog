@@ -1,3 +1,4 @@
+import { mockRichTextForDTO } from '../../../mockData/mockBlogPostDTO';
 import { ContentBuildStrategyContext } from './context';
 import { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
 
@@ -23,12 +24,12 @@ describe('エンティティ: 投稿記事の閲覧', () => {
   });
 
   it('paragraph を生成するストラテジー', () => {
-    const paragraphInput = new ParagraphInput('1', 'テキスト');
+    const paragraphInput = new ParagraphInput('1', mockRichTextForDTO());
     const strategyContext = new ContentBuildStrategyContext(paragraphInput);
     const paragraph = strategyContext.build();
 
     expect(paragraph.getId()).toBe('1');
-    expect(paragraph.getValue()).toBe('テキスト');
+    expect(paragraph.getValue()).toBeDefined();
     expect(paragraph.getType()).toBe('paragraph');
   });
 

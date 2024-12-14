@@ -17,7 +17,7 @@ export type H3ForDTO = Readonly<{
 
 export type ParagraphForDTO = Readonly<{
   id: ReturnType<Paragraph['getId']>;
-  text: ReturnType<Paragraph['getValue']>;
+  text: RichTextForDTO;
   type: ReturnType<Paragraph['getType']>;
 }>;
 
@@ -25,4 +25,11 @@ export type ImageForDTO = Readonly<{
   id: ReturnType<ImageContent['getId']>;
   type: ReturnType<ImageContent['getType']>;
   path: ReturnType<ImageContent['getPath']>;
+}>;
+
+export type RichTextForDTO = ReadonlyArray<{
+  text: string;
+  styles?: {
+    bold: boolean;
+  };
 }>;

@@ -2,6 +2,10 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import {
+  RichText,
+  RichTextPart,
+} from 'entities/src/blogPost/postContents/richText';
 import type { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
 
 export type ContentBuildStrategy<T extends Content> = {
@@ -38,7 +42,10 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
   }
 
   build(): Paragraph {
-    return new Paragraph(this.input.id, this.input.text);
+    const richTextParts = this.input.text.map(
+      (part) => new RichTextPart(part.text, part.styles),
+    );
+    return new Paragraph(this.input.id, new RichText(richTextParts));
   }
 }
 export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {

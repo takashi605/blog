@@ -40,6 +40,17 @@ Then('記事本文 が表示される', async () => {
   }
 });
 
+Then('記事本文 に太字が含まれている', async () => {
+  const strong = page.locator('strong');
+
+  const count = await strong.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    expect(strong.nth(i).textContent).not.toBe('');
+  }
+});
+
 Then('h2見出し が表示される', async () => {
   const h2 = page.locator('h2');
 

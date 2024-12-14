@@ -1,6 +1,7 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
+import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ViewPickUpPostUseCase } from './viewPickUpPost';
@@ -39,7 +40,11 @@ function buildPickUpPostDTOMock(): BlogPostDTO[] {
     contents: [
       { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し1' },
       { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し1' },
-      { id: createUUIDv4(), type: ContentType.Paragraph, text: '段落1' },
+      {
+        id: createUUIDv4(),
+        type: ContentType.Paragraph,
+        text: mockRichTextForDTO(),
+      },
     ],
   };
   return [

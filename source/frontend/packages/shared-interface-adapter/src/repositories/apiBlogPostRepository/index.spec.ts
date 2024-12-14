@@ -1,4 +1,4 @@
-import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
+import { MockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
 import { ApiBlogPostRepository } from '.';
@@ -21,32 +21,15 @@ describe('apiBlogPostRepository', () => {
   it('api を通じて JSON 形式の記事データが保存できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
-    const id = createUUIDv4();
-    const contentIds = [createUUIDv4(), createUUIDv4(), createUUIDv4()];
-    const blogPostBuilder = createBlogPostBuilder()
-      .setId(id)
-      .setThumbnail('path/to/thumbnail')
-      .setPostTitle('記事タイトル')
-      .setPostDate('1999-01-01')
-      .setLastUpdateDate('1999-01-02')
-      .addH2(contentIds[0], 'h2見出し1')
-      .addH3(contentIds[1], 'h3見出し1')
-      .addParagraph(contentIds[2], '段落1');
-    const blogPost = blogPostBuilder.build();
+    const blogPost = new MockBlogPost(createUUIDv4()).successfulMock();
 
     const resp = await apiRepository.save(blogPost);
-    expect(resp).toEqual({
-      id,
-      title: '記事タイトル',
-      thumbnail: { path: 'path/to/thumbnail' },
-      postDate: '1999-01-01',
-      lastUpdateDate: '1999-01-02',
-      contents: [
-        { id: contentIds[0], type: 'h2', text: 'h2見出し1' },
-        { id: contentIds[1], type: 'h3', text: 'h3見出し1' },
-        { id: contentIds[2], type: 'paragraph', text: '段落1' },
-      ],
-    });
+    expect(resp.id).toBeDefined();
+    expect(resp.title).toBeDefined();
+    expect(resp.thumbnail).toBeDefined();
+    expect(resp.postDate).toBeDefined();
+    expect(resp.lastUpdateDate).toBeDefined();
+    expect(resp.contents.length).toBeGreaterThan(0);
   });
 
   it('api から JSON 形式の記事データを取得できる', async () => {

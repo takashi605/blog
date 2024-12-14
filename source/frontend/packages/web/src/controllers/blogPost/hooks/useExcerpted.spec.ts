@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { ContentForDTO } from 'service/src/blogPostService/dto/contentDTO';
+import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { useExcerpted } from './useExcerpted';
 
@@ -9,7 +10,7 @@ describe('useExcerpted', () => {
     const contentDTOMock = createContentDTOMock();
 
     const { result } = renderHook(() => useExcerpted(contentDTOMock));
-    expect(result.current).toBe('段落1');
+    expect(result.current).toEqual(mockRichTextForDTO());
   });
 });
 
@@ -28,7 +29,7 @@ function createContentDTOMock(): ContentForDTO[] {
     {
       id: createUUIDv4(),
       type: ContentType.Paragraph,
-      text: '段落1',
+      text: mockRichTextForDTO(),
     },
     {
       id: createUUIDv4(),
@@ -38,7 +39,7 @@ function createContentDTOMock(): ContentForDTO[] {
     {
       id: createUUIDv4(),
       type: ContentType.Paragraph,
-      text: '段落2',
+      text: [],
     },
   ];
 }
