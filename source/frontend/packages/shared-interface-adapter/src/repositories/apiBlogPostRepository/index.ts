@@ -1,6 +1,7 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
+import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { z } from 'zod';
@@ -20,7 +21,16 @@ const contentSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ContentType.Paragraph),
     id: z.string(),
-    text: z.string(),
+    text: z.array(
+      z.object({
+        text: z.string(),
+        styles: z.optional(
+          z.object({
+            bold: z.boolean(),
+          }),
+        ),
+      }),
+    ),
   }),
   z.object({
     type: z.literal(ContentType.Image),
@@ -155,7 +165,21 @@ export class ApiBlogPostRepository implements BlogPostRepository {
           return {
             id: content.getId(),
             type: 'image',
-            text: content.getPath(),
+            path: content.getPath(),
+          };
+        }
+        if (content instanceof Paragraph) {
+          const richText = content.getValue();
+          const richTextParts = richText.getText();
+          return {
+            id: content.getId(),
+            type: 'paragraph',
+            text: richTextParts.map((richTextPart) => {
+              return {
+                text: richTextPart.getText(),
+                styles: { bold: richTextPart.getStyles().bold },
+              };
+            }),
           };
         }
         return {
