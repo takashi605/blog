@@ -1,12 +1,12 @@
 export class RichText {
-  private text: RichTextPart;
+  private text: RichTextPart[];
 
-  constructor(text: RichTextPart) {
+  constructor(text: RichTextPart[]) {
     this.text = text;
   }
 
   getText() {
-    return this.text.getText();
+    return this.text.map((part) => part.getText());
   }
 }
 
