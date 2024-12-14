@@ -10,4 +10,11 @@ describe('コンポーネント： Paragraph', () => {
     const p = screen.getByRole('paragraph');
     expect(p).toHaveTextContent('これはテストテキストです');
   });
+
+  it('RichText 配列が空の場合、空文字列を表示する', async () => {
+    render(<Paragraph richText={[]} />);
+
+    const p = screen.getByRole('paragraph');
+    expect(p).toHaveTextContent('');
+  });
 });
