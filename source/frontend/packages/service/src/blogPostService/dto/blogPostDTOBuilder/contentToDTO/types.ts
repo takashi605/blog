@@ -1,6 +1,7 @@
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import type { RichTextForDTO } from '../../contentDTO';
 
 export type ContentForDTO = H2ForDTO | H3ForDTO | ParagraphForDTO | ImageForDTO;
 
@@ -17,7 +18,7 @@ export type H3ForDTO = Readonly<{
 
 export type ParagraphForDTO = Readonly<{
   id: ReturnType<Paragraph['getId']>;
-  text: ReturnType<Paragraph['getValue']>;
+  text: RichTextForDTO;
   type: ReturnType<Paragraph['getType']>;
 }>;
 

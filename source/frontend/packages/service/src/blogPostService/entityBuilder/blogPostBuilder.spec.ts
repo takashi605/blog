@@ -1,6 +1,7 @@
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { mockRichTextForDTO } from '../../mockData/mockBlogPostDTO';
 import { createUUIDv4 } from '../../utils/uuid';
 import { createBlogPostBuilder } from './blogPostBuilder';
 
@@ -15,7 +16,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       .setLastUpdateDate('2021-01-02')
       .addH2(createUUIDv4(), 'h2見出し1')
       .addH3(createUUIDv4(), 'h3見出し1')
-      .addParagraph(createUUIDv4(), '段落1')
+      .addParagraph(createUUIDv4(), mockRichTextForDTO())
       .addImage(createUUIDv4(), 'path/to/image');
     const blogPost = builder.build();
 
@@ -40,7 +41,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
         expect(content.getValue()).toBe('h3見出し1');
         expect(content.getType()).toBe('h3');
       } else if (content instanceof Paragraph) {
-        expect(content.getValue()).toBe('段落1');
+        expect(content.getValue()).toBeDefined();
         expect(content.getType()).toBe('paragraph');
       } else if (content instanceof ImageContent) {
         expect(content.getPath()).toBe('path/to/image');

@@ -1,6 +1,7 @@
 import { BlogPost } from 'entities/src/blogPost';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { uuidv4Regex } from '../../utils/uuid';
+import type { RichTextForDTO } from '../dto/contentDTO';
 import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
   H2Input,
@@ -56,7 +57,7 @@ export class BlogPostBuilder {
     return this;
   }
 
-  addParagraph(id: string, contentValue: string) {
+  addParagraph(id: string, contentValue: RichTextForDTO) {
     const paragraphInput = new ParagraphInput(id, contentValue);
     const builder = new ContentBuildStrategyContext(paragraphInput);
     this.contentBuilders.push(builder);

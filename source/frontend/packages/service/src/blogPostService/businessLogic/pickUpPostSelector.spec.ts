@@ -1,5 +1,5 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import { ContentType } from 'entities/src/blogPost/postContents/content';
+import { mockBlogPostDTO } from '../../mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from '../../testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from '../../utils/uuid';
 import type { BlogPostDTO } from '../dto/blogPostDTO';
@@ -33,18 +33,7 @@ describe('pickUpPostSelector', () => {
 });
 
 function buildPickUpPostDTO(): BlogPostDTO[] {
-  const baseMockData: BlogPostDTO = {
-    id: createUUIDv4(),
-    title: '記事タイトル',
-    postDate: '2021-01-01',
-    lastUpdateDate: '2021-01-02',
-    thumbnail: { path: 'path/to/thumbnail' },
-    contents: [
-      { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し1' },
-      { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し1' },
-      { id: createUUIDv4(), type: ContentType.Paragraph, text: '段落1' },
-    ],
-  };
+  const baseMockData: BlogPostDTO = mockBlogPostDTO;
   return [
     {
       ...baseMockData,
