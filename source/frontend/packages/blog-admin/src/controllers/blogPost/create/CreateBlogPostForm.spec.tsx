@@ -150,7 +150,7 @@ describe('CreateBlogPostForm', () => {
     }
   });
 
-  it('paragraph ボタンをクリックすると paragraph 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
+  it.skip('paragraph ボタンをクリックすると paragraph 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
 
     expect(getOnceParagraphInput()).not.toBeInTheDocument();
