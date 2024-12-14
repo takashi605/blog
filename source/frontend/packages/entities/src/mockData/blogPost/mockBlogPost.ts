@@ -75,10 +75,14 @@ class mockBlogPostParts {
   }
 
   public getMockParagraph(): Paragraph {
-    return new Paragraph('3', new RichText([new RichTextPart('段落')]));
+    return new Paragraph('3', mockRichText());
   }
 
   public getMockImageContent(): ImageContent {
     return new ImageContent('1', 'path/to/image');
   }
+}
+
+export function mockRichText() {
+  return new RichText([new RichTextPart('段落')]);
 }

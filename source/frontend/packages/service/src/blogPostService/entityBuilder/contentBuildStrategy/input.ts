@@ -3,6 +3,7 @@ import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import type { RichTextForDTO } from '../../dto/contentDTO';
 import type { ContentBuildStrategy } from './strategy';
 import {
   H2BuildStrategy,
@@ -49,9 +50,9 @@ export class H3Input implements ContentInput<H3> {
 export class ParagraphInput implements ContentInput<Paragraph> {
   id: string;
   type: ContentType;
-  text: string;
+  text: RichTextForDTO;
 
-  constructor(id: string, contentValue: string) {
+  constructor(id: string, contentValue: RichTextForDTO) {
     this.id = id;
     this.type = ContentType.Paragraph;
     this.text = contentValue;

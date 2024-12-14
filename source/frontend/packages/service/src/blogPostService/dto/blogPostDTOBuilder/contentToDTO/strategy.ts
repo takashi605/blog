@@ -27,9 +27,16 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
   ParagraphForDTO
 > {
   toDTO(): ParagraphForDTO {
+    const richText = this.content.getValue();
+    const richTextDTO = richText.getText().map((richTextPart) => {
+      return {
+        text: richTextPart.getText(),
+        styles: { bold: richTextPart.getStyles().bold},
+      };
+    });
     return {
       id: this.content.getId(),
-      text: this.content.getValue(),
+      text: richTextDTO,
       type: this.content.getType(),
     };
   }

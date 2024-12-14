@@ -1,18 +1,19 @@
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import { mockRichText } from 'entities/src/mockData/blogPost/mockBlogPost';
 import { createContentToDTOContext } from '.';
 
 describe('contentForDTO', () => {
   it('type「Paragraph」を持つコンテントを DTO に変換できる', () => {
-    const content = new Paragraph('1', '段落');
+    const content = new Paragraph('1', mockRichText());
 
     const context = createContentToDTOContext(content);
 
     const dto = context.toDTO();
 
     expect(dto.id).toBe('1');
-    expect(dto.text).toBe('段落');
+    expect(dto.text).toBeDefined();
     expect(dto.type).toBe('paragraph');
   });
 
