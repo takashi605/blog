@@ -5,6 +5,7 @@ import {
   mockRichTextForDTO,
 } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
+import { formatDate2DigitString } from 'service/src/utils/date';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
@@ -108,7 +109,7 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     );
     const createdBlogPost = await blogPostCreator.execute();
 
-    const today = onlyYMD(new Date());
+    const today = formatDate2DigitString(new Date());
     expect(createdBlogPost.id).toBeDefined();
     expect(createdBlogPost.title).toBe('記事タイトル');
     expect(createdBlogPost.thumbnail.path).toBe('path/to/thumbnail');
