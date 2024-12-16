@@ -16,6 +16,17 @@ export class BlogPostDTOBuilder {
     this.blogPost = blogPost;
   }
 
+  build(): BlogPostDTO {
+    return {
+      id: this.blogPost.getId(),
+      title: this.blogPost.getTitleText(),
+      thumbnail: this.extractThumbnailForDTO(),
+      postDate: this.extractPostDateForDTO(),
+      lastUpdateDate: this.extractLastUpdateDateForDTO(),
+      contents: this.extractContentsForDTO(),
+    };
+  }
+
   private extractThumbnailForDTO(): thumbnailDTO {
     try {
       return {
@@ -51,16 +62,5 @@ export class BlogPostDTOBuilder {
   private createContentForDTO(content: Content): ContentForDTO {
     const dtoCreator = createContentToDTOContext(content);
     return dtoCreator.toDTO();
-  }
-
-  build(): BlogPostDTO {
-    return {
-      id: this.blogPost.getId(),
-      title: this.blogPost.getTitleText(),
-      thumbnail: this.extractThumbnailForDTO(),
-      postDate: this.extractPostDateForDTO(),
-      lastUpdateDate: this.extractLastUpdateDateForDTO(),
-      contents: this.extractContentsForDTO(),
-    };
   }
 }
