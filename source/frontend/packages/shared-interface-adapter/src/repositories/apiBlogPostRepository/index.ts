@@ -7,7 +7,7 @@ import type { BlogPostRepository } from 'service/src/blogPostService/repository/
 import { z } from 'zod';
 import { HttpError } from '../../error/httpError';
 
-const contentSchema = z.discriminatedUnion('type', [
+const blogPostContentSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(ContentType.H2),
     id: z.string(),
@@ -47,7 +47,7 @@ export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({
   }),
   postDate: z.string(),
   lastUpdateDate: z.string(),
-  contents: z.array(contentSchema),
+  contents: z.array(blogPostContentSchema),
 });
 
 export class ApiBlogPostRepository implements BlogPostRepository {
