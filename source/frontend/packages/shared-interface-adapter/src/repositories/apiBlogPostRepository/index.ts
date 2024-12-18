@@ -1,54 +1,10 @@
 import type { BlogPost } from 'entities/src/blogPost';
-import { ContentType } from 'entities/src/blogPost/postContents/content';
-import { ImageContent } from 'entities/src/blogPost/postContents/image';
-import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { z } from 'zod';
 import { HttpError } from '../../error/httpError';
-
-const contentSchema = z.discriminatedUnion('type', [
-  z.object({
-    type: z.literal(ContentType.H2),
-    id: z.string(),
-    text: z.string(),
-  }),
-  z.object({
-    type: z.literal(ContentType.H3),
-    id: z.string(),
-    text: z.string(),
-  }),
-  z.object({
-    type: z.literal(ContentType.Paragraph),
-    id: z.string(),
-    text: z.array(
-      z.object({
-        text: z.string(),
-        styles: z.optional(
-          z.object({
-            bold: z.boolean(),
-          }),
-        ),
-      }),
-    ),
-  }),
-  z.object({
-    type: z.literal(ContentType.Image),
-    id: z.string(),
-    path: z.string(),
-  }),
-]);
-
-export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({
-  id: z.string(),
-  title: z.string(),
-  thumbnail: z.object({
-    path: z.string(),
-  }),
-  postDate: z.string(),
-  lastUpdateDate: z.string(),
-  contents: z.array(contentSchema),
-});
+import { blogPostResponseSchema } from './jsonMapper/blogPostSchema';
+import { blogPostToJson } from './jsonMapper/blogPostToJson';
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   private baseUrl: string;
@@ -58,7 +14,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async save(blogPost: BlogPost): Promise<BlogPostDTO> {
-    const body = this.blogPostToJson(blogPost);
+    const body = blogPostToJson(blogPost);
     const response = await this.post(body);
 
     if (!response.ok) {
@@ -138,6 +94,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  // TODO 引数で url を受け取れるようにする
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/posts`, {
       method: 'POST',
@@ -147,47 +104,5 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       body: blogPostJson,
     });
     return response;
-  }
-
-  private blogPostToJson(blogPost: BlogPost): string {
-    return JSON.stringify({
-      id: blogPost.getId(),
-      title: blogPost.getTitleText(),
-      thumbnail: {
-        path: blogPost.getThumbnail().getPath(),
-      },
-      postDate: blogPost.getPostDate().toISOString().split('T')[0],
-      lastUpdateDate: blogPost.getLastUpdateDate().toISOString().split('T')[0],
-      contents: blogPost.getContents().map((content) => {
-        // TODO: ここで instanceof を使っているのは役割が集中して良くないので、
-        // ストラテジークラスなどを使って責務を分離する
-        if (content instanceof ImageContent) {
-          return {
-            id: content.getId(),
-            type: 'image',
-            path: content.getPath(),
-          };
-        }
-        if (content instanceof Paragraph) {
-          const richText = content.getValue();
-          const richTextParts = richText.getText();
-          return {
-            id: content.getId(),
-            type: 'paragraph',
-            text: richTextParts.map((richTextPart) => {
-              return {
-                text: richTextPart.getText(),
-                styles: { bold: richTextPart.getStyles().bold },
-              };
-            }),
-          };
-        }
-        return {
-          id: content.getId(),
-          type: content.getType(),
-          text: content.getValue(),
-        };
-      }),
-    });
   }
 }

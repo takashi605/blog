@@ -2,7 +2,7 @@ import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { UUIDList } from 'shared-test-data';
-import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository';
+import { blogPostResponseSchema } from '../../repositories/apiBlogPostRepository/jsonMapper/blogPostSchema';
 import {
   blogPostResponses,
   pickupBlogPostResponses,
