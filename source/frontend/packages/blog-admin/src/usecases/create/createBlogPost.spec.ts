@@ -75,6 +75,16 @@ describe('ユースケース: 記事の投稿', () => {
     expect(postDate).toBe(today);
     expect(lastUpdateDate).toBe(today);
   });
+
+  it('id が生成されている', () => {
+    const blogPostCreator = new CreateBlogPostUseCase(
+      mockBlogPostDTO,
+      mockRepository,
+    );
+    const blogPost = blogPostCreator.buildBlogPost();
+
+    expect(blogPost.getId()).toBeDefined();
+  })
 });
 
 describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
