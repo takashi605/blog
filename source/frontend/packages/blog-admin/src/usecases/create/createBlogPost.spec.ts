@@ -122,7 +122,10 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       (content) => content.type === 'paragraph',
     )!;
     expect(paragraphContent.type).toBe('paragraph');
+
+    // 太字のテキストが含まれているか
     expect(paragraphContent.text).toBeDefined();
+    expect(paragraphContent.text.find((text) => text.styles!.bold)).toBeDefined();
   });
 });
 
