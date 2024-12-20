@@ -31,11 +31,9 @@ function blogPostContentSchema() {
       text: z.array(
         z.object({
           text: z.string(),
-          styles: z.optional(
-            z.object({
-              bold: z.boolean(),
-            }),
-          ),
+          styles: z.object({
+            bold: z.boolean(),
+          }),
         }),
       ),
     }),
