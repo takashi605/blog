@@ -1,25 +1,22 @@
 import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
+import type { BlogPostDTOForCreate } from '@/usecases/create/createBlogPost';
 import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
+import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
-import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
-import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
 export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
 > = async (formData) => {
-  const blogPostBuilder = createBlogPostBuilder();
+  // TODO thumbnail の実装
+  const blogPostDTOForCreate: BlogPostDTOForCreate = formDataToDTO(formData);
 
-  blogPostBuilder.setId(createUUIDv4());
-  injectFormDataToBuilder(formData, blogPostBuilder);
-
-  const blogPostCreator = setupBlogPostCreator(blogPostBuilder);
-  await blogPostCreator.execute();
+  const createBlogPostUseCase = setupUseCase(blogPostDTOForCreate);
+  await createBlogPostUseCase.execute();
 };
 
-function setupBlogPostCreator(builder: BlogPostBuilder) {
+function setupUseCase(builder: BlogPostDTOForCreate) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('API の URL が設定されていません');
   }
@@ -27,30 +24,39 @@ function setupBlogPostCreator(builder: BlogPostBuilder) {
   return new CreateBlogPostUseCase(builder, repository);
 }
 
-function injectFormDataToBuilder(
-  formData: CreateBlogPostFormData,
-  builder: BlogPostBuilder,
-) {
-  builder.setPostTitle(formData.title);
-  injectContentsToBuilder(formData, builder);
-}
+function formDataToDTO(formData: CreateBlogPostFormData): BlogPostDTOForCreate {
+  return {
+    title: formData.title,
+    thumbnail: { path: 'path/to/thumbnail' },
 
-function injectContentsToBuilder(
-  formData: CreateBlogPostFormData,
-  builder: BlogPostBuilder,
-) {
-  formData.contents.forEach((content) => {
-    switch (content.type) {
-      case 'h2':
-        builder.addH2(createUUIDv4(), content.text);
-        break;
-      case 'h3':
-        builder.addH3(createUUIDv4(), content.text);
-        break;
-      // TODO: いったんモックデータで対応しているので、適切なタイミングで修正
-      case 'paragraph':
-        builder.addParagraph(createUUIDv4(), mockRichTextForDTO());
-        break;
-    }
-  });
+    // TODO 渡される content データの仕様が固まってきたら、ここでの変換処理を関数に切り出す
+    contents: formData.contents.map((content) => {
+      switch (content.type) {
+        case ContentType.H2:
+          return {
+            id: createUUIDv4(),
+            type: ContentType.H2,
+            text: content.text,
+          };
+        case ContentType.H3:
+          return {
+            id: createUUIDv4(),
+            type: ContentType.H3,
+            text: content.text,
+          };
+        case ContentType.Paragraph:
+          return {
+            id: createUUIDv4(),
+            type: ContentType.Paragraph,
+            text: [
+              { text: 'これは', styles: { bold: false } },
+              { text: content.text, styles: { bold: true } },
+              { text: 'です', styles: { bold: false } },
+            ],
+          };
+        default:
+          throw new Error('不正なコンテンツタイプです');
+      }
+    }),
+  };
 }
