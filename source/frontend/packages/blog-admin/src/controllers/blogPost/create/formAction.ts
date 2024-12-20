@@ -43,11 +43,11 @@ export const createBlogPostAction: SubmitHandler<
     }),
   };
 
-  const blogPostCreator = setupBlogPostCreator(blogPostDTOForCreate);
-  await blogPostCreator.execute();
+  const createBlogPostUseCase = setupUseCase(blogPostDTOForCreate);
+  await createBlogPostUseCase.execute();
 };
 
-function setupBlogPostCreator(builder: BlogPostDTOForCreate) {
+function setupUseCase(builder: BlogPostDTOForCreate) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('API の URL が設定されていません');
   }
