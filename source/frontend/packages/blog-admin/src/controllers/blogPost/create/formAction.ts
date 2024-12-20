@@ -1,8 +1,8 @@
 import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
+import type { BlogPostDTOForCreate } from '@/usecases/create/createBlogPost';
 import { CreateBlogPostUseCase } from '@/usecases/create/createBlogPost';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 
@@ -10,12 +10,8 @@ export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
 > = async (formData) => {
   // TODO thumbnail の実装
-  // TODO postDate, lastUpdateDate の持ち方を考える
-  const blogPostDTO: BlogPostDTO = {
-    id: createUUIDv4(),
+  const blogPostDTOForCreate: BlogPostDTOForCreate = {
     title: formData.title,
-    postDate: new Date().toISOString().split('T')[0],
-    lastUpdateDate: new Date().toISOString().split('T')[0],
     thumbnail: { path: 'path/to/thumbnail' },
     contents: formData.contents.map((content) => {
       switch (content.type) {
@@ -47,11 +43,11 @@ export const createBlogPostAction: SubmitHandler<
     }),
   };
 
-  const blogPostCreator = setupBlogPostCreator(blogPostDTO);
+  const blogPostCreator = setupBlogPostCreator(blogPostDTOForCreate);
   await blogPostCreator.execute();
 };
 
-function setupBlogPostCreator(builder: BlogPostDTO) {
+function setupBlogPostCreator(builder: BlogPostDTOForCreate) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error('API の URL が設定されていません');
   }
