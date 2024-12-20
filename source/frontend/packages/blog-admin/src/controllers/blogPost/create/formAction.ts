@@ -10,9 +10,26 @@ export const createBlogPostAction: SubmitHandler<
   CreateBlogPostFormData
 > = async (formData) => {
   // TODO thumbnail の実装
-  const blogPostDTOForCreate: BlogPostDTOForCreate = {
+  const blogPostDTOForCreate: BlogPostDTOForCreate = formDataToDTO(formData);
+
+  const createBlogPostUseCase = setupUseCase(blogPostDTOForCreate);
+  await createBlogPostUseCase.execute();
+};
+
+function setupUseCase(builder: BlogPostDTOForCreate) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error('API の URL が設定されていません');
+  }
+  const repository = new ApiBlogPostRepository(process.env.NEXT_PUBLIC_API_URL);
+  return new CreateBlogPostUseCase(builder, repository);
+}
+
+function formDataToDTO(formData: CreateBlogPostFormData): BlogPostDTOForCreate {
+  return {
     title: formData.title,
     thumbnail: { path: 'path/to/thumbnail' },
+
+    // TODO 渡される content データの仕様が固まってきたら、ここでの変換処理を関数に切り出す
     contents: formData.contents.map((content) => {
       switch (content.type) {
         case ContentType.H2:
@@ -42,15 +59,5 @@ export const createBlogPostAction: SubmitHandler<
       }
     }),
   };
-
-  const createBlogPostUseCase = setupUseCase(blogPostDTOForCreate);
-  await createBlogPostUseCase.execute();
-};
-
-function setupUseCase(builder: BlogPostDTOForCreate) {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error('API の URL が設定されていません');
-  }
-  const repository = new ApiBlogPostRepository(process.env.NEXT_PUBLIC_API_URL);
-  return new CreateBlogPostUseCase(builder, repository);
 }
+
