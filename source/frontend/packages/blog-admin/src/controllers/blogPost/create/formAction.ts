@@ -60,4 +60,3 @@ function formDataToDTO(formData: CreateBlogPostFormData): BlogPostDTOForCreate {
     }),
   };
 }
-

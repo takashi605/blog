@@ -84,7 +84,7 @@ describe('ユースケース: 記事の投稿', () => {
     const blogPost = blogPostCreator.buildBlogPost();
 
     expect(blogPost.getId()).toBeDefined();
-  })
+  });
 });
 
 describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
@@ -125,7 +125,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
 
     // 太字のテキストが含まれているか
     expect(paragraphContent.text).toBeDefined();
-    expect(paragraphContent.text.find((text) => text.styles!.bold)).toBeDefined();
+    expect(
+      paragraphContent.text.find((text) => text.styles!.bold),
+    ).toBeDefined();
   });
 });
 

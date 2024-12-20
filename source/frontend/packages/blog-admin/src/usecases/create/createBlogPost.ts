@@ -4,7 +4,10 @@ import { blogPostDTOToEntity } from 'service/src/blogPostService/dto/blogPostDTO
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 
-export type BlogPostDTOForCreate = Omit<BlogPostDTO, 'id' | 'postDate' | 'lastUpdateDate'>;
+export type BlogPostDTOForCreate = Omit<
+  BlogPostDTO,
+  'id' | 'postDate' | 'lastUpdateDate'
+>;
 
 export class CreateBlogPostUseCase {
   private blogPostDTOForCreate: BlogPostDTOForCreate;
@@ -28,7 +31,7 @@ export class CreateBlogPostUseCase {
       id: createUUIDv4(),
       postDate: today,
       lastUpdateDate: today,
-    }
+    };
 
     const blogPostEntity = blogPostDTOToEntity(blogPostDTO);
 
