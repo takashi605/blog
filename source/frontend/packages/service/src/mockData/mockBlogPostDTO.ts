@@ -15,12 +15,12 @@ export const mockBlogPostDTO: BlogPostDTO = {
     {
       id: createUUIDv4(),
       type: ContentType.Paragraph,
-      text: mockRichTextForDTO(),
+      text: mockRichTextDTO(),
     },
   ],
 };
 
-export function mockRichTextForDTO() {
+export function mockRichTextDTO() {
   return [
     {
       text: 'これは',

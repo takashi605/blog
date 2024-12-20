@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import type { ContentForDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
+import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { useExcerpted } from './useExcerpted';
 
@@ -10,11 +10,11 @@ describe('useExcerpted', () => {
     const contentDTOMock = createContentDTOMock();
 
     const { result } = renderHook(() => useExcerpted(contentDTOMock));
-    expect(result.current).toEqual(mockRichTextForDTO());
+    expect(result.current).toEqual(mockRichTextDTO());
   });
 });
 
-function createContentDTOMock(): ContentForDTO[] {
+function createContentDTOMock(): ContentDTO[] {
   return [
     {
       id: createUUIDv4(),
@@ -29,7 +29,7 @@ function createContentDTOMock(): ContentForDTO[] {
     {
       id: createUUIDv4(),
       type: ContentType.Paragraph,
-      text: mockRichTextForDTO(),
+      text: mockRichTextDTO(),
     },
     {
       id: createUUIDv4(),

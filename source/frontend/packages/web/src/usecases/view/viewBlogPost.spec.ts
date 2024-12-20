@@ -1,6 +1,6 @@
 import { ViewBlogPostUseCase } from '@/usecases/view/viewBlogPost';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
-import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
+import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
@@ -17,9 +17,9 @@ describe('ユースケース: 投稿記事の閲覧', () => {
       contents: [
         { id: createUUIDv4(), type: 'h2', text: 'h2見出し1' },
         { id: createUUIDv4(), type: 'h3', text: 'h3見出し1' },
-        { id: createUUIDv4(), type: 'paragraph', text: mockRichTextForDTO() },
+        { id: createUUIDv4(), type: 'paragraph', text: mockRichTextDTO() },
         { id: createUUIDv4(), type: 'h3', text: 'h3見出し2' },
-        { id: createUUIDv4(), type: 'paragraph', text: mockRichTextForDTO() },
+        { id: createUUIDv4(), type: 'paragraph', text: mockRichTextDTO() },
       ],
     };
     const mockRepository: BlogPostRepository = {
