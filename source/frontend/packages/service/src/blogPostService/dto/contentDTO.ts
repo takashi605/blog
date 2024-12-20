@@ -29,7 +29,7 @@ export type ImageForDTO = Readonly<{
 
 export type RichTextForDTO = ReadonlyArray<{
   text: string;
-  styles: {
+  styles?: {
     bold: boolean;
   };
 }>;
