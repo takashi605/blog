@@ -1,12 +1,7 @@
-import { createBlogPostBuilder } from 'service/src/blogPostService/entityBuilder/blogPostBuilder';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
-import {
-  mockBlogPostDTO,
-  mockRichTextForDTO,
-} from 'service/src/mockData/mockBlogPostDTO';
+import { mockBlogPostDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { formatDate2DigitString } from 'service/src/utils/date';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { CreateBlogPostUseCase } from './createBlogPost';
@@ -34,13 +29,10 @@ describe('ユースケース: 記事の投稿', () => {
       save: mockSave,
     };
 
-    const builder = createBlogPostBuilder()
-      .setId(createUUIDv4())
-      .setPostTitle('記事タイトル')
-      .addH2(createUUIDv4(), 'h2見出し1')
-      .addH3(createUUIDv4(), 'h3見出し1')
-      .addParagraph(createUUIDv4(), mockRichTextForDTO());
-    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(
+      mockBlogPostDTO,
+      mockRepository,
+    );
 
     const createdBlogPost = await blogPostCreator.execute();
 
@@ -70,13 +62,10 @@ describe('ユースケース: 記事の投稿', () => {
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {
-    const id = createUUIDv4();
-    const builder = createBlogPostBuilder()
-      .setId(id)
-      .setPostTitle('記事タイトル')
-      .setPostDate('1999-01-01')
-      .setLastUpdateDate('1999-01-02');
-    const blogPostCreator = new CreateBlogPostUseCase(builder, mockRepository);
+    const blogPostCreator = new CreateBlogPostUseCase(
+      mockBlogPostDTO,
+      mockRepository,
+    );
     const blogPost = blogPostCreator.buildBlogPost();
 
     const today = onlyYMD(new Date());
@@ -93,18 +82,8 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     const apiRepository = new ApiBlogPostRepository(
       process.env.NEXT_PUBLIC_API_URL!,
     );
-
-    const blogPostBuilder = createBlogPostBuilder()
-      .setId(createUUIDv4())
-      .setThumbnail('path/to/thumbnail')
-      .setPostTitle('記事タイトル')
-      .setPostDate('1999-01-01')
-      .setLastUpdateDate('1999-01-02')
-      .addH2(createUUIDv4(), 'h2見出し1')
-      .addH3(createUUIDv4(), 'h3見出し1')
-      .addParagraph(createUUIDv4(), mockRichTextForDTO());
     const blogPostCreator = new CreateBlogPostUseCase(
-      blogPostBuilder,
+      mockBlogPostDTO,
       apiRepository,
     );
     const createdBlogPost = await blogPostCreator.execute();
