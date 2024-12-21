@@ -96,7 +96,7 @@ Then('各記事は新着順で並んでいる', async () => {
   }
 });
 
-Given('トップページにアクセスして沈着記事を閲覧する', async () => {
+Given('トップページにアクセスして新着記事を閲覧する', async () => {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
