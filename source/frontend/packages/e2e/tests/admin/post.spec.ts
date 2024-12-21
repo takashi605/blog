@@ -67,6 +67,18 @@ Then('リッチテキストエディタに「見出し2」と表示され、レ�
   const h2Text = richTextEditor.locator('h2');
   await expect(h2Text).toHaveText('見出し2');
 })
+When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す',async() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await richTextEditor.fill('見出し3');
+  await richTextEditor.press('ControlOrMeta+a');
+  const h3Button = page.getByRole('button', { name: 'h3' });
+  await h3Button.click();
+})
+Then('リッチテキストエディタに「見出し3」と表示され、レベル3見出しになっている',async() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const h3Text = richTextEditor.locator('h3');
+  await expect(h3Text).toHaveText('見出し3');
+})
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
