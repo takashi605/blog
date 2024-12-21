@@ -1,7 +1,7 @@
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
-import { mockRichTextForDTO } from '../../mockData/mockBlogPostDTO';
+import { mockRichTextDTO } from '../../mockData/mockBlogPostDTO';
 import { createUUIDv4 } from '../../utils/uuid';
 import { createBlogPostBuilder } from './blogPostBuilder';
 
@@ -16,7 +16,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
       .setLastUpdateDate('2021-01-02')
       .addH2(createUUIDv4(), 'h2見出し1')
       .addH3(createUUIDv4(), 'h3見出し1')
-      .addParagraph(createUUIDv4(), mockRichTextForDTO())
+      .addParagraph(createUUIDv4(), mockRichTextDTO())
       .addImage(createUUIDv4(), 'path/to/image');
     const blogPost = builder.build();
 

@@ -2,17 +2,11 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
-import type {
-  ContentForDTO,
-  H2ForDTO,
-  H3ForDTO,
-  ImageForDTO,
-  ParagraphForDTO,
-} from './types';
+import type { ContentDTO, H2DTO, H3DTO, ImageDTO, ParagraphDTO } from './types';
 
 export abstract class ContentToDTOStrategy<
   T extends Content,
-  U extends ContentForDTO,
+  U extends ContentDTO,
 > {
   protected content: T;
 
@@ -24,9 +18,9 @@ export abstract class ContentToDTOStrategy<
 
 export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
   Paragraph,
-  ParagraphForDTO
+  ParagraphDTO
 > {
-  toDTO(): ParagraphForDTO {
+  toDTO(): ParagraphDTO {
     const richText = this.content.getValue();
     const richTextDTO = richText.getText().map((richTextPart) => {
       return {
@@ -42,8 +36,8 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
   }
 }
 
-export class H2ToDTOStrategy extends ContentToDTOStrategy<H2, H2ForDTO> {
-  toDTO(): H2ForDTO {
+export class H2ToDTOStrategy extends ContentToDTOStrategy<H2, H2DTO> {
+  toDTO(): H2DTO {
     return {
       id: this.content.getId(),
       text: this.content.getValue(),
@@ -51,8 +45,8 @@ export class H2ToDTOStrategy extends ContentToDTOStrategy<H2, H2ForDTO> {
     };
   }
 }
-export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3ForDTO> {
-  toDTO(): H3ForDTO {
+export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3DTO> {
+  toDTO(): H3DTO {
     return {
       id: this.content.getId(),
       text: this.content.getValue(),
@@ -63,9 +57,9 @@ export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3ForDTO> {
 
 export class ImageToDTOStrategy extends ContentToDTOStrategy<
   ImageContent,
-  ImageForDTO
+  ImageDTO
 > {
-  toDTO(): ImageForDTO {
+  toDTO(): ImageDTO {
     return {
       id: this.content.getId(),
       type: this.content.getType(),

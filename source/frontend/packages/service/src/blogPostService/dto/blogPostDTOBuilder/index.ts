@@ -2,7 +2,7 @@ import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { formatDate2DigitString } from '../../../utils/date';
 import type { BlogPostDTO } from '../blogPostDTO';
-import type { ContentForDTO } from '../contentDTO';
+import type { ContentDTO } from '../contentDTO';
 import { createContentToDTOContext } from './contentToDTO';
 
 export type thumbnailDTO = {
@@ -20,14 +20,14 @@ export class BlogPostDTOBuilder {
     return {
       id: this.blogPost.getId(),
       title: this.blogPost.getTitleText(),
-      thumbnail: this.extractThumbnailForDTO(),
-      postDate: this.extractPostDateForDTO(),
-      lastUpdateDate: this.extractLastUpdateDateForDTO(),
-      contents: this.extractContentsForDTO(),
+      thumbnail: this.extractThumbnailDTO(),
+      postDate: this.extractPostDateDTO(),
+      lastUpdateDate: this.extractLastUpdateDateDTO(),
+      contents: this.extractContentsDTO(),
     };
   }
 
-  private extractThumbnailForDTO(): thumbnailDTO {
+  private extractThumbnailDTO(): thumbnailDTO {
     try {
       return {
         path: this.blogPost.getThumbnail().getPath(),
@@ -37,7 +37,7 @@ export class BlogPostDTOBuilder {
     }
   }
 
-  private extractPostDateForDTO(): string {
+  private extractPostDateDTO(): string {
     try {
       return formatDate2DigitString(this.blogPost.getPostDate());
     } catch {
@@ -45,7 +45,7 @@ export class BlogPostDTOBuilder {
     }
   }
 
-  private extractLastUpdateDateForDTO(): string {
+  private extractLastUpdateDateDTO(): string {
     try {
       return formatDate2DigitString(this.blogPost.getLastUpdateDate());
     } catch {
@@ -53,13 +53,13 @@ export class BlogPostDTOBuilder {
     }
   }
 
-  private extractContentsForDTO(): BlogPostDTO['contents'] {
+  private extractContentsDTO(): BlogPostDTO['contents'] {
     return this.blogPost
       .getContents()
-      .map((content) => this.createContentForDTO(content));
+      .map((content) => this.createContentDTO(content));
   }
 
-  private createContentForDTO(content: Content): ContentForDTO {
+  private createContentDTO(content: Content): ContentDTO {
     const dtoCreator = createContentToDTOContext(content);
     return dtoCreator.toDTO();
   }

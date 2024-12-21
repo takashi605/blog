@@ -1,4 +1,4 @@
-FROM rust:1.80-slim
+FROM rust:1.81-slim
 ARG APP_ROOT_DIR=source/backend/api-test
 
 RUN apt update && \

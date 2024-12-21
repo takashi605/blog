@@ -1,7 +1,10 @@
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 import { mockBlogPostDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
-import { formatDate2DigitString } from 'service/src/utils/date';
+import {
+  formatDate2DigitString,
+  toISOStringWithTimezone,
+} from 'service/src/utils/date';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { CreateBlogPostUseCase } from './createBlogPost';
@@ -133,5 +136,5 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
 
 // 年月日のみを取得する
 function onlyYMD(date: Date) {
-  return date.toISOString().split('T')[0];
+  return toISOStringWithTimezone(date).split('T')[0];
 }

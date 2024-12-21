@@ -9,38 +9,32 @@ import {
   ImageToDTOStrategy,
   ParagraphToDTOStrategy,
 } from './strategy';
-import type {
-  ContentForDTO,
-  H2ForDTO,
-  H3ForDTO,
-  ImageForDTO,
-  ParagraphForDTO,
-} from './types';
+import type { ContentDTO, H2DTO, H3DTO, ImageDTO, ParagraphDTO } from './types';
 
 // コンテキスト生成関数のオーバーロード
 // これにより呼び出し元で返り値の型を自動で推論できる
 // 例: createContentToDTOContext(new Paragraph(1, 'text')).toDTO()
-// 　　の返り値の型は ParagraphForDTO になる
+// 　　の返り値の型は ParagraphDTO になる
 export function createContentToDTOContext(
   content: Paragraph,
-): ContentToDTOContext<Paragraph, ParagraphForDTO>;
+): ContentToDTOContext<Paragraph, ParagraphDTO>;
 export function createContentToDTOContext(
   content: H2,
-): ContentToDTOContext<H2, H2ForDTO>;
+): ContentToDTOContext<H2, H2DTO>;
 export function createContentToDTOContext(
   content: H3,
-): ContentToDTOContext<H3, H3ForDTO>;
+): ContentToDTOContext<H3, H3DTO>;
 export function createContentToDTOContext(
   content: ImageContent,
-): ContentToDTOContext<ImageContent, ImageForDTO>;
+): ContentToDTOContext<ImageContent, ImageDTO>;
 export function createContentToDTOContext(
   content: Content,
-): ContentToDTOContext<Content, ContentForDTO>;
+): ContentToDTOContext<Content, ContentDTO>;
 
 // コンテキスト生成関数の実装
 export function createContentToDTOContext(
   content: Content,
-): ContentToDTOContext<Content, ContentForDTO> {
+): ContentToDTOContext<Content, ContentDTO> {
   if (content instanceof Paragraph) {
     return new ContentToDTOContext(new ParagraphToDTOStrategy(content));
   } else if (content instanceof H2) {

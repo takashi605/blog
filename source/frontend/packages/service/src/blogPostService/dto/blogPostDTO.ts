@@ -1,4 +1,4 @@
-import type { ContentForDTO } from './contentDTO';
+import type { ContentDTO } from './contentDTO';
 
 export type BlogPostDTO = {
   readonly id: string;
@@ -6,7 +6,7 @@ export type BlogPostDTO = {
   readonly thumbnail: thumbnailDTO;
   readonly postDate: string;
   readonly lastUpdateDate: string;
-  readonly contents: ReadonlyArray<ContentForDTO>;
+  readonly contents: ReadonlyArray<ContentDTO>;
 };
 
 export type thumbnailDTO = {
