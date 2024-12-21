@@ -2,7 +2,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useEffect, useState } from 'react';
 import {
   useSelectedNode,
-  useSelectedText,
+  useSelectedTextStyle,
   useUpdateBlockType,
 } from './toolBarPluginHooks';
 
@@ -11,7 +11,8 @@ function ToolBarPlugin() {
   const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
   const { $setHeadingToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $checkStylesForSelection } = useSelectedText();
+  const { isBoldSelected, $checkStylesForSelection, $toggleBoldToSelection } =
+    useSelectedTextStyle();
 
   useEffect(() => {
     return editor.registerUpdateListener(() => {
@@ -36,7 +37,9 @@ function ToolBarPlugin() {
   };
 
   const onClickBoldButton = () => {
-    console.log('bold');
+    editor.update(() => {
+      $toggleBoldToSelection();
+    });
   };
 
   return (
