@@ -61,14 +61,44 @@ When('h3 のインプットに「見出しレベル3」と入力する', async (
   await h3Input.fill('見出しレベル3');
   await expect(h3Input).toHaveValue('見出しレベル3');
 });
-When('リッチテキストエディタに「こんにちは！」と入力する',() => {
+When('リッチテキストエディタに「こんにちは！」と入力する', () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   richTextEditor.fill('こんにちは！');
-})
-Then('リッチテキストエディタに「こんにちは！」が表示される',async () => {
+});
+Then('リッチテキストエディタに「こんにちは！」が表示される', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！');
-})
+});
+When('「世界」と入力し、その文字を選択して太字にする', async () => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  // テキストをセット
+  await richTextEditor.fill('こんにちは！世界');
+
+  // カーソルは通常入力後に文末にあると想定
+  // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
+  await richTextEditor.press('ArrowLeft');
+  await richTextEditor.press('ArrowLeft');
+
+  // Shift を押しながら右矢印で「世界」を選択
+  await page.keyboard.down('Shift');
+  await richTextEditor.press('ArrowRight');
+  await richTextEditor.press('ArrowRight');
+  await page.keyboard.up('Shift');
+
+  // Ctrl+B で太字化コマンドを発動
+  await richTextEditor.press('ControlOrMeta+b');
+});
+Then(
+  'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
+  async () => {
+    const richTextEditor = page.locator('[contenteditable="true"]');
+
+    await expect(richTextEditor).toHaveText('こんにちは！世界');
+    // 「世界」が strong タグで囲われているか確認
+    const boldText = richTextEditor.locator('strong');
+    await expect(boldText).toHaveText('世界');
+  },
+);
 When('「公開」ボタンを押す', async () => {
   const publishButton = page.getByRole('button', { name: '投稿' });
   await publishButton.click();
