@@ -11,8 +11,16 @@ export function useUpdateBlockType() {
     }
     $setBlocksType(selection, () => $createHeadingNode('h2'));
   };
+  const $setH3ToSelection = () => {
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) {
+      return;
+    }
+    $setBlocksType(selection, () => $createHeadingNode('h3'));
+  };
   return {
     $setH2ToSelection,
+    $setH3ToSelection,
   } as const;
 }
 

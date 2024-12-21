@@ -9,7 +9,7 @@ import {
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
-  const { $setH2ToSelection } = useUpdateBlockType();
+  const { $setH2ToSelection, $setH3ToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $checkStylesForSelection } = useSelectedText();
 
@@ -29,6 +29,12 @@ function ToolBarPlugin() {
     });
   };
 
+  const onClickH3 = () => {
+    editor.update(() => {
+      $setH3ToSelection();
+    });
+  };
+
   return (
     <div>
       <button
@@ -37,6 +43,13 @@ function ToolBarPlugin() {
         disabled={selectedNodeType === 'h2'}
       >
         h2
+      </button>
+      <button
+        role="button"
+        onClick={onClickH3}
+        disabled={selectedNodeType === 'h3'}
+      >
+        h3
       </button>
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
