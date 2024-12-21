@@ -1,6 +1,7 @@
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $getSelection, $isRangeSelection } from 'lexical';
+import { useState } from 'react';
 
 export function useUpdateBlockType() {
   const $setH2ToSelection = () => {
@@ -46,4 +47,17 @@ export function useSelectedNode() {
     const focusNode = selection.focus.getNode();
     return focusNode;
   }
+}
+
+export function useSelectedText() {
+  const [isBoldSelected, setIsBoldSelected] = useState(false);
+
+  const $checkStylesForSelection = () => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      setIsBoldSelected(selection.hasFormat('bold'));
+    }
+  };
+
+  return { isBoldSelected, $checkStylesForSelection } as const;
 }
