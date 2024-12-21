@@ -2,7 +2,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useEffect, useState } from 'react';
 import {
   useSelectedNode,
-  useSelectedText,
+  useSelectedTextStyle,
   useUpdateBlockType,
 } from './toolBarPluginHooks';
 
@@ -11,7 +11,8 @@ function ToolBarPlugin() {
   const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
   const { $setHeadingToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $checkStylesForSelection } = useSelectedText();
+  const { isBoldSelected, $checkStylesForSelection, $toggleBoldToSelection } =
+    useSelectedTextStyle();
 
   useEffect(() => {
     return editor.registerUpdateListener(() => {
@@ -35,6 +36,12 @@ function ToolBarPlugin() {
     });
   };
 
+  const onClickBoldButton = () => {
+    editor.update(() => {
+      $toggleBoldToSelection();
+    });
+  };
+
   return (
     <div>
       <button
@@ -50,6 +57,9 @@ function ToolBarPlugin() {
         disabled={selectedNodeType === 'h3'}
       >
         h3
+      </button>
+      <button role="button" onClick={onClickBoldButton}>
+        bold
       </button>
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>

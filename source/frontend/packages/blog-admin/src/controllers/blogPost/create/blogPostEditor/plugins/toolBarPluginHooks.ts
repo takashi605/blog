@@ -1,6 +1,7 @@
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { $getSelection, $isRangeSelection } from 'lexical';
+import { $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
 import { useState } from 'react';
 
 export function useUpdateBlockType() {
@@ -49,8 +50,9 @@ export function useSelectedNode() {
   }
 }
 
-export function useSelectedText() {
+export function useSelectedTextStyle() {
   const [isBoldSelected, setIsBoldSelected] = useState(false);
+  const [editor] = useLexicalComposerContext();
 
   const $checkStylesForSelection = () => {
     const selection = $getSelection();
@@ -59,5 +61,13 @@ export function useSelectedText() {
     }
   };
 
-  return { isBoldSelected, $checkStylesForSelection } as const;
+  const $toggleBoldToSelection = () => {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+  };
+
+  return {
+    isBoldSelected,
+    $checkStylesForSelection,
+    $toggleBoldToSelection,
+  } as const;
 }
