@@ -65,9 +65,9 @@ When('リッチテキストエディタに「こんにちは！」と入力す�
   const richTextEditor = page.locator('[contenteditable="true"]');
   richTextEditor.fill('こんにちは！');
 })
-Then('リッチテキストエディタに「こんにちは！」が表示される',() => {
+Then('リッチテキストエディタに「こんにちは！」が表示される',async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  expect(richTextEditor).toHaveText('こんにちは！');
+  await expect(richTextEditor).toHaveText('こんにちは！');
 })
 When('「公開」ボタンを押す', async () => {
   const publishButton = page.getByRole('button', { name: '投稿' });
