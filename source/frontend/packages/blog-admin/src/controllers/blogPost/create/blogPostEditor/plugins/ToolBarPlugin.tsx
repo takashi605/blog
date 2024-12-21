@@ -23,13 +23,13 @@ function ToolBarPlugin() {
     });
   }, [editor, $getElementTypeOfSelected, $checkStylesForSelection]);
 
-  const onClickH2 = () => {
+  const onClickH2Button = () => {
     editor.update(() => {
       $setH2ToSelection();
     });
   };
 
-  const onClickH3 = () => {
+  const onClickH3Button = () => {
     editor.update(() => {
       $setH3ToSelection();
     });
@@ -39,14 +39,14 @@ function ToolBarPlugin() {
     <div>
       <button
         role="button"
-        onClick={onClickH2}
+        onClick={onClickH2Button}
         disabled={selectedNodeType === 'h2'}
       >
         h2
       </button>
       <button
         role="button"
-        onClick={onClickH3}
+        onClick={onClickH3Button}
         disabled={selectedNodeType === 'h3'}
       >
         h3
