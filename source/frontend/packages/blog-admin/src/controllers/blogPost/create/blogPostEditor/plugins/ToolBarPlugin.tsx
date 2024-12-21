@@ -35,6 +35,10 @@ function ToolBarPlugin() {
     });
   };
 
+  const onClickBoldButton = () => {
+    console.log('bold');
+  };
+
   return (
     <div>
       <button
@@ -50,6 +54,9 @@ function ToolBarPlugin() {
         disabled={selectedNodeType === 'h3'}
       >
         h3
+      </button>
+      <button role="button" onClick={onClickBoldButton}>
+        bold
       </button>
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
