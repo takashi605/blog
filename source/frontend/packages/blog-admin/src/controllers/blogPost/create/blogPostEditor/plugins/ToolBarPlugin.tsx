@@ -26,7 +26,7 @@ function ToolBarPlugin() {
 
   return (
     <div>
-      <button role="button" onClick={onClickH2}>
+      <button role="button" onClick={onClickH2} disabled={selectedNodeType==='h2'}>
         h2
       </button>
       <p>選択中の要素：{selectedNodeType}</p>
