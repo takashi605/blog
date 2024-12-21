@@ -19,6 +19,7 @@ function CustomizedLexicalComposer({
     onError: (error: Error) => {
       console.error(error);
     },
+    // node を色々と追加しないと MarkDown が動かないらしい： https://zenn.dev/ikenohi/scraps/e2832cbcb566a2
     nodes: [
       LinkNode,
       AutoLinkNode,

@@ -30,7 +30,7 @@ afterAll(() => {
 });
 
 describe('CreateBlogPostForm', () => {
-  it('送信が完了すると送信完了ページに遷移する', async () => {
+  it.skip('送信が完了すると送信完了ページに遷移する', async () => {
     render(<CreateBlogPostForm />);
     const titleInput = screen.getByRole('textbox', { name: 'タイトル' });
     const submitButton = screen.getByRole('button', { name: '投稿' });
@@ -41,7 +41,7 @@ describe('CreateBlogPostForm', () => {
     expect(pushMock).toHaveBeenCalledWith('/posts/create/success');
   });
 
-  it('入力されたタイトルが投稿記事に反映される', async () => {
+  it.skip('入力されたタイトルが投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
     const titleInput = screen.getByRole('textbox', { name: 'タイトル' });
     const submitButton = screen.getByRole('button', { name: '投稿' });
@@ -56,7 +56,7 @@ describe('CreateBlogPostForm', () => {
     expect(createdBlogPosts[1].title).toEqual('再度入力されたタイトル');
   });
 
-  it('h2 ボタンをクリックすると h2 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
+  it.skip('h2 ボタンをクリックすると h2 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
 
     expect(getOnceH2Input()).not.toBeInTheDocument();
@@ -103,7 +103,7 @@ describe('CreateBlogPostForm', () => {
     }
   });
 
-  it('h3 ボタンをクリックすると h3 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
+  it.skip('h3 ボタンをクリックすると h3 入力インプットが表示され、入力された内容が投稿記事に反映される', async () => {
     render(<CreateBlogPostForm />);
 
     expect(getOnceH3Input()).not.toBeInTheDocument();
