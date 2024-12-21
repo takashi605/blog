@@ -2,6 +2,8 @@ import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $getSelection, $isRangeSelection } from 'lexical';
 
+// TODO フックスとして定義する
+
 export function $getElementTypeOfSelected() {
   const selectedElementNode = $getElementOfSelected();
   if (!selectedElementNode) {
@@ -13,6 +15,14 @@ export function $getElementTypeOfSelected() {
     return headingTag;
   }
   return selectedElementNode.getType();
+}
+
+export function $setH2ToSelection() {
+  const selection = $getSelection();
+  if (!$isRangeSelection(selection)) {
+    return;
+  }
+  $setBlocksType(selection, () => $createHeadingNode('h2'));
 }
 
 function $getElementOfSelected() {
@@ -30,12 +40,4 @@ function $getSelectedNode() {
   }
   const focusNode = selection.focus.getNode();
   return focusNode;
-}
-
-export function $setH2ToSelection() {
-  const selection = $getSelection();
-  if (!$isRangeSelection(selection)) {
-    return;
-  }
-  $setBlocksType(selection, () => $createHeadingNode('h2'));
 }
