@@ -4,23 +4,15 @@ import { $getSelection, $isRangeSelection } from 'lexical';
 import { useState } from 'react';
 
 export function useUpdateBlockType() {
-  const $setH2ToSelection = () => {
+  const $setHeadingToSelection = (headingType: 'h2' | 'h3') => {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
       return;
     }
-    $setBlocksType(selection, () => $createHeadingNode('h2'));
-  };
-  const $setH3ToSelection = () => {
-    const selection = $getSelection();
-    if (!$isRangeSelection(selection)) {
-      return;
-    }
-    $setBlocksType(selection, () => $createHeadingNode('h3'));
-  };
+    $setBlocksType(selection, () => $createHeadingNode(headingType));
+  }
   return {
-    $setH2ToSelection,
-    $setH3ToSelection,
+    $setHeadingToSelection
   } as const;
 }
 

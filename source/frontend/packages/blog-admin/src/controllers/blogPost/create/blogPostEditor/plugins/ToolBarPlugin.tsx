@@ -9,7 +9,7 @@ import {
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
-  const { $setH2ToSelection, $setH3ToSelection } = useUpdateBlockType();
+  const { $setHeadingToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $checkStylesForSelection } = useSelectedText();
 
@@ -25,13 +25,13 @@ function ToolBarPlugin() {
 
   const onClickH2Button = () => {
     editor.update(() => {
-      $setH2ToSelection();
+      $setHeadingToSelection('h2');
     });
   };
 
   const onClickH3Button = () => {
     editor.update(() => {
-      $setH3ToSelection();
+      $setHeadingToSelection('h3');
     });
   };
 
