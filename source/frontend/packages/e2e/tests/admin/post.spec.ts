@@ -25,25 +25,29 @@ Then('リッチテキストエディタに「こんにちは！」が表示さ�
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！');
 });
-When('「世界」と入力し、その文字を選択して太字にする', async () => {
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  // テキストをセット
-  await richTextEditor.fill('こんにちは！世界');
+When(
+  '「こんにちは！世界」と入力し、その文字を選択して太字ボタンを押す',
+  async () => {
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    // テキストをセット
+    await richTextEditor.fill('こんにちは！世界');
 
-  // カーソルは通常入力後に文末にあると想定
-  // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
-  await richTextEditor.press('ArrowLeft');
-  await richTextEditor.press('ArrowLeft');
+    // カーソルは通常入力後に文末にあると想定
+    // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
+    await richTextEditor.press('ArrowLeft');
+    await richTextEditor.press('ArrowLeft');
 
-  // Shift を押しながら右矢印で「世界」を選択
-  await page.keyboard.down('Shift');
-  await richTextEditor.press('ArrowRight');
-  await richTextEditor.press('ArrowRight');
-  await page.keyboard.up('Shift');
+    // Shift を押しながら右矢印で「世界」を選択
+    await page.keyboard.down('Shift');
+    await richTextEditor.press('ArrowRight');
+    await richTextEditor.press('ArrowRight');
+    await page.keyboard.up('Shift');
 
-  // Ctrl+B で太字化コマンドを発動
-  await richTextEditor.press('ControlOrMeta+b');
-});
+    // 太字ボタンを押す
+    const boldButton = page.getByRole('button', { name: 'bold' });
+    await boldButton.click();
+  },
+);
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
   async () => {
@@ -55,30 +59,36 @@ Then(
     await expect(boldText).toHaveText('世界');
   },
 );
-When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',async() => {
+When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await richTextEditor.fill('見出し2');
   await richTextEditor.press('ControlOrMeta+a');
   const h2Button = page.getByRole('button', { name: 'h2' });
   await h2Button.click();
-})
-Then('リッチテキストエディタに「見出し2」と表示され、レベル2見出しになっている',async() => {
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const h2Text = richTextEditor.locator('h2');
-  await expect(h2Text).toHaveText('見出し2');
-})
-When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す',async() => {
+});
+Then(
+  'リッチテキストエディタに「見出し2」と表示され、レベル2見出しになっている',
+  async () => {
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    const h2Text = richTextEditor.locator('h2');
+    await expect(h2Text).toHaveText('見出し2');
+  },
+);
+When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await richTextEditor.fill('見出し3');
   await richTextEditor.press('ControlOrMeta+a');
   const h3Button = page.getByRole('button', { name: 'h3' });
   await h3Button.click();
-})
-Then('リッチテキストエディタに「見出し3」と表示され、レベル3見出しになっている',async() => {
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const h3Text = richTextEditor.locator('h3');
-  await expect(h3Text).toHaveText('見出し3');
-})
+});
+Then(
+  'リッチテキストエディタに「見出し3」と表示され、レベル3見出しになっている',
+  async () => {
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    const h3Text = richTextEditor.locator('h3');
+    await expect(h3Text).toHaveText('見出し3');
+  },
+);
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
