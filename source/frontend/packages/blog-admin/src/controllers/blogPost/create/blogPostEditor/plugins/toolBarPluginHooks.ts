@@ -10,9 +10,9 @@ export function useUpdateBlockType() {
       return;
     }
     $setBlocksType(selection, () => $createHeadingNode(headingType));
-  }
+  };
   return {
-    $setHeadingToSelection
+    $setHeadingToSelection,
   } as const;
 }
 
