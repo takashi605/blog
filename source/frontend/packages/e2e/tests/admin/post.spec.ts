@@ -55,6 +55,18 @@ Then(
     await expect(boldText).toHaveText('世界');
   },
 );
+When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',async() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await richTextEditor.fill('見出し2');
+  await richTextEditor.press('ControlOrMeta+a');
+  const h2Button = page.getByRole('button', { name: 'h2' });
+  await h2Button.click();
+})
+Then('リッチテキストエディタに「見出し2」と表示され、レベル2見出しになっている',async() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const h2Text = richTextEditor.locator('h2');
+  await expect(h2Text).toHaveText('見出し2');
+})
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
