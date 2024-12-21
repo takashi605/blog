@@ -59,6 +59,23 @@ Then(
     await expect(boldText).toHaveText('世界');
   },
 );
+When('「世界」を再び選択し、太字ボタンを押す', async () => {
+  // TODO 選択範囲について、明示的なクリーンアップをする
+  // すでに「世界」が選択されている状態であるため、そのまま太字ボタンを押す
+  // 太字ボタンを押す
+  const boldButton = page.getByRole('button', { name: 'bold' });
+  await boldButton.click();
+});
+Then(
+  'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
+  async () => {
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toHaveText('こんにちは！世界');
+    // 「世界」が strong タグで囲われていないか確認
+    const boldText = richTextEditor.locator('strong');
+    await expect(boldText).not.toBeVisible();
+  },
+);
 When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await richTextEditor.fill('見出し2');
