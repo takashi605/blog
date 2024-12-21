@@ -1,9 +1,9 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $createHeadingNode } from '@lexical/rich-text';
-import { $setBlocksType } from '@lexical/selection';
-import { $getSelection, $isRangeSelection } from 'lexical';
 import { useEffect, useState } from 'react';
-import { $getElementTypeOfSelected } from './toolBarPluginUtils';
+import {
+  $getElementTypeOfSelected,
+  $setH2ToSelection,
+} from './toolBarPluginUtils';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -20,11 +20,7 @@ function ToolBarPlugin() {
 
   const onClickH2 = () => {
     editor.update(() => {
-      const selection = $getSelection();
-      if (!$isRangeSelection(selection)) {
-        return;
-      }
-      $setBlocksType(selection, () => $createHeadingNode('h2'));
+      $setH2ToSelection();
     });
   };
 

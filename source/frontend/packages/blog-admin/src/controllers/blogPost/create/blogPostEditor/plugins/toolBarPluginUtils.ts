@@ -1,4 +1,5 @@
-import { $isHeadingNode } from '@lexical/rich-text';
+import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
+import { $setBlocksType } from '@lexical/selection';
 import { $getSelection, $isRangeSelection } from 'lexical';
 
 export function $getElementTypeOfSelected() {
@@ -29,4 +30,12 @@ function $getSelectedNode() {
   }
   const focusNode = selection.focus.getNode();
   return focusNode;
+}
+
+export function $setH2ToSelection() {
+  const selection = $getSelection();
+  if (!$isRangeSelection(selection)) {
+    return;
+  }
+  $setBlocksType(selection, () => $createHeadingNode('h2'));
 }
