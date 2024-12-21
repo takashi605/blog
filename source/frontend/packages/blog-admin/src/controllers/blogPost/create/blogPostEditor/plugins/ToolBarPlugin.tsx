@@ -27,6 +27,7 @@ function ToolBarPlugin() {
       $setBlocksType(selection, () => $createHeadingNode('h2'));
     });
   };
+
   return (
     <div>
       <button role="button" onClick={onClickH2}>
