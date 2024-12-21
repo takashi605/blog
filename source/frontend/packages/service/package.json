@@ -11,5 +11,8 @@
   "dependencies": {
     "entities": "workspace:*",
     "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "timezone-mock": "^1.3.6"
   }
 }
