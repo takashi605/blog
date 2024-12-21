@@ -61,8 +61,16 @@ When('h3 のインプットに「見出しレベル3」と入力する', async (
   await h3Input.fill('見出しレベル3');
   await expect(h3Input).toHaveValue('見出しレベル3');
 });
-When('公開ボタンを押す', async () => {
-  const publishButton = await page.getByRole('button', { name: '投稿' });
+When('リッチテキストエディタに「こんにちは！」と入力する',() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  richTextEditor.fill('こんにちは！');
+})
+Then('リッチテキストエディタに「こんにちは！」が表示される',() => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  expect(richTextEditor).toHaveText('こんにちは！');
+})
+When('「公開」ボタンを押す', async () => {
+  const publishButton = page.getByRole('button', { name: '投稿' });
   await publishButton.click();
 });
 Then('「記事を公開しました」と表示される', async () => {
