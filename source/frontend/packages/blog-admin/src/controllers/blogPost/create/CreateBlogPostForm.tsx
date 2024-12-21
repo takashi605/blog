@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import type { SubmitHandler } from 'react-hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
+import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 
 function CreateBlogPostForm() {
   const form = useForm<CreateBlogPostFormData>({
@@ -40,6 +41,7 @@ function CreateBlogPostForm() {
         <AddContentButtonList />
         <button type="submit">投稿</button>
       </form>
+      <BlogPostEditor />
     </FieldArrayFormProvider>
   );
 }
