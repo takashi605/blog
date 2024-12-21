@@ -60,9 +60,36 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.1(react-hook-form@7.53.2(react@18.3.1))
+      '@lexical/clipboard':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/code':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/html':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/link':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/list':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/markdown':
+        specifier: ^0.21.0
+        version: 0.21.0
       '@lexical/react':
         specifier: ^0.21.0
         version: 0.21.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(yjs@13.6.20)
+      '@lexical/rich-text':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/selection':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@lexical/utils':
+        specifier: ^0.21.0
+        version: 0.21.0
       destyle.css:
         specifier: ^4.0.1
         version: 4.0.1
@@ -78,6 +105,9 @@ importers:
       next:
         specifier: 14.2.4
         version: 14.2.4(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
+      prismjs:
+        specifier: ^1.29.0
+        version: 1.29.0
       react:
         specifier: ^18
         version: 18.3.1
