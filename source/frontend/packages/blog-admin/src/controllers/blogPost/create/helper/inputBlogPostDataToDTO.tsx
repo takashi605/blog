@@ -9,6 +9,7 @@ import type {
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 
+// TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 export function headingNodeToDTO(headingNode: HeadingNode): H2DTO | H3DTO {
   if (headingNode.getType() !== 'heading') {
     throw new Error('headingNode ではありません');
