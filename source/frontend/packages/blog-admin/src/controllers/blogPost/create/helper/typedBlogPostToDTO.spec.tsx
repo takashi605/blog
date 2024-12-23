@@ -1,3 +1,4 @@
+import type { LexicalEditor } from 'lexical';
 import { $createTextNode, createEditor } from 'lexical';
 import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { textNodeToDTO } from './inputBlogPostDataToDTO';
@@ -18,15 +19,7 @@ import { textNodeToDTO } from './inputBlogPostDataToDTO';
 
 describe('typedBlogPostToDTO', () => {
   it('textNode をリッチテキスト DTO に変換する', () => {
-    const config = {
-      namespace: 'testEditor',
-      theme: {},
-      onError: (e: Error) => {
-        throw e;
-      },
-    };
-
-    const editor = createEditor(config);
+    const editor = createTextEditor();
 
     editor.update(() => {
       const textNode = $createTextNode('Hello');
@@ -62,3 +55,16 @@ describe('typedBlogPostToDTO', () => {
   //   });
   // });
 });
+
+// 以下ヘルパ関数
+function createTextEditor(): LexicalEditor {
+  const config = {
+    namespace: 'testEditor',
+    theme: {},
+    onError: (e: Error) => {
+      throw e;
+    },
+  };
+
+  return createEditor(config);
+}
