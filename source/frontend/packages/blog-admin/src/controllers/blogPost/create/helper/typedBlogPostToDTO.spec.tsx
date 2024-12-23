@@ -5,7 +5,7 @@ import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import {
   headingNodeToDTO,
   paragraphNodeToDTO,
-  textNodeToDTO,
+  textNodeToRichTextDTO,
 } from './inputBlogPostDataToDTO';
 
 // function createTestNodes(): LexicalNode[] {
@@ -29,7 +29,10 @@ describe('typedBlogPostToDTO', () => {
     editor.update(() => {
       const normalText = $createTextNode('normalText');
       const boldText = $createTextNode('boldText').setFormat('bold');
-      const normalTextDTO: RichTextDTO = textNodeToDTO([normalText, boldText]);
+      const normalTextDTO: RichTextDTO = textNodeToRichTextDTO([
+        normalText,
+        boldText,
+      ]);
       expect(normalTextDTO).toEqual([
         { text: 'normalText', styles: { bold: false } },
         { text: 'boldText', styles: { bold: true } },

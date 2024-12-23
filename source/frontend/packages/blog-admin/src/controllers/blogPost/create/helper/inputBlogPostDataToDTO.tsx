@@ -42,11 +42,11 @@ export function paragraphNodeToDTO(paragraphNode: ElementNode): ParagraphDTO {
   return {
     id: createUUIDv4(),
     type: ContentType.Paragraph,
-    text: textNodeToDTO(textNodes),
+    text: textNodeToRichTextDTO(textNodes),
   };
 }
 
-export function textNodeToDTO(textNodes: TextNode[]): RichTextDTO {
+export function textNodeToRichTextDTO(textNodes: TextNode[]): RichTextDTO {
   return textNodes.map((node) => ({
     text: node.getTextContent(),
     styles: {
