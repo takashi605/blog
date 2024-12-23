@@ -1,7 +1,12 @@
+import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import type { LexicalEditor } from 'lexical';
 import { $createParagraphNode, $createTextNode, createEditor } from 'lexical';
 import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { paragraphNodeToDTO, textNodeToDTO } from './inputBlogPostDataToDTO';
+import {
+  headingNodeToDTO,
+  paragraphNodeToDTO,
+  textNodeToDTO,
+} from './inputBlogPostDataToDTO';
 
 // function createTestNodes(): LexicalNode[] {
 //   const h2Node = $createHeadingNode('h2');
@@ -53,6 +58,32 @@ describe('typedBlogPostToDTO', () => {
       });
     });
   });
+
+  it('HeadingNode を見出し DTO に変換する', () => {
+    const editor = createTextEditor();
+
+    editor.update(() => {
+      const h2Node = $createHeadingNode('h2');
+      h2Node.append($createTextNode('見出し2'));
+      const h2DTO = headingNodeToDTO(h2Node);
+
+      expect(h2DTO).toEqual({
+        id: expect.any(String),
+        type: 'h2',
+        text: '見出し2',
+      });
+
+      const h3Node = $createHeadingNode('h3');
+      h3Node.append($createTextNode('見出し3'));
+      const h3DTO = headingNodeToDTO(h3Node);
+
+      expect(h3DTO).toEqual({
+        id: expect.any(String),
+        type: 'h3',
+        text: '見出し3',
+      });
+    });
+  });
 });
 
 // it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
@@ -90,6 +121,7 @@ function createTextEditor(): LexicalEditor {
     onError: (e: Error) => {
       throw e;
     },
+    nodes: [HeadingNode],
   };
 
   return createEditor(config);
