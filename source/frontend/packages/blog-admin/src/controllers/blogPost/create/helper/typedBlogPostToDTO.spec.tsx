@@ -1,7 +1,7 @@
 import type { LexicalEditor } from 'lexical';
-import { $createTextNode, createEditor } from 'lexical';
+import { $createParagraphNode, $createTextNode, createEditor } from 'lexical';
 import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { textNodeToDTO } from './inputBlogPostDataToDTO';
+import { paragraphNodeToDTO, textNodeToDTO } from './inputBlogPostDataToDTO';
 
 // function createTestNodes(): LexicalNode[] {
 //   const h2Node = $createHeadingNode('h2');
@@ -32,33 +32,55 @@ describe('typedBlogPostToDTO', () => {
     });
   });
 
-  // it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
-  //   const config = {
-  //     namespace: 'testEditor',
-  //     theme: {},
-  //     onError: console.error,
-  //   };
+  it('paragraphNode を段落 DTO に変換する', () => {
+    const editor = createTextEditor();
 
-  //   const editor = createEditor(config);
-  //   editor.update(() => {
-  //     const root = $getRoot();
-  //     const testNodes = createTestNodes();
-  //     root.append(...testNodes);
-  //   });
+    editor.update(() => {
+      const paragraphNode = $createParagraphNode();
+      paragraphNode.append(
+        $createTextNode('Hello'),
+        $createTextNode('World').setFormat('bold'),
+      );
 
-  //   editor.getEditorState().read(() => {
-  //     const root = $getRoot();
-  //     const children = root.getChildren();
-  //     const contentDTO = typedBlogPostContentToDTO(children);
-
-  //     expect(contentDTO).toEqual([
-  //       { type: 'h2', text: '見出し2' },
-  //       { type: 'h3', text: '見出し3' },
-  //       { type: 'paragraph', text: 'HelloWorld' },
-  //     ]);
-  //   });
-  // });
+      const paragraphDTO = paragraphNodeToDTO(paragraphNode);
+      expect(paragraphDTO).toEqual({
+        id: expect.any(String),
+        type: 'paragraph',
+        text: [
+          { text: 'Hello', styles: { bold: false } },
+          { text: 'World', styles: { bold: true } },
+        ],
+      });
+    });
+  });
 });
+
+// it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
+//   const config = {
+//     namespace: 'testEditor',
+//     theme: {},
+//     onError: console.error,
+//   };
+
+//   const editor = createEditor(config);
+//   editor.update(() => {
+//     const root = $getRoot();
+//     const testNodes = createTestNodes();
+//     root.append(...testNodes);
+//   });
+
+//   editor.getEditorState().read(() => {
+//     const root = $getRoot();
+//     const children = root.getChildren();
+//     const contentDTO = typedBlogPostContentToDTO(children);
+
+//     expect(contentDTO).toEqual([
+//       { type: 'h2', text: '見出し2' },
+//       { type: 'h3', text: '見出し3' },
+//       { type: 'paragraph', text: 'HelloWorld' },
+//     ]);
+//   });
+// });
 
 // 以下ヘルパ関数
 function createTextEditor(): LexicalEditor {
