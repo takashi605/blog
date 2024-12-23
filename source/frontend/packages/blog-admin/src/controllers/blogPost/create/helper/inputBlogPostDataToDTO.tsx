@@ -10,12 +10,7 @@ export function paragraphNodeToDTO(paragraphNode: ElementNode): ParagraphDTO {
   if (paragraphNode.getType() !== 'paragraph') {
     throw new Error('paragraphNode ではありません');
   }
-  const textNodes: TextNode[] = paragraphNode.getChildren().map((child) => {
-    if (child.getType() !== 'text') {
-      throw new Error('textNode ではありません');
-    }
-    return child as TextNode;
-  });
+  const textNodes: TextNode[] = extractTextNode(paragraphNode);
   return {
     id: createUUIDv4(),
     type: ContentType.Paragraph,
@@ -30,4 +25,14 @@ export function textNodeToDTO(textNodes: TextNode[]): RichTextDTO {
       bold: node.hasFormat('bold'),
     },
   }));
+}
+
+// 以下ヘルパ関数
+function extractTextNode(elementNode: ElementNode): TextNode[] {
+  return elementNode.getChildren().map((child) => {
+    if (child.getType() !== 'text') {
+      throw new Error('textNode ではありません');
+    }
+    return child as TextNode;
+  });
 }
