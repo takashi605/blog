@@ -1,7 +1,8 @@
 import type { HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import type { ElementNode, TextNode } from 'lexical';
+import type { ElementNode, LexicalNode, TextNode } from 'lexical';
 import type {
+  ContentDTO,
   H2DTO,
   H3DTO,
   ParagraphDTO,
@@ -10,6 +11,24 @@ import type {
 import { createUUIDv4 } from 'service/src/utils/uuid';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
+
+export function typedContentToDTO(contents: LexicalNode[]): ContentDTO[] {
+  const contentsDTO: ContentDTO[] = [];
+  contents.forEach((content) => {
+    switch (content.getType()) {
+      case 'heading':
+        contentsDTO.push(headingNodeToDTO(content as HeadingNode));
+        break;
+      case 'paragraph':
+        contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
+        break;
+      default:
+        throw new Error('不正なコンテンツタイプです');
+    }
+  });
+  return contentsDTO;
+}
+
 export function headingNodeToDTO(headingNode: HeadingNode): H2DTO | H3DTO {
   if (headingNode.getType() !== 'heading') {
     throw new Error('headingNode ではありません');
