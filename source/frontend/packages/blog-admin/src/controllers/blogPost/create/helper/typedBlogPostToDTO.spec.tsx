@@ -23,16 +23,15 @@ describe('typedBlogPostToDTO', () => {
 
     editor.update(() => {
       const normalText = $createTextNode('normalText');
-      const normalTextDTO: RichTextDTO = textNodeToDTO(normalText);
+      const boldText = $createTextNode('boldText').setFormat('bold');
+      const normalTextDTO: RichTextDTO = textNodeToDTO([normalText, boldText]);
       expect(normalTextDTO).toEqual([
         { text: 'normalText', styles: { bold: false } },
+        { text: 'boldText', styles: { bold: true } },
       ]);
-
-      const boldText = $createTextNode('boldText').setFormat('bold');
-      const boldTextDTO: RichTextDTO = textNodeToDTO(boldText);
-      expect(boldTextDTO).toEqual([{ text: 'boldText', styles: { bold: true } }]);
     });
   });
+
   // it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
   //   const config = {
   //     namespace: 'testEditor',
