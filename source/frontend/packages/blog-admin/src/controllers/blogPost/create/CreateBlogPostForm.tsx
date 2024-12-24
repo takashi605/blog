@@ -4,7 +4,10 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
-import type { CreateBlogPostFormData } from './formSchema';
+
+type CreateBlogPostFormData = {
+  title: string;
+}
 
 function CreateBlogPostForm() {
   const form = useForm<CreateBlogPostFormData>();
