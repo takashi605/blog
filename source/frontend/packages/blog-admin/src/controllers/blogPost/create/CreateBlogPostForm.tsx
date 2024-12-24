@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 
-type CreateBlogPostFormData = {
+export type CreateBlogPostFormData = {
   title: string;
 }
 
