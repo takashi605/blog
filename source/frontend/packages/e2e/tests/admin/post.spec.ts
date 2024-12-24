@@ -1,5 +1,5 @@
 import { Before, Given, Then, When } from '@cucumber/cucumber';
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
 let page: Page;
@@ -30,16 +30,7 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   // テキストをセット
   await richTextEditor.pressSequentially('世界');
 
-  // カーソルは通常入力後に文末にあると想定
-  // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
-  await richTextEditor.press('ArrowLeft');
-  await richTextEditor.press('ArrowLeft');
-
-  // Shift を押しながら右矢印で「世界」を選択
-  await page.keyboard.down('Shift');
-  await richTextEditor.press('ArrowRight');
-  await richTextEditor.press('ArrowRight');
-  await page.keyboard.up('Shift');
+  await selectByArrowLeft(richTextEditor, 2);
 
   // 太字ボタンを押す
   const boldButton = page.getByRole('button', { name: 'bold' });
@@ -105,6 +96,14 @@ Then(
     await expect(h3Text).toHaveText('見出し3');
   },
 );
+
+async function selectByArrowLeft(locator: Locator, count: number) {
+  await page.keyboard.down('Shift');
+  for (let i = 1; i <= count; i++) {
+    await locator.press('ArrowLeft');
+  }
+  await page.keyboard.up('Shift');
+}
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
