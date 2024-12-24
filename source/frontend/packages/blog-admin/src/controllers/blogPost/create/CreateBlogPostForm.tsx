@@ -1,44 +1,59 @@
 'use client';
-// import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
-// import { createBlogPostFormSchema } from '@/controllers/blogPost/create/formSchema';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import type { Dispatch, SetStateAction } from 'react';
+import { createContext, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { BlogPostDTOForCreate } from '../../../usecases/create/createBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
+
+export type CreateBlogPostFormData = {
+  title: string;
+};
 
 function CreateBlogPostForm() {
-  // const form = useForm<CreateBlogPostFormData>({
-  //   resolver: zodResolver(createBlogPostFormSchema),
-  // });
+  const form = useForm<CreateBlogPostFormData>();
+  const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
 
-  // const { register, handleSubmit, control } = form;
+  const { register, handleSubmit } = form;
 
-  // const fieldArray = useFieldArray<CreateBlogPostFormData>({
-  //   control,
-  //   name: 'contents',
-  // });
+  const router = useRouter();
 
-  // const router = useRouter();
-
-  // const onSubmit: SubmitHandler<CreateBlogPostFormData> = async (formData) => {
-  //   await createBlogPostAction(formData);
-  //   router.push('/posts/create/success');
-  // };
+  const onSubmit = () => {
+    const formValues = form.getValues();
+    const blogPostDTO: BlogPostDTOForCreate = {
+      ...typedBlogPostWithoutContentsToDTO(formValues),
+      contents: contentsDTO,
+    };
+    console.log(blogPostDTO);
+    // await createBlogPostAction(formData);
+    router.push('/posts/create/success');
+  };
 
   return (
-    <BlogPostEditor />
+    <>
+      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+        <BlogPostEditor />
+      </ContentsDTOSetterContext.Provider>
 
-    // <FieldArrayFormProvider {...form} {...fieldArray}>
-    //   <form role="form" onSubmit={handleSubmit(onSubmit)}>
-    //     <label htmlFor="title">タイトル</label>
+      <FormProvider {...form}>
+        <form role="form" onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="title">タイトル</label>
 
-    //     <input id="title" {...register('title')} />
-    //     <ContentInputList />
+          <input id="title" {...register('title')} />
 
-    //     <AddContentButtonList />
-    //     <button type="submit">投稿</button>
-    //   </form>
-    // </FieldArrayFormProvider>
+          <button type="submit">投稿</button>
+        </form>
+      </FormProvider>
+    </>
   );
 }
 
 export default CreateBlogPostForm;
+
+export const ContentsDTOSetterContext = createContext<
+  Dispatch<SetStateAction<ContentDTO[]>>
+>(() => {
+  throw new Error('ContentsDTOSetterContext の設定が完了していません');
+});
