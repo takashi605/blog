@@ -1,43 +1,36 @@
 'use client';
-// import type { CreateBlogPostFormData } from '@/controllers/blogPost/create/formSchema';
-// import { createBlogPostFormSchema } from '@/controllers/blogPost/create/formSchema';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import type { CreateBlogPostFormData } from './formSchema';
 
 function CreateBlogPostForm() {
-  // const form = useForm<CreateBlogPostFormData>({
-  //   resolver: zodResolver(createBlogPostFormSchema),
-  // });
+  const form = useForm<CreateBlogPostFormData>();
 
-  // const { register, handleSubmit, control } = form;
-
-  // const fieldArray = useFieldArray<CreateBlogPostFormData>({
-  //   control,
-  //   name: 'contents',
-  // });
+  const { register, handleSubmit } = form;
 
   // const router = useRouter();
 
-  // const onSubmit: SubmitHandler<CreateBlogPostFormData> = async (formData) => {
-  //   await createBlogPostAction(formData);
-  //   router.push('/posts/create/success');
-  // };
+  const onSubmit = async () => {
+    const blogPostTitle = form.getValues('title');
+    console.log(blogPostTitle);
+    // await createBlogPostAction(formData);
+    // router.push('/posts/create/success');
+  };
 
   return (
-    <BlogPostEditor />
+    <>
+      <BlogPostEditor />
 
-    // <FieldArrayFormProvider {...form} {...fieldArray}>
-    //   <form role="form" onSubmit={handleSubmit(onSubmit)}>
-    //     <label htmlFor="title">タイトル</label>
+      <FormProvider {...form}>
+        <form role="form" onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="title">タイトル</label>
 
-    //     <input id="title" {...register('title')} />
-    //     <ContentInputList />
+          <input id="title" {...register('title')} />
 
-    //     <AddContentButtonList />
-    //     <button type="submit">投稿</button>
-    //   </form>
-    // </FieldArrayFormProvider>
+          <button type="submit">投稿</button>
+        </form>
+      </FormProvider>
+    </>
   );
 }
 
