@@ -35,6 +35,9 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   // 太字ボタンを押す
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
+
+  // 選択の解除
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
@@ -48,13 +51,12 @@ Then(
   },
 );
 When('「世界」を再び選択し、太字ボタンを押す', async () => {
-  // TODO 選択もこのステップで行う
-  // すでに「世界」が選択されている状態であるため、そのまま太字ボタンを押す
-  // 太字ボタンを押す
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await selectByArrowLeft(richTextEditor, 2);
+
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.press('Escape');
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
@@ -103,6 +105,12 @@ async function selectByArrowLeft(locator: Locator, count: number) {
     await locator.press('ArrowLeft');
   }
   await page.keyboard.up('Shift');
+}
+async function clearSelectionByArrow(locator: Locator) {
+  // Shiftキーが押されていないことを確実にしておく
+  await page.keyboard.up('Shift');
+  // 右矢印を1回押すだけで選択が外れる
+  await locator.press('ArrowRight');
 }
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
