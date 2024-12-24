@@ -10,6 +10,51 @@ import {
 } from './typedContentToDTO';
 
 describe('typedBlogPostToDTO', () => {
+  it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
+    const editor = createTextEditor();
+    editor.update(() => {
+      const testNodes = createTestNodes();
+      const contentDTO = typedContentToDTO(testNodes);
+      expect(contentDTO).toEqual([
+        {
+          id: expect.any(String),
+          type: 'h2',
+          text: '見出し2',
+        },
+        {
+          id: expect.any(String),
+          type: 'h3',
+          text: '見出し3',
+        },
+        {
+          id: expect.any(String),
+          type: 'paragraph',
+          text: [
+            { text: 'Hello', styles: { bold: false } },
+            { text: 'World', styles: { bold: true } },
+          ],
+        },
+      ]);
+    });
+    // テスト用のノードを作成するヘルパ関数
+    function createTestNodes(): LexicalNode[] {
+      const h2Node = $createHeadingNode('h2');
+      h2Node.append($createTextNode('見出し2'));
+
+      const h3Node = $createHeadingNode('h3');
+      h3Node.append($createTextNode('見出し3'));
+
+      const paragraphNode = $createParagraphNode();
+      paragraphNode.append(
+        $createTextNode('Hello'),
+        $createTextNode('World').setFormat('bold'),
+      );
+
+      const nodeArray: LexicalNode[] = [h2Node, h3Node, paragraphNode];
+      return nodeArray;
+    }
+  });
+
   it('textNode をリッチテキスト DTO に変換する', () => {
     const editor = createTextEditor();
 
@@ -73,51 +118,6 @@ describe('typedBlogPostToDTO', () => {
         text: '見出し3',
       });
     });
-  });
-
-  it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
-    const editor = createTextEditor();
-    editor.update(() => {
-      const testNodes = createTestNodes();
-      const contentDTO = typedContentToDTO(testNodes);
-      expect(contentDTO).toEqual([
-        {
-          id: expect.any(String),
-          type: 'h2',
-          text: '見出し2',
-        },
-        {
-          id: expect.any(String),
-          type: 'h3',
-          text: '見出し3',
-        },
-        {
-          id: expect.any(String),
-          type: 'paragraph',
-          text: [
-            { text: 'Hello', styles: { bold: false } },
-            { text: 'World', styles: { bold: true } },
-          ],
-        },
-      ]);
-    });
-    // テスト用のノードを作成するヘルパ関数
-    function createTestNodes(): LexicalNode[] {
-      const h2Node = $createHeadingNode('h2');
-      h2Node.append($createTextNode('見出し2'));
-
-      const h3Node = $createHeadingNode('h3');
-      h3Node.append($createTextNode('見出し3'));
-
-      const paragraphNode = $createParagraphNode();
-      paragraphNode.append(
-        $createTextNode('Hello'),
-        $createTextNode('World').setFormat('bold'),
-      );
-
-      const nodeArray: LexicalNode[] = [h2Node, h3Node, paragraphNode];
-      return nodeArray;
-    }
   });
 });
 

@@ -17,26 +17,27 @@ function CreateBlogPostForm() {
   const onSubmit = () => {
     const blogPostTitle = form.getValues('title');
     console.log(blogPostTitle);
+    console.log(contentsDTO);
     // await createBlogPostAction(formData);
     // router.push('/posts/create/success');
   };
 
   return (
     <>
-      <BlogPostEditor />
+      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+        <BlogPostEditor />
+      </ContentsDTOSetterContext.Provider>
 
       <FormProvider {...form}>
-        <contentsDTOContext.Provider value={contentsDTO}>
-          <contentsDTOSetterContext.Provider value={setContentsDTO}>
-            <form role="form" onSubmit={handleSubmit(onSubmit)}>
-              <label htmlFor="title">タイトル</label>
+        <ContentsDTOContext.Provider value={contentsDTO}>
+          <form role="form" onSubmit={handleSubmit(onSubmit)}>
+            <label htmlFor="title">タイトル</label>
 
-              <input id="title" {...register('title')} />
+            <input id="title" {...register('title')} />
 
-              <button type="submit">投稿</button>
-            </form>
-          </contentsDTOSetterContext.Provider>
-        </contentsDTOContext.Provider>
+            <button type="submit">投稿</button>
+          </form>
+        </ContentsDTOContext.Provider>
       </FormProvider>
     </>
   );
@@ -44,7 +45,9 @@ function CreateBlogPostForm() {
 
 export default CreateBlogPostForm;
 
-const contentsDTOContext = createContext<ContentDTO[]>([]);
-const contentsDTOSetterContext = createContext<Dispatch<
-  SetStateAction<ContentDTO[]>
-> | null>(null);
+const ContentsDTOContext = createContext<ContentDTO[]>([]);
+export const ContentsDTOSetterContext = createContext<
+  Dispatch<SetStateAction<ContentDTO[]>>
+>(() => {
+  throw new Error('ContentsDTOSetterContext の設定が完了していません');
+});
