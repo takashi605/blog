@@ -19,18 +19,18 @@ Given('記事投稿ページにアクセスする', async () => {
 
 When('リッチテキストエディタに「こんにちは！」と入力する', () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  richTextEditor.fill('こんにちは！');
+  richTextEditor.pressSequentially('こんにちは！');
 });
 Then('リッチテキストエディタに「こんにちは！」が表示される', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！');
 });
 When(
-  '「こんにちは！世界」と入力し、その文字を選択して太字ボタンを押す',
+  '「世界」と入力し、その文字を選択して太字ボタンを押す',
   async () => {
     const richTextEditor = page.locator('[contenteditable="true"]');
     // テキストをセット
-    await richTextEditor.fill('こんにちは！世界');
+    await richTextEditor.pressSequentially('世界');
 
     // カーソルは通常入力後に文末にあると想定
     // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
