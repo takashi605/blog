@@ -29,15 +29,13 @@ function CreateBlogPostForm() {
       </ContentsDTOSetterContext.Provider>
 
       <FormProvider {...form}>
-        <ContentsDTOContext.Provider value={contentsDTO}>
-          <form role="form" onSubmit={handleSubmit(onSubmit)}>
-            <label htmlFor="title">タイトル</label>
+        <form role="form" onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="title">タイトル</label>
 
-            <input id="title" {...register('title')} />
+          <input id="title" {...register('title')} />
 
-            <button type="submit">投稿</button>
-          </form>
-        </ContentsDTOContext.Provider>
+          <button type="submit">投稿</button>
+        </form>
       </FormProvider>
     </>
   );
@@ -45,7 +43,6 @@ function CreateBlogPostForm() {
 
 export default CreateBlogPostForm;
 
-const ContentsDTOContext = createContext<ContentDTO[]>([]);
 export const ContentsDTOSetterContext = createContext<
   Dispatch<SetStateAction<ContentDTO[]>>
 >(() => {
