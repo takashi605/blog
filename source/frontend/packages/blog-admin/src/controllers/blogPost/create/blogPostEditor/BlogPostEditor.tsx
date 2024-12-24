@@ -6,9 +6,9 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
 import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
+import { typedContentToDTO } from '../helper/typedContentToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
-import { typedContentToDTO } from '../helper/typedContentToDTO';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);
