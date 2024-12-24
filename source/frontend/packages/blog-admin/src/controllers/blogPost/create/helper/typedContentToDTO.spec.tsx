@@ -7,7 +7,7 @@ import {
   paragraphNodeToDTO,
   textNodeToRichTextDTO,
   typedContentToDTO,
-} from './inputBlogPostDataToDTO';
+} from './typedContentToDTO';
 
 describe('typedBlogPostToDTO', () => {
   it('textNode をリッチテキスト DTO に変換する', () => {
