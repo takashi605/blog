@@ -70,10 +70,12 @@ Then(
 );
 When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.fill('見出し2');
-  await richTextEditor.press('ControlOrMeta+a');
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('見出し2');
+  await selectByArrowLeft(richTextEditor, 4);
   const h2Button = page.getByRole('button', { name: 'h2' });
   await h2Button.click();
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「見出し2」と表示され、レベル2見出しになっている',
@@ -85,10 +87,12 @@ Then(
 );
 When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.fill('見出し3');
-  await richTextEditor.press('ControlOrMeta+a');
-  const h3Button = page.getByRole('button', { name: 'h3' });
-  await h3Button.click();
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('見出し3');
+  await selectByArrowLeft(richTextEditor, 4);
+  const h2Button = page.getByRole('button', { name: 'h3' });
+  await h2Button.click();
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「見出し3」と表示され、レベル3見出しになっている',
