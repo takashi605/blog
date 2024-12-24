@@ -102,7 +102,15 @@ Then(
     await expect(h3Text).toHaveText('見出し3');
   },
 );
+When('「投稿」ボタンを押す', async () => {
+  const publishButton = page.getByRole('button', { name: '投稿' });
+  await publishButton.click();
+});
+Then('記事が投稿され、投稿完了ページに遷移する', async () => {
+  await expect(page.getByText('記事を公開しました')).toBeVisible();
+});
 
+// 以下ヘルパ関数
 async function selectByArrowLeft(locator: Locator, count: number) {
   await page.keyboard.down('Shift');
   for (let i = 1; i <= count; i++) {
