@@ -1,12 +1,12 @@
 import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
-import { typedBlogPostToDTO } from './typedBlogPostToDTO';
+import { typedBlogPostWithoutContentsToDTO } from './typedBlogPostToDTO';
 
 describe('typedBlogPostToDTO', () => {
   it('フォームに入力されたコンテンツ以外のデータを DTO に変換する', () => {
     const formData: CreateBlogPostFormData = {
       title: 'ブログ記事のタイトル',
     };
-    const formDataDTO = typedBlogPostToDTO(formData);
+    const formDataDTO = typedBlogPostWithoutContentsToDTO(formData);
     expect(formDataDTO).toEqual({
       title: 'ブログ記事のタイトル',
 

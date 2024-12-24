@@ -3,11 +3,13 @@ import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { BlogPostDTOForCreate } from '../../../usecases/create/createBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
 
 export type CreateBlogPostFormData = {
   title: string;
-}
+};
 
 function CreateBlogPostForm() {
   const form = useForm<CreateBlogPostFormData>();
@@ -18,9 +20,12 @@ function CreateBlogPostForm() {
   // const router = useRouter();
 
   const onSubmit = () => {
-    const blogPostTitle = form.getValues('title');
-    console.log(blogPostTitle);
-    console.log(contentsDTO);
+    const formValues = form.getValues();
+    const blogPostDTO: BlogPostDTOForCreate = {
+      ...typedBlogPostWithoutContentsToDTO(formValues),
+      contents: contentsDTO,
+    };
+    console.log(blogPostDTO);
     // await createBlogPostAction(formData);
     // router.push('/posts/create/success');
   };
