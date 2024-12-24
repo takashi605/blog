@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -17,7 +18,7 @@ function CreateBlogPostForm() {
 
   const { register, handleSubmit } = form;
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const onSubmit = () => {
     const formValues = form.getValues();
@@ -27,7 +28,7 @@ function CreateBlogPostForm() {
     };
     console.log(blogPostDTO);
     // await createBlogPostAction(formData);
-    // router.push('/posts/create/success');
+    router.push('/posts/create/success');
   };
 
   return (
