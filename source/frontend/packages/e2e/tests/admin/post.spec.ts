@@ -1,5 +1,5 @@
 import { Before, Given, Then, When } from '@cucumber/cucumber';
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
 let page: Page;
@@ -19,35 +19,26 @@ Given('記事投稿ページにアクセスする', async () => {
 
 When('リッチテキストエディタに「こんにちは！」と入力する', () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  richTextEditor.fill('こんにちは！');
+  richTextEditor.pressSequentially('こんにちは！');
 });
 Then('リッチテキストエディタに「こんにちは！」が表示される', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！');
 });
-When(
-  '「こんにちは！世界」と入力し、その文字を選択して太字ボタンを押す',
-  async () => {
-    const richTextEditor = page.locator('[contenteditable="true"]');
-    // テキストをセット
-    await richTextEditor.fill('こんにちは！世界');
+When('「世界」と入力し、その文字を選択して太字ボタンを押す', async () => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  // テキストをセット
+  await richTextEditor.pressSequentially('世界');
 
-    // カーソルは通常入力後に文末にあると想定
-    // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
-    await richTextEditor.press('ArrowLeft');
-    await richTextEditor.press('ArrowLeft');
+  await selectByArrowLeft(richTextEditor, 2);
 
-    // Shift を押しながら右矢印で「世界」を選択
-    await page.keyboard.down('Shift');
-    await richTextEditor.press('ArrowRight');
-    await richTextEditor.press('ArrowRight');
-    await page.keyboard.up('Shift');
+  // 太字ボタンを押す
+  const boldButton = page.getByRole('button', { name: 'bold' });
+  await boldButton.click();
 
-    // 太字ボタンを押す
-    const boldButton = page.getByRole('button', { name: 'bold' });
-    await boldButton.click();
-  },
-);
+  // 選択の解除
+  await clearSelectionByArrow(richTextEditor);
+});
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
   async () => {
@@ -60,11 +51,12 @@ Then(
   },
 );
 When('「世界」を再び選択し、太字ボタンを押す', async () => {
-  // TODO 選択範囲について、明示的なクリーンアップをする
-  // すでに「世界」が選択されている状態であるため、そのまま太字ボタンを押す
-  // 太字ボタンを押す
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await selectByArrowLeft(richTextEditor, 2);
+
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
@@ -78,10 +70,12 @@ Then(
 );
 When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.fill('見出し2');
-  await richTextEditor.press('ControlOrMeta+a');
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('見出し2');
+  await selectByArrowLeft(richTextEditor, 4);
   const h2Button = page.getByRole('button', { name: 'h2' });
   await h2Button.click();
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「見出し2」と表示され、レベル2見出しになっている',
@@ -93,10 +87,12 @@ Then(
 );
 When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.fill('見出し3');
-  await richTextEditor.press('ControlOrMeta+a');
-  const h3Button = page.getByRole('button', { name: 'h3' });
-  await h3Button.click();
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('見出し3');
+  await selectByArrowLeft(richTextEditor, 4);
+  const h2Button = page.getByRole('button', { name: 'h3' });
+  await h2Button.click();
+  await clearSelectionByArrow(richTextEditor);
 });
 Then(
   'リッチテキストエディタに「見出し3」と表示され、レベル3見出しになっている',
@@ -106,6 +102,28 @@ Then(
     await expect(h3Text).toHaveText('見出し3');
   },
 );
+When('「投稿」ボタンを押す', async () => {
+  const publishButton = page.getByRole('button', { name: '投稿' });
+  await publishButton.click();
+});
+Then('記事が投稿され、投稿完了ページに遷移する', async () => {
+  await expect(page.getByText('記事を公開しました')).toBeVisible();
+});
+
+// 以下ヘルパ関数
+async function selectByArrowLeft(locator: Locator, count: number) {
+  await page.keyboard.down('Shift');
+  for (let i = 1; i <= count; i++) {
+    await locator.press('ArrowLeft');
+  }
+  await page.keyboard.up('Shift');
+}
+async function clearSelectionByArrow(locator: Locator) {
+  // Shiftキーが押されていないことを確実にしておく
+  await page.keyboard.up('Shift');
+  // 右矢印を1回押すだけで選択が外れる
+  await locator.press('ArrowRight');
+}
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async () => {
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
