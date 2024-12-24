@@ -25,29 +25,26 @@ Then('リッチテキストエディタに「こんにちは！」が表示さ�
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！');
 });
-When(
-  '「世界」と入力し、その文字を選択して太字ボタンを押す',
-  async () => {
-    const richTextEditor = page.locator('[contenteditable="true"]');
-    // テキストをセット
-    await richTextEditor.pressSequentially('世界');
+When('「世界」と入力し、その文字を選択して太字ボタンを押す', async () => {
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  // テキストをセット
+  await richTextEditor.pressSequentially('世界');
 
-    // カーソルは通常入力後に文末にあると想定
-    // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
-    await richTextEditor.press('ArrowLeft');
-    await richTextEditor.press('ArrowLeft');
+  // カーソルは通常入力後に文末にあると想定
+  // 「世界」を選択するため、カーソルを左へ移動して選択範囲を作る
+  await richTextEditor.press('ArrowLeft');
+  await richTextEditor.press('ArrowLeft');
 
-    // Shift を押しながら右矢印で「世界」を選択
-    await page.keyboard.down('Shift');
-    await richTextEditor.press('ArrowRight');
-    await richTextEditor.press('ArrowRight');
-    await page.keyboard.up('Shift');
+  // Shift を押しながら右矢印で「世界」を選択
+  await page.keyboard.down('Shift');
+  await richTextEditor.press('ArrowRight');
+  await richTextEditor.press('ArrowRight');
+  await page.keyboard.up('Shift');
 
-    // 太字ボタンを押す
-    const boldButton = page.getByRole('button', { name: 'bold' });
-    await boldButton.click();
-  },
-);
+  // 太字ボタンを押す
+  const boldButton = page.getByRole('button', { name: 'bold' });
+  await boldButton.click();
+});
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
   async () => {
@@ -60,11 +57,13 @@ Then(
   },
 );
 When('「世界」を再び選択し、太字ボタンを押す', async () => {
-  // TODO 選択範囲について、明示的なクリーンアップをする
+  // TODO 選択もこのステップで行う
   // すでに「世界」が選択されている状態であるため、そのまま太字ボタンを押す
   // 太字ボタンを押す
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await richTextEditor.press('Escape');
 });
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
