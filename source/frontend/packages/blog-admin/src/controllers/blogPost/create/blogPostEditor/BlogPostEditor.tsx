@@ -1,5 +1,6 @@
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -9,7 +10,6 @@ import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { typedContentToDTO } from '../helper/typedContentToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);
