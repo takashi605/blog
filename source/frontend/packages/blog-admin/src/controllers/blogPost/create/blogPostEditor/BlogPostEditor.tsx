@@ -9,6 +9,7 @@ import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { typedContentToDTO } from '../helper/typedContentToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);
@@ -30,6 +31,7 @@ function BlogPostEditor() {
       />
       <MarkdownShortcutPlugin />
       <OnChangePlugin onChange={onChange} />
+      <HistoryPlugin />
     </CustomizedLexicalComposer>
   );
 }
