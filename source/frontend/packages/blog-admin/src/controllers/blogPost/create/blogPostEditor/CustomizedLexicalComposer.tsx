@@ -5,6 +5,16 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ParagraphNode, TextNode } from 'lexical';
+import styles from 'shared-styles/src/blogPostViewer.module.scss';
+
+const theme = {
+  code: 'editor-code',
+  heading: {
+    h2: styles.h2,
+    h3: styles.h3,
+  },
+  paragraph: styles.paragraph,
+};
 
 type CustomizedLexicalComposerProps = {
   children: React.ReactNode;
@@ -35,7 +45,7 @@ function CustomizedLexicalComposer({
       ParagraphNode,
       TextNode,
     ],
-    theme: {},
+    theme,
   };
   return (
     <LexicalComposer initialConfig={initialConfig}>{children}</LexicalComposer>
