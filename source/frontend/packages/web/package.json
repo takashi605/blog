@@ -40,6 +40,7 @@
     "service": "workspace:*",
     "shared-interface-adapter": "workspace:*",
     "shared-test-data": "workspace:*",
+    "shared-styles": "workspace:*",
     "tailwindcss": "^3.4.15"
   },
   "msw": {

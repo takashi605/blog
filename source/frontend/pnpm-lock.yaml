@@ -123,6 +123,9 @@ importers:
       shared-interface-adapter:
         specifier: workspace:*
         version: link:../shared-interface-adapter
+      shared-styles:
+        specifier: workspace:*
+        version: link:../shared-styles
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.15(ts-node@10.9.2(@types/node@22.3.0)(typescript@5.5.4))
@@ -219,6 +222,8 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
 
+  packages/shared-styles: {}
+
   packages/shared-test-data: {}
 
   packages/web:
@@ -250,6 +255,9 @@ importers:
       shared-interface-adapter:
         specifier: workspace:*
         version: link:../shared-interface-adapter
+      shared-styles:
+        specifier: workspace:*
+        version: link:../shared-styles
       shared-test-data:
         specifier: workspace:*
         version: link:../shared-test-data
