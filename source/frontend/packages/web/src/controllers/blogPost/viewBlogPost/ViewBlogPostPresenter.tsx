@@ -4,7 +4,7 @@ import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import Thumbnail from '../ui/Thumbnail';
 import ContentRenderer from '../ui/contents/Content';
-import styles from './viewBlogPostPresenter.module.scss';
+import styles from 'shared-styles/src/blogPostViewer.module.scss';
 
 type ViewBlogPostPresenterProps = {
   blogPost: BlogPostDTO;
