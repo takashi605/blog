@@ -1,5 +1,6 @@
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -30,6 +31,7 @@ function BlogPostEditor() {
       />
       <MarkdownShortcutPlugin />
       <OnChangePlugin onChange={onChange} />
+      <HistoryPlugin />
     </CustomizedLexicalComposer>
   );
 }
