@@ -1,10 +1,10 @@
 import React from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import styles from 'shared-styles/src/blogPostViewer.module.scss';
 import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import Thumbnail from '../ui/Thumbnail';
 import ContentRenderer from '../ui/contents/Content';
-import styles from 'shared-styles/src/blogPostViewer.module.scss';
 
 type ViewBlogPostPresenterProps = {
   blogPost: BlogPostDTO;
