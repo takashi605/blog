@@ -98,7 +98,7 @@ kube-switch-default-namespace:
 # そのため、ingress のルールは適用されない
 # wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
 kube-port-forward-ingress:
-	kubectl -n ingress port-forward nginx-ingress-microk8s-controller-spwnj 8080:80
+	kubectl -n ingress port-forward $(shell kubectl -n ingress get pod --template='{{(index .items 0).metadata.name}}') 8080:80
 
 ###
 ## Helm 系
@@ -211,4 +211,4 @@ blog-admin-build:
 check-docker-disk-usage:
 	@sudo du -h --max-depth=1 /var/lib/docker/overlay2 | sort -hr
 check-mk8s-disk-usage:
-	@sudo du -h --max-depth=1 /var/snap/microk8s/common/default-storage/container-registry-registry-claim-pvc-c6c5b40e-0bb8-443b-8b70-49f4ead98b6c/docker/registry/v2/blobs/sha256 | sort -hr
+	@sudo du -h --max-depth=1 /var/snap/microk8s/common/default-storage | sort -hr

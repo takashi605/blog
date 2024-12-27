@@ -1,5 +1,5 @@
 # ベースイメージとして公式のRustイメージを使用
-FROM rust:1.80-slim as base
+FROM rust:1.81-slim as base
 ARG APP_ROOT_DIR=source/backend/api
 
 # グループとユーザーを追加

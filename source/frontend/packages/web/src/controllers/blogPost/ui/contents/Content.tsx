@@ -1,12 +1,12 @@
 import { memo } from 'react';
-import type { ContentForDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
 import ImageContent from './elements/ImageContent';
 import Paragraph from './elements/Paragraph';
 
 export type BlogPostContentProps = {
-  content: ContentForDTO;
+  content: ContentDTO;
 };
 
 function ContentRenderer({ content }: BlogPostContentProps) {

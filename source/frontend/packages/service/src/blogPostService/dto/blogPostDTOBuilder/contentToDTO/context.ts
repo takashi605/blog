@@ -1,8 +1,8 @@
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { ContentToDTOStrategy } from './strategy';
-import type { ContentForDTO } from './types';
+import type { ContentDTO } from './types';
 
-export class ContentToDTOContext<T extends Content, U extends ContentForDTO> {
+export class ContentToDTOContext<T extends Content, U extends ContentDTO> {
   private strategy: ContentToDTOStrategy<T, U>;
 
   constructor(strategy: ContentToDTOStrategy<T, U>) {

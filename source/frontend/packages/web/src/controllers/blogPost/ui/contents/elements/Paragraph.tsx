@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
-import type { RichTextForDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import styles from './paragraph.module.scss';
 
 type ParagraphProps = {
-  richText: RichTextForDTO;
+  richText: RichTextDTO;
 };
 
 // TODO key に UUID を使うのは適切か検討
@@ -22,7 +22,7 @@ export function Paragraph({ richText }: ParagraphProps) {
 
 export default memo(Paragraph);
 
-function StyledText({ richText }: { richText: RichTextForDTO[number] }) {
+function StyledText({ richText }: { richText: RichTextDTO[number] }) {
   let text = richText.text as React.ReactNode;
   if (richText.styles?.bold) {
     text = <strong>{text}</strong>;

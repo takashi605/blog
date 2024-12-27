@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
-import { mockRichTextForDTO } from 'service/src/mockData/mockBlogPostDTO';
+import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
 import ContentRenderer from './Content';
 
 describe('コンポーネント: viewBlogPostController', () => {
@@ -41,7 +41,7 @@ describe('コンポーネント: viewBlogPostController', () => {
         content={{
           id: '1',
           type: ContentType.Paragraph,
-          text: mockRichTextForDTO(),
+          text: mockRichTextDTO(),
         }}
       />,
     );

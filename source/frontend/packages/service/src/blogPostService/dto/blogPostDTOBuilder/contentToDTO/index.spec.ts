@@ -4,7 +4,7 @@ import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import { mockRichText } from 'entities/src/mockData/blogPost/mockBlogPost';
 import { createContentToDTOContext } from '.';
 
-describe('contentForDTO', () => {
+describe('contentDTO', () => {
   it('type「Paragraph」を持つコンテントを DTO に変換できる', () => {
     const content = new Paragraph('1', mockRichText());
 

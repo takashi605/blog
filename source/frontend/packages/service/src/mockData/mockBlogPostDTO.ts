@@ -2,6 +2,7 @@ import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { BlogPostDTO } from '../blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from '../utils/uuid';
 
+// これを直接 import して使えばいい
 export const mockBlogPostDTO: BlogPostDTO = {
   id: createUUIDv4(),
   title: '記事タイトル',
@@ -14,12 +15,12 @@ export const mockBlogPostDTO: BlogPostDTO = {
     {
       id: createUUIDv4(),
       type: ContentType.Paragraph,
-      text: mockRichTextForDTO(),
+      text: mockRichTextDTO(),
     },
   ],
 };
 
-export function mockRichTextForDTO() {
+export function mockRichTextDTO() {
   return [
     {
       text: 'これは',
