@@ -99,6 +99,8 @@ kube-switch-default-namespace:
 # wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
 kube-port-forward-ingress:
 	kubectl -n ingress port-forward $(shell kubectl -n ingress get pod --template='{{(index .items 0).metadata.name}}') 8080:80
+kube-port-forward-admin:
+	kubectl port-forward svc/admin 8081:80
 
 ###
 ## Helm 系
