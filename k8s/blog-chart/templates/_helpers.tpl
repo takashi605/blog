@@ -94,3 +94,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "api.appname" -}}
 {{- "api" }}
 {{- end }}
+
+{{- /*
+アプリケーション「mysql」の名前を取得
+*/ -}}
+{{- define "mysql.appname" -}}
+{{- "mysql" }}
+{{- end }}
+{{- /*
+
+アプリケーション「mysql」に関連するシークレットの名前を取得
+*/ -}}
+{{- define "mysql.secret.name" -}}
+{{- "mysql" }}
+{{- end }}

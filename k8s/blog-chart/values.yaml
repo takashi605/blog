@@ -89,6 +89,31 @@ api:
     nodePort: 30080
     loadBalancerIP: "192.168.1.100"
     externalTrafficPolicy: Local
+mysql:
+  statefulSet:
+    replicas: 1
+    storage: "1Gi"
+  pod:
+    imageRepository: "mysql"
+    imageTag: "v0.0.0"
+    imagePullSecret: ""
+    # Always だとリモートから pull してしまう
+    # 今回はローカルのイメージを使うために Never にしている
+    imagePullPolicy: Never
+    memoryLimit: "1500Mi"
+    cpuLimit: "750m"
+    memoryRequest: "250Mi"
+    cpuRequest: "100m"
+    containerPort: 3306
+  service:
+    type: ClusterIP
+    port: 3306
+    targetPort: 3306
+    # ここから下の設定は type:ClusterIP の場合は関係ないが、
+    # 一応デフォルト値は入れておく
+    nodePort: 30080
+    loadBalancerIP: "192.168.1.100"
+    externalTrafficPolicy: Local
 e2e:
   pod:
     env:
