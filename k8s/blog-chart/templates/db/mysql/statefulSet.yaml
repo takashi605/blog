@@ -33,13 +33,13 @@ spec:
               memory: {{ .Values.mysql.pod.memoryRequest }}
               cpu: {{ .Values.mysql.pod.cpuRequest }}
           env:
-            - name: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_ROOT_PASSWORD_FILE
               value: /var/run/secrets/mysql/root_password
             - name: MYSQL_DATABASE
-              value: /var/run/secrets/mysql/database
+              value: blog
             - name: MYSQL_USER
-              value: /var/run/secrets/mysql/user
-            - name: MYSQL_PASSWORD
+              value: user
+            - name: MYSQL_PASSWORD_FILE
               value: /var/run/secrets/mysql/user_password
           ports:
             - containerPort: {{ .Values.mysql.pod.containerPort }}
