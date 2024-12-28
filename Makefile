@@ -208,6 +208,14 @@ blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
 
 ###
+## mysql 系
+###
+mysql-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep mysql
+mysql-sh:
+	kubectl exec -it $(shell $(MAKE) mysql-pod-name) -c mysql -- bash
+
+###
 ## デバッグ用
 ###
 check-docker-disk-usage:
