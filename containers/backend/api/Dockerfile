@@ -3,7 +3,9 @@ FROM rust:1.81-slim as base
 ARG APP_ROOT_DIR=source/backend/api
 
 # libssl-dev がある状態で pkg-config をインストールする必要あり
-RUN apt-get update && apt-get install -y libssl-dev && apt-get install -y pkg-config
+RUN apt-get update && apt-get install -y libssl-dev &&\
+      apt-get install -y pkg-config iputils-ping net-tools dnsutils telnet \
+      && rm -rf /var/lib/apt/lists/*
 
 # グループとユーザーを追加
 RUN groupadd -g 1000 rust && \
