@@ -22,3 +22,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# 追加分
+*.example.yaml
