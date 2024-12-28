@@ -33,6 +33,12 @@ spec:
               cpu: {{ .Values.api.pod.cpuRequest }}
           ports:
             - containerPort: {{ .Values.api.pod.containerPort }}
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: database_url
         {{- if not .Values.production }}
         - name: "{{ include "api.appname" . }}-test"
           image: "api-test:v0.0.0"
