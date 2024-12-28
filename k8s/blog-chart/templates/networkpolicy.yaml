@@ -4,10 +4,17 @@ metadata:
   name: allow-from-ingress
 spec:
   podSelector: {}
+  # Ingress は受信ポリシーの設定。ingress リソースとは関係ないので注意
   policyTypes:
   - Ingress
   ingress:
+    # ingress ネームスペースからの通信を許可
     - from:
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: ingress
+    # blog ネームスペースからの通信を許可
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: blog
