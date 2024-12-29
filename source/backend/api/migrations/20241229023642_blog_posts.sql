@@ -4,10 +4,10 @@ CREATE TABLE IF NOT EXISTS blog_posts (
     thumbnail_path VARCHAR(255) NOT NULL,
     created_post_date DATE NOT NULL,
     updated_post_date DATE NOT NULL,
-    published_at TIMESTAMP NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+    published_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
 INSERT INTO blog_posts (
     article_id,
     title,
