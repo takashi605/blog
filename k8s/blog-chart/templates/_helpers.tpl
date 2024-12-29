@@ -96,15 +96,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- /*
-アプリケーション「mysql」の名前を取得
+アプリケーション「postgres」の名前を取得
 */ -}}
-{{- define "mysql.appname" -}}
-{{- "mysql" }}
+{{- define "postgres.appname" -}}
+{{- "postgres" }}
 {{- end }}
 {{- /*
 
-アプリケーション「mysql」に関連するシークレットの名前を取得
+アプリケーション「postgres」に関連するシークレットの名前を取得
 */ -}}
-{{- define "mysql.secret.name" -}}
-{{- "mysql" }}
+{{- define "postgres.secret.name" -}}
+{{- "postgres" }}
 {{- end }}

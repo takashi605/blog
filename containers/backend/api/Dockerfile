@@ -22,7 +22,7 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR ./
 FROM base as dev
 
 RUN cargo install cargo-watch
-RUN cargo install sqlx-cli --no-default-features --features mysql
+RUN cargo install sqlx-cli --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
 CMD ["cargo", "watch", "-x", "run"]

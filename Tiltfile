@@ -95,9 +95,9 @@ custom_build(
 )
 
 custom_build(
-  'mysql:v0.0.0',
+  'postgres:v0.0.0',
   '''
-    docker image build -f containers/db/mysql/Dockerfile -t $EXPECTED_REF .;
+    docker image build -f containers/db/postgres/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune -f;
@@ -105,7 +105,7 @@ custom_build(
     make mk8s-prune;
   ''',
   deps=[
-    'containers/db/mysql'
+    'containers/db/postgres'
   ]
 )
 

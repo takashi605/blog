@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "postgres.appname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "postgres.appname" . }}
+    {{- include "blog-chart.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "postgres.appname" . }}
+  replicas: {{ .Values.postgres.statefulSet.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "postgres.appname" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "postgres.appname" . }}
+        {{- include "blog-chart.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- if .Values.postgres.pod.imagePullSecret }}
+        - name: {{ .Values.postgres.pod.imagePullSecret }}
+        {{- end }}
+      containers:
+        - name: {{ include "postgres.appname" . }}
+          image: "{{ .Values.postgres.pod.imageRepository }}:{{ .Values.postgres.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.postgres.pod.imagePullPolicy }}
+          resources:
+            limits:
+              memory: {{ .Values.postgres.pod.memoryLimit }}
+              cpu: {{ .Values.postgres.pod.cpuLimit }}
+            requests:
+              memory: {{ .Values.postgres.pod.memoryRequest }}
+              cpu: {{ .Values.postgres.pod.cpuRequest }}
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "postgres.secret.name" . }}
+                  key: user_password
+            - name: POSTGRES_DB
+              value: blog
+          ports:
+            - containerPort: {{ .Values.postgres.pod.containerPort }}
+          volumeMounts:
+            - name: {{ include "postgres.appname" . }}-data
+              mountPath: /var/lib/postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "postgres.appname" . }}-data
+      spec:
+        storageClassName: "microk8s-hostpath"
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.postgres.statefulSet.storage }}

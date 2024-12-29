@@ -208,12 +208,12 @@ blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
 
 ###
-## mysql 系
+## postgres 系
 ###
-mysql-pod-name:
-	@kubectl get pods -o custom-columns=:metadata.name | grep mysql
-mysql-sh:
-	kubectl exec -it $(shell $(MAKE) mysql-pod-name) -c mysql -- bash
+postgres-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep postgres
+postgres-sh:
+	kubectl exec -it $(shell $(MAKE) postgres-pod-name) -c postgres -- bash
 
 ###
 ## デバッグ用
