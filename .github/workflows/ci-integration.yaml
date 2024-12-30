@@ -111,14 +111,14 @@ jobs:
           kind load docker-image e2e:v0.0.0 --name blog
           kind load docker-image blog-admin:v0.0.0 --name blog
 
-      - name: "api シークレットを作成"
-        run: |
-          kubectl create secret generic api \
-            --from-literal=user_password="${{ secrets.POSTGRES_PASSWORD }}"
-
       - name: "postgres シークレットを作成"
         run: |
           kubectl create secret generic postgres \
+            --from-literal=user_password="${{ secrets.POSTGRES_PASSWORD }}"
+
+      - name: "api シークレットを作成"
+        run: |
+          kubectl create secret generic api \
             --from-literal=database_url="${{ secrets.DATABASE_URL }}"
 
       - name: "Chart のインストール"
