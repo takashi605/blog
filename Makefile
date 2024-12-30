@@ -107,7 +107,7 @@ kube-port-forward-admin:
 ## 基本的には tilt が管理してくれるのであまり使わない
 ###
 helm-install:
-	helm install blog k8s/blog-chart --wait
+	helm install blog k8s/blog-chart --wait --timeout 10m0s
 
 helm-delete:
 	helm delete blog
