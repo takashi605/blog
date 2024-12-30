@@ -56,6 +56,13 @@ jobs:
         run: |
           kind create cluster --name blog
 
+      # PVC を利用するためにストレージ・プロビジョナーを作成しデフォルトストレージクラスに設定
+      - name: "local-path-provisioner の適用"
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+          kubectl patch storageclass local-path \
+            -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
       - name: "metallb の適用"
         run: |
           make setup-metallb-for-kind
