@@ -124,11 +124,6 @@ jobs:
         run: |
           kubectl rollout status deployment/web --timeout=120s
 
-      - name: "デバッグ用の状態確認"
-        run: |
-          kubectl get all
-          kubectl get pvc,pv
-
       - name: "e2e テストを実行する"
         run: |
           make e2e-run-ci
