@@ -133,6 +133,13 @@ jobs:
         run: |
           kubectl rollout status deployment/e2e --timeout=120s
 
+      - name: "デバッグ用のデータ確認"
+        run: |
+          kubectl get pods --all-namespaces
+          kubectl get pvc --all-namespaces
+          kubectl get pv --all-namespaces
+          kubectl get secret --all-namespaces
+
       - name: "api を扱う Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/api --timeout=120s
