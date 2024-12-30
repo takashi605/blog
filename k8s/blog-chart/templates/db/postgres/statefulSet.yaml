@@ -49,7 +49,6 @@ spec:
     - metadata:
         name: {{ include "postgres.appname" . }}-data
       spec:
-        storageClassName: "microk8s-hostpath"
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
