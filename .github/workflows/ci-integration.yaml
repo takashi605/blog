@@ -140,6 +140,10 @@ jobs:
           kubectl get pv --all-namespaces
           kubectl get secret --all-namespaces
 
+      - name: "デバッグ用に api リソースの状態を確認"
+        run: |
+          kubectl describe pod $(kubectl get pods -o custom-columns=:metadata.name | grep api)
+
       - name: "api を扱う Deployment リソースが準備できるまで待機"
         run: |
           kubectl rollout status deployment/api --timeout=120s
