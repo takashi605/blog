@@ -141,6 +141,10 @@ jobs:
         run: |
           kubectl rollout status deployment/web --timeout=120s
 
+      - name: "デバッグ用: api の情報を表示"
+        run: |
+          kubectl describe pod $(make api-pod-name)
+
       - name: "db にデータを投入"
         run: |
           make api-create-db
