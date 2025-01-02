@@ -295,10 +295,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "api-test"
+name = "api_test"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "common",
  "reqwest",
  "serde",
  "serde_json",
@@ -449,6 +450,14 @@ dependencies = [
  "serde",
  "wasm-bindgen",
  "windows-targets 0.52.6",
+]
+
+[[package]]
+name = "common"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

@@ -201,9 +201,9 @@ api-migrate-run:
 ## Pod「api」内に api テスト用コンテナがある
 ###
 api-test-sh:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api_test -- bash
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api_test -- cargo test
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
 
 ###
 ## blog-admin 系

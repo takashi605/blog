@@ -17,17 +17,21 @@ USER rust:rust
 # ワーキングディレクトリを作成
 WORKDIR /$APP_ROOT_DIR
 
+# キャッシュを効率的に使うために Cargo.toml だけをコピーして依存関係を解決
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test/Cargo.toml ./api_test/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/common/Cargo.toml ./common/
 
 # ワークスペースメンバーを解決するために空のソースを用意
 RUN mkdir -p ./api/src && echo "" > ./api/src/main.rs
 RUN mkdir -p ./api_test/src && echo "" > ./api_test/src/main.rs
+RUN mkdir -p ./common/src && echo "" > ./common/src/lib.rs
 
 RUN cargo fetch
 
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api ./api
+COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 
 FROM base AS dev
 

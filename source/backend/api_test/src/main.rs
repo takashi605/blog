@@ -6,9 +6,10 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-  use crate::http::request::Request;
   use crate::http::methods::Methods;
+  use crate::http::request::Request;
   use anyhow::{Context, Result};
+  use common::Numbers;
 
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
@@ -35,11 +36,6 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn fivesix_get() -> Result<()> {
-    #[derive(serde::Deserialize)]
-    struct Numbers {
-      num1: i32,
-      num2: i32,
-    }
     let resp = Request::new(Methods::GET, "http://localhost:8000/fivesix").send().await?.text().await?;
     let numbers: Numbers = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
     assert_eq!(numbers.num1, 5);
