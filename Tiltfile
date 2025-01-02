@@ -78,7 +78,7 @@ custom_build(
 custom_build(
   'api-test:v0.0.0',
   '''
-    docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
+    docker image build -f containers/backend/api_test/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
 
     docker system prune -f;
@@ -86,11 +86,11 @@ custom_build(
     make mk8s-prune;
   ''',
   deps=[
-    'source/backend/api-test',
-    'containers/backend/api-test'
+    'source/backend/api_test',
+    'containers/backend/api_test'
   ],
   live_update=[
-    sync('source/backend/api-test', '/source/backend/api-test'),
+    sync('source/backend/api_test', '/source/backend/api_test'),
   ]
 )
 

@@ -19,11 +19,11 @@ WORKDIR /$APP_ROOT_DIR
 
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
-COPY --chown=rust:rust ./$APP_ROOT_DIR/api-test/Cargo.toml ./api-test/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test/Cargo.toml ./api_test/
 
 # ワークスペースメンバーを解決するために空のソースを用意
 RUN mkdir -p ./api/src && echo "" > ./api/src/main.rs
-RUN mkdir -p ./api-test/src && echo "" > ./api-test/src/main.rs
+RUN mkdir -p ./api_test/src && echo "" > ./api_test/src/main.rs
 
 RUN cargo fetch
 

@@ -16,17 +16,17 @@ WORKDIR /$APP_ROOT_DIR
 
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
-COPY --chown=rust:rust ./$APP_ROOT_DIR/api-test/Cargo.toml ./api-test/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test/Cargo.toml ./api_test/
 
 # ワークスペースメンバーを解決するために空のソースを用意
 RUN mkdir -p ./api/src && echo "" > ./api/src/main.rs
-RUN mkdir -p ./api-test/src && echo "" > ./api-test/src/main.rs
+RUN mkdir -p ./api_test/src && echo "" > ./api_test/src/main.rs
 
 RUN cargo fetch
 
-COPY --chown=rust:rust ./$APP_ROOT_DIR/api-test ./api-test
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test ./api_test
 
-WORKDIR /$APP_ROOT_DIR/api-test
+WORKDIR /$APP_ROOT_DIR/api_test
 
 # 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
 CMD ["sleep", "infinity"]
