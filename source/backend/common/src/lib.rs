@@ -1,3 +1,5 @@
+mod types;
+
 #[derive(serde::Deserialize)]
 pub struct Numbers {
   pub num1: i32,
