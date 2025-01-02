@@ -42,3 +42,6 @@ next-env.d.ts
 # 環境変数ファイル
 *.env
 .env*.local
+
+# シークレットファイル
+*secret.yaml

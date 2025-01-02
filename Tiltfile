@@ -94,6 +94,21 @@ custom_build(
   ]
 )
 
+custom_build(
+  'postgres:v0.0.0',
+  '''
+    docker image build -f containers/db/postgres/Dockerfile -t $EXPECTED_REF .;
+    make mk8s-import-image image_name=$EXPECTED_REF;
+
+    docker system prune -f;
+    crictl rmi --prune || true;
+    make mk8s-prune;
+  ''',
+  deps=[
+    'containers/db/postgres'
+  ]
+)
+
 # chart の読み込み
 yaml = helm(
   'k8s/blog-chart',

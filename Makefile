@@ -99,13 +99,15 @@ kube-switch-default-namespace:
 # wsl2 上で google-chrome 等を起動することで ingress の動作は確認可能
 kube-port-forward-ingress:
 	kubectl -n ingress port-forward $(shell kubectl -n ingress get pod --template='{{(index .items 0).metadata.name}}') 8080:80
+kube-port-forward-admin:
+	kubectl port-forward svc/admin 8081:80
 
 ###
 ## Helm 系
 ## 基本的には tilt が管理してくれるのであまり使わない
 ###
 helm-install:
-	helm install blog k8s/blog-chart --wait
+	helm install blog k8s/blog-chart --wait --timeout 10m0s
 
 helm-delete:
 	helm delete blog
@@ -186,9 +188,13 @@ web-sh:
 api-run:
 	docker container run --rm api:v0.0.0
 api-sh:
-	docker container run --rm -it api:v0.0.0 /bin/bash
+	kubectl exec -it $(shell $(MAKE) api-pod-name) /bin/bash
 api-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep api
+api-create-db:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx database create
+api-migrate-run:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx migrate run
 
 ###
 ## api テスト系
@@ -204,6 +210,14 @@ api-test-run:
 ###
 blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
+
+###
+## postgres 系
+###
+postgres-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep postgres
+postgres-sh:
+	kubectl exec -it $(shell $(MAKE) postgres-pod-name) -c postgres -- bash
 
 ###
 ## デバッグ用

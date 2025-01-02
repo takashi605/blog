@@ -94,3 +94,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "api.appname" -}}
 {{- "api" }}
 {{- end }}
+
+{{- /*
+アプリケーション「postgres」の名前を取得
+*/ -}}
+{{- define "postgres.appname" -}}
+{{- "postgres" }}
+{{- end }}
+{{- /*
+
+アプリケーション「postgres」に関連するシークレットの名前を取得
+*/ -}}
+{{- define "postgres.secret.name" -}}
+{{- "postgres" }}
+{{- end }}
