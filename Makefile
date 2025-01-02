@@ -192,9 +192,9 @@ api-sh:
 api-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep api
 api-create-db:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx database create
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database create"
 api-migrate-run:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx migrate run
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run"
 
 ###
 ## api テスト系
