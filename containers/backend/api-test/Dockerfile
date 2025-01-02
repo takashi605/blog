@@ -1,5 +1,5 @@
 FROM rust:1.81-slim
-ARG APP_ROOT_DIR=source/backend/api-test
+ARG APP_ROOT_DIR=source/backend
 
 RUN apt update && \
     apt install -y pkg-config libssl-dev
@@ -14,7 +14,19 @@ USER rust:rust
 # ワーキングディレクトリを作成
 WORKDIR /$APP_ROOT_DIR
 
-COPY --chown=rust:rust ./$APP_ROOT_DIR ./
+COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api-test/Cargo.toml ./api-test/
+
+# ワークスペースメンバーを解決するために空のソースを用意
+RUN mkdir -p ./api/src && echo "" > ./api/src/main.rs
+RUN mkdir -p ./api-test/src && echo "" > ./api-test/src/main.rs
+
+RUN cargo fetch
+
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api-test ./api-test
+
+WORKDIR /$APP_ROOT_DIR/api-test
 
 # 基本的に exec でコマンドを実行する運用のため sleep で起動を維持
 CMD ["sleep", "infinity"]
