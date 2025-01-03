@@ -14,7 +14,7 @@ mod handle_funcs {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
-use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, images_table::fetch_image_by_id, post_contents_table::fetch_post_contents_by_post_id};
+use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, heading_blocks_table::fetch_heading_blocks_by_content_id, images_table::fetch_image_by_id, post_contents_table::fetch_post_contents_by_post_id};
 
   pub async fn get_blog_post() -> impl Responder {
     // テスト取得なのでいったん unwrap で処理
@@ -24,6 +24,17 @@ use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, images_table::f
     println!("{:?}", contents);
     let thumbnail = fetch_image_by_id(post.thumbnail_image_id).await.unwrap();
     println!("{:?}", thumbnail);
+    // TODO コンテントタイプが enum にできないか検討
+    for content in contents {
+      match content.content_type.as_str() {
+        "heading" => {
+          let heading_block = fetch_heading_blocks_by_content_id(content.id).await.unwrap();
+          println!("{:?}", heading_block);
+        }
+        // TODO 全てのコンテントタイプは明示的に処理する
+        _ => {}
+      }
+    }
 
     let blog_post: BlogPost = blog_post_literal().expect("記事データの生成に失敗しました。");
     HttpResponse::Ok().json(blog_post)
