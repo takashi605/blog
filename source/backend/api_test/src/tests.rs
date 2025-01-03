@@ -1,4 +1,5 @@
 mod helper;
+mod handlers;
 
 #[cfg(test)]
 mod api_tests {
