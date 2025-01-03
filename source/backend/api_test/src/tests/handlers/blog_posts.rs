@@ -6,6 +6,7 @@ mod tests {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
+  // TODO uuid を共通化する
   #[tokio::test(flavor = "current_thread")]
   async fn get_single_blog_post() -> Result<()> {
     let target_user_id: Uuid = Uuid::parse_str("672f2772-72b5-404a-8895-b1fbbf310801")?;
@@ -14,7 +15,7 @@ mod tests {
       title: "テストタイトル".to_string(),
       thumbnail: Image { path: "test-book".to_string() },
       post_date: "2021-01-01".parse()?,
-      last_update_date: "2021-01-01".parse()?,
+      last_update_date: "2021-01-02".parse()?,
       contents: vec![
         BlogPostContent::H2(H2Block {
           id: Uuid::new_v4(),
@@ -31,7 +32,7 @@ mod tests {
         }),
         BlogPostContent::Image(ImageBlock {
           id: Uuid::new_v4(),
-          path: "test-image".to_string(),
+          path: "test-coffee".to_string(),
           type_field: "image".to_string(),
         }),
       ],
