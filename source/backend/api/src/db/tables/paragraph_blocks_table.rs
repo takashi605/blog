@@ -30,11 +30,22 @@ pub struct ParagraphBlockStyleRecord {
   pub updated_at: DateTime<Utc>,
 }
 
-pub async fn fetch_paragraph_blocks_by_content_id(content_id: Uuid) -> Result<Vec<ParagraphBlockRecord>> {
-  let blocks =
+pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
+  let block =
     sqlx::query_as::<_, ParagraphBlockRecord>("select id, content_id, text_content, created_at, updated_at from paragraph_blocks where content_id = $1")
       .bind(content_id)
-      .fetch_all(&*POOL)
+      .fetch_one(&*POOL)
       .await?;
-  Ok(blocks)
+  Ok(block)
+}
+
+// paragraph_block_styles 中間テーブルを使って、特定の paragraph_blocks に対応する style を取得する
+pub async fn fetch_styles_by_paragraph_block_id(paragraph_block_id: Uuid) -> Result<Vec<TextStyleRecord>> {
+  let styles = sqlx::query_as::<_, TextStyleRecord>(
+    "select id, style_type, created_at, updated_at from text_styles where id in (select style_id from paragraph_block_styles where text_block_id = $1)",
+  )
+  .bind(paragraph_block_id)
+  .fetch_all(&*POOL)
+  .await?;
+  Ok(styles)
 }
