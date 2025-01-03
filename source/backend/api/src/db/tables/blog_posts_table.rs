@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
 pub struct BlogPostTable {
-  id: Uuid,
+  pub id: Uuid,
   title: String,
   thumbnail_image_id: Uuid,
   post_date: chrono::NaiveDate,
