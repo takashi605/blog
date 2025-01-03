@@ -8,7 +8,7 @@ use uuid::Uuid;
 pub struct BlogPostTable {
   pub id: Uuid,
   title: String,
-  thumbnail_image_id: Uuid,
+  pub thumbnail_image_id: Uuid,
   post_date: chrono::NaiveDate,
   last_update_date: chrono::NaiveDate,
   published_at: DateTime<Utc>,

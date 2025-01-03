@@ -14,7 +14,7 @@ mod handle_funcs {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
-use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, post_contents_table::fetch_post_contents_by_post_id};
+use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, images_table::fetch_image_by_id, post_contents_table::fetch_post_contents_by_post_id};
 
   pub async fn get_blog_post() -> impl Responder {
     // テスト取得なのでいったん unwrap で処理
@@ -22,6 +22,8 @@ use crate::db::tables::{blog_posts_table::fetch_blog_post_by_id, post_contents_t
     println!("{:?}", post);
     let contents = fetch_post_contents_by_post_id(post.id).await.unwrap();
     println!("{:?}", contents);
+    let thumbnail = fetch_image_by_id(post.thumbnail_image_id).await.unwrap();
+    println!("{:?}", thumbnail);
 
     let blog_post: BlogPost = blog_post_literal().expect("記事データの生成に失敗しました。");
     HttpResponse::Ok().json(blog_post)
