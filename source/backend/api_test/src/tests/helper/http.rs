@@ -4,10 +4,9 @@ mod response;
 
 #[cfg(test)]
 mod tests {
-  use reqwest::header::CONTENT_TYPE;
   use anyhow::{Context, Result};
-
-use crate::tests::http::{methods::Methods, request::Request};
+  use reqwest::header::CONTENT_TYPE;
+  use crate::tests::helper::http::{methods::Methods, request::Request};
 
   #[tokio::test(flavor = "current_thread")]
   async fn initialize_request() {

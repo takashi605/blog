@@ -1,12 +1,11 @@
-mod http;
+mod helper;
 
 #[cfg(test)]
 mod api_tests {
-  use crate::tests::http::methods::Methods;
-  use crate::tests::http::request::Request;
+  use crate::tests::helper::http::methods::Methods;
+  use crate::tests::helper::http::request::Request;
   use anyhow::{Context, Result};
   use common::Numbers;
-
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
     let resp = Request::new(Methods::GET, "http://localhost:8000").send().await?.text().await?;

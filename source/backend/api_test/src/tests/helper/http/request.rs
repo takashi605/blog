@@ -1,5 +1,5 @@
-use crate::tests::http::methods::Methods;
-use crate::tests::http::response::Response;
+use crate::tests::helper::http::methods::Methods;
+use crate::tests::helper::http::response::Response;
 use anyhow::{Context, Result};
 use reqwest;
 use reqwest::header::CONTENT_TYPE;
