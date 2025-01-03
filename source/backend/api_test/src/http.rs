@@ -2,13 +2,11 @@ pub mod methods;
 pub mod request;
 mod response;
 
-use anyhow::{Context, Result};
-
 #[cfg(test)]
 mod tests {
   use reqwest::header::CONTENT_TYPE;
+  use anyhow::{Context, Result};
 
-  use super::*;
   use crate::http::methods::Methods;
   use crate::http::request::Request;
   #[tokio::test(flavor = "current_thread")]
