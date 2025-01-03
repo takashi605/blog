@@ -1,27 +1,27 @@
 use actix_web::{web, Scope};
 
 pub fn sample_scope() -> Scope {
-  web::scope("")
+  web::scope("/")
     .service(handle_funcs::hello)
     .service(handle_funcs::echo)
     .service(handle_funcs::fivesix)
-    .route("/hey", web::get().to(handle_funcs::manual_hello))
+    .route("hey", web::get().to(handle_funcs::manual_hello))
 }
 
 mod handle_funcs {
   use actix_web::{get, post, HttpResponse, Responder};
 
-  #[get("/")]
+  #[get("")]
   pub async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
   }
 
-  #[post("/")]
+  #[post("")]
   pub async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
   }
 
-  #[get("/fivesix")]
+  #[get("fivesix")]
   pub async fn fivesix() -> impl Responder {
     #[derive(serde::Serialize)]
     struct Numbers {
