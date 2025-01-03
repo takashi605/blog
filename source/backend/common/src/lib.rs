@@ -1,4 +1,4 @@
-mod types;
+pub mod types;
 
 #[derive(serde::Deserialize)]
 pub struct Numbers {

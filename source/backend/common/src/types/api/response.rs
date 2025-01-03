@@ -1,80 +1,78 @@
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::NaiveDate;
 use serde::Deserialize;
 use uuid::Uuid;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
-struct BlogPost {
-  id: Uuid,
-  title: String,
-  thumbnail: Image,
-  post_date: NaiveDate,
-  last_update_date: NaiveDate,
-  contents: Vec<BlogPostContent>,
+pub struct BlogPost {
+  pub id: Uuid,
+  pub title: String,
+  pub thumbnail: Image,
+  pub post_date: NaiveDate,
+  pub last_update_date: NaiveDate,
+  pub contents: Vec<BlogPostContent>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
-struct Image {
-  path: String,
+pub struct Image {
+  pub path: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
-struct Style {
-  bold: bool,
+pub struct Style {
+  pub bold: bool,
 }
 
-
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
-enum BlogPostContent {
+pub enum BlogPostContent {
   H2(H2Block),
   H3(H3Block),
   Paragraph(ParagraphBlock),
   Image(ImageBlock),
 }
 
-
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct H2Block {
-  id: Uuid,
-  text: String,
+  pub id: Uuid,
+  pub text: String,
   #[serde(rename = "type")]
-  type_field: String,
+  pub type_field: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct H3Block {
-  id: Uuid,
-  text: String,
+  pub id: Uuid,
+  pub text: String,
   #[serde(rename = "type")]
-  type_field: String,
+  pub type_field: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ParagraphBlock {
-  id: Uuid,
-  text: RichText,
+  pub id: Uuid,
+  pub text: RichText,
   #[serde(rename = "type")]
-  type_field: String,
+  pub type_field: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
-struct RichText {
-  text: String,
-  styles: Vec<Style>,
+pub struct RichText {
+  pub text: String,
+  pub styles: Vec<Style>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageBlock {
-  id: Uuid,
-  path: String,
+  pub id: Uuid,
+  pub path: String,
   #[serde(rename = "type")]
-  type_field: String,
+  pub type_field: String,
 }
