@@ -7,8 +7,8 @@ mod tests {
   use reqwest::header::CONTENT_TYPE;
   use anyhow::{Context, Result};
 
-  use crate::http::methods::Methods;
-  use crate::http::request::Request;
+use crate::tests::http::{methods::Methods, request::Request};
+
   #[tokio::test(flavor = "current_thread")]
   async fn initialize_request() {
     let req = Request::new(Methods::GET, "http://localhost:8000");
