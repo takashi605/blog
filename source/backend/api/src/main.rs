@@ -1,11 +1,19 @@
 mod server;
 
+use sqlx::postgres::PgPoolOptions;
+use std::{env, sync::LazyLock};
+
 use anyhow::Result;
 use server::start_api_server;
 
+// シングルトンとしてのPgPoolの定義
+static POOL: LazyLock<sqlx::Pool<sqlx::Postgres>> = LazyLock::new(|| {
+  let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+  PgPoolOptions::new().max_connections(5).connect_lazy(&database_url).expect("Failed to create pool")
+});
+
 // use chrono::{DateTime, NaiveDate, Utc};
 // use serde::{Deserialize, Serialize};
-// use sqlx::postgres::PgPoolOptions;
 // use std::env;
 // use uuid::Uuid;
 
@@ -23,8 +31,6 @@ use server::start_api_server;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
-  start_api_server().await
-
   // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
   // let pool = PgPoolOptions::new().max_connections(5).connect(&database_url).await.unwrap();
   // let posts = sqlx::query_as!(
@@ -37,4 +43,6 @@ async fn main() -> Result<()> {
   // for post in posts {
   //   println!("{:?}", post);
   // }
+  start_api_server().await
+
 }
