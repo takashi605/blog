@@ -1,8 +1,8 @@
 mod server;
 
-use actix_cors::Cors;
-use actix_web::{http, App, HttpServer};
-use server::handlers::sample_handler::sample_scope;
+use anyhow::Result;
+use server::start_api_server;
+
 // use chrono::{DateTime, NaiveDate, Utc};
 // use serde::{Deserialize, Serialize};
 // use sqlx::postgres::PgPoolOptions;
@@ -22,8 +22,9 @@ use server::handlers::sample_handler::sample_scope;
 // }
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
-  println!("api started");
+async fn main() -> Result<()> {
+  start_api_server().await
+
   // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
   // let pool = PgPoolOptions::new().max_connections(5).connect(&database_url).await.unwrap();
   // let posts = sqlx::query_as!(
@@ -36,16 +37,4 @@ async fn main() -> std::io::Result<()> {
   // for post in posts {
   //   println!("{:?}", post);
   // }
-  HttpServer::new(|| {
-    let cors = Cors::default()
-      .allow_any_origin()
-      .allowed_methods(vec!["GET", "POST"])
-      // .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-      .allowed_header(http::header::CONTENT_TYPE)
-      .max_age(3600);
-    App::new().wrap(cors).service(sample_scope())
-  })
-  .bind(("0.0.0.0", 8000))?
-  .run()
-  .await
 }
