@@ -2,7 +2,7 @@
 mod tests {
   use crate::tests::helper::http::methods::Methods;
   use crate::tests::helper::http::request::Request;
-  use anyhow::Result;
+  use anyhow::{Context, Result};
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
@@ -12,7 +12,7 @@ mod tests {
     let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
 
     let expected_blog_post: BlogPost = helper::expected_blog_post()?;
-    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp)?;
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
 
     helper::assert_blog_post(&actual_blog_post_resp, &expected_blog_post);
     Ok(())

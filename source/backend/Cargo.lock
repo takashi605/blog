@@ -287,6 +287,7 @@ dependencies = [
  "actix-web",
  "anyhow",
  "chrono",
+ "common",
  "dotenv",
  "serde",
  "serde_json",

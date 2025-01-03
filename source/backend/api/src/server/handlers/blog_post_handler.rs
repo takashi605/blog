@@ -9,9 +9,51 @@ fn posts_scope() -> Scope {
 }
 
 mod handle_funcs {
-  use actix_web::{web::Path, HttpResponse, Responder};
+  use actix_web::{HttpResponse, Responder};
+  use anyhow::Result;
+  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+  use uuid::Uuid;
 
-  pub async fn get_blog_post(path: Path<String>) -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+  pub async fn get_blog_post() -> impl Responder {
+    let blog_post: BlogPost = blog_post_literal().expect("記事データの生成に失敗しました。");
+    HttpResponse::Ok().json(blog_post)
+  }
+
+  pub fn blog_post_literal() -> Result<BlogPost> {
+    let target_user_id: Uuid = target_user_id()?;
+    let blog_post = BlogPost {
+      id: target_user_id,
+      title: "テストタイトル".to_string(),
+      thumbnail: Image { path: "test-book".to_string() },
+      post_date: "2021-01-01".parse()?,
+      last_update_date: "2021-01-02".parse()?,
+      contents: vec![
+        BlogPostContent::H2(H2Block {
+          id: Uuid::new_v4(),
+          text: "見出し2".to_string(),
+          type_field: "h2".to_string(),
+        }),
+        BlogPostContent::Paragraph(ParagraphBlock {
+          id: Uuid::new_v4(),
+          text: RichText {
+            text: "段落".to_string(),
+            styles: vec![Style { bold: true }],
+          },
+          type_field: "paragraph".to_string(),
+        }),
+        BlogPostContent::Image(ImageBlock {
+          id: Uuid::new_v4(),
+          path: "test-coffee".to_string(),
+          type_field: "image".to_string(),
+        }),
+      ],
+    };
+
+    Ok(blog_post)
+  }
+
+  fn target_user_id() -> Result<Uuid> {
+    let uuid = Uuid::parse_str("672f2772-72b5-404a-8895-b1fbbf310801")?;
+    Ok(uuid)
   }
 }
