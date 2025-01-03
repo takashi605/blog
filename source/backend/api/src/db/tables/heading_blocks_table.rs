@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use sqlx::FromRow;
 
 #[derive(Debug, FromRow)]
-pub struct HeadingBlock {
+pub struct HeadingBlockRecord {
     pub id: Uuid,
     pub content_id: Uuid,
     pub heading_level: i16,

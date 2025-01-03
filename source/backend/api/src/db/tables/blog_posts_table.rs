@@ -5,7 +5,7 @@ use sqlx::FromRow;
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
-pub struct BlogPostTable {
+pub struct BlogPostRecord {
   pub id: Uuid,
   title: String,
   pub thumbnail_image_id: Uuid,
@@ -16,8 +16,8 @@ pub struct BlogPostTable {
   updated_at: DateTime<Utc>,
 }
 
-pub async fn fetch_blog_post_by_id(id: Uuid) -> Result<BlogPostTable> {
-  let post = sqlx::query_as::<_, BlogPostTable>(
+pub async fn fetch_blog_post_by_id(id: Uuid) -> Result<BlogPostRecord> {
+  let post = sqlx::query_as::<_, BlogPostRecord>(
     "select id, title, thumbnail_image_id, post_date, last_update_date, published_at, created_at, updated_at from blog_posts where id = $1",
   )
   .bind(id)

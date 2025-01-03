@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use sqlx::FromRow;
 
 #[derive(Debug, FromRow)]
-pub struct ParagraphBlock {
+pub struct ParagraphBlockRecord {
     pub id: Uuid,
     pub content_id: Uuid,
     pub text_content: String,
@@ -12,7 +12,7 @@ pub struct ParagraphBlock {
 }
 
 #[derive(Debug, FromRow)]
-pub struct TextStyle {
+pub struct TextStyleRecord {
     pub id: Uuid,
     pub style_type: String,
     pub created_at: DateTime<Utc>,
@@ -20,7 +20,7 @@ pub struct TextStyle {
 }
 
 #[derive(Debug, FromRow)]
-pub struct ParagraphBlockStyle {
+pub struct ParagraphBlockStyleRecord {
     pub style_id: Uuid,
     pub text_block_id: Uuid,
     pub created_at: DateTime<Utc>,

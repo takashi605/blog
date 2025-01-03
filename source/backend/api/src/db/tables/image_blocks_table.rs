@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use sqlx::FromRow;
 
 #[derive(Debug, FromRow)]
-pub struct ImageBlock {
+pub struct ImageBlockRecord {
     pub id: Uuid,
     pub content_id: Uuid,
     pub image_id: Uuid,
