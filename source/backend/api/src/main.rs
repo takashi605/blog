@@ -12,23 +12,6 @@ static POOL: LazyLock<sqlx::Pool<sqlx::Postgres>> = LazyLock::new(|| {
   PgPoolOptions::new().max_connections(5).connect_lazy(&database_url).expect("Failed to create pool")
 });
 
-// use chrono::{DateTime, NaiveDate, Utc};
-// use serde::{Deserialize, Serialize};
-// use std::env;
-// use uuid::Uuid;
-
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct BlogPost {
-//   pub article_id: Uuid,
-//   pub title: String,
-//   pub thumbnail_path: String,
-//   pub created_post_date: NaiveDate,
-//   pub updated_post_date: NaiveDate,
-//   pub published_at: DateTime<Utc>,
-//   pub created_at: DateTime<Utc>,
-//   pub updated_at: DateTime<Utc>,
-// }
-
 #[actix_web::main]
 async fn main() -> Result<()> {
   // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
