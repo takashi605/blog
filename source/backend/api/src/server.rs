@@ -8,16 +8,19 @@ use handlers::sample_handler::sample_scope;
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
   HttpServer::new(|| {
-    let cors = Cors::default()
-      .allow_any_origin()
-      .allowed_methods(vec!["GET", "POST"])
-      // .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-      .allowed_header(http::header::CONTENT_TYPE)
-      .max_age(3600);
-    App::new().wrap(cors).service(sample_scope())
+    App::new().wrap(configure_cors()).service(sample_scope())
   })
   .bind(("0.0.0.0", 8000))?
   .run()
   .await
   .context("api サーバーの起動に失敗しました")
+}
+
+fn configure_cors() -> Cors {
+    Cors::default()
+      .allow_any_origin()
+      .allowed_methods(vec!["GET", "POST"])
+      // .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+      .allowed_header(http::header::CONTENT_TYPE)
+      .max_age(3600)
 }
