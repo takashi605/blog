@@ -14,7 +14,13 @@ mod handle_funcs {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
+use crate::db::tables::blog_posts_table::fetch_blog_post_by_id;
+
   pub async fn get_blog_post() -> impl Responder {
+    // テスト取得なのでいったん unwrap で処理
+    let post = fetch_blog_post_by_id(target_user_id().unwrap()).await.unwrap();
+    println!("{:?}", post);
+
     let blog_post: BlogPost = blog_post_literal().expect("記事データの生成に失敗しました。");
     HttpResponse::Ok().json(blog_post)
   }

@@ -1,2 +1,2 @@
 mod pool;
-mod tables;
+pub mod tables;
