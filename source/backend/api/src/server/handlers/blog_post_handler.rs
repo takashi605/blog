@@ -1,9 +1,11 @@
 use actix_web::{web, Scope};
 
-pub fn blog_post_scope() -> Scope {
-  web::scope("/blog")
-    .service(web::scope("/posts")
-    .route("/{uuid}", web::get().to(handle_funcs::get_blog_post)))
+pub fn blog_scope() -> Scope {
+  web::scope("/blog").service(posts_scope())
+}
+
+fn posts_scope() -> Scope {
+  web::scope("/posts").route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
 }
 
 mod handle_funcs {
