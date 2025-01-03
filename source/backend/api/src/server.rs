@@ -3,12 +3,12 @@ pub mod handlers;
 use actix_cors::Cors;
 use actix_web::{http, App, HttpServer};
 use anyhow::{Context, Result};
-use handlers::sample_handler::sample_scope;
+use handlers::{blog_post_handler::blog_post_scope, sample_handler::sample_scope};
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
   HttpServer::new(|| {
-    App::new().wrap(configure_cors()).service(sample_scope())
+    App::new().wrap(configure_cors()).service(sample_scope()).service(blog_post_scope())
   })
   .bind(("0.0.0.0", 8000))?
   .run()
