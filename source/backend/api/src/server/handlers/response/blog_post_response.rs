@@ -2,14 +2,10 @@ use core::panic;
 use std::vec;
 
 use crate::db::tables::{
-  blog_posts_table::fetch_blog_post_by_id,
-  heading_blocks_table::fetch_heading_blocks_by_content_id,
-  image_blocks_table::fetch_image_blocks_by_content_id,
-  images_table::fetch_image_by_id,
-  post_contents_table::fetch_post_contents_by_post_id,
+  blog_posts_table::fetch_blog_post_by_id, heading_blocks_table::fetch_heading_blocks_by_content_id, image_blocks_table::fetch_image_blocks_by_content_id, images_table::fetch_image_by_id, paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id}, post_contents_table::fetch_post_contents_by_post_id
 };
 use anyhow::{Context, Result};
-use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock};
+use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
 struct ContentWithOrder {
@@ -22,6 +18,8 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let contents = fetch_post_contents_by_post_id(blog_post.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
   let thumbnail = fetch_image_by_id(blog_post.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
   let mut content_with_order: Vec<ContentWithOrder> = vec![];
+
+  // TODO 関数に切り分ける
   // TODO コンテントタイプが enum にできないか検討
   for content in contents {
     match content.content_type.as_str() {
@@ -64,15 +62,25 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
           });
         }
       }
-      // "paragraph" => {
-      //   let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
-      //   paragraph_block_records.push(paragraph_block);
-      //   let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.context("リッチテキストの取得に失敗しました。")?;
-      //   for text in rich_text_styles {
-      //     let styles = fetch_styles_by_rich_text_id(text.id).await.context("リッチテキストのスタイルの取得に失敗しました。")?;
-      //     rich_text_styles.extend(styles);
-      //   }
-      // }
+      "paragraph" => {
+        let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
+        let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.context("リッチテキストの取得に失敗しました。")?;
+        for rich_text in rich_texts {
+          let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
+          let paragraph_block = ParagraphBlock {
+            id: paragraph_block.id,
+            text: RichText {
+              text: rich_text.text_content,
+              styles: styles.into_iter().map(|style| Style { bold: style.style_type == "bold" }).collect(),
+            },
+            type_field: "paragraph".to_string(),
+          };
+          content_with_order.push(ContentWithOrder {
+            sort_order: content.sort_order,
+            content: BlogPostContent::Paragraph(paragraph_block),
+          });
+        }
+      }
       // TODO 全てのコンテントタイプは明示的に処理する
       _ => {}
     }

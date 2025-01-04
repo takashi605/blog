@@ -14,6 +14,7 @@ pub struct ImageBlockRecord {
     pub updated_at: DateTime<Utc>,
 }
 
+// TODO Vec で変える必要がないので修正する
 pub async fn fetch_image_blocks_by_content_id(content_id: Uuid) -> Result<Vec<ImageBlockRecord>> {
   let blocks = sqlx::query_as::<_, ImageBlockRecord>("select id, content_id, image_id, created_at, updated_at from image_blocks where content_id = $1")
     .bind(content_id)

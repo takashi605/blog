@@ -15,6 +15,7 @@ pub struct HeadingBlockRecord {
     pub updated_at: DateTime<Utc>,
 }
 
+// TODO Vec で変える必要がないので修正する
 pub async fn fetch_heading_blocks_by_content_id(content_id: Uuid) -> Result<Vec<HeadingBlockRecord>> {
   let blocks = sqlx::query_as::<_, HeadingBlockRecord>("select id, content_id, heading_level, text_content, created_at, updated_at from heading_blocks where content_id = $1")
     .bind(content_id)
