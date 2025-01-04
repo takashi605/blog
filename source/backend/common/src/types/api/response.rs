@@ -26,7 +26,7 @@ pub struct Style {
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
-#[serde(rename_all = "camelCase")]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum BlogPostContent {
   H2(H2Block),
   H3(H3Block),
@@ -65,7 +65,7 @@ pub struct ParagraphBlock {
 #[serde(rename_all = "camelCase")]
 pub struct RichText {
   pub text: String,
-  pub styles: Vec<Style>,
+  pub styles: Style,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
