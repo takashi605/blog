@@ -37,10 +37,10 @@ mod tests {
           }),
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
-            text: RichText {
+            text: vec![RichText {
               text: "段落".to_string(),
               styles: vec![Style { bold: true }],
-            },
+            }],
             type_field: "paragraph".to_string(),
           }),
           BlogPostContent::Image(ImageBlock {

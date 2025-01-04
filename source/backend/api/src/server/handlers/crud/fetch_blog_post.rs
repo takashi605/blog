@@ -47,26 +47,29 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
       PostContentType::Paragraph => {
         let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
         let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.context("リッチテキストの取得に失敗しました。")?;
+        let mut rich_text_response: Vec<RichText> = vec![];
         for rich_text in rich_texts {
           let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
-          let paragraph_block = ParagraphBlock {
-            id: paragraph_block.id,
-            text: RichText {
-              text: rich_text.text_content,
-              styles: styles
-                .into_iter()
-                .map(|style| Style {
-                  bold: style.style_type == "bold",
-                })
-                .collect(),
-            },
-            type_field: "paragraph".to_string(),
+          let rich_text = RichText {
+            text: rich_text.text_content,
+            styles: styles
+              .into_iter()
+              .map(|style| Style {
+                bold: style.style_type == "bold",
+              })
+              .collect(),
           };
-          content_with_order.push(ContentWithOrder {
-            sort_order: content.sort_order,
-            content: BlogPostContent::Paragraph(paragraph_block),
-          });
+          rich_text_response.push(rich_text);
         }
+        let paragraph_block = ParagraphBlock {
+          id: paragraph_block.id,
+          text: rich_text_response,
+          type_field: "paragraph".to_string(),
+        };
+        content_with_order.push(ContentWithOrder {
+          sort_order: content.sort_order,
+          content: BlogPostContent::Paragraph(paragraph_block),
+        });
       }
     }
   }
@@ -102,7 +105,7 @@ fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostCont
   heading_block_content
 }
 
-fn image_to_response(image_block_record: ImageBlockRecord, image:ImageRecord) -> ImageBlock {
+fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -> ImageBlock {
   ImageBlock {
     id: image_block_record.id,
     path: image.file_path,

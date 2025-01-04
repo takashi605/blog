@@ -56,7 +56,7 @@ pub struct H3Block {
 #[serde(rename_all = "camelCase")]
 pub struct ParagraphBlock {
   pub id: Uuid,
-  pub text: RichText,
+  pub text: Vec<RichText>,
   #[serde(rename = "type")]
   pub type_field: String,
 }
