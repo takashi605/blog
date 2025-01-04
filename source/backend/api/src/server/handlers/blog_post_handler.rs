@@ -19,7 +19,7 @@ mod handle_funcs {
     heading_blocks_table::fetch_heading_blocks_by_content_id,
     image_blocks_table::fetch_image_blocks_by_content_id,
     images_table::fetch_image_by_id,
-    paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_styles_by_paragraph_block_id},
+    paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id},
     post_contents_table::fetch_post_contents_by_post_id,
   };
 
@@ -45,8 +45,12 @@ mod handle_funcs {
         "paragraph" => {
           let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.unwrap();
           println!("{:?}", paragraph_block);
-          let styles = fetch_styles_by_paragraph_block_id(paragraph_block.id).await.unwrap();
-          println!("{:?}", styles);
+          let texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.unwrap();
+          println!("{:?}", texts);
+          for text in texts {
+            let styles = fetch_styles_by_rich_text_id(text.id).await.unwrap();
+            println!("{:?}", styles);
+          }
         }
         // TODO 全てのコンテントタイプは明示的に処理する
         _ => {}
