@@ -39,7 +39,7 @@ mod tests {
             id: Uuid::new_v4(),
             text: vec![RichText {
               text: "段落".to_string(),
-              styles: vec![Style { bold: true }],
+              styles: Style { bold: true },
             }],
             type_field: "paragraph".to_string(),
           }),

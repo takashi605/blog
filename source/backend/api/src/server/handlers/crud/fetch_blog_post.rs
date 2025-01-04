@@ -118,12 +118,9 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_text
 
 fn rich_text_to_response(rich_text_record: RichTextRecord, style_records: Vec<TextStyleRecord>) -> RichText {
   // TODO スタイルが増えた時のことが考えられていないので、修正が必要
-  let styles = style_records
-    .into_iter()
-    .map(|style| Style {
-      bold: style.style_type == "bold",
-    })
-    .collect();
+  let styles = Style {
+    bold: style_records.iter().any(|record| record.style_type == "bold"),
+  };
   RichText {
     text: rich_text_record.text_content,
     styles,
