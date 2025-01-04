@@ -32,17 +32,15 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   // TODO 関数に切り分ける
   for content in contents {
     let content_type_enum = PostContentType::try_from(content.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
-    match content_type_enum {
+    let post_content = match content_type_enum {
       PostContentType::Heading => {
         let heading_block_record: HeadingBlockRecord = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
-        let heading_block_content: BlogPostContent = heading_to_response(heading_block_record);
-        content_with_order.push(ContentWithOrder::new(content.sort_order, heading_block_content));
+        heading_to_response(heading_block_record)
       }
       PostContentType::Image => {
         let image_block_record = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
         let image = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
-        let image_block = image_to_response(image_block_record, image);
-        content_with_order.push(ContentWithOrder::new(content.sort_order, BlogPostContent::Image(image_block)));
+        image_to_response(image_block_record, image)
       }
       PostContentType::Paragraph => {
         let paragraph_block_record = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
@@ -55,10 +53,10 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
           rich_text_response.push(rich_text);
         }
 
-        let paragraph_block = paragraph_to_response(paragraph_block_record, rich_text_response);
-        content_with_order.push(ContentWithOrder::new(content.sort_order, BlogPostContent::Paragraph(paragraph_block)));
+        paragraph_to_response(paragraph_block_record, rich_text_response)
       }
-    }
+    };
+    content_with_order.push(ContentWithOrder::new(content.sort_order, post_content));
   }
   content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
   let contents: Vec<BlogPostContent> = content_with_order.into_iter().map(|content| content.content).collect();
@@ -92,20 +90,20 @@ fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostCont
   heading_block_content
 }
 
-fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -> ImageBlock {
-  ImageBlock {
+fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -> BlogPostContent {
+  BlogPostContent::Image(ImageBlock {
     id: image_block_record.id,
     path: image.file_path,
     type_field: "image".to_string(),
-  }
+  })
 }
 
-fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_texts: Vec<RichText>) -> ParagraphBlock {
-  ParagraphBlock {
+fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_texts: Vec<RichText>) -> BlogPostContent {
+  BlogPostContent::Paragraph(ParagraphBlock {
     id: paragraph_block_record.id,
     text: rich_texts,
     type_field: "paragraph".to_string(),
-  }
+  })
 }
 
 fn rich_text_to_response(rich_text_record: RichTextRecord, style_records: Vec<TextStyleRecord>) -> RichText {
