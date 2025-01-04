@@ -6,7 +6,7 @@ use crate::db::tables::{
   heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
   image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
   images_table::{fetch_image_by_id, ImageRecord},
-  paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id},
+  paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord},
   post_contents_table::{fetch_post_contents_by_post_id, PostContentType},
 };
 use anyhow::{Context, Result};
@@ -45,31 +45,18 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
         content_with_order.push(ContentWithOrder::new(content.sort_order, BlogPostContent::Image(image_block)));
       }
       PostContentType::Paragraph => {
-        let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
-        let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.context("リッチテキストの取得に失敗しました。")?;
+        let paragraph_block_record = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
+        let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+
         let mut rich_text_response: Vec<RichText> = vec![];
         for rich_text in rich_texts {
           let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
-          let rich_text = RichText {
-            text: rich_text.text_content,
-            styles: styles
-              .into_iter()
-              .map(|style| Style {
-                bold: style.style_type == "bold",
-              })
-              .collect(),
-          };
+          let rich_text = rich_text_to_response(rich_text, styles);
           rich_text_response.push(rich_text);
         }
-        let paragraph_block = ParagraphBlock {
-          id: paragraph_block.id,
-          text: rich_text_response,
-          type_field: "paragraph".to_string(),
-        };
-        content_with_order.push(ContentWithOrder {
-          sort_order: content.sort_order,
-          content: BlogPostContent::Paragraph(paragraph_block),
-        });
+
+        let paragraph_block = paragraph_to_response(paragraph_block_record, rich_text_response);
+        content_with_order.push(ContentWithOrder::new(content.sort_order, BlogPostContent::Paragraph(paragraph_block)));
       }
     }
   }
@@ -110,5 +97,27 @@ fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -
     id: image_block_record.id,
     path: image.file_path,
     type_field: "image".to_string(),
+  }
+}
+
+fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_texts: Vec<RichText>) -> ParagraphBlock {
+  ParagraphBlock {
+    id: paragraph_block_record.id,
+    text: rich_texts,
+    type_field: "paragraph".to_string(),
+  }
+}
+
+fn rich_text_to_response(rich_text_record: RichTextRecord, style_records: Vec<TextStyleRecord>) -> RichText {
+  // TODO スタイルが増えた時のことが考えられていないので、修正が必要
+  let styles = style_records
+    .into_iter()
+    .map(|style| Style {
+      bold: style.style_type == "bold",
+    })
+    .collect();
+  RichText {
+    text: rich_text_record.text_content,
+    styles,
   }
 }
