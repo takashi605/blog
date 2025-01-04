@@ -10,11 +10,10 @@ pub struct ImageBlockRecord {
     pub image_id: Uuid,
 }
 
-// TODO Vec で変える必要がないので修正する
-pub async fn fetch_image_blocks_by_content_id(content_id: Uuid) -> Result<Vec<ImageBlockRecord>> {
-  let blocks = sqlx::query_as::<_, ImageBlockRecord>("select id, image_id from image_blocks where content_id = $1")
+pub async fn fetch_image_blocks_by_content_id(content_id: Uuid) -> Result<ImageBlockRecord> {
+  let block = sqlx::query_as::<_, ImageBlockRecord>("select id, image_id from image_blocks where content_id = $1")
     .bind(content_id)
-    .fetch_all(&*POOL)
+    .fetch_one(&*POOL)
     .await?;
-  Ok(blocks)
+  Ok(block)
 }

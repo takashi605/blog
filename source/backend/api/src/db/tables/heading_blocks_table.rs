@@ -11,11 +11,10 @@ pub struct HeadingBlockRecord {
     pub text_content: String,
 }
 
-// TODO Vec で変える必要がないので修正する
-pub async fn fetch_heading_blocks_by_content_id(content_id: Uuid) -> Result<Vec<HeadingBlockRecord>> {
-  let blocks = sqlx::query_as::<_, HeadingBlockRecord>("select id, heading_level, text_content from heading_blocks where content_id = $1")
+pub async fn fetch_heading_blocks_by_content_id(content_id: Uuid) -> Result<HeadingBlockRecord> {
+  let block = sqlx::query_as::<_, HeadingBlockRecord>("select id, heading_level, text_content from heading_blocks where content_id = $1")
     .bind(content_id)
-    .fetch_all(&*POOL)
+    .fetch_one(&*POOL)
     .await?;
-  Ok(blocks)
+  Ok(block)
 }

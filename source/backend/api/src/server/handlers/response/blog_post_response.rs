@@ -2,7 +2,12 @@ use core::panic;
 use std::vec;
 
 use crate::db::tables::{
-  blog_posts_table::fetch_blog_post_by_id, heading_blocks_table::fetch_heading_blocks_by_content_id, image_blocks_table::fetch_image_blocks_by_content_id, images_table::fetch_image_by_id, paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id}, post_contents_table::fetch_post_contents_by_post_id
+  blog_posts_table::fetch_blog_post_by_id,
+  heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
+  image_blocks_table::fetch_image_blocks_by_content_id,
+  images_table::fetch_image_by_id,
+  paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id},
+  post_contents_table::fetch_post_contents_by_post_id,
 };
 use anyhow::{Context, Result};
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
@@ -24,43 +29,40 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   for content in contents {
     match content.content_type.as_str() {
       "heading" => {
-        let heading_block = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
-        for heading in heading_block {
-          let heading_block = match heading.heading_level {
-            2 => BlogPostContent::H2(H2Block {
-              id: heading.id,
-              text: heading.text_content,
-              type_field: "h2".to_string(),
-            }),
-            3 => BlogPostContent::H3(H3Block {
-              id: heading.id,
-              text: heading.text_content,
-              type_field: "h3".to_string(),
-            }),
-            _ => {
-              panic!("見出しレベルが不正です。")
-            }
-          };
-          content_with_order.push(ContentWithOrder {
-            sort_order: content.sort_order,
-            content: heading_block,
-          });
-        }
+        let heading_block_record: HeadingBlockRecord = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
+        let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
+          2 => BlogPostContent::H2(H2Block {
+            id: heading_block_record.id,
+            text: heading_block_record.text_content,
+            type_field: "h2".to_string(),
+          }),
+          3 => BlogPostContent::H3(H3Block {
+            id: heading_block_record.id,
+            text: heading_block_record.text_content,
+            type_field: "h3".to_string(),
+          }),
+          _ => {
+            panic!("見出しレベルが不正です。")
+          }
+        };
+        content_with_order.push(ContentWithOrder {
+          sort_order: content.sort_order,
+          content: heading_block_content,
+        });
       }
       "image" => {
-        let image_blocks = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
-        for image_block in image_blocks {
-          let image = fetch_image_by_id(image_block.image_id).await.context("画像の取得に失敗しました。")?;
-          let image_block = ImageBlock {
-            id: image_block.id,
-            path: image.file_path,
-            type_field: "image".to_string(),
-          };
-          content_with_order.push(ContentWithOrder {
-            sort_order: content.sort_order,
-            content: BlogPostContent::Image(image_block),
-          });
-        }
+        let image_block = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
+
+        let image = fetch_image_by_id(image_block.image_id).await.context("画像の取得に失敗しました。")?;
+        let image_block = ImageBlock {
+          id: image_block.id,
+          path: image.file_path,
+          type_field: "image".to_string(),
+        };
+        content_with_order.push(ContentWithOrder {
+          sort_order: content.sort_order,
+          content: BlogPostContent::Image(image_block),
+        });
       }
       "paragraph" => {
         let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
@@ -71,7 +73,12 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
             id: paragraph_block.id,
             text: RichText {
               text: rich_text.text_content,
-              styles: styles.into_iter().map(|style| Style { bold: style.style_type == "bold" }).collect(),
+              styles: styles
+                .into_iter()
+                .map(|style| Style {
+                  bold: style.style_type == "bold",
+                })
+                .collect(),
             },
             type_field: "paragraph".to_string(),
           };
