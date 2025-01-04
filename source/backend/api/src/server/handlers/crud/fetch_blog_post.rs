@@ -7,7 +7,7 @@ use crate::db::tables::{
   image_blocks_table::fetch_image_blocks_by_content_id,
   images_table::fetch_image_by_id,
   paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id},
-  post_contents_table::fetch_post_contents_by_post_id,
+  post_contents_table::{fetch_post_contents_by_post_id, PostContentType},
 };
 use anyhow::{Context, Result};
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
@@ -25,10 +25,10 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let mut content_with_order: Vec<ContentWithOrder> = vec![];
 
   // TODO 関数に切り分ける
-  // TODO コンテントタイプが enum にできないか検討
   for content in contents {
-    match content.content_type.as_str() {
-      "heading" => {
+    let content_type_enum = PostContentType::try_from(content.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
+    match content_type_enum {
+      PostContentType::Heading => {
         let heading_block_record: HeadingBlockRecord = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
         let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
           2 => BlogPostContent::H2(H2Block {
@@ -50,7 +50,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
           content: heading_block_content,
         });
       }
-      "image" => {
+      PostContentType::Image => {
         let image_block = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
 
         let image = fetch_image_by_id(image_block.image_id).await.context("画像の取得に失敗しました。")?;
@@ -64,7 +64,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
           content: BlogPostContent::Image(image_block),
         });
       }
-      "paragraph" => {
+      PostContentType::Paragraph => {
         let paragraph_block = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
         let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block.id).await.context("リッチテキストの取得に失敗しました。")?;
         for rich_text in rich_texts {
@@ -88,8 +88,6 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
           });
         }
       }
-      // TODO 全てのコンテントタイプは明示的に処理する
-      _ => {}
     }
   }
   content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
