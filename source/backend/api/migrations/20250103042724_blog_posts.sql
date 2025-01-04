@@ -86,8 +86,8 @@ VALUES (
     '672f2772-72b5-404a-8895-b1fbbf310801',
     'テストタイトル',
     (SELECT id FROM images WHERE file_path = 'test-book'),
-    DATE '2022-01-01',
-    Date '2022-01-02',
+    DATE '2021-01-01',
+    Date '2021-01-02',
     CURRENT_TIMESTAMP
 );
 
