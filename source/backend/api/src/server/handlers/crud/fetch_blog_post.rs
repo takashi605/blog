@@ -6,8 +6,10 @@ use crate::db::tables::{
   heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
   image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
   images_table::{fetch_image_by_id, ImageRecord},
-  paragraph_blocks_table::{fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord},
-  post_contents_table::{fetch_post_contents_by_post_id, PostContentType},
+  paragraph_blocks_table::{
+    fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+  },
+  post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
 };
 use anyhow::{Context, Result};
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
@@ -29,35 +31,13 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let thumbnail = fetch_image_by_id(blog_post.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
   let mut content_with_order: Vec<ContentWithOrder> = vec![];
 
-  // TODO 関数に切り分ける
   for content in contents {
-    let content_type_enum = PostContentType::try_from(content.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
-    let post_content = match content_type_enum {
-      PostContentType::Heading => {
-        let heading_block_record: HeadingBlockRecord = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
-        heading_to_response(heading_block_record)
-      }
-      PostContentType::Image => {
-        let image_block_record = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
-        let image = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
-        image_to_response(image_block_record, image)
-      }
-      PostContentType::Paragraph => {
-        let paragraph_block_record = fetch_paragraph_block_by_content_id(content.id).await.context("段落ブロックの取得に失敗しました。")?;
-        let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+    let sort_order = content.sort_order; // content が move される前に変数化
+    let post_content = content_to_response(content).await?;
 
-        let mut rich_text_response: Vec<RichText> = vec![];
-        for rich_text in rich_texts {
-          let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
-          let rich_text = rich_text_to_response(rich_text, styles);
-          rich_text_response.push(rich_text);
-        }
-
-        paragraph_to_response(paragraph_block_record, rich_text_response)
-      }
-    };
-    content_with_order.push(ContentWithOrder::new(content.sort_order, post_content));
+    content_with_order.push(ContentWithOrder::new(sort_order, post_content));
   }
+
   content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
   let contents: Vec<BlogPostContent> = content_with_order.into_iter().map(|content| content.content).collect();
 
@@ -69,6 +49,36 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
     last_update_date: blog_post.last_update_date,
     contents,
   })
+}
+
+async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPostContent> {
+  let content_type_enum = PostContentType::try_from(content_record.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
+  let result = match content_type_enum {
+    PostContentType::Heading => {
+      let heading_block_record: HeadingBlockRecord =
+        fetch_heading_blocks_by_content_id(content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
+      heading_to_response(heading_block_record)
+    }
+    PostContentType::Image => {
+      let image_block_record = fetch_image_blocks_by_content_id(content_record.id).await.context("画像ブロックの取得に失敗しました。")?;
+      let image = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
+      image_to_response(image_block_record, image)
+    }
+    PostContentType::Paragraph => {
+      let paragraph_block_record = fetch_paragraph_block_by_content_id(content_record.id).await.context("段落ブロックの取得に失敗しました。")?;
+      let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+
+      let mut rich_text_response: Vec<RichText> = vec![];
+      for rich_text in rich_texts {
+        let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
+        let rich_text = rich_text_to_response(rich_text, styles);
+        rich_text_response.push(rich_text);
+      }
+
+      paragraph_to_response(paragraph_block_record, rich_text_response)
+    }
+  };
+  Ok(result)
 }
 
 fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostContent {
