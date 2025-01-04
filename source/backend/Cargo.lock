@@ -285,7 +285,9 @@ version = "0.1.0"
 dependencies = [
  "actix-cors",
  "actix-web",
+ "anyhow",
  "chrono",
+ "common",
  "dotenv",
  "serde",
  "serde_json",

@@ -1,8 +1,8 @@
 use chrono::NaiveDate;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BlogPost {
   pub id: Uuid,
@@ -13,19 +13,19 @@ pub struct BlogPost {
   pub contents: Vec<BlogPostContent>,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
   pub path: String,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Style {
   pub bold: bool,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum BlogPostContent {
   H2(H2Block),
@@ -34,7 +34,7 @@ pub enum BlogPostContent {
   Image(ImageBlock),
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct H2Block {
   pub id: Uuid,
@@ -43,7 +43,7 @@ pub struct H2Block {
   pub type_field: String,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct H3Block {
   pub id: Uuid,
@@ -52,23 +52,23 @@ pub struct H3Block {
   pub type_field: String,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ParagraphBlock {
   pub id: Uuid,
-  pub text: RichText,
+  pub text: Vec<RichText>,
   #[serde(rename = "type")]
   pub type_field: String,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RichText {
   pub text: String,
   pub styles: Vec<Style>,
 }
 
-#[derive(Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageBlock {
   pub id: Uuid,
