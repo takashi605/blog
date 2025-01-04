@@ -8,8 +8,8 @@ use crate::db::pool::POOL;
 #[derive(Debug, FromRow)]
 pub struct ImageRecord {
     pub id: Uuid,
-    pub file_name: String,
-    pub file_path: Option<String>,
+    pub file_name: Option<String>,
+    pub file_path: String,
     pub caption: Option<String>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,

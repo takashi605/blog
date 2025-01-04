@@ -7,10 +7,10 @@ use uuid::Uuid;
 #[derive(Debug, FromRow)]
 pub struct BlogPostRecord {
   pub id: Uuid,
-  title: String,
+  pub title: String,
   pub thumbnail_image_id: Uuid,
-  post_date: chrono::NaiveDate,
-  last_update_date: chrono::NaiveDate,
+  pub post_date: chrono::NaiveDate,
+  pub last_update_date: chrono::NaiveDate,
   published_at: DateTime<Utc>,
   created_at: DateTime<Utc>,
   updated_at: DateTime<Utc>,

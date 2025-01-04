@@ -1,1 +1,1 @@
-mod blog_post_response;
+pub mod blog_post_response;

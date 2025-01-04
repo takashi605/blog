@@ -1,8 +1,8 @@
 -- テーブルの作成
 CREATE TABLE IF NOT EXISTS images (
     id UUID PRIMARY KEY,
-    file_name VARCHAR(255) NOT NULL,
-    file_path VARCHAR(255),
+    file_name VARCHAR(255),
+    file_path VARCHAR(255) NOT NULL,
     caption VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
