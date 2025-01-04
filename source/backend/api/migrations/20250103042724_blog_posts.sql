@@ -46,19 +46,25 @@ CREATE TABLE IF NOT EXISTS heading_blocks (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
-CREATE TABLE IF NOT EXISTS paragraph_block (
+CREATE TABLE IF NOT EXISTS paragraph_blocks (
     id UUID PRIMARY KEY,
     content_id UUID NOT NULL REFERENCES post_contents(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS rich_texts (
+    id UUID PRIMARY KEY,
+    paragraph_block_id UUID NOT NULL REFERENCES paragraph_blocks(id),
     text_content VARCHAR(1000) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
-CREATE TABLE IF NOT EXISTS paragraph_block_styles (
+CREATE TABLE IF NOT EXISTS rich_text_styles (
     style_id UUID NOT NULL REFERENCES text_styles(id),
-    text_block_id UUID NOT NULL REFERENCES paragraph_block(id),
+    rich_text_id UUID NOT NULL REFERENCES rich_texts(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (style_id, text_block_id));
+    PRIMARY KEY (style_id, rich_text_id));
 
 -- 1. images に挿入
 INSERT INTO images (id, file_name, file_path, caption)
@@ -122,9 +128,9 @@ VALUES (
     '見出し2'
 );
 
--- 5. paragraph_block に挿入
+-- 5. paragraph_blocks に挿入
 --   "paragraph" タイプの content_id を拾ってきて紐付ける
-INSERT INTO paragraph_block (id, content_id, text_content)
+INSERT INTO paragraph_blocks (id, content_id)
 VALUES (
     gen_random_uuid(),
     (
@@ -132,6 +138,22 @@ VALUES (
         FROM post_contents
        WHERE content_type = 'paragraph'
          AND post_id = (SELECT id FROM blog_posts WHERE title = 'テストタイトル' LIMIT 1)
+       LIMIT 1
+    )
+);
+
+INSERT INTO rich_texts (id, paragraph_block_id, text_content)
+VALUES (
+    gen_random_uuid(),
+    (
+      SELECT id
+        FROM paragraph_blocks
+        WHERE content_id = (
+          SELECT id
+            FROM post_contents
+            WHERE content_type = 'paragraph'
+            AND post_id = (SELECT id FROM blog_posts WHERE title = 'テストタイトル' LIMIT 1)
+        )
        LIMIT 1
     ),
     '段落'
@@ -161,7 +183,7 @@ VALUES
 
 -- 8. paragraph_block_styles に挿入 (テキストブロックにスタイルを適用する中間テーブル)
 --   ここでは "bold" スタイルを適用する例
-INSERT INTO paragraph_block_styles (style_id, text_block_id)
+INSERT INTO rich_text_styles (style_id, rich_text_id)
 VALUES (
     (
       SELECT id
@@ -171,7 +193,7 @@ VALUES (
     ),
     (
       SELECT id
-        FROM paragraph_block
+        FROM rich_texts
         LIMIT 1
     )
 );
