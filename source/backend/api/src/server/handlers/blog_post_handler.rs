@@ -11,7 +11,7 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use actix_web::{web, HttpResponse, Responder};
   use uuid::Uuid;
-  use crate::server::handlers::response::blog_post_response::fetch_single_blog_post;
+  use crate::server::handlers::crud::fetch_blog_post::fetch_single_blog_post;
 
   pub async fn get_blog_post(path: web::Path<String>) -> impl Responder {
     let post_id = path.into_inner();
