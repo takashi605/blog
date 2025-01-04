@@ -18,6 +18,7 @@ pub enum PostContentType {
   Heading,
   Image,
 }
+
 impl TryFrom<String> for PostContentType {
   type Error = anyhow::Error;
   fn try_from(value: String) -> Result<PostContentType> {

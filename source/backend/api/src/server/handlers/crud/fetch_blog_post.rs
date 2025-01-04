@@ -17,6 +17,11 @@ struct ContentWithOrder {
   sort_order: i32,
   content: BlogPostContent,
 }
+impl ContentWithOrder {
+  fn new(sort_order: i32, content: BlogPostContent) -> Self {
+    Self { sort_order, content }
+  }
+}
 
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let blog_post = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
@@ -30,25 +35,8 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
     match content_type_enum {
       PostContentType::Heading => {
         let heading_block_record: HeadingBlockRecord = fetch_heading_blocks_by_content_id(content.id).await.context("見出しブロックの取得に失敗しました。")?;
-        let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
-          2 => BlogPostContent::H2(H2Block {
-            id: heading_block_record.id,
-            text: heading_block_record.text_content,
-            type_field: "h2".to_string(),
-          }),
-          3 => BlogPostContent::H3(H3Block {
-            id: heading_block_record.id,
-            text: heading_block_record.text_content,
-            type_field: "h3".to_string(),
-          }),
-          _ => {
-            panic!("見出しレベルが不正です。")
-          }
-        };
-        content_with_order.push(ContentWithOrder {
-          sort_order: content.sort_order,
-          content: heading_block_content,
-        });
+        let heading_block_content: BlogPostContent = heading_to_response(heading_block_record);
+        content_with_order.push(ContentWithOrder::new(content.sort_order, heading_block_content));
       }
       PostContentType::Image => {
         let image_block = fetch_image_blocks_by_content_id(content.id).await.context("画像ブロックの取得に失敗しました。")?;
@@ -101,4 +89,23 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
     last_update_date: blog_post.last_update_date,
     contents,
   })
+}
+
+fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostContent {
+  let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
+    2 => BlogPostContent::H2(H2Block {
+      id: heading_block_record.id,
+      text: heading_block_record.text_content,
+      type_field: "h2".to_string(),
+    }),
+    3 => BlogPostContent::H3(H3Block {
+      id: heading_block_record.id,
+      text: heading_block_record.text_content,
+      type_field: "h3".to_string(),
+    }),
+    _ => {
+      panic!("見出しレベルが不正です。")
+    }
+  };
+  heading_block_content
 }
