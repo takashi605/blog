@@ -40,6 +40,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
 
   content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
   let contents: Vec<BlogPostContent> = content_with_order.into_iter().map(|content| content.content).collect();
+  println!("contents: {:?}", contents);
 
   Ok(BlogPost {
     id: blog_post.id,
@@ -82,6 +83,7 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
 }
 
 fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostContent {
+  println!("heading_block_record: {:?}", heading_block_record);
   let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
     2 => BlogPostContent::H2(H2Block {
       id: heading_block_record.id,
@@ -117,7 +119,6 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_text
 }
 
 fn rich_text_to_response(rich_text_record: RichTextRecord, style_records: Vec<TextStyleRecord>) -> RichText {
-  // TODO スタイルが増えた時のことが考えられていないので、修正が必要
   let styles = Style {
     bold: style_records.iter().any(|record| record.style_type == "bold"),
   };
