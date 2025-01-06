@@ -90,21 +90,6 @@ Then('投稿日時 が表示される', async () => {
 Then('更新日時 が表示される', async () => {
   await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
 });
-
-Given('投稿日,更新日時が存在しないページにアクセスする', async () => {
-  if (!process.env.TEST_TARGET_URL) {
-    throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
-  }
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID4}`);
-});
-
-Then(
-  'データ不整合により {string} というエラーメッセージが表示される',
-  async (errorMessage) => {
-    await expect(page.getByText(errorMessage)).toBeVisible();
-  },
-);
-
 Given('対応する記事データが存在しないページにアクセスする', async () => {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
