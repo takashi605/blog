@@ -28,7 +28,7 @@ mod tests {
 
     // ステータスが 404 エラーであることを確認
     assert_eq!(resp_status, 404);
-    assert_eq!(resp_body, "ブログ記事が見つかりませんでした");
+    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。"), true);
     Ok(())
   }
 
@@ -146,8 +146,6 @@ mod tests {
 
       // 各要素ごとに「id だけ無視して他は比較」
       for (i, (actual_block, expected_block)) in actual.contents.iter().zip(&expected.contents).enumerate() {
-        println!("actual_block: {:?}", actual_block);
-        println!("expected_block: {:?}", expected_block);
         match actual_block {
           BlogPostContent::H2(a) => {
             // TODO json にシリアライズするタイミングで H2 or H3型の情報が抜け落ちているので、Heading 型に統一する

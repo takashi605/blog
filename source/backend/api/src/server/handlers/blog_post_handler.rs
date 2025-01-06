@@ -11,13 +11,13 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use actix_web::{web, HttpResponse, Responder};
   use uuid::Uuid;
-  use crate::server::handlers::crud::fetch_blog_post::fetch_single_blog_post;
+  use crate::server::handlers::{crud::fetch_blog_post::fetch_single_blog_post, response::err::ApiCustomError};
 
-  pub async fn get_blog_post(path: web::Path<String>) -> impl Responder {
+  pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
     let post_id = path.into_inner();
     let uuid = Uuid::parse_str(&post_id).expect("UUIDのパースに失敗しました。");
-    let blog_post = fetch_single_blog_post(uuid).await.expect("ブログ記事の取得に失敗しました。");
+    let blog_post = fetch_single_blog_post(uuid).await?;
 
-    HttpResponse::Ok().json(blog_post)
+    Ok(HttpResponse::Ok().json(blog_post))
   }
 }

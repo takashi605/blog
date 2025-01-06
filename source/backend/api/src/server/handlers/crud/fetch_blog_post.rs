@@ -1,15 +1,18 @@
 use core::panic;
 use std::vec;
 
-use crate::db::tables::{
-  blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
-  heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
-  image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
-  images_table::{fetch_image_by_id, ImageRecord},
-  paragraph_blocks_table::{
-    fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+use crate::{
+  db::tables::{
+    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
+    heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
+    image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
+    images_table::{fetch_image_by_id, ImageRecord},
+    paragraph_blocks_table::{
+      fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+    },
+    post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
   },
-  post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
+  server::handlers::response::err::ApiCustomError,
 };
 use anyhow::{Context, Result};
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
@@ -25,29 +28,33 @@ impl ContentWithOrder {
   }
 }
 
-pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, actix_web::Error> {
+pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustomError> {
   let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
-      actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。")
+      ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
     } else {
-      actix_web::error::ErrorInternalServerError(err)
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
   let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
-      actix_web::error::ErrorInternalServerError("ブログ記事のサムネイル画像の取得に失敗しました(記事データの不整合)")
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "ブログ記事のサムネイル画像の取得に失敗しました。(記事データの不整合)",
+      ))
     } else {
-      actix_web::error::ErrorInternalServerError(err)
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
   let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
-      actix_web::error::ErrorInternalServerError("ブログ記事コンテンツの取得に失敗しました。(記事データの不整合)")
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "ブログ記事コンテンツの取得に失敗しました。(記事データの不整合)",
+      ))
     } else {
-      actix_web::error::ErrorInternalServerError(err)
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
   let sorted_content_records = sort_contents(content_records);
@@ -56,9 +63,11 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, actix_web
   let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
-      actix_web::error::ErrorInternalServerError("コンテンツブロックの取得に失敗しました。(記事データの不整合)")
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "コンテンツブロックの取得に失敗しました。(記事データの不整合)",
+      ))
     } else {
-      actix_web::error::ErrorInternalServerError(err)
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
   Ok(blog_post)
