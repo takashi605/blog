@@ -27,7 +27,7 @@ impl Request {
   }
 
   pub async fn send(self) -> Result<Response> {
-    let resp = self.request_builder.send().await.context("リクエストを送信できませんでした")?;
+    let resp = self.request_builder.send().await.context("HTTP リクエストを送りましたが、エラーが発生しました")?;
     Ok(Response::new(resp))
   }
 }

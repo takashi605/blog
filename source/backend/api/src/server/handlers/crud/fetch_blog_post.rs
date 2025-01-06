@@ -1,15 +1,18 @@
 use core::panic;
 use std::vec;
 
-use crate::db::tables::{
-  blog_posts_table::fetch_blog_post_by_id,
-  heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
-  image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
-  images_table::{fetch_image_by_id, ImageRecord},
-  paragraph_blocks_table::{
-    fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+use crate::{
+  db::tables::{
+    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
+    heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
+    image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
+    images_table::{fetch_image_by_id, ImageRecord},
+    paragraph_blocks_table::{
+      fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+    },
+    post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
   },
-  post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
+  server::handlers::response::err::ApiCustomError,
 };
 use anyhow::{Context, Result};
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
@@ -17,39 +20,107 @@ use uuid::Uuid;
 
 struct ContentWithOrder {
   sort_order: i32,
-  content: BlogPostContent,
+  content: PostContentRecord,
 }
 impl ContentWithOrder {
-  fn new(sort_order: i32, content: BlogPostContent) -> Self {
+  fn new(sort_order: i32, content: PostContentRecord) -> Self {
     Self { sort_order, content }
   }
 }
 
-pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
-  let blog_post = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
-  let contents = fetch_post_contents_by_post_id(blog_post.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
-  let thumbnail = fetch_image_by_id(blog_post.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
-  let mut content_with_order: Vec<ContentWithOrder> = vec![];
+pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustomError> {
+  let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "ブログ記事のサムネイル画像の取得に失敗しました。(記事データの不整合)",
+      ))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "ブログ記事コンテンツの取得に失敗しました。(記事データの不整合)",
+      ))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  let sorted_content_records = sort_contents(content_records);
 
-  for content in contents {
-    let sort_order = content.sort_order; // content が move される前に変数化
-    let post_content = content_to_response(content).await?;
+  // TODO コンテンツブロックの fetch を generate_blog_post_response 内で行っていてダブルミーニングなので、fetch と response 生成を分ける
+  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "コンテンツブロックの取得に失敗しました。(記事データの不整合)",
+      ))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  Ok(blog_post)
+}
 
-    content_with_order.push(ContentWithOrder::new(sort_order, post_content));
+// エラーが「データなし」のエラーかを判定する関数
+fn is_row_not_found(err: &anyhow::Error) -> bool {
+  // root_cause で一番根本のエラーを取得
+  if let Some(sqlx::Error::RowNotFound) = err.root_cause().downcast_ref::<sqlx::Error>() {
+    true
+  } else {
+    false
   }
+}
 
-  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
-  let contents: Vec<BlogPostContent> = content_with_order.into_iter().map(|content| content.content).collect();
-  println!("contents: {:?}", contents);
+async fn generate_blog_post_response(
+  blog_post_record: BlogPostRecord,
+  thumbnail_record: ImageRecord,
+  content_records: Vec<PostContentRecord>,
+) -> Result<BlogPost> {
+  let contents = contents_to_response(content_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
 
   Ok(BlogPost {
-    id: blog_post.id,
-    title: blog_post.title,
-    thumbnail: Image { path: thumbnail.file_path },
-    post_date: blog_post.post_date,
-    last_update_date: blog_post.last_update_date,
+    id: blog_post_record.id,
+    title: blog_post_record.title,
+    thumbnail: Image {
+      path: thumbnail_record.file_path,
+    },
+    post_date: blog_post_record.post_date,
+    last_update_date: blog_post_record.last_update_date,
     contents,
   })
+}
+
+fn sort_contents(content_records: Vec<PostContentRecord>) -> Vec<PostContentRecord> {
+  let mut content_with_order: Vec<ContentWithOrder> = vec![];
+
+  for content_record in content_records {
+    let sort_order = content_record.sort_order; // content が move される前に変数化
+
+    content_with_order.push(ContentWithOrder::new(sort_order, content_record));
+  }
+  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
+  content_with_order.into_iter().map(|content| content.content).collect::<Vec<PostContentRecord>>()
+}
+
+async fn contents_to_response(content_records: Vec<PostContentRecord>) -> Result<Vec<BlogPostContent>> {
+  let mut contents: Vec<BlogPostContent> = vec![];
+  for content_record in content_records {
+    let content = content_to_response(content_record).await?;
+    contents.push(content);
+  }
+  Ok(contents)
 }
 
 async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPostContent> {

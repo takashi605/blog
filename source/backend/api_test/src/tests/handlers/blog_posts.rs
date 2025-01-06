@@ -18,6 +18,20 @@ mod tests {
     Ok(())
   }
 
+  // 存在しないブログ記事を取得すると 404 エラーとエラーメッセージが返る
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_not_exist_blog_post() -> Result<()> {
+    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = Uuid::new_v4());
+    let resp = Request::new(Methods::GET, &url).send().await?;
+    let resp_status = resp.status();
+    let resp_body = resp.text().await?;
+
+    // ステータスが 404 エラーであることを確認
+    assert_eq!(resp_status, 404);
+    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。"), true);
+    Ok(())
+  }
+
   mod helper {
     use common::types::api::response::H3Block;
 
@@ -132,8 +146,6 @@ mod tests {
 
       // 各要素ごとに「id だけ無視して他は比較」
       for (i, (actual_block, expected_block)) in actual.contents.iter().zip(&expected.contents).enumerate() {
-        println!("actual_block: {:?}", actual_block);
-        println!("expected_block: {:?}", expected_block);
         match actual_block {
           BlogPostContent::H2(a) => {
             // TODO json にシリアライズするタイミングで H2 or H3型の情報が抜け落ちているので、Heading 型に統一する
