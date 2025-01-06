@@ -17,37 +17,40 @@ use uuid::Uuid;
 
 struct ContentWithOrder {
   sort_order: i32,
-  content: BlogPostContent,
+  content: PostContentRecord,
 }
 impl ContentWithOrder {
-  fn new(sort_order: i32, content: BlogPostContent) -> Self {
+  fn new(sort_order: i32, content: PostContentRecord) -> Self {
     Self { sort_order, content }
   }
 }
 
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
-  let blog_post = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
-  let contents = fetch_post_contents_by_post_id(blog_post.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
-  let thumbnail = fetch_image_by_id(blog_post.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
+  let blog_post_record = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
+  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
+  let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
   let mut content_with_order: Vec<ContentWithOrder> = vec![];
 
-  for content in contents {
-    let sort_order = content.sort_order; // content が move される前に変数化
-    let post_content = content_to_response(content).await?;
+  for content_record in content_records {
+    let sort_order = content_record.sort_order; // content が move される前に変数化
 
-    content_with_order.push(ContentWithOrder::new(sort_order, post_content));
+    content_with_order.push(ContentWithOrder::new(sort_order, content_record));
+  }
+  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
+  let sorted_content_records = content_with_order.into_iter().map(|content| content.content).collect::<Vec<PostContentRecord>>();
+
+  let mut contents:Vec<BlogPostContent> = vec![];
+  for content in sorted_content_records {
+    let content = content_to_response(content).await?;
+    contents.push(content);
   }
 
-  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
-  let contents: Vec<BlogPostContent> = content_with_order.into_iter().map(|content| content.content).collect();
-  println!("contents: {:?}", contents);
-
   Ok(BlogPost {
-    id: blog_post.id,
-    title: blog_post.title,
-    thumbnail: Image { path: thumbnail.file_path },
-    post_date: blog_post.post_date,
-    last_update_date: blog_post.last_update_date,
+    id: blog_post_record.id,
+    title: blog_post_record.title,
+    thumbnail: Image { path: thumbnail_record.file_path },
+    post_date: blog_post_record.post_date,
+    last_update_date: blog_post_record.last_update_date,
     contents,
   })
 }
