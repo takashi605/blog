@@ -25,14 +25,53 @@ impl ContentWithOrder {
   }
 }
 
-pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
-  let blog_post_record = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
-  let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
-  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
+pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, actix_web::Error> {
+  let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。")
+    } else {
+      actix_web::error::ErrorInternalServerError(err)
+    }
+  })?;
+  let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      actix_web::error::ErrorInternalServerError("ブログ記事のサムネイル画像の取得に失敗しました(記事データの不整合)")
+    } else {
+      actix_web::error::ErrorInternalServerError(err)
+    }
+  })?;
+  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      actix_web::error::ErrorInternalServerError("ブログ記事コンテンツの取得に失敗しました。(記事データの不整合)")
+    } else {
+      actix_web::error::ErrorInternalServerError(err)
+    }
+  })?;
   let sorted_content_records = sort_contents(content_records);
 
-  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await?;
+  // TODO コンテンツブロックの fetch を generate_blog_post_response 内で行っていてダブルミーニングなので、fetch と response 生成を分ける
+  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      actix_web::error::ErrorInternalServerError("コンテンツブロックの取得に失敗しました。(記事データの不整合)")
+    } else {
+      actix_web::error::ErrorInternalServerError(err)
+    }
+  })?;
   Ok(blog_post)
+}
+
+// エラーが「データなし」のエラーかを判定する関数
+fn is_row_not_found(err: &anyhow::Error) -> bool {
+  // root_cause で一番根本のエラーを取得
+  if let Some(sqlx::Error::RowNotFound) = err.root_cause().downcast_ref::<sqlx::Error>() {
+    true
+  } else {
+    false
+  }
 }
 
 async fn generate_blog_post_response(
