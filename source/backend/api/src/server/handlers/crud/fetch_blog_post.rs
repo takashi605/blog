@@ -2,7 +2,7 @@ use core::panic;
 use std::vec;
 
 use crate::db::tables::{
-  blog_posts_table::fetch_blog_post_by_id,
+  blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
   heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
   image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
   images_table::{fetch_image_by_id, ImageRecord},
@@ -28,15 +28,26 @@ impl ContentWithOrder {
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let blog_post_record = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
   let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
-
   let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
   let sorted_content_records = sort_contents(content_records);
-  let contents:Vec<BlogPostContent> = contents_to_response(sorted_content_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
+
+  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await?;
+  Ok(blog_post)
+}
+
+async fn generate_blog_post_response(
+  blog_post_record: BlogPostRecord,
+  thumbnail_record: ImageRecord,
+  content_records: Vec<PostContentRecord>,
+) -> Result<BlogPost> {
+  let contents = contents_to_response(content_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
 
   Ok(BlogPost {
     id: blog_post_record.id,
     title: blog_post_record.title,
-    thumbnail: Image { path: thumbnail_record.file_path },
+    thumbnail: Image {
+      path: thumbnail_record.file_path,
+    },
     post_date: blog_post_record.post_date,
     last_update_date: blog_post_record.last_update_date,
     contents,
