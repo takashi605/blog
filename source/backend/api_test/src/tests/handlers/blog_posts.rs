@@ -18,6 +18,20 @@ mod tests {
     Ok(())
   }
 
+  // 存在しないブログ記事を取得すると 404 エラーとエラーメッセージが返る
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_not_exist_blog_post() -> Result<()> {
+    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = Uuid::new_v4());
+    let resp = Request::new(Methods::GET, &url).send().await?;
+    let resp_status = resp.status();
+    let resp_body = resp.text().await?;
+
+    // ステータスが 404 エラーであることを確認
+    assert_eq!(resp_status, 404);
+    assert_eq!(resp_body, "ブログ記事が見つかりませんでした");
+    Ok(())
+  }
+
   mod helper {
     use common::types::api::response::H3Block;
 
