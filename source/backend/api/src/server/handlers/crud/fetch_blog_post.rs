@@ -27,23 +27,11 @@ impl ContentWithOrder {
 
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
   let blog_post_record = fetch_blog_post_by_id(post_id).await.context("ブログ記事の基本データの取得に失敗しました。")?;
-  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
   let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.context("ブログ記事のサムネイル画像の取得に失敗しました。")?;
-  let mut content_with_order: Vec<ContentWithOrder> = vec![];
 
-  for content_record in content_records {
-    let sort_order = content_record.sort_order; // content が move される前に変数化
-
-    content_with_order.push(ContentWithOrder::new(sort_order, content_record));
-  }
-  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
-  let sorted_content_records = content_with_order.into_iter().map(|content| content.content).collect::<Vec<PostContentRecord>>();
-
-  let mut contents:Vec<BlogPostContent> = vec![];
-  for content in sorted_content_records {
-    let content = content_to_response(content).await?;
-    contents.push(content);
-  }
+  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.context("ブログ記事コンテンツの取得に失敗しました。")?;
+  let sorted_content_records = sort_contents(content_records);
+  let contents:Vec<BlogPostContent> = contents_to_response(sorted_content_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
 
   Ok(BlogPost {
     id: blog_post_record.id,
@@ -53,6 +41,27 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost> {
     last_update_date: blog_post_record.last_update_date,
     contents,
   })
+}
+
+fn sort_contents(content_records: Vec<PostContentRecord>) -> Vec<PostContentRecord> {
+  let mut content_with_order: Vec<ContentWithOrder> = vec![];
+
+  for content_record in content_records {
+    let sort_order = content_record.sort_order; // content が move される前に変数化
+
+    content_with_order.push(ContentWithOrder::new(sort_order, content_record));
+  }
+  content_with_order.sort_by(|a, b| a.sort_order.cmp(&b.sort_order));
+  content_with_order.into_iter().map(|content| content.content).collect::<Vec<PostContentRecord>>()
+}
+
+async fn contents_to_response(content_records: Vec<PostContentRecord>) -> Result<Vec<BlogPostContent>> {
+  let mut contents: Vec<BlogPostContent> = vec![];
+  for content_record in content_records {
+    let content = content_to_response(content_record).await?;
+    contents.push(content);
+  }
+  Ok(contents)
 }
 
 async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPostContent> {
