@@ -1,6 +1,6 @@
 # ベースイメージとして公式のRustイメージを使用
-FROM rust:1.81-slim as base
-ARG APP_ROOT_DIR=source/backend/api
+FROM rust:1.81-slim AS base
+ARG APP_ROOT_DIR=source/backend
 
 # libssl-dev がある状態で pkg-config をインストールする必要あり
 RUN apt-get update && apt-get install -y libssl-dev &&\
@@ -17,23 +17,37 @@ USER rust:rust
 # ワーキングディレクトリを作成
 WORKDIR /$APP_ROOT_DIR
 
-COPY --chown=rust:rust ./$APP_ROOT_DIR ./
+# キャッシュを効率的に使うために Cargo.toml だけをコピーして依存関係を解決
+COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test/Cargo.toml ./api_test/
+COPY --chown=rust:rust ./$APP_ROOT_DIR/common/Cargo.toml ./common/
 
-FROM base as dev
+# ワークスペースメンバーを解決するために空のソースを用意
+RUN mkdir -p ./api/src && echo "" > ./api/src/main.rs
+RUN mkdir -p ./api_test/src && echo "" > ./api_test/src/main.rs
+RUN mkdir -p ./common/src && echo "" > ./common/src/lib.rs
+
+RUN cargo fetch
+
+COPY --chown=rust:rust ./$APP_ROOT_DIR/api ./api
+COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
+
+FROM base AS dev
 
 RUN cargo install cargo-watch
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
-CMD ["cargo", "watch", "-x", "run"]
+CMD ["cargo", "watch", "-x", "run -p api"]
 
-FROM base as builder
+FROM base AS builder
 ARG APP_ROOT_DIR=source/backend/api
 
 WORKDIR /$APP_ROOT_DIR
-RUN cargo build --release
+RUN cargo build --release -p api
 
-FROM gcr.io/distroless/cc-debian12:nonroot as prod
+FROM gcr.io/distroless/cc-debian12:nonroot AS prod
 ARG APP_ROOT_DIR=source/backend/api
 
 WORKDIR /$APP_ROOT_DIR

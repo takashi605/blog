@@ -12,4 +12,8 @@ impl Response {
   pub async fn text(self) -> Result<String> {
     self.resp.text().await.context("レスポンスをテキストに変換できませんでした")
   }
+
+  pub fn status(&self) -> u16 {
+    self.resp.status().as_u16()
+  }
 }

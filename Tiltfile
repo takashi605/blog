@@ -4,10 +4,6 @@ custom_build(
   '''
     docker image build --target dev -f containers/frontend/web/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
     'source/frontend',
@@ -23,10 +19,6 @@ custom_build(
   '''
     docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
     'source/frontend',
@@ -42,10 +34,6 @@ custom_build(
   '''
     docker image build -f containers/frontend/e2e/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune -f;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
     'source/frontend',
@@ -61,17 +49,15 @@ custom_build(
   '''
     docker image build --target dev -f containers/backend/api/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune -f;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
     'source/backend/api',
+    'source/backend/common',
     'containers/backend/api'
   ],
   live_update=[
     sync('source/backend/api', '/source/backend/api'),
+    sync('source/backend/common', '/source/backend/common'),
   ]
 )
 
@@ -80,17 +66,15 @@ custom_build(
   '''
     docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune -f;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
-    'source/backend/api-test',
+    'source/backend/api_test',
+    'source/backend/common',
     'containers/backend/api-test'
   ],
   live_update=[
-    sync('source/backend/api-test', '/source/backend/api-test'),
+    sync('source/backend/api_test', '/source/backend/api_test'),
+    sync('source/backend/common', '/source/backend/common'),
   ]
 )
 
@@ -99,10 +83,6 @@ custom_build(
   '''
     docker image build -f containers/db/postgres/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
-
-    docker system prune -f;
-    crictl rmi --prune || true;
-    make mk8s-prune;
   ''',
   deps=[
     'containers/db/postgres'

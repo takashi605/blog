@@ -1,5 +1,5 @@
-use crate::http::methods::Methods;
-use crate::http::response::Response;
+use crate::tests::helper::http::methods::Methods;
+use crate::tests::helper::http::response::Response;
 use anyhow::{Context, Result};
 use reqwest;
 use reqwest::header::CONTENT_TYPE;
@@ -27,7 +27,7 @@ impl Request {
   }
 
   pub async fn send(self) -> Result<Response> {
-    let resp = self.request_builder.send().await.context("リクエストを送信できませんでした")?;
+    let resp = self.request_builder.send().await.context("HTTP リクエストを送りましたが、エラーが発生しました")?;
     Ok(Response::new(resp))
   }
 }

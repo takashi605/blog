@@ -16,6 +16,24 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
+    ...createProtTypeBlogPostHandlers(baseUrl),
+    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
+      const userId = params.userId?.toString();
+      const blogPost = blogPostResponses.find((post) => post.id === userId);
+      if (blogPost === undefined) {
+        return new HttpResponse('Not found', {
+          status: 404,
+        });
+      }
+      return HttpResponse.json(blogPost);
+    }),
+  ];
+  return blogPostHandlers;
+};
+export const createProtTypeBlogPostHandlers = (
+  baseUrl: string,
+): HttpHandler[] => {
+  const blogPostHandlers = [
     // 以下 post メソッドのモック
     http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
@@ -69,16 +87,6 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
         return HttpResponse.json(filteredBlogPosts.slice(0, Number(quantity)));
       }
       return HttpResponse.json(filteredBlogPosts);
-    }),
-    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
-      const userId = params.userId?.toString();
-      const blogPost = blogPostResponses.find((post) => post.id === userId);
-      if (blogPost === undefined) {
-        return new HttpResponse('Not found', {
-          status: 404,
-        });
-      }
-      return HttpResponse.json(blogPost);
     }),
   ];
   return blogPostHandlers;

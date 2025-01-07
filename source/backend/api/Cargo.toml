@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+common = { path = "../common" }
 actix-cors = "0.7.0"
 actix-web = "4"
 dotenv = "0.15.0"
@@ -13,3 +14,5 @@ sqlx = { version = "0.8.2", features = ["postgres", "runtime-tokio-rustls", "chr
 tokio = { version = "1.42.0", features = ["full"] }
 uuid = { version = "1.3", features = ["serde", "v4"] }
 chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1.0.87"
+thiserror = "2.0.9"

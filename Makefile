@@ -101,6 +101,8 @@ kube-port-forward-ingress:
 	kubectl -n ingress port-forward $(shell kubectl -n ingress get pod --template='{{(index .items 0).metadata.name}}') 8080:80
 kube-port-forward-admin:
 	kubectl port-forward svc/admin 8081:80
+kube-port-forward-api:
+	kubectl port-forward svc/api 8000:80
 
 ###
 ## Helm 系
@@ -192,9 +194,13 @@ api-sh:
 api-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep api
 api-create-db:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx database create
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database create"
+api-drop-db:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop"
 api-migrate-run:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sqlx migrate run
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run"
+api-migrate-revert:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert"
 
 ###
 ## api テスト系

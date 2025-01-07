@@ -2,15 +2,12 @@ pub mod methods;
 pub mod request;
 mod response;
 
-use anyhow::{Context, Result};
-
 #[cfg(test)]
 mod tests {
+  use anyhow::{Context, Result};
   use reqwest::header::CONTENT_TYPE;
+  use crate::tests::helper::http::{methods::Methods, request::Request};
 
-  use super::*;
-  use crate::http::methods::Methods;
-  use crate::http::request::Request;
   #[tokio::test(flavor = "current_thread")]
   async fn initialize_request() {
     let req = Request::new(Methods::GET, "http://localhost:8000");
