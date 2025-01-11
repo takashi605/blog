@@ -72,6 +72,29 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache
 
+      - name: "postgres Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/db/postgres/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-postgres:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache
+
+      - name: "admin Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/blog-admin/Dockerfile
+          target: prod
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-blog-admin:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
+
   push_chart_package:
     runs-on: ubuntu-latest
 
