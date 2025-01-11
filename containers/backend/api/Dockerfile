@@ -42,13 +42,13 @@ RUN cargo install sqlx-cli --no-default-features --features postgres
 CMD ["cargo", "watch", "-x", "run -p api"]
 
 FROM base AS builder
-ARG APP_ROOT_DIR=source/backend/api
+ARG APP_ROOT_DIR=source/backend
 
 WORKDIR /$APP_ROOT_DIR
 RUN cargo build --release -p api
 
 FROM gcr.io/distroless/cc-debian12:nonroot AS prod
-ARG APP_ROOT_DIR=source/backend/api
+ARG APP_ROOT_DIR=source/backend
 
 WORKDIR /$APP_ROOT_DIR
 
