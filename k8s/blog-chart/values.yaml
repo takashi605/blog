@@ -80,6 +80,11 @@ api:
     memoryRequest: "250Mi"
     cpuRequest: "100m"
     containerPort: 8000
+    apiTest:
+      imageRepository: "api-test"
+      imageTag: "v0.0.0"
+      imagePullSecret: ""
+      imagePullPolicy: Never
   service:
     type: ClusterIP
     port: 80
