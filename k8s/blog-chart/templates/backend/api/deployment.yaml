@@ -41,8 +41,8 @@ spec:
                   key: database_url
         {{- if not .Values.production }}
         - name: "{{ include "api.appname" . }}-test"
-          image: "api-test:v0.0.0"
-          imagePullPolicy: "Never"
+          image: "{{ .Values.api.pod.apiTest.imageRepository }}:{{ .Values.api.pod.apiTest.imageTag }}"
+          imagePullPolicy: {{ .Values.api.pod.apiTest.imagePullPolicy }}
           resources:
             limits:
               memory: "750Mi"

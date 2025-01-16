@@ -83,7 +83,6 @@ api:
     apiTest:
       imageRepository: "api-test"
       imageTag: "v0.0.0"
-      imagePullSecret: ""
       imagePullPolicy: Never
   service:
     type: ClusterIP
