@@ -116,6 +116,10 @@ postgres:
     externalTrafficPolicy: Local
 e2e:
   pod:
+    imageRepository: "e2e"
+    imageTag: "v0.0.0"
+    imagePullSecret: ""
+    imagePullPolicy: Never
     env:
       TEST_TARGET_URL: "http://blog.example"
       ADMIN_URL: "http://admin.blog.example"
