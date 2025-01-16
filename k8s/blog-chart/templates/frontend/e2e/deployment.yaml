@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: {{ include "e2e.appname" . }}
-          image: "e2e:v0.0.0"
-          imagePullPolicy: "Never"
+          image: "{{ .Values.e2e.pod.imageRepository }}:{{ .Values.e2e.pod.imageTag }}"
+          imagePullPolicy: {{ .Values.e2e.pod.imagePullPolicy }}
           resources:
             limits:
               memory: {{ .Values.e2e.pod.memoryLimit }}
