@@ -95,6 +95,28 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
 
+      - name: "e2e Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/e2e/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-e2e:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-e2e:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-e2e:cache
+
+      - name: "api-test Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/backend/api-test/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-api-test:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api-test:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api-test:cache
+
   push_chart_package:
     runs-on: ubuntu-latest
 

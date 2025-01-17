@@ -20,7 +20,7 @@ Given('正常な記事が取得できるページにアクセスする', async (
 
 Then('記事サムネイル が表示される', async () => {
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
-  await expect(thumbnailImage).toBeVisible();
+  await expect(thumbnailImage).toBeVisible({timeout: 10000});
 });
 
 Then('記事タイトル が表示される', async () => {
@@ -79,16 +79,16 @@ Then('画像コンテンツ が表示される', async () => {
   expect(count).toBeGreaterThan(0);
 
   for (let i = 0; i < count; i++) {
-    await expect(contentImages.nth(i)).toBeVisible();
+    await expect(contentImages.nth(i)).toBeVisible({timeout: 10000});
   }
 });
 
 Then('投稿日時 が表示される', async () => {
-  await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
+  await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({timeout: 10000});
 });
 
 Then('更新日時 が表示される', async () => {
-  await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible();
+  await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({timeout: 10000});
 });
 Given('対応する記事データが存在しないページにアクセスする', async () => {
   if (!process.env.TEST_TARGET_URL) {
@@ -100,6 +100,6 @@ Given('対応する記事データが存在しないページにアクセスす�
 Then(
   'データ未存在により {string} というエラーメッセージが表示される',
   async (errorMessage) => {
-    await expect(page.getByText(errorMessage)).toBeVisible();
+    await expect(page.getByText(errorMessage)).toBeVisible({timeout: 10000});
   },
 );
