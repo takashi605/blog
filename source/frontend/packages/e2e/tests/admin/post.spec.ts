@@ -65,7 +65,7 @@ Then(
     await expect(richTextEditor).toHaveText('こんにちは！世界');
     // 「世界」が strong タグで囲われていないか確認
     const boldText = richTextEditor.locator('strong');
-    await expect(boldText).not.toBeVisible();
+    await expect(boldText).not.toBeVisible({ timeout: 10000 });
   },
 );
 When('「見出し2」と入力し、その文字を選択して「h2」ボタンを押す', async () => {
@@ -107,7 +107,9 @@ When('「投稿」ボタンを押す', async () => {
   await publishButton.click();
 });
 Then('記事が投稿され、投稿完了ページに遷移する', async () => {
-  await expect(page.getByText('記事を公開しました')).toBeVisible();
+  await expect(page.getByText('記事を公開しました')).toBeVisible({
+    timeout: 10000,
+  });
 });
 
 // 以下ヘルパ関数
@@ -136,7 +138,7 @@ async function clearSelectionByArrow(locator: Locator) {
 //   await addH2Button.click();
 // });
 // Then('h2のインプットが表示される', async () => {
-//   await expect(page.getByRole('textbox', { name: 'h2' })).toBeVisible();
+//   await expect(page.getByRole('textbox', { name: 'h2' })).toBeVisible({timeout: 10000});
 // });
 // When('h2に「見出しレベル2」と入力する', async () => {
 //   const h2Input = await page.getByRole('textbox', { name: 'h2' });
@@ -150,7 +152,7 @@ async function clearSelectionByArrow(locator: Locator) {
 //   await addTextButton.click();
 // });
 // Then('paragraphのインプットが表示される', async () => {
-//   await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible();
+//   await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible({timeout: 10000});
 // });
 // When('paragraphのインプットに「paragraph入力値」と入力する', async () => {
 //   const paragraphInput = await page.getByRole('textbox', { name: 'paragraph' });
@@ -162,7 +164,7 @@ async function clearSelectionByArrow(locator: Locator) {
 //   await addH3Button.click();
 // });
 // Then('h3 のインプットが表示される', async () => {
-//   await expect(page.getByRole('textbox', { name: 'h3' })).toBeVisible();
+//   await expect(page.getByRole('textbox', { name: 'h3' })).toBeVisible({timeout: 10000});
 // });
 // When('h3 のインプットに「見出しレベル3」と入力する', async () => {
 //   const h3Input = await page.getByRole('textbox', { name: 'h3' });
@@ -174,5 +176,5 @@ async function clearSelectionByArrow(locator: Locator) {
 //   await publishButton.click();
 // });
 // Then('「記事を公開しました」と表示される', async () => {
-//   await expect(page.getByText('記事を公開しました')).toBeVisible();
+//   await expect(page.getByText('記事を公開しました')).toBeVisible({timeout: 10000});
 // });

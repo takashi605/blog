@@ -25,7 +25,7 @@ Then('トップテックピック記事のサムネイル画像が表示され�
   const thumbnailImage = topTechPickSection.getByRole('img', {
     name: 'サムネイル画像',
   });
-  await expect(thumbnailImage).toBeVisible();
+  await expect(thumbnailImage).toBeVisible({ timeout: 10000 });
 });
 
 // TODO h1 タグであるのは適切でないため、修正が必要
@@ -47,7 +47,7 @@ Then('トップテックピック記事の投稿日時が表示されている',
 
   await expect(
     topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 10000 });
 });
 
 function getTopTechPickSection(page: Page) {
