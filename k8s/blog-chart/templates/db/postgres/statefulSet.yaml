@@ -49,6 +49,9 @@ spec:
     - metadata:
         name: {{ include "postgres.appname" . }}-data
       spec:
+        {{- if .Values.postgres.pvc.volumeName }}
+        volumeName: {{ .Values.postgres.pvc.volumeName }}
+        {{- end }}
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
