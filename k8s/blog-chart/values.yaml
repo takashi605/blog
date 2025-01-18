@@ -97,6 +97,8 @@ postgres:
   statefulSet:
     replicas: 1
     storage: "1Gi"
+  pvc:
+    volumeName: ""
   pod:
     imageRepository: "postgres"
     imageTag: "v0.0.0"
