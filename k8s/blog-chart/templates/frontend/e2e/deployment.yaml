@@ -17,6 +17,10 @@ spec:
         app.kubernetes.io/name: {{ include "e2e.appname" . }}
         {{- include "blog-chart.labels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+        {{- if .Values.e2e.pod.imagePullSecret }}
+        - name: {{ .Values.e2e.pod.imagePullSecret }}
+        {{- end }}
       containers:
         - name: {{ include "e2e.appname" . }}
           image: "{{ .Values.e2e.pod.imageRepository }}:{{ .Values.e2e.pod.imageTag }}"
