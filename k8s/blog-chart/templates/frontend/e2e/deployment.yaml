@@ -51,6 +51,9 @@ spec:
       {{- if and (ne .Values.e2e.hostAliases.ip "") (gt (len .Values.e2e.hostAliases.hostnames) 0) }}
       hostAliases:
         - ip: {{ .Values.e2e.hostAliases.ip }}
-          hostnames: {{ .Values.e2e.hostAliases.hostnames }}
+          hostnames:
+          {{- range .Values.e2e.hostAliases.hostnames }}
+            - {{ . | quote }}
+          {{- end }}
       {{- end }}
 {{- end }}
