@@ -48,4 +48,9 @@ spec:
         - name: unix-domain-socket
           hostPath:
             path: /tmp/.X11-unix
+      {{- if and (ne .Values.e2e.hostAliases.ip "") (gt (len .Values.e2e.hostAliases.hostnames) 0) }}
+      hostAliases:
+        - ip: {{ .Values.e2e.hostAliases.ip }}
+          hostnames: {{ .Values.e2e.hostAliases.hostnames }}
+      {{- end }}
 {{- end }}
