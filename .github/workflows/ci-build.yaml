@@ -60,7 +60,7 @@ jobs:
             NEXT_PUBLIC_CLOUDINARY_API_KEY=${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
             CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
 
-      - name: "api Image の Build と Push"
+      - name: "本番用 api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -71,6 +71,18 @@ jobs:
             ghcr.io/${{ github.repository }}-api:${{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache
+
+      - name: "ステージング用 api Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/backend/api/Dockerfile
+          target: staging
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-api-staging:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api-staging:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api-staging:cache
 
       - name: "postgres Image の Build と Push"
         uses: docker/build-push-action@v5

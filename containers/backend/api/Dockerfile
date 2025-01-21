@@ -47,6 +47,21 @@ ARG APP_ROOT_DIR=source/backend
 WORKDIR /$APP_ROOT_DIR
 RUN cargo build --release -p api
 
+# ステージング環境用に sqlx をインストール
+RUN cargo install sqlx-cli --no-default-features --features postgres --root /tmp/sqlx-install
+
+FROM gcr.io/distroless/cc-debian12:nonroot AS staging
+ARG APP_ROOT_DIR=source/backend
+
+WORKDIR /$APP_ROOT_DIR
+
+# ビルド用ステージから必要なファイルのみをコピー
+COPY --from=builder --chown=nonroot:nonroot /$APP_ROOT_DIR/target/release/api ./api
+COPY --from=builder --chown=nonroot:nonroot /tmp/sqlx-install/bin/sqlx ./sqlx
+COPY --from=dev --chown=nonroot:nonroot /$APP_ROOT_DIR/api/migrations ./migrations
+
+CMD ["./api"]
+
 FROM gcr.io/distroless/cc-debian12:nonroot AS prod
 ARG APP_ROOT_DIR=source/backend
 
