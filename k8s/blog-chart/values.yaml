@@ -1,5 +1,6 @@
 web:
   ingress:
+    rewriteTarget: /
     # host が空文字列の場合は rules に含まれない
     host: "blog.example"
     pathType: Prefix
