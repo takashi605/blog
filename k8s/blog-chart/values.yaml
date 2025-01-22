@@ -32,6 +32,7 @@ web:
     externalTrafficPolicy: Local
 admin:
   ingress:
+    rewriteTarget: /
     # host が空文字列の場合は rules に含まれない
     host: "admin.blog.example"
     pathType: Prefix

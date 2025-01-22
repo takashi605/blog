@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ include "admin.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.admin.ingress.rewriteTarget }}
 spec:
   rules:
     - {{- if .Values.admin.ingress.host }}
