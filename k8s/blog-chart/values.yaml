@@ -20,7 +20,7 @@ web:
     cpuRequest: "100m"
     containerPort: 3000
     env:
-      NEXT_PUBLIC_API_URL: "http://api.blog.example"
+      NEXT_PUBLIC_API_URL: "http://api"
   service:
     type: ClusterIP
     port: 80
@@ -52,7 +52,7 @@ admin:
     cpuRequest: "100m"
     containerPort: 3000
     env:
-      NEXT_PUBLIC_API_URL: "http://api.blog.example"
+      NEXT_PUBLIC_API_URL: "http://api"
   service:
     type: ClusterIP
     port: 80
