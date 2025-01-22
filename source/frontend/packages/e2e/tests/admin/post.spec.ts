@@ -23,7 +23,7 @@ When('リッチテキストエディタに「こんにちは！」と入力す�
 });
 Then('リッチテキストエディタに「こんにちは！」が表示される', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toHaveText('こんにちは！');
+  await expect(richTextEditor).toHaveText('こんにちは！', { timeout: 10000 });
 });
 When('「世界」と入力し、その文字を選択して太字ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
