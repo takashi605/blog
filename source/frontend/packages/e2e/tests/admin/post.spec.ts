@@ -17,9 +17,14 @@ Given('記事投稿ページにアクセスする', async () => {
   await page.goto(`${process.env.ADMIN_URL}/posts/create`);
 });
 
-When('リッチテキストエディタに「こんにちは！」と入力する', () => {
+Then('リッチテキストエディタが表示されていることを確認する', async () => {
+  const richTextEditor = page.locator('[data-testid="rich-text-editor"]');
+  await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+});
+
+When('リッチテキストエディタに「こんにちは！」と入力する', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  richTextEditor.pressSequentially('こんにちは！');
+  await richTextEditor.pressSequentially('こんにちは！', { timeout: 10000 });
 });
 Then('リッチテキストエディタに「こんにちは！」が表示される', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
@@ -28,7 +33,7 @@ Then('リッチテキストエディタに「こんにちは！」が表示さ�
 When('「世界」と入力し、その文字を選択して太字ボタンを押す', async () => {
   const richTextEditor = page.locator('[contenteditable="true"]');
   // テキストをセット
-  await richTextEditor.pressSequentially('世界');
+  await richTextEditor.pressSequentially('世界', { timeout: 10000 });
 
   await selectByArrowLeft(richTextEditor, 2);
 
