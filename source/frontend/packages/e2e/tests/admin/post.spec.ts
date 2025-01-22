@@ -18,7 +18,7 @@ Given('記事投稿ページにアクセスする', async () => {
 });
 
 Then('リッチテキストエディタが表示されていることを確認する', async () => {
-  const richTextEditor = page.locator('[data-testid="rich-text-editor"]');
+  const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toBeVisible({ timeout: 10000 });
 });
 
