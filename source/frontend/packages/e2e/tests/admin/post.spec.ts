@@ -8,6 +8,7 @@ Before(async () => {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();
+  page.setDefaultTimeout(15000);
 });
 
 Given('記事投稿ページにアクセスする', async () => {
