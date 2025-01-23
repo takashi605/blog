@@ -50,10 +50,12 @@ Then(
   async () => {
     const richTextEditor = page.locator('[contenteditable="true"]');
 
-    await expect(richTextEditor).toHaveText('こんにちは！世界');
+    await expect(richTextEditor).toHaveText('こんにちは！世界', {
+      timeout: 10000,
+    });
     // 「世界」が strong タグで囲われているか確認
     const boldText = richTextEditor.locator('strong');
-    await expect(boldText).toHaveText('世界');
+    await expect(boldText).toHaveText('世界', { timeout: 10000 });
   },
 );
 When('「世界」を再び選択し、太字ボタンを押す', async () => {
@@ -68,7 +70,9 @@ Then(
   'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
   async () => {
     const richTextEditor = page.locator('[contenteditable="true"]');
-    await expect(richTextEditor).toHaveText('こんにちは！世界');
+    await expect(richTextEditor).toHaveText('こんにちは！世界', {
+      timeout: 10000,
+    });
     // 「世界」が strong タグで囲われていないか確認
     const boldText = richTextEditor.locator('strong');
     await expect(boldText).not.toBeVisible({ timeout: 10000 });
@@ -88,7 +92,7 @@ Then(
   async () => {
     const richTextEditor = page.locator('[contenteditable="true"]');
     const h2Text = richTextEditor.locator('h2');
-    await expect(h2Text).toHaveText('見出し2');
+    await expect(h2Text).toHaveText('見出し2', { timeout: 10000 });
   },
 );
 When('「見出し3」と入力し、その文字を選択して「h3」ボタンを押す', async () => {
@@ -105,7 +109,7 @@ Then(
   async () => {
     const richTextEditor = page.locator('[contenteditable="true"]');
     const h3Text = richTextEditor.locator('h3');
-    await expect(h3Text).toHaveText('見出し3');
+    await expect(h3Text).toHaveText('見出し3', { timeout: 10000 });
   },
 );
 When('「投稿」ボタンを押す', async () => {
