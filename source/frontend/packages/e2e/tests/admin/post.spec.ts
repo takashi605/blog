@@ -1,4 +1,4 @@
-import { Before, Given, Then, When } from '@cucumber/cucumber';
+import { After, Before, Given, Then, When } from '@cucumber/cucumber';
 import type { Locator, Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
@@ -9,6 +9,10 @@ Before(async () => {
   const context = await browser.newContext();
   page = await context.newPage();
   page.setDefaultTimeout(15000);
+});
+
+After(async () => {
+  await page.close();
 });
 
 Given('記事投稿ページにアクセスする', async () => {

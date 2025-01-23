@@ -1,4 +1,10 @@
-import { Before, Given, setDefaultTimeout, Then } from '@cucumber/cucumber';
+import {
+  After,
+  Before,
+  Given,
+  setDefaultTimeout,
+  Then,
+} from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { chromium, expect } from '@playwright/test';
 
@@ -9,6 +15,10 @@ Before(async () => {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();
+});
+
+After(async () => {
+  await page.close();
 });
 
 Given('新着記事を一覧表示するページにアクセスする', async () => {
