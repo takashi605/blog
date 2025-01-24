@@ -10,6 +10,7 @@ Given('記事投稿ページにアクセスする', async function () {
   const page = playwrightHelper.getPage();
   await page.goto(`${process.env.ADMIN_URL}/posts/create`);
 
+  console.log(`targetURL: ${process.env.ADMIN_URL}/posts/create`);
   // TODO デバッグ用の記述なので削除
   const htmlContent = await page.content();
   console.log(htmlContent);
