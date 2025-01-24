@@ -1,44 +1,34 @@
-import {
-  After,
-  Before,
-  Given,
-  setDefaultTimeout,
-  Then,
-} from '@cucumber/cucumber';
+import { Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
-import { chromium, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let page: Page;
-
-Before(async () => {
-  setDefaultTimeout(15000);
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  page = await context.newPage();
-});
-
-After(async () => {
-  await page.close();
-});
-
-Given('新着記事を一覧表示するページにアクセスする', async () => {
+Given('新着記事を一覧表示するページにアクセスする', async function () {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
+  const page = playwrightHelper.getPage();
+
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/latests`);
 });
 
-Then('ページタイトルが表示される', async () => {
+Then('ページタイトルが表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   expect(page.getByRole('heading', { level: 2 })).toHaveText('新着記事');
 });
 
-Then('複数の記事が表示される', async () => {
+Then('複数の記事が表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const posts = page.getByRole('listitem');
   const count = await posts.count();
   expect(count).toBeGreaterThan(1);
 });
 
-Then('各記事に記事タイトルが表示される', async () => {
+Then('各記事に記事タイトルが表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -52,7 +42,9 @@ Then('各記事に記事タイトルが表示される', async () => {
   );
 });
 
-Then('各記事に記事サムネイルが表示される', async () => {
+Then('各記事に記事サムネイルが表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -64,7 +56,9 @@ Then('各記事に記事サムネイルが表示される', async () => {
   );
 });
 
-Then('各記事に投稿日が表示される', async () => {
+Then('各記事に投稿日が表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -78,7 +72,9 @@ Then('各記事に投稿日が表示される', async () => {
   );
 });
 
-Then('各記事は新着順で並んでいる', async () => {
+Then('各記事は新着順で並んでいる', async function () {
+  const page = playwrightHelper.getPage();
+
   const posts = page.getByRole('listitem');
   const count = await posts.count();
 
@@ -108,28 +104,38 @@ Then('各記事は新着順で並んでいる', async () => {
   }
 });
 
-Given('トップページにアクセスして新着記事を閲覧する', async () => {
+Given('トップページにアクセスして新着記事を閲覧する', async function () {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
+  const page = playwrightHelper.getPage();
+
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
-Then('新着記事3件分の記事タイトルが表示される', async () => {
+Then('新着記事3件分の記事タイトルが表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const latestsSection = getLatestsSectionInTopPage(page);
   const titles = latestsSection.locator('h3');
   expect(await titles.count()).toBe(3);
 });
-Then('新着記事3件分の記事サムネイルが表示される', async () => {
+Then('新着記事3件分の記事サムネイルが表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const latestsSection = getLatestsSectionInTopPage(page);
   const thumbnailImages = latestsSection.locator('img');
   expect(await thumbnailImages.count()).toBe(3);
 });
-Then('新着記事3件分の投稿日が表示される', async () => {
+Then('新着記事3件分の投稿日が表示される', async function () {
+  const page = playwrightHelper.getPage();
+
   const latestsSection = getLatestsSectionInTopPage(page);
   const postDates = latestsSection.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
   expect(await postDates.count()).toBe(3);
 });
-Then('新着記事は新着順で並んでいる', async () => {
+Then('新着記事は新着順で並んでいる', async function () {
+  const page = playwrightHelper.getPage();
+
   const latestsSection = getLatestsSectionInTopPage(page);
 
   const posts = latestsSection.getByRole('listitem');
