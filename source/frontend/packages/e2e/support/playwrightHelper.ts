@@ -42,12 +42,12 @@ class PlaywrightHelper {
 
     // デバッグ用のコンソールログとページエラーのキャプチャ
     // 基本はコメントアウト
-    // this.page.on('console', (msg) =>
-    //   console.log(`Console Log: ${msg.type()} - ${msg.text()}`),
-    // );
-    // this.page.on('pageerror', (error) =>
-    //   console.log(`Page Error: ${error.message}`),
-    // );
+    this.page.on('console', (msg) =>
+      console.log(`Console Log: ${msg.type()} - ${msg.text()}`),
+    );
+    this.page.on('pageerror', (error) =>
+      console.log(`Page Error: ${error.message}`),
+    );
   }
 
   public async closeBrowser() {
