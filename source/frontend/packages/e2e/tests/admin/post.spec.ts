@@ -28,7 +28,7 @@ Then('リッチテキストエディタに「こんにちは！」が表示さ�
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toHaveText('こんにちは！', { timeout: 10000 });
+  await expect(richTextEditor).toHaveText('こんにちは！うおおおおおおお！！！！！！！！', { timeout: 10000 });
 });
 When('「世界」と入力し、その文字を選択して太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
