@@ -28,7 +28,7 @@ mod tests {
 
     // ステータスが 404 エラーであることを確認
     assert_eq!(resp_status, 404);
-    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。！！！！！！！！！！！！"), true);
+    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。！！！！！！！！"), true);
     Ok(())
   }
 
