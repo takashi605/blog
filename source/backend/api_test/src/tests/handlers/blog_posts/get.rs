@@ -14,7 +14,7 @@ mod tests {
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
     let expected_blog_post: BlogPost = helper::expected_blog_post()?;
 
-    helper::assert_blog_post(&actual_blog_post_resp, &expected_blog_post);
+    helper::assert_blog_post_without_content_id(&actual_blog_post_resp, &expected_blog_post);
     Ok(())
   }
 
@@ -129,8 +129,7 @@ mod tests {
       Ok(uuid)
     }
 
-    // この関数は content の id 以外のフィールドを比較する
-    pub fn assert_blog_post(actual: &BlogPost, expected: &BlogPost) {
+    pub fn assert_blog_post_without_content_id(actual: &BlogPost, expected: &BlogPost) {
       // BlogPost の id, title, post_date などを比較
       assert_eq!(actual.id, expected.id);
       assert_eq!(actual.title, expected.title);
