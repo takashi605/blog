@@ -1,0 +1,73 @@
+#[cfg(test)]
+mod tests {
+  use crate::tests::helper::http::request::Request;
+  use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
+  use anyhow::{Context, Result};
+  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+  use uuid::Uuid;
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn post_single_blog_post() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts";
+    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req()?;
+    let blog_post_json:String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+    let post_request = Request::new(
+      Methods::POST {
+        body: blog_post_json,
+      },
+      &url,
+    );
+    let resp = post_request.send().await?.text().await?;
+
+    let resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+
+    test_helper::assert_blog_post_without_content_id(&resp, &blog_post_for_req);
+    Ok(())
+  }
+
+  mod helper {
+    use common::types::api::response::H3Block;
+
+    use super::*;
+
+    pub fn create_blog_post_for_req() -> Result<BlogPost> {
+      let target_post_id: Uuid = target_post_id()?;
+      let blog_post = BlogPost {
+        id: target_post_id,
+        title: "テスト記事".to_string(),
+        thumbnail: Image {
+          path: "test-coffee".to_string(),
+        },
+        post_date: "2021-01-01".parse()?,
+        last_update_date: "2021-01-02".parse()?,
+        contents: vec![
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはテスト用の文字列です。".to_string(),
+              styles: Style { bold: true },
+            }],
+            type_field: "paragraph".to_string(),
+          }),
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "見出しレベル2".to_string(),
+            type_field: "h2".to_string(),
+          }),
+          BlogPostContent::H3(H3Block {
+            id: Uuid::new_v4(),
+            text: "見出しレベル3".to_string(),
+            type_field: "h3".to_string(),
+          })
+        ],
+      };
+
+      Ok(blog_post)
+    }
+
+    pub fn target_post_id() -> Result<Uuid> {
+      let uuid = Uuid::parse_str("2f9795cd-7e7d-453e-96e5-228f36a03fd1")?;
+      Ok(uuid)
+    }
+  }
+}
