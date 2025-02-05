@@ -38,9 +38,9 @@ mod tests {
     use super::*;
 
     pub fn expected_blog_post() -> Result<BlogPost> {
-      let target_user_id: Uuid = target_post_id()?;
+      let target_post_id: Uuid = target_post_id()?;
       let blog_post = BlogPost {
-        id: target_user_id,
+        id: target_post_id,
         title: "初めての技術スタックへの挑戦".to_string(),
         thumbnail: Image { path: "test-coffee".to_string() },
         post_date: "2021-01-01".parse()?,
