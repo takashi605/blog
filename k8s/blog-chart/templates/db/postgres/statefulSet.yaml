@@ -17,6 +17,12 @@ spec:
         app.kubernetes.io/name: {{ include "postgres.appname" . }}
         {{- include "blog-chart.labels" . | nindent 8 }}
     spec:
+      # postgres ユーザーが 999:999 なので、それに合わせる
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsGroup: 999
+        runAsNonRoot: true
       imagePullSecrets:
         {{- if .Values.postgres.pod.imagePullSecret }}
         - name: {{ .Values.postgres.pod.imagePullSecret }}
@@ -44,7 +50,8 @@ spec:
             - containerPort: {{ .Values.postgres.pod.containerPort }}
           volumeMounts:
             - name: {{ include "postgres.appname" . }}-data
-              mountPath: /var/lib/postgres
+              # postgresql のデフォルトのデータディレクトリ
+              mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:
         name: {{ include "postgres.appname" . }}-data
