@@ -1,3 +1,5 @@
+MAKEFLAGS += --no-print-directory
+
 CLUSTER_NAME = blog
 
 ###
@@ -196,12 +198,11 @@ api-pod-name:
 api-create-db:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database create"
 api-drop-db:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop"
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop -y"
 api-migrate-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run"
 api-migrate-revert:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert"
-
 ###
 ## api テスト系
 ## Pod「api」内に api テスト用コンテナがある
@@ -209,7 +210,11 @@ api-migrate-revert:
 api-test-sh:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
+	$(MAKE) api-create-db
+	$(MAKE) api-migrate-run
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
 
 ###
 ## blog-admin 系
@@ -224,6 +229,9 @@ postgres-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep postgres
 postgres-sh:
 	kubectl exec -it $(shell $(MAKE) postgres-pod-name) -c postgres -- bash
+postgres-recreate-schema:
+	kubectl exec -it $(shell $(MAKE) postgres-pod-name) -c postgres -- \
+		psql -d blog -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 
 ###
 ## デバッグ用
