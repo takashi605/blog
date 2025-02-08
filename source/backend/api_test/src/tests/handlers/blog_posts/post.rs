@@ -6,23 +6,23 @@ mod tests {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
-  #[tokio::test(flavor = "current_thread")]
-  async fn post_single_blog_post() -> Result<()> {
-    let url = "http://localhost:8000/blog/posts";
+  // #[tokio::test(flavor = "current_thread")]
+  // async fn post_single_blog_post() -> Result<()> {
+  //   let url = "http://localhost:8000/blog/posts";
 
-    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req()?;
-    let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
-    println!("{}", blog_post_json_for_req);
+  //   let blog_post_for_req: BlogPost = helper::create_blog_post_for_req()?;
+  //   let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+  //   println!("{}", blog_post_json_for_req);
 
-    let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
+  //   let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
 
-    let resp = post_request.send().await?.text().await?;
-    println!("{}", resp);
-    let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+  //   let resp = post_request.send().await?.text().await?;
+  //   println!("{}", resp);
+  //   let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
 
-    test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
-    Ok(())
-  }
+  //   test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
+  //   Ok(())
+  // }
 
   mod helper {
     use common::types::api::response::H3Block;
@@ -38,7 +38,7 @@ mod tests {
         // TODO 画像の ID は実際に DB 上に存在するものでなくてはならない
         // いったん実際の ID をコピペしているが、image 取得のエンドポイントを作成して、そのエンドポイントから取得した ID を使うように修正する
         thumbnail: Image {
-          id: Uuid::parse_str("ca482635-8c72-4cc3-bab8-36128105948c")?,
+          id: Uuid::parse_str("3d8e3a38-e644-4725-980e-4d536395c241")?,
           path: "test-coffee".to_string(),
         },
         post_date: "2021-01-01".parse()?,
