@@ -3,8 +3,11 @@ pub mod fetch_blog_post;
 
 use actix_web::{web, Scope};
 
+use super::image_handlers::image_scope;
+
+// TODO image_scope が同階層の別モジュールとなっており構造的に気持ち悪いので、上手く階層化する
 pub fn blog_scope() -> Scope {
-  web::scope("/blog").service(posts_scope())
+  web::scope("/blog").service(posts_scope()).service(image_scope())
 }
 
 fn posts_scope() -> Scope {
