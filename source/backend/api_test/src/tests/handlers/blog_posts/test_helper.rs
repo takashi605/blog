@@ -1,10 +1,10 @@
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block};
 
-pub fn assert_blog_post_without_content_id(actual: &BlogPost, expected: &BlogPost) {
+pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
   // BlogPost の id, title, post_date などを比較
   assert_eq!(actual.id, expected.id);
   assert_eq!(actual.title, expected.title);
-  assert_eq!(actual.thumbnail, expected.thumbnail);
+  assert_eq!(actual.thumbnail.path, expected.thumbnail.path);
   assert_eq!(actual.post_date, expected.post_date);
   assert_eq!(actual.last_update_date, expected.last_update_date);
 

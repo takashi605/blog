@@ -53,11 +53,13 @@ custom_build(
   deps=[
     'source/backend/api',
     'source/backend/common',
-    'containers/backend/api'
+    'containers/backend/api',
+    'source/backend/bacon.toml'
   ],
   live_update=[
     sync('source/backend/api', '/source/backend/api'),
     sync('source/backend/common', '/source/backend/common'),
+    sync('source/backend/bacon.toml', '/source/backend/bacon.toml'),
   ]
 )
 
@@ -70,11 +72,13 @@ custom_build(
   deps=[
     'source/backend/api_test',
     'source/backend/common',
-    'containers/backend/api-test'
+    'containers/backend/api-test',
+    'source/backend/bacon.toml'
   ],
   live_update=[
     sync('source/backend/api_test', '/source/backend/api_test'),
     sync('source/backend/common', '/source/backend/common'),
+    sync('source/backend/bacon.toml', '/source/backend/bacon.toml'),
   ]
 )
 

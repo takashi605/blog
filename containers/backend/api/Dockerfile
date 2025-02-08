@@ -19,6 +19,7 @@ WORKDIR /$APP_ROOT_DIR
 
 # キャッシュを効率的に使うために Cargo.toml だけをコピーして依存関係を解決
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
+COPY --chown=rust:rust ./$APP_ROOT_DIR/bacon.toml ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api/Cargo.toml ./api/
 COPY --chown=rust:rust ./$APP_ROOT_DIR/api_test/Cargo.toml ./api_test/
 COPY --chown=rust:rust ./$APP_ROOT_DIR/common/Cargo.toml ./common/
@@ -39,7 +40,7 @@ RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
-CMD ["bacon", "--headless", "run", "./api"]
+CMD ["bacon", "--headless", "run-api"]
 
 FROM base AS builder
 ARG APP_ROOT_DIR=source/backend

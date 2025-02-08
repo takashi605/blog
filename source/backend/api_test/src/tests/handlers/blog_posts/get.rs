@@ -14,7 +14,7 @@ mod tests {
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
     let expected_blog_post: BlogPost = helper::expected_blog_post()?;
 
-    test_helper::assert_blog_post_without_content_id(&actual_blog_post_resp, &expected_blog_post);
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
     Ok(())
   }
 
@@ -42,7 +42,10 @@ mod tests {
       let blog_post = BlogPost {
         id: target_post_id,
         title: "初めての技術スタックへの挑戦".to_string(),
-        thumbnail: Image { path: "test-coffee".to_string() },
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-coffee".to_string()
+        },
         post_date: "2021-01-01".parse()?,
         last_update_date: "2021-01-02".parse()?,
         contents: vec![
