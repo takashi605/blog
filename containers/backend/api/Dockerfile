@@ -39,7 +39,7 @@ RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
-CMD ["bacon", "--headless", "./api"]
+CMD ["bacon", "--headless", "run", "./api"]
 
 FROM base AS builder
 ARG APP_ROOT_DIR=source/backend
