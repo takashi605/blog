@@ -34,8 +34,11 @@ mod tests {
       let blog_post = BlogPost {
         id: target_post_id,
         title: "テスト記事".to_string(),
+
+        // TODO 画像の ID は実際に DB 上に存在するものでなくてはならない
+        // いったん実際の ID をコピペしているが、image 取得のエンドポイントを作成して、そのエンドポイントから取得した ID を使うように修正する
         thumbnail: Image {
-          id: Uuid::new_v4(),
+          id: Uuid::parse_str("ca482635-8c72-4cc3-bab8-36128105948c")?,
           path: "test-coffee".to_string(),
         },
         post_date: "2021-01-01".parse()?,
