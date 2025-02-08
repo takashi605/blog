@@ -16,6 +16,7 @@ pub struct BlogPost {
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
+  pub id: Uuid,
   pub path: String,
 }
 
