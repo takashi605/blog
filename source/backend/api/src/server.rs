@@ -3,7 +3,7 @@ pub mod handlers;
 use actix_cors::Cors;
 use actix_web::{http, web, App, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
-use handlers::{blog_post_handler::blog_scope, response::err::ApiCustomError, sample_handler::sample_scope};
+use handlers::{blog_post_handlers::blog_scope, response::err::ApiCustomError, sample_handler::sample_scope};
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
