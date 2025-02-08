@@ -6,43 +6,37 @@ mod tests {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
-  // TODO 画像IDが上手く指定できず安定してテストが通らないのでいったんコメントアウト。
-  // 画像IDを取得できるようにしたらコメントアウトを外す
-  // #[tokio::test(flavor = "current_thread")]
-  // async fn post_single_blog_post() -> Result<()> {
-  //   let url = "http://localhost:8000/blog/posts";
+  #[tokio::test(flavor = "current_thread")]
+  async fn post_single_blog_post() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts";
 
-  //   let blog_post_for_req: BlogPost = helper::create_blog_post_for_req()?;
-  //   let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
-  //   println!("{}", blog_post_json_for_req);
+    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req().await?;
+    let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+    println!("{}", blog_post_json_for_req);
 
-  //   let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
+    let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
 
-  //   let resp = post_request.send().await?.text().await?;
-  //   println!("{}", resp);
-  //   let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+    let resp = post_request.send().await?.text().await?;
+    println!("{}", resp);
+    let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
 
-  //   test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
-  //   Ok(())
-  // }
+    test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
+    Ok(())
+  }
 
   mod helper {
     use common::types::api::response::H3Block;
 
     use super::*;
 
-    pub fn create_blog_post_for_req() -> Result<BlogPost> {
+    pub async fn create_blog_post_for_req() -> Result<BlogPost> {
+      // DB 上に存在する画像を使わないとエラーするので、適当な画像を取得する
+      let thumbnail = fetch_thumbnail_image().await?;
       let target_post_id: Uuid = target_post_id()?;
       let blog_post = BlogPost {
         id: target_post_id,
         title: "テスト記事".to_string(),
-
-        // TODO 画像の ID は実際に DB 上に存在するものでなくてはならない
-        // いったん実際の ID をコピペしているが、image 取得のエンドポイントを作成して、そのエンドポイントから取得した ID を使うように修正する
-        thumbnail: Image {
-          id: Uuid::parse_str("3d8e3a38-e644-4725-980e-4d536395c241")?,
-          path: "test-coffee".to_string(),
-        },
+        thumbnail,
         post_date: "2021-01-01".parse()?,
         last_update_date: "2021-01-02".parse()?,
         contents: vec![
@@ -73,6 +67,19 @@ mod tests {
     pub fn target_post_id() -> Result<Uuid> {
       let uuid = Uuid::parse_str("2f9795cd-7e7d-453e-96e5-228f36a03fd1")?;
       Ok(uuid)
+    }
+
+    async fn fetch_thumbnail_image() -> Result<Image> {
+      let url = "http://localhost:8000/blog/images";
+      let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
+
+      let images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+
+      if images_resp.len() == 0 {
+        panic!("画像が取得できませんでした");
+      }
+
+      Ok(images_resp[0].clone())
     }
   }
 }
