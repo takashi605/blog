@@ -9,7 +9,10 @@ fn posts_scope() -> Scope {
 }
 
 mod handle_funcs {
-  use crate::server::handlers::{crud::fetch_blog_post::fetch_single_blog_post, response::err::ApiCustomError};
+  use crate::server::handlers::{
+    crud::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post},
+    response::err::ApiCustomError,
+  };
   use actix_web::{web, HttpResponse, Responder};
   use common::types::api::response::BlogPost;
   use uuid::Uuid;
@@ -23,7 +26,10 @@ mod handle_funcs {
   }
 
   pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
-    // TODO 実際にデータベースに格納したデータを返すように変更
-    Ok(HttpResponse::Ok().json(blog_post_req))
+    let blog_post_req = blog_post_req.into_inner();
+
+    // TODO create_single_blog_post 関数内部で適切なエラーハンドリングを行い、? でエラーを返す
+    let inserted_blog_post = create_single_blog_post(blog_post_req).await.map_err(|err| ApiCustomError::Other(err))?;
+    Ok(HttpResponse::Ok().json(inserted_blog_post))
   }
 }
