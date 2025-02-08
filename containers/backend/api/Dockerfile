@@ -35,11 +35,11 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 
 FROM base AS dev
 
-RUN cargo install cargo-watch
+RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
-CMD ["cargo", "watch", "-x", "run -p api"]
+CMD ["bacon", "--headless", "./api"]
 
 FROM base AS builder
 ARG APP_ROOT_DIR=source/backend
