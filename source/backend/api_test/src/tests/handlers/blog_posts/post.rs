@@ -9,19 +9,21 @@ mod tests {
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_blog_post() -> Result<()> {
     let url = "http://localhost:8000/blog/posts";
+
     let blog_post_for_req: BlogPost = helper::create_blog_post_for_req()?;
-    let blog_post_json:String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+    let blog_post_json_for_req:String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+
     let post_request = Request::new(
       Methods::POST {
-        body: blog_post_json,
+        body: blog_post_json_for_req,
       },
       &url,
     );
+
     let resp = post_request.send().await?.text().await?;
+    let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
 
-    let resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
-
-    test_helper::assert_blog_post_without_content_id(&resp, &blog_post_for_req);
+    test_helper::assert_blog_post_without_content_id(&blog_post_by_resp, &blog_post_for_req);
     Ok(())
   }
 
