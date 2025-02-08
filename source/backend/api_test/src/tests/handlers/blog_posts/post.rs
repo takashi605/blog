@@ -6,6 +6,8 @@ mod tests {
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
+  // TODO 画像IDが上手く指定できず安定してテストが通らないのでいったんコメントアウト。
+  // 画像IDを取得できるようにしたらコメントアウトを外す
   // #[tokio::test(flavor = "current_thread")]
   // async fn post_single_blog_post() -> Result<()> {
   //   let url = "http://localhost:8000/blog/posts";
