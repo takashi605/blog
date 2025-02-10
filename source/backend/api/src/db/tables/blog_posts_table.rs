@@ -34,15 +34,13 @@ pub async fn insert_blog_post(post: BlogPostRecord) -> Result<()> {
   Ok(())
 }
 
-impl From<BlogPost> for BlogPostRecord {
-  fn from(post: BlogPost) -> Self {
-    Self {
-      id: post.id,
-      title: post.title,
-      thumbnail_image_id: post.thumbnail.id,
-      post_date: post.post_date,
-      last_update_date: post.last_update_date,
-    }
+pub fn records_from_blog_post(post: BlogPost) -> BlogPostRecord {
+  BlogPostRecord {
+    id: post.id,
+    title: post.title,
+    thumbnail_image_id: post.thumbnail.id,
+    post_date: post.post_date,
+    last_update_date: post.last_update_date,
   }
 }
 
@@ -53,10 +51,11 @@ mod tests {
   use anyhow::Result;
 
   #[tokio::test(flavor = "current_thread")]
-  async fn blog_post_to_record_by_from_func() {
+  async fn blog_post_to_records() {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
-    let record = BlogPostRecord::from(mock_post);
+
+    let record:BlogPostRecord = records_from_blog_post(mock_post);
     assert_eq!(record.id, post_id);
     assert_eq!(record.title, "テスト記事");
     assert_eq!(record.post_date, "2021-01-01".parse().unwrap());
