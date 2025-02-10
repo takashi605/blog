@@ -21,7 +21,7 @@ pub struct TextStyleRecord {
 }
 
 pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
-  let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where content_id = $1")
+  let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where id = $1")
     .bind(content_id)
     .fetch_one(&*POOL)
     .await?;
