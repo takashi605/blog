@@ -10,13 +10,13 @@ mod tests {
   async fn post_single_blog_post() -> Result<()> {
     let url = "http://localhost:8000/blog/posts";
 
-    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req().await?;
-    let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした")?;
+    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req().await.unwrap();
+    let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした").unwrap();
 
     let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
 
-    let resp = post_request.send().await?.text().await?;
-    let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+    let resp = post_request.send().await.unwrap().text().await.unwrap();
+    let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 
     test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
     Ok(())

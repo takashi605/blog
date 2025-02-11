@@ -1,5 +1,5 @@
-mod helper;
 mod handlers;
+mod helper;
 
 #[cfg(test)]
 mod api_tests {
@@ -9,7 +9,7 @@ mod api_tests {
   use common::Numbers;
   #[tokio::test(flavor = "current_thread")]
   async fn root_get() -> Result<()> {
-    let resp = Request::new(Methods::GET, "http://localhost:8000").send().await?.text().await?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000").send().await.unwrap().text().await.unwrap();
     assert_eq!(resp, "Hello world!");
     Ok(())
   }
@@ -23,17 +23,19 @@ mod api_tests {
       "http://localhost:8000",
     )
     .send()
-    .await?
+    .await
+    .unwrap()
     .text()
-    .await?;
+    .await
+    .unwrap();
     assert_eq!(resp, "post message");
     Ok(())
   }
 
   #[tokio::test(flavor = "current_thread")]
   async fn fivesix_get() -> Result<()> {
-    let resp = Request::new(Methods::GET, "http://localhost:8000/fivesix").send().await?.text().await?;
-    let numbers: Numbers = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+    let resp = Request::new(Methods::GET, "http://localhost:8000/fivesix").send().await.unwrap().text().await.unwrap();
+    let numbers: Numbers = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
     assert_eq!(numbers.num1, 5);
     assert_eq!(numbers.num2, 6);
     Ok(())

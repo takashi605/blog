@@ -108,7 +108,7 @@ mod tests {
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
       Vec<RichTextRecord>,
-    ) = records_from_blog_post(mock_post)?;
+    ) = records_from_blog_post(mock_post).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());

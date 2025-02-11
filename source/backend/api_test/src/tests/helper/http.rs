@@ -4,9 +4,9 @@ mod response;
 
 #[cfg(test)]
 mod tests {
+  use crate::tests::helper::http::{methods::Methods, request::Request};
   use anyhow::{Context, Result};
   use reqwest::header::CONTENT_TYPE;
-  use crate::tests::helper::http::{methods::Methods, request::Request};
 
   #[tokio::test(flavor = "current_thread")]
   async fn initialize_request() {
@@ -35,17 +35,19 @@ mod tests {
     if let Some(content_type) = req
       .request_builder
       .try_clone()
-      .context("RequestBuilder のクローンを生成できませんでした")?
+      .context("RequestBuilder のクローンを生成できませんでした")
+      .unwrap()
       .build()
-      .context("Request を生成できませんでした")?
+      .context("Request を生成できませんでした")
+      .unwrap()
       .headers()
       .get(CONTENT_TYPE)
     {
-      assert_eq!(content_type.to_str()?, "application/json");
+      assert_eq!(content_type.to_str().unwrap(), "application/json");
     } else {
       anyhow::bail!("Content-Type ヘッダーが見つかりませんでした");
     }
-    let resp = req.send().await?.text().await?;
+    let resp = req.send().await.unwrap().text().await.unwrap();
     assert_eq!(resp, "post message");
 
     Ok(())
