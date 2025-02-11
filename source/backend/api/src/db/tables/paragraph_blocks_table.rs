@@ -16,6 +16,12 @@ pub struct RichTextRecord {
 }
 
 #[derive(Debug, FromRow)]
+pub struct RichTextStyles {
+  pub style_id: Uuid,
+  pub rich_text_id: String,
+}
+
+#[derive(Debug, FromRow)]
 pub struct TextStyleRecord {
   pub style_type: String,
 }
