@@ -8,9 +8,10 @@ pub mod post_contents_table;
 use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
+use heading_blocks_table::HeadingBlockRecord;
 use post_contents_table::PostContentRecord;
 
-pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>)> {
+pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>)> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
     title: post.title,
@@ -19,6 +20,7 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
     last_update_date: post.last_update_date,
   };
   let mut post_content_records: Vec<PostContentRecord> = vec![];
+  let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
@@ -27,16 +29,30 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
         content_type: "paragraph".to_string(),
         sort_order: index as i32,
       },
-      BlogPostContent::H2(h2) => PostContentRecord {
-        id: h2.id,
-        content_type: "h2".to_string(),
-        sort_order: index as i32,
-      },
-      BlogPostContent::H3(h3) => PostContentRecord {
-        id: h3.id,
-        content_type: "h3".to_string(),
-        sort_order: index as i32,
-      },
+      BlogPostContent::H2(h2) => {
+        heading_block_records.push(HeadingBlockRecord {
+          id: h2.id,
+          heading_level: 2,
+          text_content: h2.text,
+        });
+        PostContentRecord {
+          id: h2.id,
+          content_type: "h2".to_string(),
+          sort_order: index as i32,
+        }
+      }
+      BlogPostContent::H3(h3) => {
+        heading_block_records.push(HeadingBlockRecord {
+          id: h3.id,
+          heading_level: 3,
+          text_content: h3.text,
+        });
+        PostContentRecord {
+          id: h3.id,
+          content_type: "h3".to_string(),
+          sort_order: index as i32,
+        }
+      }
       BlogPostContent::Image(_image) => {
         anyhow::bail!("イメージブロックへの変換は未実装です。");
       }
@@ -45,7 +61,7 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
     Ok(())
   })?;
 
-  Ok((blog_post_record, post_content_records))
+  Ok((blog_post_record, post_content_records, heading_block_records))
 }
 
 #[cfg(test)]
@@ -59,7 +75,8 @@ mod tests {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
 
-    let (blog_post_record, post_content_records) = records_from_blog_post(mock_post)?;
+    let (blog_post_record, post_content_records, heading_block_records): (BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>) =
+      records_from_blog_post(mock_post)?;
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
@@ -73,6 +90,13 @@ mod tests {
     assert_eq!(post_content_records[0].sort_order, 0);
     assert_eq!(post_content_records[1].sort_order, 1);
     assert_eq!(post_content_records[2].sort_order, 2);
+
+    assert_eq!(heading_block_records.len(), 2);
+    assert_eq!(heading_block_records[0].id, post_content_records[1].id);
+    assert_eq!(heading_block_records[0].text_content, "見出しレベル2");
+
+    assert_eq!(heading_block_records[1].id, post_content_records[2].id);
+    assert_eq!(heading_block_records[1].text_content, "見出しレベル3");
 
     Ok(())
   }
