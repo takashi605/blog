@@ -9,10 +9,19 @@ use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
-use paragraph_blocks_table::ParagraphBlockRecord;
+use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord};
 use post_contents_table::PostContentRecord;
+use uuid::Uuid;
 
-pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>, Vec<ParagraphBlockRecord>)> {
+pub fn records_from_blog_post(
+  post: BlogPost,
+) -> Result<(
+  BlogPostRecord,
+  Vec<PostContentRecord>,
+  Vec<HeadingBlockRecord>,
+  Vec<ParagraphBlockRecord>,
+  Vec<RichTextRecord>,
+)> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
     title: post.title,
@@ -23,11 +32,16 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
   let mut post_content_records: Vec<PostContentRecord> = vec![];
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
+  let mut rich_text_records: Vec<RichTextRecord> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
       BlogPostContent::Paragraph(paragraph) => {
         paragraph_block_records.push(ParagraphBlockRecord { id: paragraph.id });
+        rich_text_records.push(RichTextRecord {
+          id: Uuid::new_v4(),
+          text_content: paragraph.text.iter().map(|rt| rt.text.clone()).collect::<String>(),
+        });
         PostContentRecord {
           id: paragraph.id,
           content_type: "paragraph".to_string(),
@@ -66,27 +80,34 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
     Ok(())
   })?;
 
-  Ok((blog_post_record, post_content_records, heading_block_records, paragraph_block_records))
+  Ok((
+    blog_post_record,
+    post_content_records,
+    heading_block_records,
+    paragraph_block_records,
+    rich_text_records,
+  ))
 }
 
 #[cfg(test)]
 mod tests {
-  use crate::db::tables::paragraph_blocks_table::ParagraphBlockRecord;
+  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord};
 
   use super::*;
   use anyhow::Result;
-  use uuid::Uuid;
+  use uuid::{Uuid, Version};
 
   #[tokio::test(flavor = "current_thread")]
   async fn blog_post_to_records() -> Result<()> {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
 
-    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records): (
+    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, rich_text_records): (
       BlogPostRecord,
       Vec<PostContentRecord>,
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
+      Vec<RichTextRecord>,
     ) = records_from_blog_post(mock_post)?;
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
@@ -111,6 +132,10 @@ mod tests {
 
     assert_eq!(paragraph_block_records.len(), 1);
     assert_eq!(paragraph_block_records[0].id, post_content_records[0].id);
+
+    assert_eq!(rich_text_records.len(), 1);
+    assert_eq!(rich_text_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_records[0].text_content, "これはテスト用の文字列です。");
 
     Ok(())
   }

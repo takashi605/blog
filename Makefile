@@ -212,8 +212,8 @@ api-test-sh:
 api-test-run:
 	$(MAKE) api-create-db
 	$(MAKE) api-migrate-run
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- cargo test
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
 api-test-unit:
