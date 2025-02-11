@@ -5,37 +5,76 @@ pub mod images_table;
 pub mod paragraph_blocks_table;
 pub mod post_contents_table;
 
+use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
-use common::types::api::response::BlogPost;
+use common::types::api::response::{BlogPost, BlogPostContent};
+use post_contents_table::PostContentRecord;
 
-
-pub fn records_from_blog_post(post: BlogPost) -> BlogPostRecord {
-  BlogPostRecord {
+pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>)> {
+  let blog_post_record = BlogPostRecord {
     id: post.id,
     title: post.title,
     thumbnail_image_id: post.thumbnail.id,
     post_date: post.post_date,
     last_update_date: post.last_update_date,
-  }
+  };
+  let mut post_content_records: Vec<PostContentRecord> = vec![];
+
+  post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
+    let content_record = match content {
+      BlogPostContent::Paragraph(paragraph) => PostContentRecord {
+        id: paragraph.id,
+        content_type: "paragraph".to_string(),
+        sort_order: index as i32,
+      },
+      BlogPostContent::H2(h2) => PostContentRecord {
+        id: h2.id,
+        content_type: "h2".to_string(),
+        sort_order: index as i32,
+      },
+      BlogPostContent::H3(h3) => PostContentRecord {
+        id: h3.id,
+        content_type: "h3".to_string(),
+        sort_order: index as i32,
+      },
+      BlogPostContent::Image(_image) => {
+        anyhow::bail!("イメージブロックへの変換は未実装です。");
+      }
+    };
+    post_content_records.push(content_record);
+    Ok(())
+  })?;
+
+  Ok((blog_post_record, post_content_records))
 }
 
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::db::tables::blog_posts_table::BlogPostRecord;
   use anyhow::Result;
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
-  async fn blog_post_to_records() {
+  async fn blog_post_to_records() -> Result<()> {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
 
-    let record: BlogPostRecord = records_from_blog_post(mock_post);
-    assert_eq!(record.id, post_id);
-    assert_eq!(record.title, "テスト記事");
-    assert_eq!(record.post_date, "2021-01-01".parse().unwrap());
-    assert_eq!(record.last_update_date, "2021-01-02".parse().unwrap());
+    let (blog_post_record, post_content_records) = records_from_blog_post(mock_post)?;
+    assert_eq!(blog_post_record.id, post_id);
+    assert_eq!(blog_post_record.title, "テスト記事");
+    assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
+    assert_eq!(blog_post_record.last_update_date, "2021-01-02".parse().unwrap());
+
+    assert_eq!(post_content_records.len(), 3);
+    assert_eq!(post_content_records[0].content_type, "paragraph");
+    assert_eq!(post_content_records[1].content_type, "h2");
+    assert_eq!(post_content_records[2].content_type, "h3");
+
+    assert_eq!(post_content_records[0].sort_order, 0);
+    assert_eq!(post_content_records[1].sort_order, 1);
+    assert_eq!(post_content_records[2].sort_order, 2);
+
+    Ok(())
   }
 
   mod helper {
