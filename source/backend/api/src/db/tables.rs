@@ -13,7 +13,7 @@ use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyle
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
 
-pub fn records_from_blog_post(
+pub fn generate_blog_post_records_by(
   post: BlogPost,
   style_records: Vec<TextStyleRecord>,
 ) -> Result<(
@@ -127,7 +127,7 @@ mod tests {
       Vec<ParagraphBlockRecord>,
       Vec<RichTextRecord>,
       Vec<RichTextStyles>,
-    ) = records_from_blog_post(mock_post, mock_style_records).unwrap();
+    ) = generate_blog_post_records_by(mock_post, mock_style_records).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
