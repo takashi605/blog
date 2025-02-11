@@ -9,18 +9,20 @@ use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
-use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord};
+use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyles, TextStyleRecord};
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
 
 pub fn records_from_blog_post(
   post: BlogPost,
+  style_records: Vec<TextStyleRecord>,
 ) -> Result<(
   BlogPostRecord,
   Vec<PostContentRecord>,
   Vec<HeadingBlockRecord>,
   Vec<ParagraphBlockRecord>,
   Vec<RichTextRecord>,
+  Vec<RichTextStyles>,
 )> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
@@ -33,6 +35,7 @@ pub fn records_from_blog_post(
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
   let mut rich_text_records: Vec<RichTextRecord> = vec![];
+  let mut rich_text_styles: Vec<RichTextStyles> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
@@ -41,6 +44,16 @@ pub fn records_from_blog_post(
         rich_text_records.push(RichTextRecord {
           id: Uuid::new_v4(),
           text_content: paragraph.text.iter().map(|rt| rt.text.clone()).collect::<String>(),
+        });
+        paragraph.text.iter().for_each(|rt| {
+          // paragraph.text に bold:true が含まれている場合、対応する style_id を取得する
+          if rt.styles.bold {
+            let style_id = style_records.iter().find(|style| style.style_type == "bold").unwrap().id;
+            rich_text_styles.push(RichTextStyles {
+              style_id,
+              rich_text_id: rich_text_records.last().unwrap().id.to_string(),
+            });
+          }
         });
         PostContentRecord {
           id: paragraph.id,
@@ -86,12 +99,13 @@ pub fn records_from_blog_post(
     heading_block_records,
     paragraph_block_records,
     rich_text_records,
+    rich_text_styles,
   ))
 }
 
 #[cfg(test)]
 mod tests {
-  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord};
+  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyles, TextStyleRecord};
 
   use super::*;
   use anyhow::Result;
@@ -101,14 +115,19 @@ mod tests {
   async fn blog_post_to_records() -> Result<()> {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
+    let mock_style_records: Vec<TextStyleRecord> = vec![TextStyleRecord {
+      id: Uuid::new_v4(),
+      style_type: "bold".to_string(),
+    }];
 
-    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, rich_text_records): (
+    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, rich_text_records, rich_text_styles): (
       BlogPostRecord,
       Vec<PostContentRecord>,
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
       Vec<RichTextRecord>,
-    ) = records_from_blog_post(mock_post).unwrap();
+      Vec<RichTextStyles>,
+    ) = records_from_blog_post(mock_post, mock_style_records).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
@@ -136,6 +155,10 @@ mod tests {
     assert_eq!(rich_text_records.len(), 1);
     assert_eq!(rich_text_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(rich_text_records[0].text_content, "これはテスト用の文字列です。");
+
+    assert_eq!(rich_text_styles.len(), 1);
+    assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id.to_string());
 
     Ok(())
   }
