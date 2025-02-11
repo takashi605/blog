@@ -23,6 +23,7 @@ pub struct RichTextStyles {
 
 #[derive(Debug, FromRow)]
 pub struct TextStyleRecord {
+  pub id: Uuid,
   pub style_type: String,
 }
 
@@ -46,7 +47,7 @@ pub async fn fetch_rich_texts_by_paragraph(paragraph_block_id: Uuid) -> Result<V
 // rich_text_styles 中間テーブルを使って、特定の rich_texts に対応する style を取得する
 pub async fn fetch_styles_by_rich_text_id(rich_text_id: Uuid) -> Result<Vec<TextStyleRecord>> {
   let styles = sqlx::query_as::<_, TextStyleRecord>(
-    "select style_type from text_styles where id in (select style_id from rich_text_styles where rich_text_id = $1)",
+    "select id, style_type from text_styles where id in (select style_id from rich_text_styles where rich_text_id = $1)",
   )
   .bind(rich_text_id)
   .fetch_all(&*POOL)
