@@ -9,9 +9,10 @@ use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
+use paragraph_blocks_table::ParagraphBlockRecord;
 use post_contents_table::PostContentRecord;
 
-pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>)> {
+pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>, Vec<ParagraphBlockRecord>)> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
     title: post.title,
@@ -21,14 +22,18 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
   };
   let mut post_content_records: Vec<PostContentRecord> = vec![];
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
+  let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
-      BlogPostContent::Paragraph(paragraph) => PostContentRecord {
-        id: paragraph.id,
-        content_type: "paragraph".to_string(),
-        sort_order: index as i32,
-      },
+      BlogPostContent::Paragraph(paragraph) => {
+        paragraph_block_records.push(ParagraphBlockRecord { id: paragraph.id });
+        PostContentRecord {
+          id: paragraph.id,
+          content_type: "paragraph".to_string(),
+          sort_order: index as i32,
+        }
+      }
       BlogPostContent::H2(h2) => {
         heading_block_records.push(HeadingBlockRecord {
           id: h2.id,
@@ -61,11 +66,13 @@ pub fn records_from_blog_post(post: BlogPost) -> Result<(BlogPostRecord, Vec<Pos
     Ok(())
   })?;
 
-  Ok((blog_post_record, post_content_records, heading_block_records))
+  Ok((blog_post_record, post_content_records, heading_block_records, paragraph_block_records))
 }
 
 #[cfg(test)]
 mod tests {
+  use crate::db::tables::paragraph_blocks_table::ParagraphBlockRecord;
+
   use super::*;
   use anyhow::Result;
   use uuid::Uuid;
@@ -75,8 +82,12 @@ mod tests {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
 
-    let (blog_post_record, post_content_records, heading_block_records): (BlogPostRecord, Vec<PostContentRecord>, Vec<HeadingBlockRecord>) =
-      records_from_blog_post(mock_post)?;
+    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records): (
+      BlogPostRecord,
+      Vec<PostContentRecord>,
+      Vec<HeadingBlockRecord>,
+      Vec<ParagraphBlockRecord>,
+    ) = records_from_blog_post(mock_post)?;
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
@@ -97,6 +108,9 @@ mod tests {
 
     assert_eq!(heading_block_records[1].id, post_content_records[2].id);
     assert_eq!(heading_block_records[1].text_content, "見出しレベル3");
+
+    assert_eq!(paragraph_block_records.len(), 1);
+    assert_eq!(paragraph_block_records[0].id, post_content_records[0].id);
 
     Ok(())
   }
