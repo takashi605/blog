@@ -76,7 +76,7 @@ pub fn generate_blog_post_records_by(
           content_record = PostContentRecord {
             id: h2.id,
             post_id: post.id,
-            content_type: "h3".to_string(),
+            content_type: "heading".to_string(),
             sort_order: index as i32,
           }
         } else {
@@ -88,7 +88,7 @@ pub fn generate_blog_post_records_by(
           content_record = PostContentRecord {
             id: h2.id,
             post_id: post.id,
-            content_type: "h2".to_string(),
+            content_type: "heading".to_string(),
             sort_order: index as i32,
           };
         }
@@ -103,7 +103,7 @@ pub fn generate_blog_post_records_by(
         PostContentRecord {
           id: h3.id,
           post_id: post.id,
-          content_type: "h3".to_string(),
+          content_type: "heading".to_string(),
           sort_order: index as i32,
         }
       }
@@ -161,8 +161,8 @@ mod tests {
     assert_eq!(post_content_records[2].post_id, post_id);
 
     assert_eq!(post_content_records[0].content_type, "paragraph");
-    assert_eq!(post_content_records[1].content_type, "h2");
-    assert_eq!(post_content_records[2].content_type, "h3");
+    assert_eq!(post_content_records[1].content_type, "heading");
+    assert_eq!(post_content_records[2].content_type, "heading");
 
     assert_eq!(post_content_records[0].sort_order, 0);
     assert_eq!(post_content_records[1].sort_order, 1);
