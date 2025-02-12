@@ -18,3 +18,13 @@ pub async fn fetch_heading_blocks_by_content_id(content_id: Uuid) -> Result<Head
     .await?;
   Ok(block)
 }
+
+pub async fn insert_heading_block(heading_block: HeadingBlockRecord) -> Result<()> {
+  sqlx::query("insert into heading_blocks (id, heading_level, text_content) values ($1, $2, $3)")
+    .bind(heading_block.id)
+    .bind(heading_block.heading_level)
+    .bind(heading_block.text_content)
+    .execute(&*POOL)
+    .await?;
+  Ok(())
+}

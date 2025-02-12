@@ -43,6 +43,7 @@ pub fn generate_blog_post_records_by(
         paragraph_block_records.push(ParagraphBlockRecord { id: paragraph.id });
         rich_text_records.push(RichTextRecord {
           id: Uuid::new_v4(),
+          paragraph_block_id: paragraph.id,
           text_content: paragraph.text.iter().map(|rt| rt.text.clone()).collect::<String>(),
         });
         paragraph.text.iter().for_each(|rt| {
@@ -51,7 +52,7 @@ pub fn generate_blog_post_records_by(
             let style_id = style_records.iter().find(|style| style.style_type == "bold").unwrap().id;
             rich_text_styles.push(RichTextStyleRecord {
               style_id,
-              rich_text_id: rich_text_records.last().unwrap().id.to_string(),
+              rich_text_id: rich_text_records.last().unwrap().id,
             });
           }
         });
@@ -62,18 +63,36 @@ pub fn generate_blog_post_records_by(
           sort_order: index as i32,
         }
       }
+      // 現状は json へのシリアライズ時に h2 と h3 の区別がつかないため、type_field で区別する
+      // TODO 適切な方法で区別できるように修正する
       BlogPostContent::H2(h2) => {
-        heading_block_records.push(HeadingBlockRecord {
-          id: h2.id,
-          heading_level: 2,
-          text_content: h2.text,
-        });
-        PostContentRecord {
-          id: h2.id,
-          post_id: post.id,
-          content_type: "h2".to_string(),
-          sort_order: index as i32,
+        let content_record: PostContentRecord;
+        if h2.type_field == "h3" {
+          heading_block_records.push(HeadingBlockRecord {
+            id: h2.id,
+            heading_level: 3,
+            text_content: h2.text,
+          });
+          content_record = PostContentRecord {
+            id: h2.id,
+            post_id: post.id,
+            content_type: "h3".to_string(),
+            sort_order: index as i32,
+          }
+        } else {
+          heading_block_records.push(HeadingBlockRecord {
+            id: h2.id,
+            heading_level: 2,
+            text_content: h2.text,
+          });
+          content_record = PostContentRecord {
+            id: h2.id,
+            post_id: post.id,
+            content_type: "h2".to_string(),
+            sort_order: index as i32,
+          };
         }
+        content_record
       }
       BlogPostContent::H3(h3) => {
         heading_block_records.push(HeadingBlockRecord {
@@ -165,7 +184,7 @@ mod tests {
 
     assert_eq!(rich_text_styles.len(), 1);
     assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
-    assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id.to_string());
+    assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id);
 
     Ok(())
   }
