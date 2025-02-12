@@ -50,3 +50,8 @@ pub async fn fetch_styles_by_rich_text_id(rich_text_id: Uuid) -> Result<Vec<Text
       .await?;
   Ok(styles)
 }
+
+pub async fn fetch_text_styles_all() -> Result<Vec<TextStyleRecord>> {
+  let styles = sqlx::query_as::<_, TextStyleRecord>("select id, style_type from text_styles").fetch_all(&*POOL).await?;
+  Ok(styles)
+}
