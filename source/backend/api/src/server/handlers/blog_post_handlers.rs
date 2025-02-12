@@ -33,8 +33,7 @@ mod handle_funcs {
   pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
     let blog_post_req = blog_post_req.into_inner();
 
-    // TODO create_single_blog_post 関数内部で適切なエラーハンドリングを行い、? でエラーを返す
-    let inserted_blog_post = create_single_blog_post(blog_post_req).await.map_err(|err| ApiCustomError::Other(err))?;
+    let inserted_blog_post = create_single_blog_post(blog_post_req).await?;
     Ok(HttpResponse::Ok().json(inserted_blog_post))
   }
 }

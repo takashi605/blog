@@ -8,11 +8,11 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_single_blog_post() -> Result<()> {
-    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::target_post_id()?);
-    let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
+    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::target_post_id().unwrap());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
-    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
-    let expected_blog_post: BlogPost = helper::expected_blog_post()?;
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = helper::expected_blog_post().unwrap();
 
     test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
     Ok(())
@@ -22,9 +22,9 @@ mod tests {
   #[tokio::test(flavor = "current_thread")]
   async fn get_not_exist_blog_post() -> Result<()> {
     let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = Uuid::new_v4());
-    let resp = Request::new(Methods::GET, &url).send().await?;
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap();
     let resp_status = resp.status();
-    let resp_body = resp.text().await?;
+    let resp_body = resp.text().await.unwrap();
 
     // ステータスが 404 エラーであることを確認
     assert_eq!(resp_status, 404);
