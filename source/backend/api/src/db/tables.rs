@@ -9,7 +9,7 @@ use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
-use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyles, TextStyleRecord};
+use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
 
@@ -22,7 +22,7 @@ pub fn generate_blog_post_records_by(
   Vec<HeadingBlockRecord>,
   Vec<ParagraphBlockRecord>,
   Vec<RichTextRecord>,
-  Vec<RichTextStyles>,
+  Vec<RichTextStyleRecord>,
 )> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
@@ -35,7 +35,7 @@ pub fn generate_blog_post_records_by(
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
   let mut rich_text_records: Vec<RichTextRecord> = vec![];
-  let mut rich_text_styles: Vec<RichTextStyles> = vec![];
+  let mut rich_text_styles: Vec<RichTextStyleRecord> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
@@ -49,7 +49,7 @@ pub fn generate_blog_post_records_by(
           // paragraph.text に bold:true が含まれている場合、対応する style_id を取得する
           if rt.styles.bold {
             let style_id = style_records.iter().find(|style| style.style_type == "bold").unwrap().id;
-            rich_text_styles.push(RichTextStyles {
+            rich_text_styles.push(RichTextStyleRecord {
               style_id,
               rich_text_id: rich_text_records.last().unwrap().id.to_string(),
             });
@@ -105,7 +105,7 @@ pub fn generate_blog_post_records_by(
 
 #[cfg(test)]
 mod tests {
-  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyles, TextStyleRecord};
+  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
 
   use super::*;
   use anyhow::Result;
@@ -126,7 +126,7 @@ mod tests {
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
       Vec<RichTextRecord>,
-      Vec<RichTextStyles>,
+      Vec<RichTextStyleRecord>,
     ) = generate_blog_post_records_by(mock_post, mock_style_records).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
