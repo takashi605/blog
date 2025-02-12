@@ -57,6 +57,7 @@ pub fn generate_blog_post_records_by(
         });
         PostContentRecord {
           id: paragraph.id,
+          post_id: post.id,
           content_type: "paragraph".to_string(),
           sort_order: index as i32,
         }
@@ -69,6 +70,7 @@ pub fn generate_blog_post_records_by(
         });
         PostContentRecord {
           id: h2.id,
+          post_id: post.id,
           content_type: "h2".to_string(),
           sort_order: index as i32,
         }
@@ -81,6 +83,7 @@ pub fn generate_blog_post_records_by(
         });
         PostContentRecord {
           id: h3.id,
+          post_id: post.id,
           content_type: "h3".to_string(),
           sort_order: index as i32,
         }
@@ -134,6 +137,10 @@ mod tests {
     assert_eq!(blog_post_record.last_update_date, "2021-01-02".parse().unwrap());
 
     assert_eq!(post_content_records.len(), 3);
+    assert_eq!(post_content_records[0].post_id, post_id);
+    assert_eq!(post_content_records[1].post_id, post_id);
+    assert_eq!(post_content_records[2].post_id, post_id);
+
     assert_eq!(post_content_records[0].content_type, "paragraph");
     assert_eq!(post_content_records[1].content_type, "h2");
     assert_eq!(post_content_records[2].content_type, "h3");
