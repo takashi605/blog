@@ -10,7 +10,7 @@ describe('エンティティ: 投稿記事を生成するビルダークラス',
     const id = createUUIDv4();
     const builder = createBlogPostBuilder()
       .setId(id)
-      .setThumbnail('path/to/image')
+      .setThumbnail('535c8105-fd92-47b7-93ce-dc01b379ae66', 'path/to/image')
       .setPostTitle('記事タイトル')
       .setPostDate('2021-01-01')
       .setLastUpdateDate('2021-01-02')
