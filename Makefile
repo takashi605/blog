@@ -169,7 +169,11 @@ e2e-pod-name:
 e2e-sh:
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- bash
 e2e-run:
-	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
+	@kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm run e2e-test
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
 
 # CI でもコンテナ上で実行する関係で明示的に環境変数を指定
 # DISPLAY 環境変数をクリアしないとなぜかタイムアウトする
