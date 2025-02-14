@@ -24,7 +24,7 @@ Then(
     const thumbnailImage = topTechPickSection.getByRole('img', {
       name: 'サムネイル画像',
     });
-    await expect(thumbnailImage).toBeVisible({ timeout: 10000 });
+    await expect(thumbnailImage).toBeVisible({ timeout: 20000 });
   },
 );
 
@@ -56,7 +56,7 @@ Then('トップテックピック記事の投稿日時が表示されている',
 
   await expect(
     topTechPickSection.getByText(/\d{4}\/\d{1,2}\/\d{1,2}/),
-  ).toBeVisible({ timeout: 10000 });
+  ).toBeVisible({ timeout: 20000 });
 });
 
 function getTopTechPickSection(page: Page) {

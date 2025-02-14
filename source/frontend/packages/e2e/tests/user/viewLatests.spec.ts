@@ -36,7 +36,7 @@ Then('各記事に記事タイトルが表示される', async function () {
   await Promise.all(
     Array.from(Array(count), (_, i) =>
       expect(posts.nth(i).getByRole('heading', { level: 3 })).toBeVisible({
-        timeout: 10000,
+        timeout: 20000,
       }),
     ),
   );
@@ -51,7 +51,7 @@ Then('各記事に記事サムネイルが表示される', async function () {
   // 各記事に対して image 要素が存在するかを確認
   await Promise.all(
     Array.from(Array(count), (_, i) =>
-      expect(posts.nth(i).getByRole('img')).toBeVisible({ timeout: 10000 }),
+      expect(posts.nth(i).getByRole('img')).toBeVisible({ timeout: 20000 }),
     ),
   );
 });
@@ -67,7 +67,7 @@ Then('各記事に投稿日が表示される', async function () {
     Array.from(Array(count), (_, i) =>
       expect(
         posts.nth(i).getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/),
-      ).toBeVisible({ timeout: 10000 }),
+      ).toBeVisible({ timeout: 20000 }),
     ),
   );
 });

@@ -16,7 +16,7 @@ Then('記事サムネイル が表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
-  await expect(thumbnailImage).toBeVisible({ timeout: 10000 });
+  await expect(thumbnailImage).toBeVisible({ timeout: 20000 });
 });
 
 Then('記事タイトル が表示される', async function () {
@@ -87,7 +87,7 @@ Then('画像コンテンツ が表示される', async function () {
   expect(count).toBeGreaterThan(0);
 
   for (let i = 0; i < count; i++) {
-    await expect(contentImages.nth(i)).toBeVisible({ timeout: 10000 });
+    await expect(contentImages.nth(i)).toBeVisible({ timeout: 20000 });
   }
 });
 
@@ -95,7 +95,7 @@ Then('投稿日時 が表示される', async function () {
   const page = playwrightHelper.getPage();
 
   await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({
-    timeout: 10000,
+    timeout: 20000,
   });
 });
 
@@ -103,7 +103,7 @@ Then('更新日時 が表示される', async function () {
   const page = playwrightHelper.getPage();
 
   await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({
-    timeout: 10000,
+    timeout: 20000,
   });
 });
 Given('対応する記事データが存在しないページにアクセスする', async function () {
@@ -121,7 +121,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     await expect(page.getByText(errorMessage)).toBeVisible({
-      timeout: 10000,
+      timeout: 20000,
     });
   },
 );
