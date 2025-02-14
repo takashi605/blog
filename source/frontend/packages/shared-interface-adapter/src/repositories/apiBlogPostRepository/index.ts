@@ -108,7 +108,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       throw new Error(
         `ブログ記事の保存に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
       );
-     }
+    }
     return response;
   }
 }

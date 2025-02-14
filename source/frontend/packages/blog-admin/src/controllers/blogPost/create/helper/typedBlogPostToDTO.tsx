@@ -7,8 +7,8 @@ export function typedBlogPostWithoutContentsToDTO(
   return {
     title: blogPost.title,
     thumbnail: {
-      id:'535c8105-fd92-47b7-93ce-dc01b379ae66',
-      path: 'path/to/thumbnail'
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+      path: 'path/to/thumbnail',
     },
   };
 }

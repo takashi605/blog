@@ -25,7 +25,9 @@ export class CreateBlogPostUseCase {
   buildBlogPost(): BlogPost {
     // YYYY-MM-DD形式の日付を取得
     // TODO 日付のフォーマットを共通化する
-    const today = toISOStringWithTimezone(new Date()).split('T')[0].replace('/', '-');
+    const today = toISOStringWithTimezone(new Date())
+      .split('T')[0]
+      .replace('/', '-');
 
     const blogPostDTO = {
       ...this.blogPostDTOForCreate,
