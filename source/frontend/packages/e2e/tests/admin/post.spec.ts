@@ -43,6 +43,9 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
 
+  // 太字のテキストが表示されるまで少し待つ
+  await page.waitForTimeout(300);
+
   // 選択の解除
   await clearSelectionByArrow(page, richTextEditor);
   const html = await page.content();
@@ -59,41 +62,50 @@ Then(
     });
   },
 );
-// Then('世界のみ太字になっている', async function () {
-//   const page = playwrightHelper.getPage();
-//   const richTextEditor = page.locator('[contenteditable="true"]');
-//   const boldText = richTextEditor.locator('strong');
+Then('世界のみ太字になっている', async function () {
+  const page = playwrightHelper.getPage();
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const boldText = richTextEditor.locator('strong');
 
-//   await expect(boldText).toHaveText('世界', { timeout: 20000 });
-// });
+  await expect(boldText).toHaveText('世界', { timeout: 20000 });
+});
 When('「世界」を再び選択し、太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
   await selectByArrowLeft(page, richTextEditor, 2);
 
+  // 太字のテキストが消えるまで少し待つ
+  await page.waitForTimeout(300);
+
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
 });
-// Then('世界の太字が解除されている', async function () {
-//   const page = playwrightHelper.getPage();
-//   const richTextEditor = page.locator('[contenteditable="true"]');
-//   const boldText = richTextEditor.locator('strong');
+Then('世界の太字が解除されている', async function () {
+  const page = playwrightHelper.getPage();
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const boldText = richTextEditor.locator('strong');
 
-//   await expect(boldText).not.toBeVisible({ timeout: 20000 });
-// });
+  await expect(boldText).not.toBeVisible({ timeout: 20000 });
+});
 When(
   '「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-
     const richTextEditor = page.locator('[contenteditable="true"]');
+
     richTextEditor.press('Enter');
+
     await richTextEditor.pressSequentially('見出し2');
     await selectByArrowLeft(page, richTextEditor, 4);
+
     const h2Button = page.getByRole('button', { name: 'h2' });
     await h2Button.click();
+
+    // 見出しが表示されるまで少し待つ
+    await page.waitForTimeout(300);
+
     await clearSelectionByArrow(page, richTextEditor);
   },
 );
@@ -111,13 +123,19 @@ When(
   '「見出し3」と入力し、その文字を選択して「h3」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-
     const richTextEditor = page.locator('[contenteditable="true"]');
+
     richTextEditor.press('Enter');
+
     await richTextEditor.pressSequentially('見出し3');
     await selectByArrowLeft(page, richTextEditor, 4);
+
     const h2Button = page.getByRole('button', { name: 'h3' });
     await h2Button.click();
+
+    // 見出しが表示されるまで少し待つ
+    await page.waitForTimeout(300);
+
     await clearSelectionByArrow(page, richTextEditor);
   },
 );
