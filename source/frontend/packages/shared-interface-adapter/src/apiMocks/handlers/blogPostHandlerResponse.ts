@@ -8,6 +8,7 @@ export const blogPostResponses = [
     id: UUIDList.UUID1,
     title: '初めての技術スタックへの挑戦',
     thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
       path: 'test-coffee',
     },
     postDate: '2022-01-01',
@@ -20,6 +21,7 @@ export const blogPostResponses = [
     id: UUIDList.UUID2,
     title: 'Kubernetes わからんつらたん',
     thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
       path: 'test-mechanical',
     },
     postDate: '2022-02-01',
@@ -32,6 +34,7 @@ export const blogPostResponses = [
     id: UUIDList.UUID3,
     title: 'クリーンアーキテクチャの自分流ディレクトリ構成',
     thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
       path: 'test-book',
     },
     postDate: '2023-01-01',
@@ -44,6 +47,7 @@ export const blogPostResponses = [
     id: UUIDList.UUID5,
     title: 'ペアプログラミングのススメ',
     thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
       path: 'test-book',
     },
     postDate: '2021-01-15',
@@ -71,6 +75,7 @@ function createResponseBase() {
     id: '', // 上書きしないとエラーする
     title: '初めての技術スタックへの挑戦',
     thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
       path: 'test-coffee',
     },
     postDate: '2022-01-01',
