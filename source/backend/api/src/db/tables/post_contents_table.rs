@@ -7,6 +7,7 @@ use crate::db::pool::POOL;
 #[derive(Debug, FromRow)]
 pub struct PostContentRecord {
   pub id: Uuid,
+  pub post_id: Uuid,
   pub content_type: String,
   pub sort_order: i32,
 }
@@ -34,6 +35,17 @@ impl TryFrom<String> for PostContentType {
 
 pub async fn fetch_post_contents_by_post_id(post_id: Uuid) -> Result<Vec<PostContentRecord>> {
   let contents =
-    sqlx::query_as::<_, PostContentRecord>("select id, content_type, sort_order from post_contents where post_id = $1").bind(post_id).fetch_all(&*POOL).await?;
+    sqlx::query_as::<_, PostContentRecord>("select id, post_id, content_type, sort_order from post_contents where post_id = $1").bind(post_id).fetch_all(&*POOL).await?;
   Ok(contents)
+}
+
+pub async fn insert_blog_post_content(content: PostContentRecord) -> Result<()> {
+  sqlx::query("insert into post_contents (id, post_id, content_type, sort_order) values ($1, $2, $3, $4)")
+    .bind(content.id)
+    .bind(content.post_id)
+    .bind(content.content_type)
+    .bind(content.sort_order)
+    .execute(&*POOL)
+    .await?;
+  Ok(())
 }

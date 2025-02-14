@@ -94,6 +94,7 @@ async fn generate_blog_post_response(
     id: blog_post_record.id,
     title: blog_post_record.title,
     thumbnail: Image {
+      id: thumbnail_record.id,
       path: thumbnail_record.file_path,
     },
     post_date: blog_post_record.post_date,
@@ -154,7 +155,6 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
 }
 
 fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostContent {
-  println!("heading_block_record: {:?}", heading_block_record);
   let heading_block_content: BlogPostContent = match heading_block_record.heading_level {
     2 => BlogPostContent::H2(H2Block {
       id: heading_block_record.id,

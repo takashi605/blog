@@ -21,7 +21,7 @@
     "editor.inlayHints.enabled": "off"
   },
   "makefile.configureOnOpen": false,
-  "cSpell.words": ["Usecase"],
+  "cSpell.words": ["actix", "chrono", "funcs", "sqlx", "Usecase"],
   "rust-analyzer.server.extraEnv": {
     "SQLX_OFFLINE": "true"
   }

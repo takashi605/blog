@@ -7,7 +7,7 @@ export function blogPostDTOToEntity(dto: BlogPostDTO): BlogPost {
   const entityBuilder = createBlogPostBuilder()
     .setId(dto.id)
     .setPostTitle(dto.title)
-    .setThumbnail(dto.thumbnail.path)
+    .setThumbnail(dto.thumbnail.id, dto.thumbnail.path)
     .setPostDate(dto.postDate)
     .setLastUpdateDate(dto.lastUpdateDate);
 

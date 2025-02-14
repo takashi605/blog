@@ -17,20 +17,29 @@ export class MockBlogPost {
 
   successfulMock(): BlogPost {
     return this.mockBase()
-      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setThumbnail(
+        this.mockParts.getMockThumbnailId(),
+        this.mockParts.getMockThumbnailPath(),
+      )
       .setPostDate(this.mockParts.getMockPostDate())
       .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
   }
 
   unsetPostDateMock(): BlogPost {
     return this.mockBase()
-      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setThumbnail(
+        this.mockParts.getMockThumbnailId(),
+        this.mockParts.getMockThumbnailPath(),
+      )
       .setLastUpdateDate(this.mockParts.getMockLastUpdateDate());
   }
 
   unsetLastUpdateDateMock(): BlogPost {
     return this.mockBase()
-      .setThumbnail(this.mockParts.getMockThumbnailPath())
+      .setThumbnail(
+        this.mockParts.getMockThumbnailId(),
+        this.mockParts.getMockThumbnailPath(),
+      )
       .setPostDate(this.mockParts.getMockPostDate());
   }
 
@@ -68,6 +77,10 @@ class MockBlogPostParts {
   // id が連結されるので注意
   public getMockTitle(): string {
     return `記事タイトル${this.id}`;
+  }
+
+  public getMockThumbnailId(): string {
+    return '535c8105-fd92-47b7-93ce-dc01b379ae66';
   }
 
   public getMockThumbnailPath(): string {

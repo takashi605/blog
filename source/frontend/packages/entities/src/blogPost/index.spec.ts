@@ -13,10 +13,12 @@ describe('エンティティ: 投稿記事', () => {
 
   it('サムネイル画像を持っている', () => {
     const blogPost = new MockBlogPost('1').successfulMock();
+    const id = '535c8105-fd92-47b7-93ce-dc01b379ae66';
     const imagePath = 'path/to/image';
-    blogPost.setThumbnail(imagePath);
+    blogPost.setThumbnail(id, imagePath);
 
     const thumbnail = blogPost.getThumbnail();
+    expect(thumbnail.getId()).toBe(id);
     expect(thumbnail.getPath()).toBe(imagePath);
   });
 
