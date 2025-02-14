@@ -74,20 +74,6 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
 });
-Then(
-  'リッチテキストエディタに「こんにちは！世界」と表示される',
-  async function () {
-    const page = playwrightHelper.getPage();
-
-    const richTextEditor = page.locator('[contenteditable="true"]');
-    await expect(richTextEditor).toHaveText('こんにちは！世界', {
-      timeout: 20000,
-    });
-    // 「世界」が strong タグで囲われていないか確認
-    const boldText = richTextEditor.locator('strong');
-    await expect(boldText).not.toBeVisible({ timeout: 20000 });
-  },
-);
 Then('世界の太字が解除されている', async function () {
   const page = playwrightHelper.getPage();
   const richTextEditor = page.locator('[contenteditable="true"]');
