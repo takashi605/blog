@@ -47,20 +47,23 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   await clearSelectionByArrow(page, richTextEditor);
 });
 Then(
-  'リッチテキストエディタに「こんにちは！世界」と表示され、世界のみ太字になっている',
+  'リッチテキストエディタに「こんにちは！世界」と表示される',
   async function () {
     const page = playwrightHelper.getPage();
-
     const richTextEditor = page.locator('[contenteditable="true"]');
 
     await expect(richTextEditor).toHaveText('こんにちは！世界', {
       timeout: 20000,
     });
-    // 「世界」が strong タグで囲われているか確認
-    const boldText = richTextEditor.locator('strong');
-    await expect(boldText).toHaveText('世界', { timeout: 20000 });
   },
 );
+Then('世界のみ太字になっている', async function () {
+  const page = playwrightHelper.getPage();
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const boldText = richTextEditor.locator('strong');
+
+  await expect(boldText).toHaveText('世界', { timeout: 20000 });
+});
 When('「世界」を再び選択し、太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
@@ -72,7 +75,7 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   await clearSelectionByArrow(page, richTextEditor);
 });
 Then(
-  'リッチテキストエディタに「こんにちは！世界」と表示され、世界の太字が解除されている',
+  'リッチテキストエディタに「こんにちは！世界」と表示される',
   async function () {
     const page = playwrightHelper.getPage();
 
@@ -85,6 +88,13 @@ Then(
     await expect(boldText).not.toBeVisible({ timeout: 20000 });
   },
 );
+Then('世界の太字が解除されている', async function () {
+  const page = playwrightHelper.getPage();
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const boldText = richTextEditor.locator('strong');
+
+  await expect(boldText).not.toBeVisible({ timeout: 20000 });
+});
 When(
   '「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',
   async function () {
