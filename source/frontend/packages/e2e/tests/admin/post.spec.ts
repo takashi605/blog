@@ -43,9 +43,6 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
 
-  // 太字のテキストが表示されるまで少し待つ
-  await page.waitForTimeout(300);
-
   // 選択の解除
   await clearSelectionByArrow(page, richTextEditor);
   const html = await page.content();
@@ -75,9 +72,6 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   const richTextEditor = page.locator('[contenteditable="true"]');
   await selectByArrowLeft(page, richTextEditor, 2);
 
-  // 太字のテキストが消えるまで少し待つ
-  await page.waitForTimeout(300);
-
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
@@ -102,9 +96,6 @@ When(
 
     const h2Button = page.getByRole('button', { name: 'h2' });
     await h2Button.click();
-
-    // 見出しが表示されるまで少し待つ
-    await page.waitForTimeout(300);
 
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -133,8 +124,6 @@ When(
     const h2Button = page.getByRole('button', { name: 'h3' });
     await h2Button.click();
 
-    // 見出しが表示されるまで少し待つ
-    await page.waitForTimeout(300);
 
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -169,6 +158,7 @@ async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
   for (let i = 1; i <= count; i++) {
     await locator.press('ArrowLeft');
   }
+  await page.waitForTimeout(300);
   await page.keyboard.up('Shift');
 }
 async function clearSelectionByArrow(page: Page, locator: Locator) {
@@ -176,56 +166,5 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
   await page.keyboard.up('Shift');
   // 右矢印を1回押すだけで選択が外れる
   await locator.press('ArrowRight');
+  await page.waitForTimeout(300);
 }
-
-// When('記事タイトルのインプットに「タイトル」を入力する', async function(){
-//   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
-//   await titleInput.fill('タイトル');
-//   await expect(titleInput).toHaveValue('タイトル');
-// });
-
-// When('「h2」ボタンを押す', async function(){
-//   const addH2Button = await page.getByRole('button', { name: 'h2' });
-//   await addH2Button.click();
-// });
-// Then('h2のインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'h2' })).toBeVisible({timeout: 20000});
-// });
-// When('h2に「見出しレベル2」と入力する', async function(){
-//   const h2Input = await page.getByRole('textbox', { name: 'h2' });
-//   await h2Input.fill('見出しレベル2');
-//   await expect(h2Input).toHaveValue('見出しレベル2');
-// });
-// When('「paragraph」ボタンを押す', async function(){
-//   const addTextButton = await page.getByRole('button', {
-//     name: 'paragraph',
-//   });
-//   await addTextButton.click();
-// });
-// Then('paragraphのインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible({timeout: 20000});
-// });
-// When('paragraphのインプットに「paragraph入力値」と入力する', async function(){
-//   const paragraphInput = await page.getByRole('textbox', { name: 'paragraph' });
-//   await paragraphInput.fill('paragraph入力値');
-//   await expect(paragraphInput).toHaveValue('paragraph入力値');
-// });
-// When('「h3」ボタンを押す', async function(){
-//   const addH3Button = await page.getByRole('button', { name: 'h3' });
-//   await addH3Button.click();
-// });
-// Then('h3 のインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'h3' })).toBeVisible({timeout: 20000});
-// });
-// When('h3 のインプットに「見出しレベル3」と入力する', async function(){
-//   const h3Input = await page.getByRole('textbox', { name: 'h3' });
-//   await h3Input.fill('見出しレベル3');
-//   await expect(h3Input).toHaveValue('見出しレベル3');
-// });
-// When('「公開」ボタンを押す', async function(){
-//   const publishButton = page.getByRole('button', { name: '投稿' });
-//   await publishButton.click();
-// });
-// Then('「記事を公開しました」と表示される', async function(){
-//   await expect(page.getByText('記事を公開しました')).toBeVisible({timeout: 20000});
-// });
