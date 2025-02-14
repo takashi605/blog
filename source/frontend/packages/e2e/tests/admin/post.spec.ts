@@ -45,6 +45,8 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
 
   // 選択の解除
   await clearSelectionByArrow(page, richTextEditor);
+  const html = await page.content();
+  console.log(html);
 });
 Then(
   'リッチテキストエディタに「こんにちは！世界」と表示される',
