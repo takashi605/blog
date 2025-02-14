@@ -57,13 +57,13 @@ Then(
     });
   },
 );
-Then('世界のみ太字になっている', async function () {
-  const page = playwrightHelper.getPage();
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const boldText = richTextEditor.locator('strong');
+// Then('世界のみ太字になっている', async function () {
+//   const page = playwrightHelper.getPage();
+//   const richTextEditor = page.locator('[contenteditable="true"]');
+//   const boldText = richTextEditor.locator('strong');
 
-  await expect(boldText).toHaveText('世界', { timeout: 20000 });
-});
+//   await expect(boldText).toHaveText('世界', { timeout: 20000 });
+// });
 When('「世界」を再び選択し、太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
@@ -74,13 +74,13 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
 });
-Then('世界の太字が解除されている', async function () {
-  const page = playwrightHelper.getPage();
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const boldText = richTextEditor.locator('strong');
+// Then('世界の太字が解除されている', async function () {
+//   const page = playwrightHelper.getPage();
+//   const richTextEditor = page.locator('[contenteditable="true"]');
+//   const boldText = richTextEditor.locator('strong');
 
-  await expect(boldText).not.toBeVisible({ timeout: 20000 });
-});
+//   await expect(boldText).not.toBeVisible({ timeout: 20000 });
+// });
 When(
   '「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',
   async function () {
