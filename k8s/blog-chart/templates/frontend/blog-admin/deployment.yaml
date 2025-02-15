@@ -36,3 +36,11 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_URL
               value: {{ .Values.admin.pod.env.NEXT_PUBLIC_API_URL }}
+      {{- if and (ne .Values.admin.hostAliases.ip "") (gt (len .Values.admin.hostAliases.hostnames) 0) }}
+      hostAliases:
+        - ip: {{ .Values.admin.hostAliases.ip }}
+          hostnames:
+          {{- range .Values.admin.hostAliases.hostnames }}
+            - {{ . | quote }}
+          {{- end }}
+      {{- end }}
