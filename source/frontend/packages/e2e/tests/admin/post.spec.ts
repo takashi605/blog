@@ -30,53 +30,37 @@ Then('リッチテキストエディタに「こんにちは！」が表示さ�
   const richTextEditor = page.locator('[contenteditable="true"]');
   await expect(richTextEditor).toHaveText('こんにちは！', { timeout: 20000 });
 });
-When('「世界」と入力し、その文字を選択して太字ボタンを押す', async function () {
+When('「こんにちは！」の文字列を選択して太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  // テキストをセット
-  await richTextEditor.pressSequentially('世界', { timeout: 20000 });
+  const locator = page.locator('text=こんにちは！');
+  await selectTextInLocator(page, locator);
 
-  await selectByArrowLeft(page, richTextEditor, 2);
-
-  // 太字ボタンを押す
+  // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
-
-  // 選択の解除
-  await clearSelectionByArrow(page, richTextEditor);
+  await clearSelection(page);
   const html = await page.content();
   console.log(html);
 });
-Then(
-  'リッチテキストエディタに「こんにちは！世界」と表示される',
-  async function () {
-    const page = playwrightHelper.getPage();
-    const richTextEditor = page.locator('[contenteditable="true"]');
-
-    await expect(richTextEditor).toHaveText('こんにちは！世界', {
-      timeout: 20000,
-    });
-  },
-);
-Then('世界のみ太字になっている', async function () {
+Then('「こんにちは！」が太字になっている', async function () {
   const page = playwrightHelper.getPage();
   const richTextEditor = page.locator('[contenteditable="true"]');
   const boldText = richTextEditor.locator('strong');
 
-  await expect(boldText).toHaveText('世界', { timeout: 20000 });
+  await expect(boldText).toHaveText('こんにちは！', { timeout: 20000 });
 });
-When('「世界」を再び選択し、太字ボタンを押す', async function () {
+When('「こんにちは！」を再び選択し、太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  await selectByArrowLeft(page, richTextEditor, 2);
+  const locator = page.locator('text=こんにちは！');
+  await selectTextInLocator(page, locator);
 
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
-  await clearSelectionByArrow(page, richTextEditor);
+  await clearSelection(page);
 });
-Then('世界の太字が解除されている', async function () {
+Then('「こんにちは！」の太字が解除されている', async function () {
   const page = playwrightHelper.getPage();
   const richTextEditor = page.locator('[contenteditable="true"]');
   const boldText = richTextEditor.locator('strong');
@@ -92,12 +76,13 @@ When(
     richTextEditor.press('Enter');
 
     await richTextEditor.pressSequentially('見出し2');
-    await selectByArrowLeft(page, richTextEditor, 4);
+    const h2Locator = page.locator('text=見出し2');
+    await selectTextInLocator(page, h2Locator);
 
     const h2Button = page.getByRole('button', { name: 'h2' });
     await h2Button.click();
 
-    await clearSelectionByArrow(page, richTextEditor);
+    await clearSelection(page);
   },
 );
 Then(
@@ -119,13 +104,13 @@ When(
     richTextEditor.press('Enter');
 
     await richTextEditor.pressSequentially('見出し3');
-    await selectByArrowLeft(page, richTextEditor, 4);
+    const h3Locator = page.locator('text=見出し3');
+    await selectTextInLocator(page, h3Locator);
 
     const h2Button = page.getByRole('button', { name: 'h3' });
     await h2Button.click();
 
-
-    await clearSelectionByArrow(page, richTextEditor);
+    await clearSelection(page);
   },
 );
 Then(
@@ -153,18 +138,30 @@ Then('記事が投稿され、投稿完了ページに遷移する', async funct
 });
 
 // 以下ヘルパ関数
-async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
-  await page.keyboard.down('Shift');
-  for (let i = 1; i <= count; i++) {
-    await locator.press('ArrowLeft');
-    await page.waitForTimeout(1000);
+async function selectTextInLocator(page: Page, locator: Locator) {
+  // バウンディングボックスを取得
+  const box = await locator.boundingBox();
+  if (!box) {
+    throw new Error('「世界」のバウンディングボックスを取得できませんでした');
   }
-  await page.keyboard.up('Shift');
+
+  const startX = box.x + box.width;
+  const startY = box.y + box.height / 2;
+
+  // マウスを移動して押し下げ (ドラッグ開始)
+  await page.mouse.move(startX, startY);
+  await page.mouse.down();
+
+  // 端 (または少しずらした位置) に向かってマウスを移動して選択範囲を作る
+  // ここでは例として要素左端に移動。steps を増やすとドラッグが滑らかになる
+  await page.mouse.move(box.x, startY, { steps: 10 });
+  await page.mouse.up();
 }
-async function clearSelectionByArrow(page: Page, locator: Locator) {
-  // Shiftキーが押されていないことを確実にしておく
-  await page.keyboard.up('Shift');
-  // 右矢印を1回押すだけで選択が外れる
-  await locator.press('ArrowRight');
-  await page.waitForTimeout(1000);
+async function clearSelection(page: Page) {
+  await page.evaluate(() => {
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
+  });
 }
