@@ -157,8 +157,8 @@ async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
   await page.keyboard.down('Shift');
   for (let i = 1; i <= count; i++) {
     await locator.press('ArrowLeft');
+    await page.waitForTimeout(1000);
   }
-  await page.waitForTimeout(300);
   await page.keyboard.up('Shift');
 }
 async function clearSelectionByArrow(page: Page, locator: Locator) {
@@ -166,5 +166,5 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
   await page.keyboard.up('Shift');
   // 右矢印を1回押すだけで選択が外れる
   await locator.press('ArrowRight');
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(1000);
 }
