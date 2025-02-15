@@ -34,7 +34,7 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   const page = playwrightHelper.getPage();
 
   const locator = page.locator('text=こんにちは！');
-  await selectTextInLocator(page, locator);
+  await locator.selectText();
 
   // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
@@ -54,7 +54,7 @@ When('「こんにちは！」を再び選択し、太字ボタンを押す', as
   const page = playwrightHelper.getPage();
 
   const locator = page.locator('text=こんにちは！');
-  await selectTextInLocator(page, locator);
+  await locator.selectText();
 
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
@@ -77,7 +77,7 @@ When(
 
     await richTextEditor.pressSequentially('見出し2');
     const h2Locator = page.locator('text=見出し2');
-    await selectTextInLocator(page, h2Locator);
+    await h2Locator.selectText();
 
     const h2Button = page.getByRole('button', { name: 'h2' });
     await h2Button.click();
@@ -105,7 +105,7 @@ When(
 
     await richTextEditor.pressSequentially('見出し3');
     const h3Locator = page.locator('text=見出し3');
-    await selectTextInLocator(page, h3Locator);
+    await h3Locator.selectText();
 
     const h2Button = page.getByRole('button', { name: 'h3' });
     await h2Button.click();
@@ -138,25 +138,6 @@ Then('記事が投稿され、投稿完了ページに遷移する', async funct
 });
 
 // 以下ヘルパ関数
-async function selectTextInLocator(page: Page, locator: Locator) {
-  // バウンディングボックスを取得
-  const box = await locator.boundingBox();
-  if (!box) {
-    throw new Error('「世界」のバウンディングボックスを取得できませんでした');
-  }
-
-  const startX = box.x + box.width;
-  const startY = box.y + box.height / 2;
-
-  // マウスを移動して押し下げ (ドラッグ開始)
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-
-  // 端 (または少しずらした位置) に向かってマウスを移動して選択範囲を作る
-  // ここでは例として要素左端に移動。steps を増やすとドラッグが滑らかになる
-  await page.mouse.move(box.x, startY, { steps: 10 });
-  await page.mouse.up();
-}
 async function clearSelection(page: Page) {
   await page.evaluate(() => {
     const selection = window.getSelection();
