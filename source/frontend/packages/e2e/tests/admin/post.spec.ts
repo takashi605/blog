@@ -34,12 +34,20 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   const page = playwrightHelper.getPage();
 
   const locator = page.locator('text=こんにちは！');
-  await locator.selectText();
+  await locator.selectText({timeout: 20000});
 
   // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
   await clearSelection(page);
+  await page.waitForFunction(
+    () => {
+      const editor = document.querySelector('[contenteditable="true"]');
+      const strongTag = editor?.querySelector('strong');
+      return strongTag && strongTag.textContent?.includes('こんにちは！');
+    },
+    { timeout: 20000 },
+  );
   const html = await page.content();
   console.log(html);
 });
@@ -54,7 +62,7 @@ When('「こんにちは！」を再び選択し、太字ボタンを押す', as
   const page = playwrightHelper.getPage();
 
   const locator = page.locator('text=こんにちは！');
-  await locator.selectText();
+  await locator.selectText({timeout: 20000});
 
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
@@ -77,7 +85,7 @@ When(
 
     await richTextEditor.pressSequentially('見出し2');
     const h2Locator = page.locator('text=見出し2');
-    await h2Locator.selectText();
+    await h2Locator.selectText({timeout: 20000});
 
     const h2Button = page.getByRole('button', { name: 'h2' });
     await h2Button.click();
@@ -105,7 +113,7 @@ When(
 
     await richTextEditor.pressSequentially('見出し3');
     const h3Locator = page.locator('text=見出し3');
-    await h3Locator.selectText();
+    await h3Locator.selectText({timeout: 20000});
 
     const h2Button = page.getByRole('button', { name: 'h3' });
     await h2Button.click();
