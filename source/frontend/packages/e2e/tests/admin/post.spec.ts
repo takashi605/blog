@@ -50,10 +50,16 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
     console.log(msg.text());
    })
   // 太字ボタンをクリック
-  const boldButton = page.getByRole('button', { name: 'bold' });
+  // const boldButton = page.getByRole('button', { name: 'bold' });
   // 取得したボタンを確認
-  console.log(await boldButton.innerHTML());
-  await boldButton.click();
+  // console.log(await boldButton.innerHTML());
+  // await boldButton.click();
+
+  // キーボード操作で太字にする
+  await page.keyboard.down('Control');
+  await page.keyboard.press('KeyB');
+  await page.keyboard.up('Control');
+
   await page.waitForFunction(
     () => {
       const editor = document.querySelector('[contenteditable="true"]');
