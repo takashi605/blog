@@ -36,6 +36,16 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   const locator = page.locator('text=こんにちは！');
   await locator.selectText({ timeout: 20000 });
 
+  const selectedText = await page.evaluate(() => {
+    const selection = window.getSelection();
+    return selection ? selection.toString() : '';
+  });
+
+  console.log(selectedText);
+
+  // 選択文字列が「世界」になっていることをアサート
+  expect(selectedText).toBe('こんにちは！');
+
   // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
