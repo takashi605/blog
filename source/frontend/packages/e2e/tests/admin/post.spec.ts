@@ -46,12 +46,12 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   // 選択文字列が「世界」になっていることをアサート
   expect(selectedText).toBe('こんにちは！');
 
-  // 太字ボタンをクリック
-  const boldButton = page.getByRole('button', { name: 'bold' });
-  await boldButton.click();
   page.on('console', msg => {
     console.log(msg.text());
    })
+  // 太字ボタンをクリック
+  const boldButton = page.getByRole('button', { name: 'bold' });
+  await boldButton.click();
   await clearSelection(page);
   await page.waitForFunction(
     () => {
