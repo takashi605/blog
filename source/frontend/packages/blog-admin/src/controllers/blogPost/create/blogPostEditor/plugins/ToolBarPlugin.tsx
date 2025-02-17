@@ -37,6 +37,7 @@ function ToolBarPlugin() {
   };
 
   const onClickBoldButton = () => {
+    console.log('デバッグ用：onClickBoldButton');
     editor.update(() => {
       $toggleBoldToSelection();
     });

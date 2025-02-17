@@ -49,6 +49,9 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
   await boldButton.click();
+  page.on('console', msg => {
+    console.log(msg.text());
+   })
   await clearSelection(page);
   await page.waitForFunction(
     () => {
