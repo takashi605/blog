@@ -51,8 +51,9 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
    })
   // 太字ボタンをクリック
   const boldButton = page.getByRole('button', { name: 'bold' });
+  // 取得したボタンを確認
+  console.log(await boldButton.innerHTML());
   await boldButton.click();
-  await clearSelection(page);
   await page.waitForFunction(
     () => {
       const editor = document.querySelector('[contenteditable="true"]');
