@@ -1,23 +1,22 @@
-import { Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import playwrightHelper from '../../support/playwrightHelper.ts';
+
+import { createBdd } from 'playwright-bdd';
+const { Given, Then } = createBdd();
 
 Given(
   'トップページにアクセスしてピックアップ記事を閲覧する',
-  async function () {
+  async function ({page}) {
     if (!process.env.TEST_TARGET_URL) {
       throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
     }
-    const page = playwrightHelper.getPage();
 
     await page.goto(`${process.env.TEST_TARGET_URL}`);
   },
 );
 Then(
   '各ピックアップ記事のサムネイル画像が3件分表示されている',
-  async function () {
-    const page = playwrightHelper.getPage();
+  async function ({page}) {
 
     const pickUpSection = getPickUpSection(page);
     const thumbnailImages = pickUpSection.locator('img');
@@ -26,8 +25,7 @@ Then(
 );
 Then(
   '各ピックアップ記事の記事タイトルが3件分表示されている',
-  async function () {
-    const page = playwrightHelper.getPage();
+  async function ({page}) {
 
     const pickUpSection = getPickUpSection(page);
     const titles = pickUpSection.locator('h3');

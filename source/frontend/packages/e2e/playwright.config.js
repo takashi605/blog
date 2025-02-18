@@ -1,6 +1,15 @@
 import { defineConfig } from '@playwright/test';
 
+import { defineBddConfig } from 'playwright-bdd';
+
+const testDir = defineBddConfig({
+  loader: ['ts-node/esm'],
+  paths: ['tests/**/*.feature'],
+  import: ['tests/**/*.spec.ts'],
+});
+
 export default defineConfig({
+  testDir,
   outputDir: 'tests/test-results',
   timeout: 90 * 1000,
   expect: {

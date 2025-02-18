@@ -1,15 +1,15 @@
-import { Given, Then } from '@cucumber/cucumber';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import playwrightHelper from '../../support/playwrightHelper.ts';
+
+import { createBdd } from 'playwright-bdd';
+const { Given, Then } = createBdd();
 
 Given(
   'トップページにアクセスしてトップテックピック記事を閲覧する',
-  async function () {
+  async function ({page}) {
     if (!process.env.TEST_TARGET_URL) {
       throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
     }
-    const page = playwrightHelper.getPage();
 
     await page.goto(`${process.env.TEST_TARGET_URL}`);
   },
@@ -17,8 +17,7 @@ Given(
 
 Then(
   'トップテックピック記事のサムネイル画像が表示されている',
-  async function () {
-    const page = playwrightHelper.getPage();
+  async function ({page}) {
 
     const topTechPickSection = getTopTechPickSection(page);
     const thumbnailImage = topTechPickSection.getByRole('img', {
@@ -30,8 +29,7 @@ Then(
 
 // TODO h1 タグであるのは適切でないため、修正が必要
 // adobe blog は h3 だったので、そのように修正するといいかも
-Then('トップテックピック記事の記事タイトルが表示されている', async function () {
-  const page = playwrightHelper.getPage();
+Then('トップテックピック記事の記事タイトルが表示されている', async function ({page}) {
 
   const title = page.locator('h1');
 
@@ -39,8 +37,7 @@ Then('トップテックピック記事の記事タイトルが表示されて�
 });
 Then(
   'トップテックピック記事の記事本文の抜粋が表示されている',
-  async function () {
-    const page = playwrightHelper.getPage();
+  async function ({page}) {
 
     const topTechPickSection = getTopTechPickSection(page);
     const p = topTechPickSection.locator('p');
@@ -49,8 +46,7 @@ Then(
   },
 );
 
-Then('トップテックピック記事の投稿日時が表示されている', async function () {
-  const page = playwrightHelper.getPage();
+Then('トップテックピック記事の投稿日時が表示されている', async function ({page}) {
 
   const topTechPickSection = getTopTechPickSection(page);
 
