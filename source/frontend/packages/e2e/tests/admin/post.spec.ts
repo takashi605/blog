@@ -52,7 +52,7 @@ When(
 );
 Then('「こんにちは！」が太字になっている', async function ({ page }) {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  const boldText = richTextEditor.locator('strong');
+  const boldText = richTextEditor.locator('b, strong');
 
   await expect(boldText).toHaveText('こんにちは！', { timeout: 20000 });
 });
@@ -69,7 +69,7 @@ When(
 );
 Then('「こんにちは！」の太字が解除されている', async function ({ page }) {
   const richTextEditor = page.locator('[contenteditable="true"]');
-  const boldText = richTextEditor.locator('strong');
+  const boldText = richTextEditor.locator('b, strong');
 
   await expect(boldText).not.toBeVisible({ timeout: 20000 });
 });
