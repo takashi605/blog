@@ -40,17 +40,15 @@ When(
     const locator = page.locator('text=こんにちは！');
     await locator.selectText({ timeout: 20000 });
 
-    page.on('console', (msg) => {
-      console.log(msg.text());
-    });
+
     // 太字ボタンをクリック
     const boldButton = page.getByRole('button', { name: 'bold' });
-    // 取得したボタンを確認
-    console.log(await boldButton.innerHTML());
     await boldButton.click();
   },
 );
 Then('「こんにちは！」が太字になっている', async function ({ page }) {
+  // ページの状態を出力
+  console.log(await page.content());
   const richTextEditor = page.locator('[contenteditable="true"]');
   const boldText = richTextEditor.locator('b, strong');
 
