@@ -60,6 +60,8 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
   await page.keyboard.press('KeyB');
   await page.keyboard.up('Control');
 
+  const html = await page.content();
+  console.log(html);
   await page.waitForFunction(
     () => {
       const editor = document.querySelector('[contenteditable="true"]');
@@ -68,8 +70,6 @@ When('「こんにちは！」の文字列を選択して太字ボタンを押�
     },
     { timeout: 20000 },
   );
-  const html = await page.content();
-  console.log(html);
 });
 Then('「こんにちは！」が太字になっている', async function () {
   const page = playwrightHelper.getPage();
