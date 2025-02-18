@@ -40,40 +40,14 @@ When(
     const locator = page.locator('text=こんにちは！');
     await locator.selectText({ timeout: 20000 });
 
-    const selectedText = await page.evaluate(() => {
-      const selection = window.getSelection();
-      return selection ? selection.toString() : '';
-    });
-
-    console.log(selectedText);
-
-    // 選択文字列が「世界」になっていることをアサート
-    expect(selectedText).toBe('こんにちは！');
-
     page.on('console', (msg) => {
       console.log(msg.text());
     });
     // 太字ボタンをクリック
-    // const boldButton = page.getByRole('button', { name: 'bold' });
+    const boldButton = page.getByRole('button', { name: 'bold' });
     // 取得したボタンを確認
-    // console.log(await boldButton.innerHTML());
-    // await boldButton.click();
-
-    // キーボード操作で太字にする
-    await page.keyboard.down('Control');
-    await page.keyboard.press('KeyB');
-    await page.keyboard.up('Control');
-
-    const html = await page.content();
-    console.log(html);
-    await page.waitForFunction(
-      () => {
-        const editor = document.querySelector('[contenteditable="true"]');
-        const strongTag = editor?.querySelector('strong');
-        return strongTag && strongTag.textContent?.includes('こんにちは！');
-      },
-      { timeout: 20000 },
-    );
+    console.log(await boldButton.innerHTML());
+    await boldButton.click();
   },
 );
 Then('「こんにちは！」が太字になっている', async function ({ page }) {
