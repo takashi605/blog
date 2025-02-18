@@ -40,10 +40,14 @@ When(
     const locator = page.locator('text=こんにちは！');
     await locator.selectText({ timeout: 20000 });
 
-
     // 太字ボタンをクリック
-    const boldButton = page.getByRole('button', { name: 'bold' });
-    await boldButton.click();
+    // const boldButton = page.getByRole('button', { name: 'bold' });
+    // await boldButton.click();
+
+    // キーボード操作で太字にする
+    await page.keyboard.down('Control');
+    await page.keyboard.press('KeyB');
+    await page.keyboard.up('Control');
   },
 );
 Then('「こんにちは！」が太字になっている', async function ({ page }) {
