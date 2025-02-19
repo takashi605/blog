@@ -64,8 +64,11 @@ When(
     const locator = page.locator('text=こんにちは！');
     await locator.selectText({ timeout: 20000 });
 
-    const boldButton = page.getByRole('button', { name: 'bold' });
-    await boldButton.click();
+    // const boldButton = page.getByRole('button', { name: 'bold' });
+    // await boldButton.click();
+    await page.keyboard.down('Control');
+    await page.keyboard.press('KeyB');
+    await page.keyboard.up('Control');
     await clearSelection(page);
   },
 );
