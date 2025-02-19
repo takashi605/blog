@@ -9,6 +9,14 @@ const testDir = defineBddConfig({
 });
 
 export default defineConfig({
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        browserName: 'chromium',
+      },
+    },
+  ],
   testDir,
   outputDir: 'tests/test-results',
   timeout: 90 * 1000,
