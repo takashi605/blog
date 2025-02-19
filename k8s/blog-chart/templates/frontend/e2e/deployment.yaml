@@ -34,13 +34,14 @@ spec:
               cpu: {{ .Values.e2e.pod.cpuRequest }}
           ports:
             - containerPort: 4000
+          hostNetwork: {{ .Values.e2e.pod.hostNetwork }}
           env:
             - name: TEST_TARGET_URL
               value: {{ .Values.e2e.pod.env.TEST_TARGET_URL }}
             - name: ADMIN_URL
               value: {{ .Values.e2e.pod.env.ADMIN_URL }}
             - name: DISPLAY
-              value: :0
+              value: {{ .Values.e2e.pod.env.DISPLAY }}
           volumeMounts:
             - mountPath: /tmp/.X11-unix
               name: unix-domain-socket

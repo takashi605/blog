@@ -131,10 +131,12 @@ e2e:
     env:
       TEST_TARGET_URL: "http://blog.example"
       ADMIN_URL: "http://admin.blog.example"
+      DISPLAY: ":0"
     memoryLimit: "5000Mi"
     cpuLimit: "4000m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
+    hostNetwork: false
 
   # 開発環境では coreDNS で名前解決を行うため、空の値を指定
   hostAliases:
