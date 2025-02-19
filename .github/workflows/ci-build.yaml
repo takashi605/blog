@@ -107,6 +107,18 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
 
+      - name: "ステージング用 admin Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/blog-admin/Dockerfile
+          target: staging
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-blog-admin-staging:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache
+
       - name: "e2e Image の Build と Push"
         uses: docker/build-push-action@v5
         with:

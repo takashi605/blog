@@ -55,6 +55,29 @@ ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm exec next build
 
+# / ステージング環境用ステージ /
+FROM gcr.io/distroless/nodejs18-debian12:nonroot as staging
+
+ENV NODE_ENV production
+ARG FRONTEND_DIR=source/frontend
+ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
+
+WORKDIR /$ADMIN_DIR
+
+# ビルド用ステージから必要なファイルのみをコピー
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/public ./public
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/standalone/packages/pruned ./
+COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next/static ./.next/static
+
+# ポートを開放
+EXPOSE 3000
+ENV PORT 3000
+ENV HOSTNAME="0.0.0.0"
+ENV NEXT_PUBLIC_API_URL="http://api.blog.example/staging"
+
+# 実行開始
+CMD ["server.js"]
+
 # / 本番環境用ステージ /
 FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 
