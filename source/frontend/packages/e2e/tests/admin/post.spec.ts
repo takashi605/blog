@@ -8,6 +8,10 @@ Given('記事投稿ページにアクセスする', async function ({ page }) {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
+  // ログがキャプチャされるようにする
+  page.on('console', (msg) => {
+    console.log(msg.text());
+  });
 
   await page.goto(`${process.env.ADMIN_URL}/posts/create`);
 });
@@ -41,18 +45,11 @@ When(
     await locator.selectText({ timeout: 20000 });
 
     // 太字ボタンをクリック
-    // const boldButton = page.getByRole('button', { name: 'bold' });
-    // await boldButton.click();
-
-    // キーボード操作で太字にする
-    await page.keyboard.down('Control');
-    await page.keyboard.press('KeyB');
-    await page.keyboard.up('Control');
+    const boldButton = page.getByRole('button', { name: 'bold' });
+    await boldButton.click();
   },
 );
 Then('「こんにちは！」が太字になっている', async function ({ page }) {
-  // ページの状態を出力
-  console.log(await page.content());
   const richTextEditor = page.locator('[contenteditable="true"]');
   const boldText = richTextEditor.locator('b, strong');
 
@@ -64,8 +61,8 @@ When(
     const locator = page.locator('text=こんにちは！');
     await locator.selectText({ timeout: 20000 });
 
-    // const boldButton = page.getByRole('button', { name: 'bold' });
-    // await boldButton.click();
+    const boldButton = page.getByRole('button', { name: 'bold' });
+    await boldButton.click();
     await page.keyboard.down('Control');
     await page.keyboard.press('KeyB');
     await page.keyboard.up('Control');
