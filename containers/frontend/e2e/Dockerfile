@@ -12,8 +12,8 @@ ARG E2E_DIR=$FRONTEND_DIR/packages/e2e
 
 RUN npm install -g pnpm@9.9.0
 
-# ベースイメージに含まれるユーザーを使う
-USER pwuser
+# ステージング環境でデバッグしやすいように root ユーザーでコンテナを起動
+USER root
 
 WORKDIR /$FRONTEND_DIR
 
