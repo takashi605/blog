@@ -17,6 +17,7 @@ spec:
         app.kubernetes.io/name: {{ include "e2e.appname" . }}
         {{- include "blog-chart.labels" . | nindent 8 }}
     spec:
+      hostNetwork: {{ .Values.e2e.pod.hostNetwork }}
       imagePullSecrets:
         {{- if .Values.e2e.pod.imagePullSecret }}
         - name: {{ .Values.e2e.pod.imagePullSecret }}
@@ -34,7 +35,6 @@ spec:
               cpu: {{ .Values.e2e.pod.cpuRequest }}
           ports:
             - containerPort: 4000
-          hostNetwork: {{ .Values.e2e.pod.hostNetwork }}
           env:
             - name: TEST_TARGET_URL
               value: {{ .Values.e2e.pod.env.TEST_TARGET_URL }}
