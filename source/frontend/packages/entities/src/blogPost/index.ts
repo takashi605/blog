@@ -24,8 +24,8 @@ export class BlogPost {
     return this.title;
   }
 
-  setThumbnail(path: string) {
-    this.thumbnail = new Thumbnail(path);
+  setThumbnail(id: string, path: string) {
+    this.thumbnail = new Thumbnail(id, path);
     return this;
   }
 

@@ -31,6 +31,7 @@ mod handle_funcs {
   }
 
   pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
+    println!("create_blog_post");
     let blog_post_req = blog_post_req.into_inner();
 
     let inserted_blog_post = create_single_blog_post(blog_post_req).await?;

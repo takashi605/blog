@@ -15,6 +15,7 @@ mod tests {
 
     let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
 
+
     let resp = post_request.send().await.unwrap().text().await.unwrap();
     let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 

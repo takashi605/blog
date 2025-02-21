@@ -6,6 +6,7 @@ import type { ContentDTO } from '../contentDTO';
 import { createContentToDTOContext } from './contentToDTO';
 
 export type thumbnailDTO = {
+  readonly id: string;
   readonly path: string;
 };
 
@@ -30,6 +31,7 @@ export class BlogPostDTOBuilder {
   private extractThumbnailDTO(): thumbnailDTO {
     try {
       return {
+        id: this.blogPost.getThumbnail().getId(),
         path: this.blogPost.getThumbnail().getPath(),
       };
     } catch {

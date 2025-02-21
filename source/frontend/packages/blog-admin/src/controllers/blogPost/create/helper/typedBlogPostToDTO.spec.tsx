@@ -11,7 +11,10 @@ describe('typedBlogPostToDTO', () => {
       title: 'ブログ記事のタイトル',
 
       // thumbnail は未実装のため、固定の値を入れている
-      thumbnail: { path: 'path/to/thumbnail' },
+      thumbnail: {
+        id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+        path: 'path/to/thumbnail',
+      },
     });
   });
 });

@@ -13,6 +13,7 @@ import {
 export class BlogPostBuilder {
   private id: string | null = null;
   private postTitle = '';
+  private thumbnailId = '';
   private thumbnailPath = '';
   private postDate = '';
   private lastUpdateDate = '';
@@ -28,7 +29,8 @@ export class BlogPostBuilder {
     return this;
   }
 
-  setThumbnail(thumbnailPath: string) {
+  setThumbnail(thumbnailId: string, thumbnailPath: string) {
+    this.thumbnailId = thumbnailId;
     this.thumbnailPath = thumbnailPath;
     return this;
   }
@@ -80,7 +82,7 @@ export class BlogPostBuilder {
   build() {
     this.validateId();
     const blogPost = new BlogPost(this.id!, this.postTitle)
-      .setThumbnail(this.thumbnailPath)
+      .setThumbnail(this.thumbnailId, this.thumbnailPath)
       .setPostDate(this.postDate)
       .setLastUpdateDate(this.lastUpdateDate);
     this.injectionContentsTo(blogPost);
