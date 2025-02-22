@@ -96,7 +96,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
 
   // TODO 引数で url を受け取れるようにする
   private async post(blogPostJson: string): Promise<Response> {
-    const response = await fetch(`${this.baseUrl}/posts`, {
+    const response = await fetch(`${this.baseUrl}/blog/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
