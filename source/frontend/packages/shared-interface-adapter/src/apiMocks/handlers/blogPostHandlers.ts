@@ -16,26 +16,8 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
-    ...createProtTypeBlogPostHandlers(baseUrl),
-    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
-      const userId = params.userId?.toString();
-      const blogPost = blogPostResponses.find((post) => post.id === userId);
-      if (blogPost === undefined) {
-        return new HttpResponse('Not found', {
-          status: 404,
-        });
-      }
-      return HttpResponse.json(blogPost);
-    }),
-  ];
-  return blogPostHandlers;
-};
-export const createProtTypeBlogPostHandlers = (
-  baseUrl: string,
-): HttpHandler[] => {
-  const blogPostHandlers = [
     // 以下 post メソッドのモック
-    http.post(`${baseUrl}/posts`, async ({ request }) => {
+    http.post(`${baseUrl}/blog/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
         newPost = await request.json();
@@ -48,7 +30,24 @@ export const createProtTypeBlogPostHandlers = (
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
-
+    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
+      const userId = params.userId?.toString();
+      const blogPost = blogPostResponses.find((post) => post.id === userId);
+      if (blogPost === undefined) {
+        return new HttpResponse('Not found', {
+          status: 404,
+        });
+      }
+      return HttpResponse.json(blogPost);
+    }),
+    ...createProtTypeBlogPostHandlers(baseUrl),
+  ];
+  return blogPostHandlers;
+};
+export const createProtTypeBlogPostHandlers = (
+  baseUrl: string,
+): HttpHandler[] => {
+  const blogPostHandlers = [
     http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
