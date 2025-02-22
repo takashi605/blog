@@ -50,7 +50,7 @@ RUN pnpm -F blog-admin deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
 
-ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+ENV NEXT_PUBLIC_API_URL="http://api"
 
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm exec next build
@@ -73,7 +73,7 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
-ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+ENV NEXT_PUBLIC_API_URL="http://api"
 
 # 実行開始
 CMD ["server.js"]
