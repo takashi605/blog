@@ -35,7 +35,7 @@ export const createProtTypeBlogPostHandlers = (
 ): HttpHandler[] => {
   const blogPostHandlers = [
     // 以下 post メソッドのモック
-    http.post(`${baseUrl}/blog/posts`, async ({ request }) => {
+    http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
         newPost = await request.json();
