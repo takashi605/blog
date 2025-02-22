@@ -30,16 +30,16 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
-    http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
-      const userId = params.userId?.toString();
-      const blogPost = blogPostResponses.find((post) => post.id === userId);
-      if (blogPost === undefined) {
-        return new HttpResponse('Not found', {
-          status: 404,
-        });
-      }
-      return HttpResponse.json(blogPost);
-    }),
+    // http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
+    //   const userId = params.userId?.toString();
+    //   const blogPost = blogPostResponses.find((post) => post.id === userId);
+    //   if (blogPost === undefined) {
+    //     return new HttpResponse('Not found', {
+    //       status: 404,
+    //     });
+    //   }
+    //   return HttpResponse.json(blogPost);
+    // }),
     ...createProtTypeBlogPostHandlers(baseUrl),
   ];
   return blogPostHandlers;
