@@ -27,13 +27,6 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       }
       return HttpResponse.json(blogPost);
     }),
-  ];
-  return blogPostHandlers;
-};
-export const createProtTypeBlogPostHandlers = (
-  baseUrl: string,
-): HttpHandler[] => {
-  const blogPostHandlers = [
     // 以下 post メソッドのモック
     http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
@@ -48,7 +41,13 @@ export const createProtTypeBlogPostHandlers = (
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
-
+  ];
+  return blogPostHandlers;
+};
+export const createProtTypeBlogPostHandlers = (
+  baseUrl: string,
+): HttpHandler[] => {
+  const blogPostHandlers = [
     http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
