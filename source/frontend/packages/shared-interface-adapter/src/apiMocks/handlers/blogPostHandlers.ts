@@ -34,7 +34,7 @@ export const createProtTypeBlogPostHandlers = (
   baseUrl: string,
 ): HttpHandler[] => {
   const blogPostHandlers = [
-    http.post(`${baseUrl}/blog/posts`, async ({ request }) => {
+    http.post(`${baseUrl}/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
         newPost = await request.json();
