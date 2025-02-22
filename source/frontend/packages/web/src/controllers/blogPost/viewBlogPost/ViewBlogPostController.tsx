@@ -17,6 +17,7 @@ async function ViewBlogPostController({ postId }: ViewBlogPostControllerProps) {
   const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
     postId,
   );
+  console.log(blogPostDTO);
 
   return <ViewBlogPostPresenter blogPost={blogPostDTO} />;
 }
