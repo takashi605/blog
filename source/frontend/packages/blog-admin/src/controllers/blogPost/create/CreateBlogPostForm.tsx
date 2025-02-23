@@ -17,6 +17,7 @@ export type CreateBlogPostFormData = {
 };
 
 function CreateBlogPostForm() {
+  console.log("CreateBlogPostForm コンポーネントを表示！");
   const form = useForm<CreateBlogPostFormData>();
   const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
 

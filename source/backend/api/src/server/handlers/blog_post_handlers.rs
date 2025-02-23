@@ -26,6 +26,7 @@ mod handle_funcs {
     let post_id = path.into_inner();
     let uuid = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
     let blog_post = fetch_single_blog_post(uuid).await?;
+    println!("{:?}", blog_post);
 
     Ok(HttpResponse::Ok().json(blog_post))
   }
