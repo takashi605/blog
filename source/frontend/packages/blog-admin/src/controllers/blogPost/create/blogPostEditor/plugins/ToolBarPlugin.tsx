@@ -7,6 +7,7 @@ import {
 } from './toolBarPluginHooks';
 
 function ToolBarPlugin() {
+  console.log("ToolBarPlugin コンポーネントを表示！");
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
   const { $setHeadingToSelection } = useUpdateBlockType();

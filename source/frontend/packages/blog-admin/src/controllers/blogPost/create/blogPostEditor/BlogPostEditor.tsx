@@ -12,6 +12,7 @@ import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
 
 function BlogPostEditor() {
+  console.log("BlogPostEditor コンポーネントを表示！");
   const setContentsDTO = useContext(ContentsDTOSetterContext);
   const onChange = (editor: EditorState) => {
     editor.read(() => {
