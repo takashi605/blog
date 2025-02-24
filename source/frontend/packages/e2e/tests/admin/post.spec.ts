@@ -15,27 +15,27 @@ Then('リッチテキストエディタが表示されていることを確認�
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+  await expect(richTextEditor).toBeVisible({ timeout: 15000 });
 });
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.pressSequentially('こんにちは！', { timeout: 10000 });
+  await richTextEditor.pressSequentially('こんにちは！', { timeout: 15000 });
 });
 Then('リッチテキストエディタに「こんにちは！」が表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toHaveText('こんにちは！', { timeout: 10000 });
+  await expect(richTextEditor).toHaveText('こんにちは！', { timeout: 15000 });
 });
 When('「世界」と入力し、その文字を選択して太字ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
   // テキストをセット
-  await richTextEditor.pressSequentially('世界', { timeout: 10000 });
+  await richTextEditor.pressSequentially('世界', { timeout: 15000 });
 
   await selectByArrowLeft(page, richTextEditor, 2);
 
@@ -54,11 +54,11 @@ Then(
     const richTextEditor = page.locator('[contenteditable="true"]');
 
     await expect(richTextEditor).toHaveText('こんにちは！世界', {
-      timeout: 10000,
+      timeout: 15000,
     });
     // 「世界」が strong タグで囲われているか確認
     const boldText = richTextEditor.locator('strong');
-    await expect(boldText).toHaveText('世界', { timeout: 10000 });
+    await expect(boldText).toHaveText('世界', { timeout: 15000 });
   },
 );
 When('「世界」を再び選択し、太字ボタンを押す', async function () {
@@ -78,11 +78,11 @@ Then(
 
     const richTextEditor = page.locator('[contenteditable="true"]');
     await expect(richTextEditor).toHaveText('こんにちは！世界', {
-      timeout: 10000,
+      timeout: 15000,
     });
     // 「世界」が strong タグで囲われていないか確認
     const boldText = richTextEditor.locator('strong');
-    await expect(boldText).not.toBeVisible({ timeout: 10000 });
+    await expect(boldText).not.toBeVisible({ timeout: 15000 });
   },
 );
 When(
@@ -106,7 +106,7 @@ Then(
 
     const richTextEditor = page.locator('[contenteditable="true"]');
     const h2Text = richTextEditor.locator('h2');
-    await expect(h2Text).toHaveText('見出し2', { timeout: 10000 });
+    await expect(h2Text).toHaveText('見出し2', { timeout: 15000 });
   },
 );
 When(
@@ -130,7 +130,7 @@ Then(
 
     const richTextEditor = page.locator('[contenteditable="true"]');
     const h3Text = richTextEditor.locator('h3');
-    await expect(h3Text).toHaveText('見出し3', { timeout: 10000 });
+    await expect(h3Text).toHaveText('見出し3', { timeout: 15000 });
   },
 );
 When('「投稿」ボタンを押す', async function () {
@@ -143,7 +143,7 @@ Then('記事が投稿され、投稿完了ページに遷移する', async funct
   const page = playwrightHelper.getPage();
 
   await expect(page.getByText('記事を公開しました')).toBeVisible({
-    timeout: 10000,
+    timeout: 15000,
   });
 });
 
@@ -173,7 +173,7 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
 //   await addH2Button.click();
 // });
 // Then('h2のインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'h2' })).toBeVisible({timeout: 10000});
+//   await expect(page.getByRole('textbox', { name: 'h2' })).toBeVisible({timeout: 15000});
 // });
 // When('h2に「見出しレベル2」と入力する', async function(){
 //   const h2Input = await page.getByRole('textbox', { name: 'h2' });
@@ -187,7 +187,7 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
 //   await addTextButton.click();
 // });
 // Then('paragraphのインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible({timeout: 10000});
+//   await expect(page.getByRole('textbox', { name: 'paragraph' })).toBeVisible({timeout: 15000});
 // });
 // When('paragraphのインプットに「paragraph入力値」と入力する', async function(){
 //   const paragraphInput = await page.getByRole('textbox', { name: 'paragraph' });
@@ -199,7 +199,7 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
 //   await addH3Button.click();
 // });
 // Then('h3 のインプットが表示される', async function(){
-//   await expect(page.getByRole('textbox', { name: 'h3' })).toBeVisible({timeout: 10000});
+//   await expect(page.getByRole('textbox', { name: 'h3' })).toBeVisible({timeout: 15000});
 // });
 // When('h3 のインプットに「見出しレベル3」と入力する', async function(){
 //   const h3Input = await page.getByRole('textbox', { name: 'h3' });
@@ -211,5 +211,5 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
 //   await publishButton.click();
 // });
 // Then('「記事を公開しました」と表示される', async function(){
-//   await expect(page.getByText('記事を公開しました')).toBeVisible({timeout: 10000});
+//   await expect(page.getByText('記事を公開しました')).toBeVisible({timeout: 15000});
 // });

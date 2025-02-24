@@ -243,3 +243,10 @@ check-docker-disk-usage:
 	@sudo du -h --max-depth=1 /var/lib/docker/overlay2 | sort -hr
 check-mk8s-disk-usage:
 	@sudo du -h --max-depth=1 /var/snap/microk8s/common/default-storage | sort -hr
+
+build-prod-admin-image:
+	docker build \
+	-f ./containers/frontend/blog-admin/Dockerfile \
+	--target prod \
+	-t blog-admin-prod:v0.0.0 \
+	.
