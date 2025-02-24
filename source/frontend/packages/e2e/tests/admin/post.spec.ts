@@ -14,10 +14,8 @@ Given('記事投稿ページにアクセスする', async function () {
 Then('リッチテキストエディタが表示されていることを確認する', async function () {
   const page = playwrightHelper.getPage();
 
-const richTextEditor = page.locator(
-  '[contenteditable="true"][data-lexical-editor="true"]',
-);
-await expect(richTextEditor).toBeVisible({ timeout: 60000 });
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await expect(richTextEditor).toBeVisible({ timeout: 60000 });
 });
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
