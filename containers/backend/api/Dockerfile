@@ -18,7 +18,6 @@ USER rust:rust
 WORKDIR /$APP_ROOT_DIR
 
 # キャッシュを効率的に使うために Cargo.toml だけをコピーして依存関係を解決
-COPY --chown=rust:rust ./$APP_ROOT_DIR/.cargo/config.toml ./.cargo/config.toml
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.toml ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/Cargo.lock ./
 COPY --chown=rust:rust ./$APP_ROOT_DIR/bacon.toml ./
