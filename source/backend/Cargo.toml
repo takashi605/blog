@@ -5,7 +5,3 @@ members = [
     "common"
 ]
 resolver = "2"
-
-# 2024 エディションじゃないと上のバージョンは使えない
-[patch.crates-io]
-base64ct = { git = "https://github.com/RustCrypto/formats", tag = "base64ct/v1.6.0" }

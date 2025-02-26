@@ -1,5 +1,5 @@
 # ベースイメージとして公式のRustイメージを使用
-FROM rust:1.81-slim AS base
+FROM rustlang/rust:nightly-slim AS base
 ARG APP_ROOT_DIR=source/backend
 
 # libssl-dev がある状態で pkg-config をインストールする必要あり
