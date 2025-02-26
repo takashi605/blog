@@ -1,0 +1,3 @@
+# 2024 エディションじゃないと上のバージョンは使えない
+[patch."https://github.com/rust-lang/crates.io-index"]
+base64ct = { git = "https://github.com/RustCrypto/formats", tag = "base64ct/v1.6.0" }
