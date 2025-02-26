@@ -38,7 +38,7 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 FROM base AS dev
 
 RUN cargo install --locked bacon
-RUN cargo install sqlx-cli --no-default-features --features postgres
+RUN cargo install sqlx-cli --version 0.8.0 --no-default-features --features postgres
 
 # コンテナ起動時に実行するコマンド
 CMD ["bacon", "--headless", "run-api"]
@@ -50,7 +50,7 @@ WORKDIR /$APP_ROOT_DIR
 RUN cargo build --release -p api
 
 # ステージング環境用に sqlx をインストール
-RUN cargo install sqlx-cli --no-default-features --features postgres --root /tmp/sqlx-install
+RUN cargo install sqlx-cli --version 0.8.0 --no-default-features --features postgres --root /tmp/sqlx-install
 
 FROM gcr.io/distroless/cc-debian12:nonroot AS staging
 ARG APP_ROOT_DIR=source/backend
