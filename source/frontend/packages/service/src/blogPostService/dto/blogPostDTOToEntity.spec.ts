@@ -12,6 +12,7 @@ describe('blogPostDTOToEntity', () => {
       postDate: '2021-01-01',
       lastUpdateDate: '2021-01-02',
       thumbnail: {
+        id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
         path: 'path/to/thumbnail',
       },
       contents: [

@@ -6,6 +6,7 @@ export const blogPostResponseSchema: z.ZodType<BlogPostDTO> = z.object({
   id: z.string(),
   title: z.string(),
   thumbnail: z.object({
+    id: z.string(),
     path: z.string(),
   }),
   postDate: z.string(),

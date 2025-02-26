@@ -65,7 +65,10 @@ function createFetchedDTOMock(): BlogPostDTO[] {
     title: 'dto1記事タイトル',
     postDate: '2021-01-01',
     lastUpdateDate: '2021-01-02',
-    thumbnail: { path: 'path/to/thumbnail1' },
+    thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+      path: 'path/to/thumbnail1',
+    },
     contents: [
       { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し1' },
       { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し1' },
@@ -77,7 +80,10 @@ function createFetchedDTOMock(): BlogPostDTO[] {
     title: 'dto2記事タイトル',
     postDate: '2021-02-01',
     lastUpdateDate: '2021-02-02',
-    thumbnail: { path: 'path/to/thumbnail2' },
+    thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+      path: 'path/to/thumbnail2',
+    },
     contents: [
       { id: createUUIDv4(), type: ContentType.H2, text: 'h2見出し2' },
       { id: createUUIDv4(), type: ContentType.H3, text: 'h3見出し2' },

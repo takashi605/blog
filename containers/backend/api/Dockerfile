@@ -70,5 +70,7 @@ WORKDIR /$APP_ROOT_DIR
 
 # ビルド用ステージから必要なファイルのみをコピー
 COPY --from=builder --chown=nonroot:nonroot /$APP_ROOT_DIR/target/release/api ./api
+COPY --from=builder --chown=nonroot:nonroot /tmp/sqlx-install/bin/sqlx ./sqlx
+COPY --from=dev --chown=nonroot:nonroot /$APP_ROOT_DIR/api/migrations ./migrations
 
 CMD ["./api"]

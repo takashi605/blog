@@ -101,7 +101,7 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     );
     const createdBlogPost = await blogPostCreator.execute();
 
-    const today = formatDate2DigitString(new Date());
+    const today = formatDate2DigitString(new Date()).replaceAll('/', '-');
     expect(createdBlogPost.id).toBeDefined();
     expect(createdBlogPost.title).toBe('記事タイトル');
     expect(createdBlogPost.thumbnail.path).toBe('path/to/thumbnail');

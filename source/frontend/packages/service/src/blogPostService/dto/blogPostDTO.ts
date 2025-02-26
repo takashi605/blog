@@ -4,11 +4,12 @@ export type BlogPostDTO = {
   readonly id: string;
   readonly title: string;
   readonly thumbnail: thumbnailDTO;
-  readonly postDate: string;
-  readonly lastUpdateDate: string;
+  postDate: string;
+  lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentDTO>;
 };
 
 export type thumbnailDTO = {
+  readonly id: string;
   readonly path: string;
 };

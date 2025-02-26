@@ -6,6 +6,9 @@ export function typedBlogPostWithoutContentsToDTO(
 ): Omit<BlogPostDTOForCreate, 'contents'> {
   return {
     title: blogPost.title,
-    thumbnail: { path: 'path/to/thumbnail' },
+    thumbnail: {
+      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+      path: 'path/to/thumbnail',
+    },
   };
 }
