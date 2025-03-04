@@ -50,7 +50,9 @@ RUN pnpm -F blog-admin deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
 
-ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+# ビルド時に実際の api の URL を指定
+ARG NEXT_PUBLIC_API_URL="http://api.blog.example"
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 # .next ディレクトリにビルド成果物を生成
 RUN pnpm exec next build
@@ -61,9 +63,6 @@ FROM gcr.io/distroless/nodejs18-debian12:nonroot as prod
 ENV NODE_ENV production
 ARG FRONTEND_DIR=source/frontend
 ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
-
-# ビルド時に実際の api の URL を指定
-ARG NEXT_PUBLIC_API_URL="http://api.blog.example"
 
 WORKDIR /$ADMIN_DIR
 
@@ -76,7 +75,6 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 # 実行開始
 CMD ["server.js"]
