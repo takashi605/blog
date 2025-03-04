@@ -62,6 +62,9 @@ ENV NODE_ENV production
 ARG FRONTEND_DIR=source/frontend
 ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
 
+# ビルド時に実際の api の URL を指定
+ARG NEXT_PUBLIC_API_URL="http://api.blog.example"
+
 WORKDIR /$ADMIN_DIR
 
 # ビルド用ステージから必要なファイルのみをコピー

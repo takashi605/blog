@@ -95,7 +95,7 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache
 
-      - name: "admin Image の Build と Push"
+      - name: "本番用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -106,6 +106,22 @@ jobs:
             ghcr.io/${{ github.repository }}-blog-admin:${{ env.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_PROD }}
+
+      - name: "ステージング用 admin Image の Build と Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./containers/frontend/blog-admin/Dockerfile
+          target: prod # build-args のみの違いなので、target は prod で問題ない
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-blog-admin-staging:${{ env.IMAGE_VERSION }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
 
       - name: "e2e Image の Build と Push"
         uses: docker/build-push-action@v5
