@@ -63,7 +63,7 @@ ARG FRONTEND_DIR=source/frontend
 ARG ADMIN_DIR=$FRONTEND_DIR/packages/blog-admin
 
 # ビルド時に実際の api の URL を指定
-ARG NEXT_PUBLIC_API_URL="http://api.blog.example"
+ARG ARG_NEXT_PUBLIC_API_URL="http://api.blog.example"
 
 WORKDIR /$ADMIN_DIR
 
@@ -76,7 +76,7 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
-ENV NEXT_PUBLIC_API_URL="http://api.blog.example"
+ENV NEXT_PUBLIC_API_URL=$ARG_NEXT_PUBLIC_API_URL
 
 # 実行開始
 CMD ["server.js"]
