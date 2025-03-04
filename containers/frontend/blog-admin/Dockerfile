@@ -1,4 +1,3 @@
-# / node の環境設定用に slim イメージを取得 /
 FROM node:20-slim AS node
 
 # / 基本的な設定を行うステージ /
