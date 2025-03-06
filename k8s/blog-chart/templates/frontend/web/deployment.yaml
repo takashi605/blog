@@ -36,3 +36,8 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_URL
               value: {{ .Values.web.pod.env.NEXT_PUBLIC_API_URL }}
+            - name: BASIC_AUTHENTICATION
+              valueFrom:
+                secretKeyRef:
+                  name: frontend
+                  key: basic_authentication
