@@ -49,6 +49,10 @@ RUN pnpm -F blog-admin deploy ./packages/pruned
 
 WORKDIR /$FRONTEND_DIR/packages/pruned
 
+# ビルド時に Basic 認証情報を設定
+ARG NEXT_PUBLIC_BASIC_AUTHENTICATION
+ENV NEXT_PUBLIC_BASIC_AUTHENTICATION=$NEXT_PUBLIC_BASIC_AUTHENTICATION
+
 # ビルド時に実際の api の URL を指定
 ARG NEXT_PUBLIC_API_URL="http://api.blog.example"
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
@@ -74,10 +78,6 @@ COPY --from=builder --chown=nonroot:nonroot /$FRONTEND_DIR/packages/pruned/.next
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME="0.0.0.0"
-
-# Basic 認証情報を設定。引数で変更可能
-ARG NEXT_PUBLIC_BASIC_AUTHENTICATION
-ENV NEXT_PUBLIC_BASIC_AUTHENTICATION=$NEXT_PUBLIC_BASIC_AUTHENTICATION
 
 # 実行開始
 CMD ["server.js"]
