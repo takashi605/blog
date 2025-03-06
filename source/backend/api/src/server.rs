@@ -20,7 +20,6 @@ fn configure_cors() -> Cors {
     .allowed_methods(vec!["GET", "POST", "OPTIONS"])
     .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
     .allowed_header(http::header::CONTENT_TYPE)
-    .supports_credentials()
     .max_age(3600)
 }
 
