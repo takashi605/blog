@@ -8,6 +8,13 @@ import { blogPostToJson } from './jsonMapper/blogPostToJson';
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   private baseUrl: string;
+  private baseFetchOptions = {
+    mode: 'cors' as const,
+    headers: {
+      Authorization: `${process.env.NEXT_PUBLIC_BASIC_AUTHENTICATION}`,
+      'Content-Type': 'application/json',
+    },
+  };
 
   constructor(url: string) {
     this.baseUrl = url;
@@ -32,7 +39,10 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async fetch(id: string): Promise<BlogPostDTO> {
-    const response = await fetch(`${this.baseUrl}/blog/posts/${id}`);
+    const response = await fetch(
+      `${this.baseUrl}/blog/posts/${id}`,
+      this.baseFetchOptions,
+    );
     if (response.status === 404) {
       throw new HttpError('記事データが存在しませんでした', response.status);
     }
@@ -48,6 +58,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     const queryParam = quantity ? `?quantity=${quantity}` : '';
     const response = await fetch(
       `${this.baseUrl}/blog/posts/latests${queryParam}`,
+      this.baseFetchOptions,
     );
     const validatedResponse = z
       .array(blogPostResponseSchema)
@@ -61,7 +72,10 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async fetchTopTechPick(): Promise<BlogPostDTO> {
-    const response = await fetch(`${this.baseUrl}/blog/posts/top-tech-pick`);
+    const response = await fetch(
+      `${this.baseUrl}/blog/posts/top-tech-pick`,
+      this.baseFetchOptions,
+    );
     const validatedResponse = blogPostResponseSchema.parse(
       await response.json(),
     );
@@ -72,6 +86,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   async fetchPickUpPosts(quantity: number): Promise<BlogPostDTO[]> {
     const response = await fetch(
       `${this.baseUrl}/blog/posts/pickup?quantity=${quantity}`,
+      this.baseFetchOptions,
     );
     const validatedResponse = z
       .array(blogPostResponseSchema)
@@ -86,6 +101,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     const queryParam = quantity ? `?quantity=${quantity}` : '';
     const response = await fetch(
       `${this.baseUrl}/blog/posts/popular${queryParam}`,
+      this.baseFetchOptions,
     );
     const validatedResponse = z
       .array(blogPostResponseSchema)
@@ -98,10 +114,8 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/blog/posts`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: blogPostJson,
+      ...this.baseFetchOptions,
     });
     if (!response.ok) {
       const message = await response.text();

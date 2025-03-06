@@ -44,6 +44,7 @@ jobs:
       - name: "git の最新タグを GITHUB_ENV に追加"
         run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
 
+      # TODO staging 用の Image も作成する
       - name: "web Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -59,6 +60,7 @@ jobs:
             NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
             NEXT_PUBLIC_CLOUDINARY_API_KEY=${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
             CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            NEXT_PUBLIC_BASIC_AUTHENTICATION=${{ secrets.NEXT_PUBLIC_BASIC_AUTHENTICATION }}
 
       - name: "本番用 api Image の Build と Push"
         uses: docker/build-push-action@v5
@@ -122,6 +124,7 @@ jobs:
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+            NEXT_PUBLIC_BASIC_AUTHENTICATION=${{ secrets.NEXT_PUBLIC_BASIC_AUTHENTICATION }}
 
       - name: "e2e Image の Build と Push"
         uses: docker/build-push-action@v5
