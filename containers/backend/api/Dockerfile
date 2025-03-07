@@ -36,6 +36,7 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR/api ./api
 COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 
 FROM base AS dev
+ENV RUST_ENV=development
 
 RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
@@ -54,6 +55,7 @@ RUN cargo install sqlx-cli --no-default-features --features postgres --root /tmp
 
 FROM gcr.io/distroless/cc-debian12:nonroot AS staging
 ARG APP_ROOT_DIR=source/backend
+ENV RUST_ENV=production
 
 WORKDIR /$APP_ROOT_DIR
 
@@ -66,6 +68,7 @@ CMD ["./api"]
 
 FROM gcr.io/distroless/cc-debian12:nonroot AS prod
 ARG APP_ROOT_DIR=source/backend
+ENV RUST_ENV=production
 
 WORKDIR /$APP_ROOT_DIR
 
