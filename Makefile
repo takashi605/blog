@@ -226,6 +226,12 @@ api-migrate-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run"
 api-migrate-revert:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert"
+
+# usage:
+#   make api-migrate-add name=xxxxx
+api-migrate-add:
+	cd source/backend/api && sqlx migrate add $(name)
+
 ###
 ## api テスト系
 ## Pod「api」内に api テスト用コンテナがある
