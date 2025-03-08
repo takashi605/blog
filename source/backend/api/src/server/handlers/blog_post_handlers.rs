@@ -20,13 +20,17 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
 
-  use crate::server::handlers::response::err::ApiCustomError;
+  use crate::{
+    db::tables::pickup_posts::fetch_all_pickup_blog_posts,
+    server::handlers::response::err::ApiCustomError,
+  };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
+    println!("get_blog_post");
     let post_id = path.into_inner();
     let uuid = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
     let blog_post = fetch_single_blog_post(uuid).await?;
@@ -35,6 +39,10 @@ mod handle_funcs {
   }
 
   pub async fn get_pickup_blog_posts() -> Result<impl Responder, ApiCustomError> {
+    println!("get_pickup_blog_posts");
+    let pickup_blog_posts =
+      fetch_all_pickup_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+    println!("pickup_blog_posts: {:?}", pickup_blog_posts);
     let blog_posts = expected_pickup_blog_posts().map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ブログ記事の取得に失敗しました。")))?;
 
     Ok(HttpResponse::Ok().json(blog_posts))
