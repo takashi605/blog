@@ -3,6 +3,25 @@ MAKEFLAGS += --no-print-directory
 CLUSTER_NAME = blog
 
 ###
+## 下記コマンドで環境構築可能
+## 上から順次実行で可能なことはテスト済みだが、make コマンド単体での実行は未検証
+## リソースの構築完了前に次のコマンドを実行して停止するといったことがあり得るので、
+## 途中で止まったら止まった地点から再実行する
+## また、postgres 関連リソースの起動後に ls -l /var/snap/microk8s/common/default-storage でボリュームの場所を確認し、
+## sudo chown -R 999:999 /var/snap/microk8s/common/default-storage/volumeファイル名 でボリュームの所有者を変更する
+###
+up-all-env:
+	$(MAKE) mk8s-setup
+	$(MAKE) mk8s-make-local-cluster
+	$(MAKE) kube-switch-working-namespace
+	$(MAKE) coredns-apply
+	$(MAKE) setup-metallb
+	$(MAKE) metallb-apply
+	$(MAKE) ingress-controller-install
+	$(MAKE) ingress-controller-set-metallb
+	$(MAKE) ingress-controller-default-set
+
+###
 ## tilt 系
 ###
 tilt-up:
