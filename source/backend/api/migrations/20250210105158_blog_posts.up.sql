@@ -73,6 +73,13 @@ CREATE TABLE IF NOT EXISTS rich_text_styles (
     PRIMARY KEY (style_id, rich_text_id)
 );
 
+CREATE TABLE IF NOT EXISTS pickup_posts (
+    id UUID PRIMARY KEY,
+    post_id UUID NOT NULL UNIQUE REFERENCES blog_posts(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 1. images に挿入
 INSERT INTO images (id, file_name, file_path, caption)
 VALUES
