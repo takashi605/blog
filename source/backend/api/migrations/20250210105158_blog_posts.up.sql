@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS rich_text_styles (
 INSERT INTO images (id, file_name, file_path, caption)
 VALUES
   ('535c8105-fd92-47b7-93ce-dc01b379ae66', 'book', 'test-book', '本の画像'),
-  (gen_random_uuid(), 'mechanical', 'test-mechanical', '機械の画像'),
-  (gen_random_uuid(), 'coffee', 'test-coffee', 'コーヒーの画像');
+  ('ea933f80-aa80-4532-b5ab-99c7111d7fa4', 'mechanical', 'test-mechanical', '機械の画像'),
+  ('343b12ab-95ce-4745-b18b-4ed41f6bae71', 'coffee', 'test-coffee', 'コーヒーの画像');
 
 -- 2. blog_posts に挿入
 INSERT INTO blog_posts (
