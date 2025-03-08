@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
       - "develop"
-      - "STORY*"
+      - "PBI*"
 
 env:
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
