@@ -17,6 +17,16 @@ export const clearCreatedBlogPosts = () => {
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
     ...createProtTypeBlogPostHandlers(baseUrl),
+    // クエリパラメータの扱い方の参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
+    http.get(`${baseUrl}/blog/posts/pickup`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(pickupBlogPostResponses);
+      }
+      const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
+    }),
     http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
       const userId = params.userId?.toString();
       const blogPost = blogPostResponses.find((post) => post.id === userId);
@@ -51,16 +61,6 @@ export const createProtTypeBlogPostHandlers = (
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
       );
-    }),
-    // クエリパラメータの扱い方の参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
-    http.get(`${baseUrl}/blog/posts/pickup`, ({ request }) => {
-      const url = new URL(request.url);
-      const quantity = url.searchParams.get('quantity');
-      if (!quantity) {
-        return HttpResponse.json(pickupBlogPostResponses);
-      }
-      const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
-      return HttpResponse.json(blogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/popular`, ({ request }) => {
       const url = new URL(request.url);
