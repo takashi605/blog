@@ -1,20 +1,35 @@
 #[cfg(test)]
 mod tests {
-  use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use crate::tests::helper::http::request::Request;
+  use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
   use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_single_blog_post() -> Result<()> {
-    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::target_post_id().unwrap());
+    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
-    let expected_blog_post: BlogPost = helper::expected_blog_post().unwrap();
+    let expected_blog_post: BlogPost = helper::expected_regular_blog_post().unwrap();
 
     test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_pickup_blog_posts() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts/pickup";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: Vec<BlogPost> = helper::expected_pickup_blog_posts().unwrap();
+
+    assert_eq!(actual_blog_post_resp.len(), expected_blog_post.len());
+    for (actual, expected) in actual_blog_post_resp.iter().zip(expected_blog_post.iter()) {
+      test_helper::assert_blog_post_without_uuid(actual, expected);
+    }
     Ok(())
   }
 
@@ -37,8 +52,8 @@ mod tests {
 
     use super::*;
 
-    pub fn expected_blog_post() -> Result<BlogPost> {
-      let target_post_id: Uuid = target_post_id()?;
+    pub fn expected_regular_blog_post() -> Result<BlogPost> {
+      let target_post_id: Uuid = regular_post_id()?;
       let blog_post = BlogPost {
         id: target_post_id,
         title: "初めての技術スタックへの挑戦".to_string(),
@@ -127,9 +142,72 @@ mod tests {
       Ok(blog_post)
     }
 
-    pub fn target_post_id() -> Result<Uuid> {
+    pub fn regular_post_id() -> Result<Uuid> {
       let uuid = Uuid::parse_str("672f2772-72b5-404a-8895-b1fbbf310801")?;
       Ok(uuid)
+    }
+
+    pub fn expected_pickup_blog_posts() -> Result<Vec<BlogPost>> {
+      let result = vec![expected_minimal_blog_post1()?, expected_minimal_blog_post2()?, expected_regular_blog_post()?];
+      Ok(result)
+    }
+
+    fn expected_minimal_blog_post1() -> Result<BlogPost> {
+      let blog_post = BlogPost {
+        id: Uuid::parse_str("20b73825-9a6f-4901-aa42-e104a8d2c4f6")?,
+        title: "ミニマル記事1".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-book".to_string(),
+        },
+        post_date: "2025-01-01".parse()?,
+        last_update_date: "2025-01-01".parse()?,
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "ミニマル記事1の見出し".to_string(),
+            type_field: "h2".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはミニマル記事1の段落です。".to_string(),
+              styles: Style { bold: false },
+            }],
+            type_field: "paragraph".to_string(),
+          }),
+        ],
+      };
+      Ok(blog_post)
+    }
+
+    fn expected_minimal_blog_post2() -> Result<BlogPost> {
+      let blog_post = BlogPost {
+        id: Uuid::parse_str("91450c47-9845-4398-ad3a-275118d223ea")?,
+        title: "ミニマル記事2".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-mechanical".to_string(),
+        },
+        post_date: "2025-02-01".parse()?,
+        last_update_date: "2025-02-01".parse()?,
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "ミニマル記事2の見出し".to_string(),
+            type_field: "h2".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはミニマル記事2の段落です。".to_string(),
+              styles: Style { bold: false },
+            }],
+            type_field: "paragraph".to_string(),
+          }),
+        ],
+      };
+      Ok(blog_post)
     }
   }
 }
