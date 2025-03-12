@@ -27,6 +27,15 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
       return HttpResponse.json(blogPosts);
     }),
+    http.get(`${baseUrl}/blog/posts/popular`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(popularBlogPostResponses);
+      }
+      const blogPosts = popularBlogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
+    }),
     http.get(`${baseUrl}/blog/posts/:userId`, ({ params }) => {
       const userId = params.userId?.toString();
       const blogPost = blogPostResponses.find((post) => post.id === userId);
@@ -61,15 +70,6 @@ export const createProtTypeBlogPostHandlers = (
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
       );
-    }),
-    http.get(`${baseUrl}/blog/posts/popular`, ({ request }) => {
-      const url = new URL(request.url);
-      const quantity = url.searchParams.get('quantity');
-      if (!quantity) {
-        return HttpResponse.json(popularBlogPostResponses);
-      }
-      const blogPosts = popularBlogPostResponses.slice(0, Number(quantity));
-      return HttpResponse.json(blogPosts);
     }),
     http.get(`${baseUrl}/blog/posts/latests`, ({ request }) => {
       const sortedBlogPosts = blogPostResponses.sort((a, b) => {
