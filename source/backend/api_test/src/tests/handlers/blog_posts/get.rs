@@ -33,6 +33,21 @@ mod tests {
     Ok(())
   }
 
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_popular_blog_posts() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts/popular";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_posts: Vec<BlogPost> = helper::expected_popular_blog_posts().unwrap();
+
+    assert_eq!(actual_blog_post_resp.len(), expected_blog_posts.len());
+    for (actual, expected) in actual_blog_post_resp.iter().zip(expected_blog_posts.iter()) {
+      test_helper::assert_blog_post_without_uuid(actual, expected);
+    }
+    Ok(())
+  }
+
   // 存在しないブログ記事を取得すると 404 エラーとエラーメッセージが返る
   #[tokio::test(flavor = "current_thread")]
   async fn get_not_exist_blog_post() -> Result<()> {
@@ -152,6 +167,11 @@ mod tests {
       Ok(result)
     }
 
+    pub fn expected_popular_blog_posts() -> Result<Vec<BlogPost>> {
+      let result = vec![expected_minimal_blog_post2()?, expected_minimal_blog_post3()?, expected_regular_blog_post()?];
+      Ok(result)
+    }
+
     fn expected_minimal_blog_post1() -> Result<BlogPost> {
       let blog_post = BlogPost {
         id: Uuid::parse_str("20b73825-9a6f-4901-aa42-e104a8d2c4f6")?,
@@ -201,6 +221,35 @@ mod tests {
             id: Uuid::new_v4(),
             text: vec![RichText {
               text: "これはミニマル記事2の段落です。".to_string(),
+              styles: Style { bold: false },
+            }],
+            type_field: "paragraph".to_string(),
+          }),
+        ],
+      };
+      Ok(blog_post)
+    }
+
+    fn expected_minimal_blog_post3() -> Result<BlogPost> {
+      let blog_post = BlogPost {
+        id: Uuid::parse_str("f735a7b7-8bbc-4cb5-b6cf-c188734f64d3")?,
+        title: "ミニマル記事3".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-coffee".to_string(),
+        },
+        post_date: "2025-03-01".parse()?,
+        last_update_date: "2025-03-01".parse()?,
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "ミニマル記事3の見出し".to_string(),
+            type_field: "h2".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはミニマル記事3の段落です。".to_string(),
               styles: Style { bold: false },
             }],
             type_field: "paragraph".to_string(),
