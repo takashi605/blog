@@ -22,7 +22,7 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
 
-  use crate::{db::tables::{pickup_posts::fetch_all_pickup_blog_posts, popular_posts::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post}, server::handlers::response::err::ApiCustomError};
+  use crate::{db::tables::{pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post}, server::handlers::response::err::ApiCustomError};
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
