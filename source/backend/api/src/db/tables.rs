@@ -6,6 +6,7 @@ pub mod paragraph_blocks_table;
 pub mod pickup_posts;
 pub mod popular_posts;
 pub mod post_contents_table;
+pub mod top_tech_pick_table;
 
 use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
