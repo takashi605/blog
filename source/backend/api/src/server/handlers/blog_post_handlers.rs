@@ -13,6 +13,7 @@ pub fn blog_scope() -> Scope {
 fn posts_scope() -> Scope {
   web::scope("/posts")
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
+    .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
     .route("", web::post().to(handle_funcs::create_blog_post))
 }
@@ -20,7 +21,7 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
 
-  use crate::{db::tables::pickup_posts::fetch_all_pickup_blog_posts, server::handlers::response::err::ApiCustomError};
+  use crate::{db::tables::{pickup_posts::fetch_all_pickup_blog_posts, popular_posts::fetch_all_popular_blog_posts}, server::handlers::response::err::ApiCustomError};
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
@@ -44,6 +45,20 @@ mod handle_funcs {
     let mut blog_posts: Vec<BlogPost> = vec![];
     for pickup_blog_post in pickup_blog_posts {
       let blog_post = fetch_single_blog_post(pickup_blog_post.post_id).await?;
+      blog_posts.push(blog_post);
+    }
+    Ok(HttpResponse::Ok().json(blog_posts))
+  }
+
+  pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
+    println!("get_pickup_blog_posts");
+    let popular_blog_posts =
+      fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
+
+    // popular_blog_posts.post_id を元に実際のブログ記事を fetch する
+    let mut blog_posts: Vec<BlogPost> = vec![];
+    for popular_blog_post in popular_blog_posts {
+      let blog_post = fetch_single_blog_post(popular_blog_post.post_id).await?;
       blog_posts.push(blog_post);
     }
     Ok(HttpResponse::Ok().json(blog_posts))

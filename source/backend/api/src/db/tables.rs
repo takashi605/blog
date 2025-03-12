@@ -4,6 +4,7 @@ pub mod image_blocks_table;
 pub mod images_table;
 pub mod paragraph_blocks_table;
 pub mod pickup_posts;
+pub mod popular_posts;
 pub mod post_contents_table;
 
 use anyhow::Result;
