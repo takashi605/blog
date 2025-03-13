@@ -3,7 +3,6 @@ use anyhow::Result;
 use sqlx::FromRow;
 use uuid::Uuid;
 
-// TODO PickUpPostRecord という名前に変更する
 #[derive(Debug, FromRow)]
 pub struct PickUpPostRecord {
   pub id: Uuid,

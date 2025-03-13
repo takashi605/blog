@@ -19,6 +19,19 @@ mod tests {
   }
 
   #[tokio::test(flavor = "current_thread")]
+  async fn get_top_tech_pick_blog_post() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts/top-tech-pick";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = helper::expected_regular_blog_post().unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
   async fn get_pickup_blog_posts() -> Result<()> {
     let url = "http://localhost:8000/blog/posts/pickup";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();

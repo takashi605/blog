@@ -3,9 +3,10 @@ pub mod heading_blocks_table;
 pub mod image_blocks_table;
 pub mod images_table;
 pub mod paragraph_blocks_table;
-pub mod pickup_posts;
-pub mod popular_posts;
+pub mod pickup_posts_table;
+pub mod popular_posts_table;
 pub mod post_contents_table;
+pub mod top_tech_pick_table;
 
 use anyhow::Result;
 use blog_posts_table::BlogPostRecord;

@@ -12,6 +12,7 @@ pub fn blog_scope() -> Scope {
 
 fn posts_scope() -> Scope {
   web::scope("/posts")
+    .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
@@ -21,7 +22,7 @@ fn posts_scope() -> Scope {
 mod handle_funcs {
   use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
 
-  use crate::{db::tables::{pickup_posts::fetch_all_pickup_blog_posts, popular_posts::fetch_all_popular_blog_posts}, server::handlers::response::err::ApiCustomError};
+  use crate::{db::tables::{pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post}, server::handlers::response::err::ApiCustomError};
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
@@ -33,6 +34,16 @@ mod handle_funcs {
     let uuid = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
     let blog_post = fetch_single_blog_post(uuid).await?;
 
+    Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  pub async fn get_top_tech_pick_blog_post() -> Result<impl Responder, ApiCustomError> {
+    println!("get_top_tech_pick_blog_post");
+    let top_tech_pick_blog_post =
+      fetch_top_tech_pick_blog_post().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+
+    // top_tech_pick_blog_post.post_id を元に実際のブログ記事を fetch する
+    let blog_post = fetch_single_blog_post(top_tech_pick_blog_post.post_id).await?;
     Ok(HttpResponse::Ok().json(blog_post))
   }
 
@@ -51,7 +62,7 @@ mod handle_funcs {
   }
 
   pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
-    println!("get_pickup_blog_posts");
+    println!("get_popular_blog_posts");
     let popular_blog_posts =
       fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
 
