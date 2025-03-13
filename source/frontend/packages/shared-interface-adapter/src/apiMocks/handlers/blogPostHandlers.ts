@@ -17,6 +17,11 @@ export const clearCreatedBlogPosts = () => {
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
     ...createProtTypeBlogPostHandlers(baseUrl),
+    http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
+      return HttpResponse.json(
+        blogPostResponses.find((post) => post.id === UUIDList.UUID1),
+      );
+    }),
     // クエリパラメータの扱い方の参考：https://kentech.blog/blogs/rwxmz-1pd#h68697b834e
     http.get(`${baseUrl}/blog/posts/pickup`, ({ request }) => {
       const url = new URL(request.url);
@@ -66,11 +71,6 @@ export const createProtTypeBlogPostHandlers = (
   baseUrl: string,
 ): HttpHandler[] => {
   const blogPostHandlers = [
-    http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
-      return HttpResponse.json(
-        blogPostResponses.find((post) => post.id === UUIDList.UUID1),
-      );
-    }),
     http.get(`${baseUrl}/blog/posts/latests`, ({ request }) => {
       const sortedBlogPosts = blogPostResponses.sort((a, b) => {
         return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
