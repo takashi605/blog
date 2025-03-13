@@ -61,6 +61,19 @@ mod tests {
     Ok(())
   }
 
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_latest_blog_posts() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts/latests";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+
+    for i in 0..blog_post_resp.len()-1 {
+      assert!(blog_post_resp[i].post_date >= blog_post_resp[i+1].post_date);
+    }
+    Ok(())
+  }
+
   // 存在しないブログ記事を取得すると 404 エラーとエラーメッセージが返る
   #[tokio::test(flavor = "current_thread")]
   async fn get_not_exist_blog_post() -> Result<()> {
