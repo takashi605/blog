@@ -34,8 +34,8 @@ mod handle_funcs {
   pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
     println!("get_blog_post");
     let post_id = path.into_inner();
-    let uuid = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
-    let blog_post = fetch_single_blog_post(uuid).await?;
+    let parsed_post_id = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
+    let blog_post = fetch_single_blog_post(parsed_post_id).await?;
 
     Ok(HttpResponse::Ok().json(blog_post))
   }
