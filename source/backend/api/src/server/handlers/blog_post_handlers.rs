@@ -1,6 +1,3 @@
-pub mod create_blog_post;
-pub mod fetch_blog_post;
-
 use actix_web::{web, Scope};
 
 use super::image_handlers::image_scope;
@@ -20,9 +17,15 @@ fn posts_scope() -> Scope {
 }
 
 mod handle_funcs {
-  use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
-
-  use crate::{db::tables::{pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post}, server::handlers::response::err::ApiCustomError};
+  use crate::{
+    db::tables::{
+      pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post,
+    },
+    server::handlers::{
+      crud_helpers::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post},
+      response::err::ApiCustomError,
+    },
+  };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
@@ -63,8 +66,7 @@ mod handle_funcs {
 
   pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
     println!("get_popular_blog_posts");
-    let popular_blog_posts =
-      fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
+    let popular_blog_posts = fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
 
     // popular_blog_posts.post_id を元に実際のブログ記事を fetch する
     let mut blog_posts: Vec<BlogPost> = vec![];
