@@ -1,6 +1,3 @@
-pub mod create_blog_post;
-pub mod fetch_blog_post;
-
 use actix_web::{web, Scope};
 
 use super::image_handlers::image_scope;
@@ -12,6 +9,7 @@ pub fn blog_scope() -> Scope {
 
 fn posts_scope() -> Scope {
   web::scope("/posts")
+    .route("/latest", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
@@ -20,9 +18,15 @@ fn posts_scope() -> Scope {
 }
 
 mod handle_funcs {
-  use super::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post};
-
-  use crate::{db::tables::{pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post}, server::handlers::response::err::ApiCustomError};
+  use crate::{
+    db::tables::{
+      pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post,
+    },
+    server::handlers::{
+      crud_helpers::{create_blog_post::create_single_blog_post, fetch_blog_post::{fetch_all_latest_blog_posts, fetch_single_blog_post}},
+      response::err::ApiCustomError,
+    },
+  };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
@@ -31,10 +35,16 @@ mod handle_funcs {
   pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
     println!("get_blog_post");
     let post_id = path.into_inner();
-    let uuid = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
-    let blog_post = fetch_single_blog_post(uuid).await?;
+    let parsed_post_id = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
+    let blog_post = fetch_single_blog_post(parsed_post_id).await?;
 
     Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  pub async fn get_latest_blog_posts() -> Result<impl Responder, ApiCustomError> {
+    println!("get_latest_blog_posts");
+    let latest_blog_posts = fetch_all_latest_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("最新記事の取得に失敗しました。")))?;
+    Ok(HttpResponse::Ok().json(latest_blog_posts))
   }
 
   pub async fn get_top_tech_pick_blog_post() -> Result<impl Responder, ApiCustomError> {
@@ -63,8 +73,7 @@ mod handle_funcs {
 
   pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
     println!("get_popular_blog_posts");
-    let popular_blog_posts =
-      fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
+    let popular_blog_posts = fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
 
     // popular_blog_posts.post_id を元に実際のブログ記事を fetch する
     let mut blog_posts: Vec<BlogPost> = vec![];
