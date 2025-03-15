@@ -18,6 +18,20 @@ Then('リッチテキストエディタが表示されていることを確認�
   await expect(richTextEditor).toBeVisible({ timeout: 10000 });
 });
 
+When('タイトルに「テスト記事」と入力する', async function () {
+  const page = playwrightHelper.getPage();
+
+  const titleInput = page.getByRole('textbox', { name: 'タイトル' });
+  await titleInput.fill('テスト記事');
+});
+
+Then('タイトルに「テスト記事」と表示される', async function () {
+  const page = playwrightHelper.getPage();
+
+  const titleInput = page.getByRole('textbox', { name: 'タイトル' });
+  await expect(titleInput).toHaveValue('テスト記事');
+});
+
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
   const page = playwrightHelper.getPage();
 

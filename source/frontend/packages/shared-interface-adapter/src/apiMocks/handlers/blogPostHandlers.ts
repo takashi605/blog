@@ -16,7 +16,21 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
-    ...createProtTypeBlogPostHandlers(baseUrl),
+    http.get(`${baseUrl}/blog/posts/latest`, ({ request }) => {
+      const sortedBlogPosts = blogPostResponses.sort((a, b) => {
+        return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
+      });
+      const filteredBlogPosts = sortedBlogPosts.filter((blogPost) => {
+        return blogPost.postDate !== '' && blogPost.lastUpdateDate != '';
+      });
+
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (quantity) {
+        return HttpResponse.json(filteredBlogPosts.slice(0, Number(quantity)));
+      }
+      return HttpResponse.json(filteredBlogPosts);
+    }),
     http.get(`${baseUrl}/blog/posts/top-tech-pick`, () => {
       return HttpResponse.json(
         blogPostResponses.find((post) => post.id === UUIDList.UUID1),
@@ -63,28 +77,6 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       }
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
-    }),
-  ];
-  return blogPostHandlers;
-};
-export const createProtTypeBlogPostHandlers = (
-  baseUrl: string,
-): HttpHandler[] => {
-  const blogPostHandlers = [
-    http.get(`${baseUrl}/blog/posts/latests`, ({ request }) => {
-      const sortedBlogPosts = blogPostResponses.sort((a, b) => {
-        return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
-      });
-      const filteredBlogPosts = sortedBlogPosts.filter((blogPost) => {
-        return blogPost.postDate !== '' && blogPost.lastUpdateDate != '';
-      });
-
-      const url = new URL(request.url);
-      const quantity = url.searchParams.get('quantity');
-      if (quantity) {
-        return HttpResponse.json(filteredBlogPosts.slice(0, Number(quantity)));
-      }
-      return HttpResponse.json(filteredBlogPosts);
     }),
   ];
   return blogPostHandlers;

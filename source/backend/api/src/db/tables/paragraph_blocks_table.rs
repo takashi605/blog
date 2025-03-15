@@ -1,9 +1,27 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use sqlx::FromRow;
 use uuid::Uuid;
 
 use crate::db::pool::POOL;
 
+/*
+ * ParagraphBlockRecord とそれに紐づく Record の関連を含めた構造体
+ */
+#[derive(Debug, FromRow)]
+pub struct ParagraphBlockRecordWithRelations {
+  pub paragraph_block: ParagraphBlockRecord,
+  pub rich_text_records_with_styles: Vec<RichTextRecordWithStyles>,
+}
+
+#[derive(Debug, FromRow)]
+pub struct RichTextRecordWithStyles {
+  pub text_record: RichTextRecord,
+  pub style_records: Vec<TextStyleRecord>,
+}
+
+/*
+ * DB内の各テーブル構造に紐づく構造体正義
+ */
 #[derive(Debug, FromRow)]
 pub struct ParagraphBlockRecord {
   pub id: Uuid,
@@ -26,6 +44,34 @@ pub struct RichTextStyleRecord {
 pub struct TextStyleRecord {
   pub id: Uuid,
   pub style_type: String,
+}
+
+/*
+ * データベース操作関数
+ */
+pub async fn fetch_paragraph_block_record_with_relations(content_record_id: Uuid) -> Result<ParagraphBlockRecordWithRelations> {
+  let paragraph_block_record: ParagraphBlockRecord =
+    fetch_paragraph_block_by_content_id(content_record_id).await.context("段落ブロックの取得に失敗しました。")?;
+  let rich_text_records_with_styles: Vec<RichTextRecordWithStyles> =
+    fetch_rich_texts_with_styles_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+  let result = ParagraphBlockRecordWithRelations {
+    paragraph_block: paragraph_block_record,
+    rich_text_records_with_styles,
+  };
+  Ok(result)
+}
+
+pub async fn fetch_rich_texts_with_styles_by_paragraph(paragraph_block_id: Uuid) -> Result<Vec<RichTextRecordWithStyles>> {
+  let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_id).await?;
+  let mut rich_text_with_styles = vec![];
+  for rich_text in rich_texts {
+    let styles = fetch_styles_by_rich_text_id(rich_text.id).await?;
+    rich_text_with_styles.push(RichTextRecordWithStyles {
+      text_record: rich_text,
+      style_records: styles,
+    });
+  }
+  Ok(rich_text_with_styles)
 }
 
 pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
@@ -73,10 +119,6 @@ pub async fn insert_rich_text(rich_text: RichTextRecord) -> Result<()> {
 }
 
 pub async fn insert_rich_text_style(style: RichTextStyleRecord) -> Result<()> {
-  sqlx::query("insert into rich_text_styles (style_id, rich_text_id) values ($1, $2)")
-    .bind(style.style_id)
-    .bind(style.rich_text_id)
-    .execute(&*POOL)
-    .await?;
+  sqlx::query("insert into rich_text_styles (style_id, rich_text_id) values ($1, $2)").bind(style.style_id).bind(style.rich_text_id).execute(&*POOL).await?;
   Ok(())
 }
