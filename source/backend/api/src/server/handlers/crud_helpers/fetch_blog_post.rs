@@ -2,8 +2,8 @@ use std::vec;
 
 use crate::{
   db::tables::{
-    blog_posts_table::fetch_blog_post_by_id,
-    images_table::fetch_image_by_id,
+    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
+    images_table::{fetch_image_by_id, ImageRecord},
     post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
   server::handlers::response::{convert_to_response::generate_blog_post_response, err::ApiCustomError},
@@ -23,6 +23,21 @@ impl ContentWithOrder {
 }
 
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustomError> {
+  let blog_post_record: BlogPostRecord = fetch_blog_post_with_api_err(post_id).await?;
+  let thumbnail_record: ImageRecord = fetch_thumbnail_record_with_api_err(blog_post_record.thumbnail_image_id).await?;
+  let content_records: Vec<PostContentRecord> = fetch_content_records_with_api_err(blog_post_record.id).await?;
+
+  // ソートしてからブロックを取得
+  let sorted_content_records: Vec<PostContentRecord> = sort_contents(content_records);
+  let content_block_records: Vec<AnyContentBlockRecord> = fetch_content_blocks(sorted_content_records).await?;
+
+  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, content_block_records)
+    .await
+    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  Ok(blog_post)
+}
+
+async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, ApiCustomError> {
   let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
@@ -31,8 +46,11 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
+  Ok(blog_post_record)
+}
 
-  let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.map_err(|err| {
+async fn fetch_thumbnail_record_with_api_err(image_id: Uuid) -> Result<ImageRecord, ApiCustomError> {
+  let thumbnail_record = fetch_image_by_id(image_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -42,8 +60,11 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
+  Ok(thumbnail_record)
+}
 
-  let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.map_err(|err| {
+async fn fetch_content_records_with_api_err(post_id: Uuid) -> Result<Vec<PostContentRecord>, ApiCustomError> {
+  let content_records = fetch_post_contents_by_post_id(post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -53,27 +74,30 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
+  Ok(content_records)
+}
 
-  let sorted_content_records = sort_contents(content_records);
-  let mut content_block_records: Vec<AnyContentBlockRecord> = vec![];
-  for content_record in sorted_content_records {
-    let content_block = fetch_any_content_block(content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
-      // RowNotFound なら 404、それ以外は 500
-      if is_row_not_found(&err) {
-        ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
-          "コンテンツブロックの取得に失敗しました。(記事データの不整合)",
-        ))
-      } else {
-        ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
-      }
-    })?;
-    content_block_records.push(content_block);
+async fn fetch_content_blocks(content_records: Vec<PostContentRecord>) -> Result<Vec<AnyContentBlockRecord>, ApiCustomError> {
+  let mut result: Vec<AnyContentBlockRecord> = vec![];
+  for content_record in content_records {
+    let content_block = fetch_content_block_with_api_err(content_record).await?;
+    result.push(content_block);
   }
+  Ok(result)
+}
 
-  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, content_block_records)
-    .await
-    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
-  Ok(blog_post)
+async fn fetch_content_block_with_api_err(content_record: PostContentRecord) -> Result<AnyContentBlockRecord, ApiCustomError> {
+  let content_block = fetch_any_content_block(content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+        "コンテンツブロックの取得に失敗しました。(記事データの不整合)",
+      ))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  Ok(content_block)
 }
 
 // エラーが「データなし」のエラーかを判定する関数
