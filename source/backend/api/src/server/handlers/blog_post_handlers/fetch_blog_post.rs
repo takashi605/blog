@@ -5,7 +5,7 @@ use crate::{
   db::tables::{
     blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
     heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
-    image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
+    image_blocks_table::{fetch_image_block_record_with_relations, fetch_image_blocks_by_content_id, ImageBlockRecord, ImageBlockRecordWithRelations},
     images_table::{fetch_image_by_id, ImageRecord},
     paragraph_blocks_table::{
       fetch_paragraph_block_by_content_id, fetch_paragraph_block_record_with_relations, fetch_rich_texts_with_styles_by_paragraph, ParagraphBlockRecord,
@@ -134,9 +134,9 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
       heading_to_response(heading_block_record)
     }
     PostContentType::Image => {
-      let image_block_record: ImageBlockRecord = fetch_image_blocks_by_content_id(content_record.id).await.context("画像ブロックの取得に失敗しました。")?;
-      let image = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
-      image_to_response(image_block_record, image)
+      let image_block_record_with_relations: ImageBlockRecordWithRelations =
+        fetch_image_block_record_with_relations(content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
+      image_to_response(image_block_record_with_relations)
     }
     PostContentType::Paragraph => {
       let paragraph_block_record: ParagraphBlockRecordWithRelations =
@@ -167,10 +167,10 @@ fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostCont
   heading_block_content
 }
 
-fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -> BlogPostContent {
+fn image_to_response(image_block_record: ImageBlockRecordWithRelations) -> BlogPostContent {
   BlogPostContent::Image(ImageBlock {
-    id: image_block_record.id,
-    path: image.file_path,
+    id: image_block_record.image_block_record.id,
+    path: image_block_record.image_record.file_path,
     type_field: "image".to_string(),
   })
 }
