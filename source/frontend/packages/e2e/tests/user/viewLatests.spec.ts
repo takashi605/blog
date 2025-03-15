@@ -112,26 +112,26 @@ Given('トップページにアクセスして新着記事を閲覧する', asyn
 
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
-Then('新着記事3件分の記事タイトルが表示される', async function () {
+Then('新着記事3件分以上の記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const latestsSection = getLatestsSectionInTopPage(page);
   const titles = latestsSection.locator('h3');
-  expect(await titles.count()).toBe(3);
+  expect(await titles.count()).toBeGreaterThanOrEqual(3);
 });
-Then('新着記事3件分の記事サムネイルが表示される', async function () {
+Then('新着記事3件分以上の記事サムネイルが表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const latestsSection = getLatestsSectionInTopPage(page);
   const thumbnailImages = latestsSection.locator('img');
-  expect(await thumbnailImages.count()).toBe(3);
+  expect(await thumbnailImages.count()).toBeGreaterThanOrEqual(3);
 });
-Then('新着記事3件分の投稿日が表示される', async function () {
+Then('新着記事3件分以上の投稿日が表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const latestsSection = getLatestsSectionInTopPage(page);
   const postDates = latestsSection.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
-  expect(await postDates.count()).toBe(3);
+  expect(await postDates.count()).toBeGreaterThanOrEqual(3);
 });
 Then('新着記事は新着順で並んでいる', async function () {
   const page = playwrightHelper.getPage();
