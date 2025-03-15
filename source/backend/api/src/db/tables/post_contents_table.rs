@@ -1,10 +1,14 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use sqlx::FromRow;
 use uuid::Uuid;
 
 use crate::db::pool::POOL;
 
-use super::{heading_blocks_table::HeadingBlockRecord, image_blocks_table::ImageBlockRecord, paragraph_blocks_table::ParagraphBlockRecordWithRelations};
+use super::{
+  heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
+  image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecord, ImageBlockRecordWithRelations},
+  paragraph_blocks_table::{fetch_paragraph_block_record_with_relations, ParagraphBlockRecordWithRelations},
+};
 
 /*
  * 各レコードの関連をまとめた構造体
@@ -13,7 +17,7 @@ use super::{heading_blocks_table::HeadingBlockRecord, image_blocks_table::ImageB
 pub enum AnyContentBlockRecord {
   HeadingBlockRecord(HeadingBlockRecord),
   ParagraphBlockRecord(ParagraphBlockRecordWithRelations),
-  ImageBlockRecord(ImageBlockRecord),
+  ImageBlockRecord(ImageBlockRecordWithRelations),
 }
 
 /*
@@ -54,9 +58,36 @@ impl TryFrom<String> for PostContentType {
 /*
  * データベース操作関数
  */
+
+/*
+ * データベース操作関数
+ */
+pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Result<AnyContentBlockRecord> {
+  let content_type_enum = PostContentType::try_from(content_record.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
+  let result = match content_type_enum {
+    PostContentType::Heading => {
+      let heading_block_record: HeadingBlockRecord =
+        fetch_heading_blocks_by_content_id(content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
+      AnyContentBlockRecord::HeadingBlockRecord(heading_block_record)
+    }
+    PostContentType::Image => {
+      let image_block_record_with_relations: ImageBlockRecordWithRelations =
+        fetch_image_block_record_with_relations(content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
+      AnyContentBlockRecord::ImageBlockRecord(image_block_record_with_relations)
+    }
+    PostContentType::Paragraph => {
+      let paragraph_block_record: ParagraphBlockRecordWithRelations =
+        fetch_paragraph_block_record_with_relations(content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
+      AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
+    }
+  };
+  Ok(result)
+}
 pub async fn fetch_post_contents_by_post_id(post_id: Uuid) -> Result<Vec<PostContentRecord>> {
-  let contents =
-    sqlx::query_as::<_, PostContentRecord>("select id, post_id, content_type, sort_order from post_contents where post_id = $1").bind(post_id).fetch_all(&*POOL).await?;
+  let contents = sqlx::query_as::<_, PostContentRecord>("select id, post_id, content_type, sort_order from post_contents where post_id = $1")
+    .bind(post_id)
+    .fetch_all(&*POOL)
+    .await?;
   Ok(contents)
 }
 
