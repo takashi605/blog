@@ -176,10 +176,11 @@ fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -
 }
 
 fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelations) -> BlogPostContent {
-  let rich_text_response: Vec<RichText> = paragraph_block_record.rich_texts.into_iter().map(|record| rich_text_to_response(record)).collect();
+  let rich_text_response: Vec<RichText> =
+    paragraph_block_record.rich_text_records_with_styles.into_iter().map(|record| rich_text_to_response(record)).collect();
 
   BlogPostContent::Paragraph(ParagraphBlock {
-    id: paragraph_block_record.block.id,
+    id: paragraph_block_record.paragraph_block.id,
     text: rich_text_response,
     type_field: "paragraph".to_string(),
   })
@@ -187,10 +188,10 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelatio
 
 fn rich_text_to_response(rich_text_record_with_styles: RichTextRecordWithStyles) -> RichText {
   let styles = Style {
-    bold: rich_text_record_with_styles.styles.iter().any(|record| record.style_type == "bold"),
+    bold: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "bold"),
   };
   RichText {
-    text: rich_text_record_with_styles.text.text_content,
+    text: rich_text_record_with_styles.text_record.text_content,
     styles,
   }
 }
