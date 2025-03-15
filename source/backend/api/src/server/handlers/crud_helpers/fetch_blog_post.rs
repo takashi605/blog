@@ -2,7 +2,7 @@ use std::vec;
 
 use crate::{
   db::tables::{
-    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
+    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord, BlogPostRecordWithRelations},
     images_table::{fetch_image_by_id, ImageRecord},
     post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
@@ -24,17 +24,27 @@ impl ContentWithOrder {
 
 pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustomError> {
   let blog_post_record: BlogPostRecord = fetch_blog_post_with_api_err(post_id).await?;
-  let thumbnail_record: ImageRecord = fetch_thumbnail_record_with_api_err(blog_post_record.thumbnail_image_id).await?;
-  let content_records: Vec<PostContentRecord> = fetch_content_records_with_api_err(blog_post_record.id).await?;
+  let blog_post_record_with_relations: BlogPostRecordWithRelations = fetch_blog_post_relations(blog_post_record).await?;
+  let blog_post = generate_blog_post_response(blog_post_record_with_relations)
+    .await
+    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
+  Ok(blog_post)
+}
+
+async fn fetch_blog_post_relations(blog_post_record: BlogPostRecord) -> Result<BlogPostRecordWithRelations, ApiCustomError> {
+  let thumbnail_record: ImageRecord = fetch_thumbnail_record_with_api_err(blog_post_record.thumbnail_image_id).await?;
+
+  let content_records: Vec<PostContentRecord> = fetch_content_records_with_api_err(blog_post_record.id).await?;
   // ソートしてからブロックを取得
   let sorted_content_records: Vec<PostContentRecord> = sort_contents(content_records);
   let content_block_records: Vec<AnyContentBlockRecord> = fetch_content_blocks(sorted_content_records).await?;
 
-  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, content_block_records)
-    .await
-    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
-  Ok(blog_post)
+  Ok(BlogPostRecordWithRelations {
+    blog_post_record,
+    thumbnail_record,
+    content_block_records,
+  })
 }
 
 async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, ApiCustomError> {

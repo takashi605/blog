@@ -10,9 +10,9 @@ use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecor
  */
 #[derive(Debug)]
 pub struct BlogPostRecordWithRelations {
-  blog_post_record: BlogPostRecord,
-  thumbnail_record: ImageRecord,
-  content_block_records: Vec<AnyContentBlockRecord>,
+  pub blog_post_record: BlogPostRecord,
+  pub thumbnail_record: ImageRecord,
+  pub content_block_records: Vec<AnyContentBlockRecord>,
 }
 
 /*

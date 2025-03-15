@@ -2,21 +2,20 @@ use core::panic;
 use std::vec;
 
 use crate::db::tables::{
-  blog_posts_table::BlogPostRecord,
+  blog_posts_table::BlogPostRecordWithRelations,
   heading_blocks_table::HeadingBlockRecord,
   image_blocks_table::ImageBlockRecordWithRelations,
-  images_table::ImageRecord,
   paragraph_blocks_table::{ParagraphBlockRecordWithRelations, RichTextRecordWithStyles},
   post_contents_table::AnyContentBlockRecord,
 };
 use anyhow::Result;
 use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
 
-pub async fn generate_blog_post_response(
-  blog_post_record: BlogPostRecord,
-  thumbnail_record: ImageRecord,
-  content_block_records: Vec<AnyContentBlockRecord>,
-) -> Result<BlogPost> {
+pub async fn generate_blog_post_response(blog_post_record_with_relations: BlogPostRecordWithRelations) -> Result<BlogPost> {
+  let blog_post_record = blog_post_record_with_relations.blog_post_record;
+  let thumbnail_record = blog_post_record_with_relations.thumbnail_record;
+  let content_block_records = blog_post_record_with_relations.content_block_records;
+
   let contents = contents_to_response(content_block_records).await?;
 
   Ok(BlogPost {
