@@ -4,6 +4,24 @@ use uuid::Uuid;
 
 use crate::db::pool::POOL;
 
+/*
+ * ParagraphBlockRecord とそれに紐づく Record の関連を含めた構造体
+ */
+#[derive(Debug, FromRow)]
+pub struct ParagraphBlockRecordWithRelations {
+  block: ParagraphBlockRecord,
+  rich_texts: Vec<RichTextRecordWithStyles>,
+}
+
+#[derive(Debug, FromRow)]
+struct RichTextRecordWithStyles {
+  text: RichTextRecord,
+  styles: Vec<TextStyleRecord>,
+}
+
+/*
+ * DB内の各テーブル構造に紐づく構造体正義
+ */
 #[derive(Debug, FromRow)]
 pub struct ParagraphBlockRecord {
   pub id: Uuid,
@@ -28,6 +46,9 @@ pub struct TextStyleRecord {
   pub style_type: String,
 }
 
+/*
+ * データベース操作関数
+ */
 pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
   let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
   Ok(block)

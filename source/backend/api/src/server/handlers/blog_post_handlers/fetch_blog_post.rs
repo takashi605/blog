@@ -144,7 +144,7 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
 
       let mut rich_text_response: Vec<RichText> = vec![];
       for rich_text in rich_texts {
-        let styles = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
+        let styles: Vec<TextStyleRecord> = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
         let rich_text = rich_text_to_response(rich_text, styles);
         rich_text_response.push(rich_text);
       }
