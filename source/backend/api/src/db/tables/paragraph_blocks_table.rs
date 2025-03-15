@@ -14,9 +14,9 @@ pub struct ParagraphBlockRecordWithRelations {
 }
 
 #[derive(Debug, FromRow)]
-struct RichTextRecordWithStyles {
-  text: RichTextRecord,
-  styles: Vec<TextStyleRecord>,
+pub struct RichTextRecordWithStyles {
+  pub text: RichTextRecord,
+  pub styles: Vec<TextStyleRecord>,
 }
 
 /*
@@ -52,6 +52,16 @@ pub struct TextStyleRecord {
 pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
   let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
   Ok(block)
+}
+
+pub async fn fetch_rich_texts_with_styles_by_paragraph(paragraph_block_id: Uuid) -> Result<Vec<RichTextRecordWithStyles>> {
+  let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_id).await?;
+  let mut rich_text_with_styles = vec![];
+  for rich_text in rich_texts {
+    let styles = fetch_styles_by_rich_text_id(rich_text.id).await?;
+    rich_text_with_styles.push(RichTextRecordWithStyles { text: rich_text, styles });
+  }
+  Ok(rich_text_with_styles)
 }
 
 // rich_texts を取得

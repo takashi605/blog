@@ -8,7 +8,8 @@ use crate::{
     image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
     images_table::{fetch_image_by_id, ImageRecord},
     paragraph_blocks_table::{
-      fetch_paragraph_block_by_content_id, fetch_rich_texts_by_paragraph, fetch_styles_by_rich_text_id, ParagraphBlockRecord, RichTextRecord, TextStyleRecord,
+      fetch_paragraph_block_by_content_id, fetch_rich_texts_with_styles_by_paragraph, ParagraphBlockRecord,
+      RichTextRecordWithStyles,
     },
     post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
   },
@@ -140,14 +141,9 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
     PostContentType::Paragraph => {
       let paragraph_block_record: ParagraphBlockRecord =
         fetch_paragraph_block_by_content_id(content_record.id).await.context("段落ブロックの取得に失敗しました。")?;
-      let rich_texts: Vec<RichTextRecord> = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
-
-      let mut rich_text_response: Vec<RichText> = vec![];
-      for rich_text in rich_texts {
-        let styles: Vec<TextStyleRecord> = fetch_styles_by_rich_text_id(rich_text.id).await.context("スタイルの取得に失敗しました。")?;
-        let rich_text = rich_text_to_response(rich_text, styles);
-        rich_text_response.push(rich_text);
-      }
+      let rich_text_records_with_styles: Vec<RichTextRecordWithStyles> =
+        fetch_rich_texts_with_styles_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+      let rich_text_response: Vec<RichText> = rich_text_records_with_styles.into_iter().map(|record| rich_text_to_response(record)).collect();
 
       paragraph_to_response(paragraph_block_record, rich_text_response)
     }
@@ -190,12 +186,12 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_text
   })
 }
 
-fn rich_text_to_response(rich_text_record: RichTextRecord, style_records: Vec<TextStyleRecord>) -> RichText {
+fn rich_text_to_response(rich_text_record_with_styles: RichTextRecordWithStyles) -> RichText {
   let styles = Style {
-    bold: style_records.iter().any(|record| record.style_type == "bold"),
+    bold: rich_text_record_with_styles.styles.iter().any(|record| record.style_type == "bold"),
   };
   RichText {
-    text: rich_text_record.text_content,
+    text: rich_text_record_with_styles.text.text_content,
     styles,
   }
 }
