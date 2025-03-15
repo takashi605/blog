@@ -9,7 +9,7 @@ Given('新着記事を一覧表示するページにアクセスする', async f
   }
   const page = playwrightHelper.getPage();
 
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/latests`);
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`);
 });
 
 Then('ページタイトルが表示される', async function () {

@@ -9,7 +9,7 @@ pub fn blog_scope() -> Scope {
 
 fn posts_scope() -> Scope {
   web::scope("/posts")
-    .route("/latests", web::get().to(handle_funcs::get_latest_blog_posts))
+    .route("/latest", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))

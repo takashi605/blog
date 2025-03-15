@@ -16,7 +16,7 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
-    http.get(`${baseUrl}/blog/posts/latests`, ({ request }) => {
+    http.get(`${baseUrl}/blog/posts/latest`, ({ request }) => {
       const sortedBlogPosts = blogPostResponses.sort((a, b) => {
         return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
       });
