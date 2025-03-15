@@ -6,7 +6,7 @@ use crate::db::pool::POOL;
 
 use super::{
   heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
-  image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecord, ImageBlockRecordWithRelations},
+  image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecordWithRelations},
   paragraph_blocks_table::{fetch_paragraph_block_record_with_relations, ParagraphBlockRecordWithRelations},
 };
 
@@ -14,6 +14,7 @@ use super::{
  * 各レコードの関連をまとめた構造体
  */
 // PostContentRecord の id を元に取得される、より具体的なコンテンツのレコード
+#[derive(Debug)]
 pub enum AnyContentBlockRecord {
   HeadingBlockRecord(HeadingBlockRecord),
   ParagraphBlockRecord(ParagraphBlockRecordWithRelations),
