@@ -8,8 +8,8 @@ use crate::{
     image_blocks_table::{fetch_image_blocks_by_content_id, ImageBlockRecord},
     images_table::{fetch_image_by_id, ImageRecord},
     paragraph_blocks_table::{
-      fetch_paragraph_block_by_content_id, fetch_rich_texts_with_styles_by_paragraph, ParagraphBlockRecord,
-      RichTextRecordWithStyles,
+      fetch_paragraph_block_by_content_id, fetch_paragraph_block_record_with_relations, fetch_rich_texts_with_styles_by_paragraph, ParagraphBlockRecord,
+      ParagraphBlockRecordWithRelations, RichTextRecordWithStyles,
     },
     post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
   },
@@ -139,13 +139,10 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
       image_to_response(image_block_record, image)
     }
     PostContentType::Paragraph => {
-      let paragraph_block_record: ParagraphBlockRecord =
-        fetch_paragraph_block_by_content_id(content_record.id).await.context("段落ブロックの取得に失敗しました。")?;
-      let rich_text_records_with_styles: Vec<RichTextRecordWithStyles> =
-        fetch_rich_texts_with_styles_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
-      let rich_text_response: Vec<RichText> = rich_text_records_with_styles.into_iter().map(|record| rich_text_to_response(record)).collect();
+      let paragraph_block_record: ParagraphBlockRecordWithRelations =
+        fetch_paragraph_block_record_with_relations(content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
 
-      paragraph_to_response(paragraph_block_record, rich_text_response)
+      paragraph_to_response(paragraph_block_record)
     }
   };
   Ok(result)
@@ -178,10 +175,12 @@ fn image_to_response(image_block_record: ImageBlockRecord, image: ImageRecord) -
   })
 }
 
-fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecord, rich_texts: Vec<RichText>) -> BlogPostContent {
+fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelations) -> BlogPostContent {
+  let rich_text_response: Vec<RichText> = paragraph_block_record.rich_texts.into_iter().map(|record| rich_text_to_response(record)).collect();
+
   BlogPostContent::Paragraph(ParagraphBlock {
-    id: paragraph_block_record.id,
-    text: rich_texts,
+    id: paragraph_block_record.block.id,
+    text: rich_text_response,
     type_field: "paragraph".to_string(),
   })
 }

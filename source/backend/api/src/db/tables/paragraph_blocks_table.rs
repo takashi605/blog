@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use sqlx::FromRow;
 use uuid::Uuid;
 
@@ -9,8 +9,8 @@ use crate::db::pool::POOL;
  */
 #[derive(Debug, FromRow)]
 pub struct ParagraphBlockRecordWithRelations {
-  block: ParagraphBlockRecord,
-  rich_texts: Vec<RichTextRecordWithStyles>,
+  pub block: ParagraphBlockRecord,
+  pub rich_texts: Vec<RichTextRecordWithStyles>,
 }
 
 #[derive(Debug, FromRow)]
@@ -49,9 +49,16 @@ pub struct TextStyleRecord {
 /*
  * データベース操作関数
  */
-pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
-  let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
-  Ok(block)
+pub async fn fetch_paragraph_block_record_with_relations(content_record_id: Uuid) -> Result<ParagraphBlockRecordWithRelations> {
+        let paragraph_block_record: ParagraphBlockRecord =
+        fetch_paragraph_block_by_content_id(content_record_id).await.context("段落ブロックの取得に失敗しました。")?;
+      let rich_text_records_with_styles: Vec<RichTextRecordWithStyles> =
+        fetch_rich_texts_with_styles_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+      let result = ParagraphBlockRecordWithRelations {
+        block: paragraph_block_record,
+        rich_texts: rich_text_records_with_styles,
+      };
+      Ok(result)
 }
 
 pub async fn fetch_rich_texts_with_styles_by_paragraph(paragraph_block_id: Uuid) -> Result<Vec<RichTextRecordWithStyles>> {
@@ -62,6 +69,11 @@ pub async fn fetch_rich_texts_with_styles_by_paragraph(paragraph_block_id: Uuid)
     rich_text_with_styles.push(RichTextRecordWithStyles { text: rich_text, styles });
   }
   Ok(rich_text_with_styles)
+}
+
+pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<ParagraphBlockRecord> {
+  let block = sqlx::query_as::<_, ParagraphBlockRecord>("select id from paragraph_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
+  Ok(block)
 }
 
 // rich_texts を取得
