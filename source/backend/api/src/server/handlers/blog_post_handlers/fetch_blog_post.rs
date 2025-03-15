@@ -133,13 +133,14 @@ async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPo
       heading_to_response(heading_block_record)
     }
     PostContentType::Image => {
-      let image_block_record = fetch_image_blocks_by_content_id(content_record.id).await.context("画像ブロックの取得に失敗しました。")?;
+      let image_block_record: ImageBlockRecord = fetch_image_blocks_by_content_id(content_record.id).await.context("画像ブロックの取得に失敗しました。")?;
       let image = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
       image_to_response(image_block_record, image)
     }
     PostContentType::Paragraph => {
-      let paragraph_block_record = fetch_paragraph_block_by_content_id(content_record.id).await.context("段落ブロックの取得に失敗しました。")?;
-      let rich_texts = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
+      let paragraph_block_record: ParagraphBlockRecord =
+        fetch_paragraph_block_by_content_id(content_record.id).await.context("段落ブロックの取得に失敗しました。")?;
+      let rich_texts: Vec<RichTextRecord> = fetch_rich_texts_by_paragraph(paragraph_block_record.id).await.context("リッチテキストの取得に失敗しました。")?;
 
       let mut rich_text_response: Vec<RichText> = vec![];
       for rich_text in rich_texts {
