@@ -2,7 +2,7 @@ use std::vec;
 
 use crate::{
   db::tables::{
-    blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord, BlogPostRecordWithRelations},
+    blog_posts_table::{fetch_all_latest_blog_posts_records, fetch_blog_post_by_id, BlogPostRecord, BlogPostRecordWithRelations},
     images_table::{fetch_image_by_id, ImageRecord},
     post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
@@ -30,6 +30,27 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   Ok(blog_post)
+}
+
+pub async fn fetch_all_latest_blog_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
+  let mut result: Vec<BlogPost> = vec![];
+
+  let blog_post_records: Vec<BlogPostRecord> = fetch_all_latest_blog_posts_records().await.map_err(|err| {
+    // RowNotFound なら 404、それ以外は 500
+    if is_row_not_found(&err) {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
+    } else {
+      ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+    }
+  })?;
+  for blog_post_record in blog_post_records {
+    let blog_post_record_with_relations: BlogPostRecordWithRelations = fetch_blog_post_relations(blog_post_record).await?;
+    let blog_post = generate_blog_post_response(blog_post_record_with_relations)
+      .await
+      .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+    result.push(blog_post);
+  }
+  Ok(result)
 }
 
 async fn fetch_blog_post_relations(blog_post_record: BlogPostRecord) -> Result<BlogPostRecordWithRelations, ApiCustomError> {

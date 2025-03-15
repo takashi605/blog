@@ -9,6 +9,7 @@ pub fn blog_scope() -> Scope {
 
 fn posts_scope() -> Scope {
   web::scope("/posts")
+    .route("/latests", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
@@ -22,7 +23,7 @@ mod handle_funcs {
       pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post,
     },
     server::handlers::{
-      crud_helpers::{create_blog_post::create_single_blog_post, fetch_blog_post::fetch_single_blog_post},
+      crud_helpers::{create_blog_post::create_single_blog_post, fetch_blog_post::{fetch_all_latest_blog_posts, fetch_single_blog_post}},
       response::err::ApiCustomError,
     },
   };
@@ -38,6 +39,12 @@ mod handle_funcs {
     let blog_post = fetch_single_blog_post(parsed_post_id).await?;
 
     Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  pub async fn get_latest_blog_posts() -> Result<impl Responder, ApiCustomError> {
+    println!("get_latest_blog_posts");
+    let latest_blog_posts = fetch_all_latest_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("最新記事の取得に失敗しました。")))?;
+    Ok(HttpResponse::Ok().json(latest_blog_posts))
   }
 
   pub async fn get_top_tech_pick_blog_post() -> Result<impl Responder, ApiCustomError> {

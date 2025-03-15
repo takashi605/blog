@@ -69,7 +69,9 @@ mod tests {
     let blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 
     for i in 0..blog_post_resp.len()-1 {
-      assert!(blog_post_resp[i].post_date >= blog_post_resp[i+1].post_date);
+      let current_post = &blog_post_resp[i];
+      let next_post = &blog_post_resp[i+1];
+      assert!(current_post.post_date <= next_post.post_date);
     }
     Ok(())
   }
