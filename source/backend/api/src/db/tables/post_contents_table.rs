@@ -58,10 +58,6 @@ impl TryFrom<String> for PostContentType {
 /*
  * データベース操作関数
  */
-
-/*
- * データベース操作関数
- */
 pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Result<AnyContentBlockRecord> {
   let content_type_enum = PostContentType::try_from(content_record.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
   let result = match content_type_enum {

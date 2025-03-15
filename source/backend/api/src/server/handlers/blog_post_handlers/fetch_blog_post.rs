@@ -4,14 +4,11 @@ use std::vec;
 use crate::{
   db::tables::{
     blog_posts_table::{fetch_blog_post_by_id, BlogPostRecord},
-    heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
-    image_blocks_table::{fetch_image_block_record_with_relations, fetch_image_blocks_by_content_id, ImageBlockRecord, ImageBlockRecordWithRelations},
+    heading_blocks_table::HeadingBlockRecord,
+    image_blocks_table::ImageBlockRecordWithRelations,
     images_table::{fetch_image_by_id, ImageRecord},
-    paragraph_blocks_table::{
-      fetch_paragraph_block_by_content_id, fetch_paragraph_block_record_with_relations, fetch_rich_texts_with_styles_by_paragraph, ParagraphBlockRecord,
-      ParagraphBlockRecordWithRelations, RichTextRecordWithStyles,
-    },
-    post_contents_table::{fetch_post_contents_by_post_id, PostContentRecord, PostContentType},
+    paragraph_blocks_table::{ParagraphBlockRecordWithRelations, RichTextRecordWithStyles},
+    post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
   server::handlers::response::err::ApiCustomError,
 };
@@ -38,6 +35,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
+
   let thumbnail_record = fetch_image_by_id(blog_post_record.thumbnail_image_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
@@ -48,6 +46,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
+
   let content_records = fetch_post_contents_by_post_id(blog_post_record.id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
@@ -58,10 +57,24 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
     }
   })?;
-  let sorted_content_records = sort_contents(content_records);
 
-  // TODO コンテンツブロックの fetch を generate_blog_post_response 内で行っていてダブルミーニングなので、fetch と response 生成を分ける
-  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, sorted_content_records).await.map_err(|err| {
+  let sorted_content_records = sort_contents(content_records);
+  let mut content_block_records: Vec<AnyContentBlockRecord> = vec![];
+  for content_record in sorted_content_records {
+    let content_block = fetch_any_content_block(content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
+      // RowNotFound なら 404、それ以外は 500
+      if is_row_not_found(&err) {
+        ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
+          "コンテンツブロックの取得に失敗しました。(記事データの不整合)",
+        ))
+      } else {
+        ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err))
+      }
+    })?;
+    content_block_records.push(content_block);
+  }
+
+  let blog_post = generate_blog_post_response(blog_post_record, thumbnail_record, content_block_records).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -87,9 +100,9 @@ fn is_row_not_found(err: &anyhow::Error) -> bool {
 async fn generate_blog_post_response(
   blog_post_record: BlogPostRecord,
   thumbnail_record: ImageRecord,
-  content_records: Vec<PostContentRecord>,
+  content_block_records: Vec<AnyContentBlockRecord>,
 ) -> Result<BlogPost> {
-  let contents = contents_to_response(content_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
+  let contents = contents_to_response(content_block_records).await.context("ブログ記事コンテンツをレスポンス形式に変換できませんでした")?;
 
   Ok(BlogPost {
     id: blog_post_record.id,
@@ -116,34 +129,20 @@ fn sort_contents(content_records: Vec<PostContentRecord>) -> Vec<PostContentReco
   content_with_order.into_iter().map(|content| content.content).collect::<Vec<PostContentRecord>>()
 }
 
-async fn contents_to_response(content_records: Vec<PostContentRecord>) -> Result<Vec<BlogPostContent>> {
+async fn contents_to_response(content_block_records: Vec<AnyContentBlockRecord>) -> Result<Vec<BlogPostContent>> {
   let mut contents: Vec<BlogPostContent> = vec![];
-  for content_record in content_records {
+  for content_record in content_block_records {
     let content = content_to_response(content_record).await?;
     contents.push(content);
   }
   Ok(contents)
 }
 
-async fn content_to_response(content_record: PostContentRecord) -> Result<BlogPostContent> {
-  let content_type_enum = PostContentType::try_from(content_record.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
-  let result = match content_type_enum {
-    PostContentType::Heading => {
-      let heading_block_record: HeadingBlockRecord =
-        fetch_heading_blocks_by_content_id(content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
-      heading_to_response(heading_block_record)
-    }
-    PostContentType::Image => {
-      let image_block_record_with_relations: ImageBlockRecordWithRelations =
-        fetch_image_block_record_with_relations(content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
-      image_to_response(image_block_record_with_relations)
-    }
-    PostContentType::Paragraph => {
-      let paragraph_block_record: ParagraphBlockRecordWithRelations =
-        fetch_paragraph_block_record_with_relations(content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
-
-      paragraph_to_response(paragraph_block_record)
-    }
+async fn content_to_response(content_block_record: AnyContentBlockRecord) -> Result<BlogPostContent> {
+  let result = match content_block_record {
+    AnyContentBlockRecord::HeadingBlockRecord(heading_block_record) => heading_to_response(heading_block_record),
+    AnyContentBlockRecord::ImageBlockRecord(image_block_record_with_relations) => image_to_response(image_block_record_with_relations),
+    AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record_with_relations) => paragraph_to_response(paragraph_block_record_with_relations),
   };
   Ok(result)
 }
