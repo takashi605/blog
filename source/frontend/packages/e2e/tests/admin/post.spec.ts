@@ -204,12 +204,16 @@ Then('「見出し3」という文字の h3 が存在する', async function () 
 Then('投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   const postDate = page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
-  expect(postDate.textContent).toContain(new Date().toLocaleDateString());
+  expect(await postDate.textContent()).toContain(
+    formatDate2DigitString(new Date()),
+  );
 });
 Then('更新日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   const lastUpdateDate = page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/);
-  expect(lastUpdateDate.textContent).toContain(new Date().toLocaleDateString());
+  expect(await lastUpdateDate.textContent()).toContain(
+    formatDate2DigitString(new Date()),
+  );
 });
 
 // 以下ヘルパ関数
@@ -226,6 +230,14 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
   // 右矢印を1回押すだけで選択が外れる
   await locator.press('ArrowRight');
 }
+export const formatDate2DigitString = (date: Date): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  return date.toLocaleDateString('ja-JP', options);
+};
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async function(){
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
