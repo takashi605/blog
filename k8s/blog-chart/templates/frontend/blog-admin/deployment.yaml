@@ -36,3 +36,5 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_URL
               value: {{ .Values.admin.pod.env.NEXT_PUBLIC_API_URL }}
+            - name: NEXT_PUBLIC_WEB_URL
+              value: {{ .Values.admin.pod.env.NEXT_PUBLIC_WEB_URL }}

@@ -160,6 +160,61 @@ Then('記事が投稿され、投稿完了ページに遷移する', async funct
     timeout: 10000,
   });
 });
+Then('投稿した記事へのリンクが表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
+  await expect(postedPageLink).toBeVisible();
+});
+
+Given('投稿した記事のページにアクセスする', async function () {
+  const page = playwrightHelper.getPage();
+
+  const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
+  await postedPageLink.click();
+});
+Then('タイトルが「テスト記事」になっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const title = page.locator('h1');
+  await expect(title).toHaveText('テスト記事');
+});
+Then('本文に「こんにちは！世界」と表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const content = page.locator('p');
+  await expect(content).toHaveText('こんにちは！世界');
+});
+Then('世界が太字になっていない', async function () {
+  const page = playwrightHelper.getPage();
+
+  const boldText = page.locator('strong');
+  await expect(boldText).not.toBeVisible();
+});
+Then('「見出し2」という文字の h2 が存在する', async function () {
+  const page = playwrightHelper.getPage();
+  const h2 = page.locator('h2');
+  await expect(h2).toHaveText('見出し2');
+});
+Then('「見出し3」という文字の h3 が存在する', async function () {
+  const page = playwrightHelper.getPage();
+  const h3 = page.locator('h3');
+  await expect(h3).toHaveText('見出し3');
+});
+Then('投稿日が今日の日付になっている', async function () {
+  const page = playwrightHelper.getPage();
+  const postDate = page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
+  expect(await postDate.textContent()).toContain(
+    formatDate2DigitString(new Date()),
+  );
+});
+Then('更新日が今日の日付になっている', async function () {
+  const page = playwrightHelper.getPage();
+  const lastUpdateDate = page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/);
+  expect(await lastUpdateDate.textContent()).toContain(
+    formatDate2DigitString(new Date()),
+  );
+});
 
 // 以下ヘルパ関数
 async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
@@ -175,6 +230,14 @@ async function clearSelectionByArrow(page: Page, locator: Locator) {
   // 右矢印を1回押すだけで選択が外れる
   await locator.press('ArrowRight');
 }
+export const formatDate2DigitString = (date: Date): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  return date.toLocaleDateString('ja-JP', options);
+};
 
 // When('記事タイトルのインプットに「タイトル」を入力する', async function(){
 //   const titleInput = await page.getByRole('textbox', { name: 'タイトル' });
