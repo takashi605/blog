@@ -110,6 +110,7 @@ jobs:
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_PROD }}
+            NEXT_PUBLIC_WEB_URL=${{ secrets.NEXT_PUBLIC_WEB_URL_PROD }}
 
       - name: "ステージング用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
@@ -124,6 +125,7 @@ jobs:
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+            NEXT_PUBLIC_WEB_URL=${{ secrets.NEXT_PUBLIC_WEB_URL_STAGING }}
             NEXT_PUBLIC_BASIC_AUTHENTICATION=${{ secrets.NEXT_PUBLIC_BASIC_AUTHENTICATION }}
 
       - name: "e2e Image の Build と Push"
