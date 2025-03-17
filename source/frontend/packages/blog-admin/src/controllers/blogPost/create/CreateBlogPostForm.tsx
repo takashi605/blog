@@ -40,8 +40,8 @@ function CreateBlogPostForm() {
       blogPostDTO,
       repository,
     );
-    await createBlogPostUseCase.execute();
-    router.push('/posts/create/success');
+    const createdBlogPost = await createBlogPostUseCase.execute();
+    router.push(`/posts/create/success?id=${createdBlogPost.id}`);
   };
 
   return (
