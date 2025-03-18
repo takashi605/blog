@@ -1,13 +1,13 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { useCommonModal } from './CommonModalProvider';
 
 type CommonModalProps = {
-  isOpen: boolean;
-  closeModal: () => void;
   children: React.ReactNode;
 };
 
-function CommonModal({ isOpen, closeModal, children }: CommonModalProps) {
+function CommonModal({ children }: CommonModalProps) {
+  const { isOpen, closeModal } = useCommonModal();
   return (
     <Modal
       isOpen={isOpen}

@@ -1,20 +1,15 @@
 'use client';
-import { useCallback, useState } from 'react';
 import CommonModal from '../../../components/modal/CommonModal';
+import { useCommonModal } from '../../../components/modal/CommonModalProvider';
 
 function ImageList() {
-  const [isOpen, setIsOpen] = useState(false);
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-  const closeModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  const { closeModal, openModal } = useCommonModal();
+
   return (
     <>
       <h2>画像の管理</h2>
       <button onClick={openModal}>画像を追加</button>
-      <CommonModal isOpen={isOpen} closeModal={closeModal}>
+      <CommonModal>
         <button onClick={closeModal} className="modal-close" type="button">
           閉じる
         </button>
