@@ -1,8 +1,12 @@
+import CommonModalProvider from '../../components/modal/CommonModalProvider';
+import ImageList from '../../controllers/images/list/ImageList';
+
 export default function CreateBlogPostPage() {
   return (
     <div>
-      <h2>画像の管理</h2>
-      <button>画像をアップロード</button>
+      <CommonModalProvider>
+        <ImageList />
+      </CommonModalProvider>
     </div>
   );
 }
