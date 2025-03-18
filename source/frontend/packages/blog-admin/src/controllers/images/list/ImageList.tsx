@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useState } from 'react';
-import Modal from 'react-modal';
+import CommonModal from '../../../components/modal/CommonModal';
 
 function ImageList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,16 +14,11 @@ function ImageList() {
     <>
       <h2>画像の管理</h2>
       <button onClick={openModal}>画像を追加</button>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={closeModal}
-        className="modal"
-        overlayClassName="overlay"
-      >
+      <CommonModal isOpen={isOpen} closeModal={closeModal}>
         <button onClick={closeModal} className="modal-close" type="button">
           閉じる
         </button>
-      </Modal>
+      </CommonModal>
     </>
   );
 }
