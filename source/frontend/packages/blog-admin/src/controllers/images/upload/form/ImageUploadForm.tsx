@@ -1,10 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import TextInput from '../../../../components/form/parts/TextInput';
-
-type ImageUploadFormValues = {
-  imageName: string;
-  imagePath: string;
-};
+import type { ImageUploadFormValues } from './ImageUploadFormProvider';
 
 type ImageUploadFormProps = {
   onSubmit: (data: ImageUploadFormValues) => void;

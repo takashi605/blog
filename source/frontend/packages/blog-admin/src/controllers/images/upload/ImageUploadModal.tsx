@@ -1,19 +1,21 @@
 import React from 'react';
-import TextInput from '../../../components/form/parts/TextInput';
 import CommonModal from '../../../components/modal/CommonModal';
 import { useCommonModal } from '../../../components/modal/CommonModalProvider';
+import ImageUploadForm from './form/ImageUploadForm';
+import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
+import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModal() {
   const { closeModal } = useCommonModal();
+  const onSubmit = (data: ImageUploadFormValues) => {
+    console.log(data);
+  };
 
   return (
     <CommonModal>
-      <div>
-        <label htmlFor="image">ファイルを選択</label>
-        <input id="image" type="file" />
-      </div>
-      <TextInput id="name" label="画像名" />
-      <TextInput id="path" label="パス" />
+      <ImageUploadFormProvider>
+        <ImageUploadForm onSubmit={onSubmit} />
+      </ImageUploadFormProvider>
       <button onClick={closeModal} className="modal-close" type="button">
         閉じる
       </button>
