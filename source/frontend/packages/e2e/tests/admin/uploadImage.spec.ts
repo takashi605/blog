@@ -38,9 +38,7 @@ When('画像を選択する', async function () {
   const fileChooserPromise = page.waitForEvent('filechooser');
   await page.getByText('ファイルを選択').click();
   const fileChooser = await fileChooserPromise;
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  await fileChooser.setFiles(path.join(__dirname, 'images/camera.jpg'));
+  await fileChooser.setFiles(path.join(dirname(), 'images/camera.jpg'));
 });
 When('画像名を入力する', async function () {
   const nameInput = getImageNameInput();
@@ -78,4 +76,9 @@ function getImagePathInput(): Locator {
   const modal = getModal();
   const pathInput = modal.getByRole('textbox', { name: 'パス' });
   return pathInput;
+}
+
+function dirname() {
+  const __filename = fileURLToPath(import.meta.url);
+  return path.dirname(__filename);
 }
