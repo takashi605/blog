@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import TextInput from '../../../components/form/parts/TextInput';
+import TextInput from '../../../../components/form/parts/TextInput';
 
 type ImageUploadFormValues = {
   imageName: string;

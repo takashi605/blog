@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FormProvider, useForm } from 'react-hook-form';
 import ImageUploadForm from './ImageUploadForm';
+import ImageUploadFormProvider from './ImageUploadFormProvider';
 
 const onSubmitMock = jest.fn();
 
@@ -9,23 +9,17 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-function ImageUploadFormWithProvider() {
-  const form = useForm({
-    defaultValues: {
-      imageName: '',
-      imagePath: '',
-    },
-  });
-  return (
-    <FormProvider {...form}>
-      <ImageUploadForm onSubmit={onSubmitMock} />
-    </FormProvider>
-  );
-}
-
 const renderComponent = () => {
   return render(<ImageUploadFormWithProvider />);
 };
+
+function ImageUploadFormWithProvider() {
+  return (
+    <ImageUploadFormProvider>
+      <ImageUploadForm onSubmit={onSubmitMock} />
+    </ImageUploadFormProvider>
+  );
+}
 
 describe('ImageUploadForm', () => {
   it('入力した画像名,パスが送信関数に渡されている', async () => {
