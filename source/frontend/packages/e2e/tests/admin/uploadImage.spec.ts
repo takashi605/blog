@@ -48,14 +48,14 @@ When('パスを入力する', async function () {
   const pathInput = getImagePathInput();
   await pathInput.fill('https://example.com/test-image.jpg');
 });
-When('モーダル内の「追加」ボタンを押下する', async function () {
+When('モーダル内の「アップロード」ボタンを押下する', async function () {
   const modal = getModal();
-  const addButton = modal.getByRole('button', { name: '追加' });
+  const addButton = modal.getByRole('button', { name: 'アップロード' });
   await addButton.click();
 });
-Then('「画像を追加しました」というメッセージが表示される', async function () {
+Then('処理成功のメッセージが表示される', async function () {
   const page = playwrightHelper.getPage();
-  const message = page.getByText('画像を追加しました');
+  const message = page.getByText('画像のアップロードが完了しました');
   await expect(message).toBeVisible({ timeout: 10000 });
 });
 
