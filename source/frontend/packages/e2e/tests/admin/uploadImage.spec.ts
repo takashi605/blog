@@ -1,6 +1,8 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
 Given('画像管理ページにアクセスする', async function () {
@@ -30,22 +32,30 @@ Then(
     await expect(pathInput).toBeVisible({ timeout: 10000 });
   },
 );
-When('画像名を入力', async function () {
+When('画像を選択する', async function () {
+  // 参考：https://playwright.dev/docs/api/class-filechooser
+  const page = playwrightHelper.getPage();
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByText('ファイルを選択').click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(path.join(dirname(), 'images/camera.jpg'));
+});
+When('画像名を入力する', async function () {
   const nameInput = getImageNameInput();
   await nameInput.fill('test-image');
 });
-When('パスを入力', async function () {
+When('パスを入力する', async function () {
   const pathInput = getImagePathInput();
   await pathInput.fill('https://example.com/test-image.jpg');
 });
-When('モーダル内の「追加」ボタンを押下する', async function () {
+When('モーダル内の「アップロード」ボタンを押下する', async function () {
   const modal = getModal();
-  const addButton = modal.getByRole('button', { name: '追加' });
+  const addButton = modal.getByRole('button', { name: 'アップロード' });
   await addButton.click();
 });
-Then('「画像を追加しました」というメッセージが表示される', async function () {
+Then('処理成功のメッセージが表示される', async function () {
   const page = playwrightHelper.getPage();
-  const message = page.getByText('画像を追加しました');
+  const message = page.getByText('画像のアップロードが完了しました');
   await expect(message).toBeVisible({ timeout: 10000 });
 });
 
@@ -66,4 +76,9 @@ function getImagePathInput(): Locator {
   const modal = getModal();
   const pathInput = modal.getByRole('textbox', { name: 'パス' });
   return pathInput;
+}
+
+function dirname() {
+  const __filename = fileURLToPath(import.meta.url);
+  return path.dirname(__filename);
 }
