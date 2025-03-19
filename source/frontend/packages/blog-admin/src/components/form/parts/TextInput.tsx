@@ -1,17 +1,29 @@
-import React from 'react'
+import React, { forwardRef } from 'react';
+
+type BaseProps = {
+  id: string;
+  label: string;
+};
+
+type InputProps = Omit<
+  React.ComponentPropsWithoutRef<'input'>,
+  keyof BaseProps
+>;
 
 type TextInputProps = {
-  id: string
-  label: string
-}
+  id: string;
+  label: string;
+} & InputProps;
 
-function TextInput({ id, label }: TextInputProps) {
-  return (
-    <div>
-      <label htmlFor={id}>{label}</label>
-      <input id={id} type="text" />
-    </div>
-  );
-}
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
+  function TextInputBase({ id, label, ...commonProps }, ref) {
+    return (
+      <div>
+        <label htmlFor={id}>{label}</label>
+        <input ref={ref} id={id} type="text" {...commonProps} />
+      </div>
+    );
+  },
+);
 
-export default TextInput
+export default React.memo(TextInput);
