@@ -1,8 +1,9 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
-import playwrightHelper from '../../support/playwrightHelper.ts';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import playwrightHelper from '../../support/playwrightHelper.ts';
 
 Given('画像管理ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
@@ -31,14 +32,16 @@ Then(
     await expect(pathInput).toBeVisible({ timeout: 10000 });
   },
 );
-When('画像をアップロードする', async function() {
+When('画像を選択する', async function () {
   // 参考：https://playwright.dev/docs/api/class-filechooser
   const page = playwrightHelper.getPage();
   const fileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByText('ファイルをアップロードする').click();
+  await page.getByText('ファイルを選択').click();
   const fileChooser = await fileChooserPromise;
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   await fileChooser.setFiles(path.join(__dirname, 'images/camera.jpg'));
-})
+});
 When('画像名を入力する', async function () {
   const nameInput = getImageNameInput();
   await nameInput.fill('test-image');

@@ -10,6 +10,8 @@ function ImageList() {
       <h2>画像の管理</h2>
       <button onClick={openModal}>画像を追加</button>
       <CommonModal>
+        <label htmlFor="image">ファイルを選択</label>
+        <input id="image" type="file" />
         <button onClick={closeModal} className="modal-close" type="button">
           閉じる
         </button>
