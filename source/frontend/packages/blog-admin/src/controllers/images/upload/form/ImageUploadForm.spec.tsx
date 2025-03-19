@@ -24,14 +24,22 @@ function ImageUploadFormWithProvider() {
 describe('ImageUploadForm', () => {
   it('入力した画像名,パスが送信関数に渡されている', async () => {
     renderComponent();
+    const fileInput = screen.getByLabelText('ファイルを選択');
+    const file = new File(['(⌐□_□)'], 'test-image.png', { type: 'image/png' });
+    await userEvent.upload(fileInput, file);
+
     const nameInput = screen.getByLabelText('画像名');
-    const pathInput = screen.getByLabelText('パス');
-    const submitButton = screen.getByRole('button', { name: 'アップロード' });
     await userEvent.type(nameInput, 'テスト画像');
+
+    const pathInput = screen.getByLabelText('パス');
     await userEvent.type(pathInput, 'test-image');
+
+    const submitButton = screen.getByRole('button', { name: 'アップロード' });
     await userEvent.click(submitButton);
+
     expect(onSubmitMock).toHaveBeenCalledWith(
       {
+        image: expect.any(FileList),
         imageName: 'テスト画像',
         imagePath: 'test-image',
       },

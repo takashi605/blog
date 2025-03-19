@@ -12,7 +12,7 @@ function ImageUploadForm({ onSubmit }: ImageUploadFormProps) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label htmlFor="image">ファイルを選択</label>
-        <input id="image" type="file" />
+        <input id="image" type="file" {...register('image')} />
       </div>
       <TextInput id="name" label="画像名" {...register('imageName')} />
       <TextInput id="path" label="パス" {...register('imagePath')} />

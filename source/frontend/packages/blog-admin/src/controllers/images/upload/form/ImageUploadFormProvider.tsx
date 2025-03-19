@@ -1,6 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 export type ImageUploadFormValues = {
+  image: FileList | null;
   imageName: string;
   imagePath: string;
 };
@@ -12,6 +13,7 @@ type ImageUploadFormProviderProps = {
 function ImageUploadFormProvider({ children }: ImageUploadFormProviderProps) {
   const form = useForm<ImageUploadFormValues>({
     defaultValues: {
+      image: null,
       imageName: '',
       imagePath: '',
     },
