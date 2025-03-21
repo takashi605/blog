@@ -1,6 +1,7 @@
 import type { HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
-import { createBlogPostHandlers } from './handlers/blogPostHandlers';
+import { createBlogPostHandlers } from './handlers/blogPost/blogPostHandlers';
+import { createImageHandlers } from './handlers/image/imageHandler';
 
 export const createAllHandlers = (baseUrl: string): HttpHandler[] => {
   return [
@@ -11,5 +12,6 @@ export const createAllHandlers = (baseUrl: string): HttpHandler[] => {
       });
     }),
     ...createBlogPostHandlers(baseUrl),
+    ...createImageHandlers(baseUrl),
   ];
 };

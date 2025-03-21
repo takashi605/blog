@@ -1,7 +1,7 @@
 import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
-import type { Content } from './postContents/content';
 import { Image } from './image';
+import type { Content } from './postContents/content';
 
 export class BlogPost {
   private id: string;
