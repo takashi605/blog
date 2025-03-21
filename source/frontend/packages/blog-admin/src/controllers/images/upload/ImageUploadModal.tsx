@@ -1,34 +1,42 @@
+import process from 'process';
 import React from 'react';
+import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
+import { createUUIDv4 } from 'service/src/utils/uuid';
+import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
 import { useCommonModal } from '../../../components/modal/CommonModalProvider';
+import { CreateImageUseCase } from '../../../usecases/create/createImage';
+import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModal() {
-  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const { closeModal } = useCommonModal();
   const onSubmit = async (data: ImageUploadFormValues) => {
-    console.log('data', data);
-    const file = data.image?.[0];
-    if (!file) {
-      return;
+    const isSuccess = uploadCloudinary(data);
+    if (!process.env.NEXT_PUBLIC_API_URL) {
+      throw new Error('API の URL が設定されていません');
     }
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'blog_images_preset');
-    formData.append('public_id', data.imagePath);
-
-    const response = await fetch(
-      // APIリファレンス： https://cloudinary.com/documentation/upload_images#basic_uploading
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
-      },
+    if (!isSuccess) {
+      alert('画像のアップロードに失敗しました。ログを確認してください。');
+    }
+    const imageRepository = new ApiImageRepository(
+      process.env.NEXT_PUBLIC_API_URL,
     );
-    const result = await response.json();
-    console.log(result);
+    const imageDTO: ImageDTO = {
+      id: createUUIDv4(),
+      path: data.imagePath,
+    };
+    const createImageUsecase = new CreateImageUseCase(
+      imageDTO,
+      imageRepository,
+    );
+    try {
+      await createImageUsecase.execute();
+    } catch {
+      alert('画像の保存に失敗しました。ログを確認してください。');
+    }
   };
 
   return (

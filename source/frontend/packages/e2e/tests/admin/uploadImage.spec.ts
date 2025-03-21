@@ -46,7 +46,7 @@ When('画像名を入力する', async function () {
 });
 When('パスを入力する', async function () {
   const pathInput = getImagePathInput();
-  await pathInput.fill('https://example.com/test-image.jpg');
+  await pathInput.fill('test-image.jpg');
 });
 When('モーダル内の「アップロード」ボタンを押下する', async function () {
   const modal = getModal();
