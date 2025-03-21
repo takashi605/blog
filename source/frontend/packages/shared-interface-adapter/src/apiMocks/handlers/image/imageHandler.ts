@@ -5,7 +5,7 @@ import { createdImages } from './imageHandlerReponse';
 
 export const createImageHandlers = (baseUrl: string): HttpHandler[] => {
   return [
-    http.post(`${baseUrl}/images`, async ({ request }) => {
+    http.post(`${baseUrl}/blog/images`, async ({ request }) => {
       let newImage: DefaultBodyType;
       try {
         newImage = await request.json();
