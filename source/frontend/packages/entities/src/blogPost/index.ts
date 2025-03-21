@@ -1,7 +1,7 @@
 import { EntityError } from '../error/error';
 import { BlogPostDate } from './blogPostDate';
+import { Image } from './image';
 import type { Content } from './postContents/content';
-import { Thumbnail } from './thumbnail';
 
 export class BlogPost {
   private id: string;
@@ -9,7 +9,7 @@ export class BlogPost {
   private contents: Content[] = [];
   private postDate: BlogPostDate | null = null;
   private lastUpdateDate: BlogPostDate | null = null;
-  private thumbnail: Thumbnail | null = null;
+  private thumbnail: Image | null = null;
 
   constructor(id: string, title: string) {
     this.title = title;
@@ -25,7 +25,7 @@ export class BlogPost {
   }
 
   setThumbnail(id: string, path: string) {
-    this.thumbnail = new Thumbnail(id, path);
+    this.thumbnail = new Image(id, path);
     return this;
   }
 

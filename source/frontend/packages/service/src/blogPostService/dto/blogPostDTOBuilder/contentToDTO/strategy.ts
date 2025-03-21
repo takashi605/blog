@@ -2,7 +2,13 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
-import type { ContentDTO, H2DTO, H3DTO, ImageDTO, ParagraphDTO } from './types';
+import type {
+  ContentDTO,
+  H2DTO,
+  H3DTO,
+  ImageContentDTO,
+  ParagraphDTO,
+} from '../../contentDTO';
 
 export abstract class ContentToDTOStrategy<
   T extends Content,
@@ -57,9 +63,9 @@ export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3DTO> {
 
 export class ImageToDTOStrategy extends ContentToDTOStrategy<
   ImageContent,
-  ImageDTO
+  ImageContentDTO
 > {
-  toDTO(): ImageDTO {
+  toDTO(): ImageContentDTO {
     return {
       id: this.content.getId(),
       type: this.content.getType(),

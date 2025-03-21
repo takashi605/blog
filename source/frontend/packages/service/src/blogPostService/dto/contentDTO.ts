@@ -2,7 +2,7 @@ import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
-export type ContentDTO = H2DTO | H3DTO | ParagraphDTO | ImageDTO;
+export type ContentDTO = H2DTO | H3DTO | ParagraphDTO | ImageContentDTO;
 
 export type H2DTO = Readonly<{
   id: ReturnType<H2['getId']>;
@@ -21,7 +21,7 @@ export type ParagraphDTO = Readonly<{
   type: ReturnType<Paragraph['getType']>;
 }>;
 
-export type ImageDTO = Readonly<{
+export type ImageContentDTO = Readonly<{
   id: ReturnType<ImageContent['getId']>;
   type: ReturnType<ImageContent['getType']>;
   path: ReturnType<ImageContent['getPath']>;
