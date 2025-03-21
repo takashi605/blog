@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
-  use crate::tests::helper::http::{methods::Methods, request::Request};
+  use crate::tests::{
+    handlers::images::test_helper::assert_images,
+    helper::http::{methods::Methods, request::Request},
+  };
   use anyhow::{Context, Result};
   use common::types::api::response::Image;
   use uuid::Uuid;
@@ -13,7 +16,7 @@ mod tests {
     let actual_images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
     let expected_images: Vec<Image> = helper::expected_images();
 
-    helper::assert_images(&actual_images_resp, &expected_images);
+    assert_images(&actual_images_resp, &expected_images);
 
     Ok(())
   }
@@ -36,15 +39,6 @@ mod tests {
         path: "test-coffee".to_string(),
       };
       vec![image1, image2, image3]
-    }
-
-    pub fn assert_images(actual: &Vec<Image>, expected: &Vec<Image>) {
-      assert_eq!(actual.len(), expected.len());
-      for (actual, expected) in actual.iter().zip(expected) {
-        // uuid は適当に生成されるので長さだけチェック
-        assert_eq!(actual.id.to_string().len(), 36);
-        assert_eq!(actual.path, expected.path);
-      }
     }
   }
 }
