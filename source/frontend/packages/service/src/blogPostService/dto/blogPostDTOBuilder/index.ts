@@ -1,14 +1,10 @@
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
+import type { ImageDTO } from '../../../ImageService/dto/imageDTO';
 import { formatDate2DigitString } from '../../../utils/date';
 import type { BlogPostDTO } from '../blogPostDTO';
 import type { ContentDTO } from '../contentDTO';
 import { createContentToDTOContext } from './contentToDTO';
-
-export type ImageDTO = {
-  readonly id: string;
-  readonly path: string;
-};
 
 export class BlogPostDTOBuilder {
   private blogPost: BlogPost;

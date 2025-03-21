@@ -1,3 +1,4 @@
+import type { ImageDTO } from '../../ImageService/dto/imageDTO';
 import type { ContentDTO } from './contentDTO';
 
 export type BlogPostDTO = {
@@ -7,9 +8,4 @@ export type BlogPostDTO = {
   postDate: string;
   lastUpdateDate: string;
   readonly contents: ReadonlyArray<ContentDTO>;
-};
-
-export type ImageDTO = {
-  readonly id: string;
-  readonly path: string;
 };
