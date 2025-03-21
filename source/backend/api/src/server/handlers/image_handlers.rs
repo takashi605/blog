@@ -8,7 +8,10 @@ pub fn image_scope() -> Scope {
 
 mod handle_funcs {
   use super::fetch_images::fetch_images;
-  use crate::{db::tables::images_table::insert_image, server::handlers::response::err::ApiCustomError};
+  use crate::{
+    db::tables::images_table::{insert_image, ImageRecord},
+    server::handlers::response::err::ApiCustomError,
+  };
   use actix_web::{web, HttpResponse, Responder};
   use common::types::api::response::Image;
 
@@ -18,12 +21,10 @@ mod handle_funcs {
   }
 
   pub async fn create_image(image_by_req: web::Json<Image>) -> Result<impl Responder, ApiCustomError> {
-    let image_by_req = image_by_req.into_inner();
-    let image_record = insert_image(image_by_req).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("画像の挿入に失敗しました。")))?;
-    let image = Image {
-      id: image_record.id,
-      path: image_record.file_path,
-    };
-    Ok(HttpResponse::Ok().json(image))
+    let image_by_req: Image = image_by_req.into_inner();
+    let insert_result: ImageRecord = insert_image(image_by_req).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("画像の挿入に失敗しました。")))?;
+
+    let response: Image = insert_result.into();
+    Ok(HttpResponse::Ok().json(response))
   }
 }
