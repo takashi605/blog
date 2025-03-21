@@ -12,6 +12,7 @@ import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModal() {
+  const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModal();
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = uploadCloudinary(data);
@@ -37,12 +38,14 @@ function ImageUploadModal() {
     } catch {
       alert('画像の保存に失敗しました。ログを確認してください。');
     }
+    setIsUploadSuccess(true);
   };
 
   return (
     <CommonModal>
       <ImageUploadFormProvider>
         <ImageUploadForm onSubmit={onSubmit} />
+        {isUploadSuccess && <p>画像のアップロードに成功しました</p>}
       </ImageUploadFormProvider>
       <button onClick={closeModal} className="modal-close" type="button">
         閉じる

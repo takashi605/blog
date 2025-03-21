@@ -55,7 +55,7 @@ When('モーダル内の「アップロード」ボタンを押下する', async
 });
 Then('処理成功のメッセージが表示される', async function () {
   const page = playwrightHelper.getPage();
-  const message = page.getByText('画像のアップロードが完了しました');
+  const message = page.getByText('画像のアップロードに成功しました');
   await expect(message).toBeVisible({ timeout: 10000 });
 });
 
