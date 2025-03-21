@@ -2,6 +2,13 @@ import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+import type {
+  ContentDTO,
+  H2DTO,
+  H3DTO,
+  ImageDTO,
+  ParagraphDTO,
+} from '../../contentDTO';
 import { ContentToDTOContext } from './context';
 import {
   H2ToDTOStrategy,
@@ -9,7 +16,6 @@ import {
   ImageToDTOStrategy,
   ParagraphToDTOStrategy,
 } from './strategy';
-import type { ContentDTO, H2DTO, H3DTO, ImageDTO, ParagraphDTO } from './types';
 
 // コンテキスト生成関数のオーバーロード
 // これにより呼び出し元で返り値の型を自動で推論できる
