@@ -1,14 +1,10 @@
 import type { BlogPost } from 'entities/src/blogPost/index';
 import type { Content } from 'entities/src/blogPost/postContents/content';
+import type { ImageDTO } from '../../../imageService/dto/imageDTO';
 import { formatDate2DigitString } from '../../../utils/date';
 import type { BlogPostDTO } from '../blogPostDTO';
 import type { ContentDTO } from '../contentDTO';
 import { createContentToDTOContext } from './contentToDTO';
-
-export type thumbnailDTO = {
-  readonly id: string;
-  readonly path: string;
-};
 
 export class BlogPostDTOBuilder {
   private blogPost: BlogPost;
@@ -21,14 +17,14 @@ export class BlogPostDTOBuilder {
     return {
       id: this.blogPost.getId(),
       title: this.blogPost.getTitleText(),
-      thumbnail: this.extractThumbnailDTO(),
+      thumbnail: this.extractImageDTO(),
       postDate: this.extractPostDateDTO(),
       lastUpdateDate: this.extractLastUpdateDateDTO(),
       contents: this.extractContentsDTO(),
     };
   }
 
-  private extractThumbnailDTO(): thumbnailDTO {
+  private extractImageDTO(): ImageDTO {
     try {
       return {
         id: this.blogPost.getThumbnail().getId(),

@@ -152,6 +152,7 @@ frontend-install-with-container:
 	$(MAKE) frontend-install
 	kubectl exec -it $(shell $(MAKE) e2e-pod-name) -c e2e -- pnpm install
 	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- pnpm install
+	kubectl exec -it $(shell $(MAKE) blog-admin-pod-name) -c admin -- pnpm install
 
 frontend-test:
 	$(MAKE) frontend-tsc
@@ -252,6 +253,10 @@ api-test-unit:
 ###
 ## blog-admin 系
 ###
+blog-admin-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep admin
+blog-admin-sh:
+	kubectl exec -it $(shell $(MAKE) blog-admin-pod-name) -c admin -- bash
 blog-admin-build:
 	docker image build --target dev -f containers/frontend/blog-admin/Dockerfile -t test-admin .
 

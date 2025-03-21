@@ -21,6 +21,15 @@ pub async fn fetch_all_images() -> Result<Vec<ImageRecord>> {
   Ok(images)
 }
 
+pub async fn insert_image(image: Image) -> Result<ImageRecord> {
+  let image = sqlx::query_as::<_, ImageRecord>("insert into images (id, file_path) values ($1, $2) returning id, file_path")
+    .bind(image.id)
+    .bind(image.path)
+    .fetch_one(&*POOL)
+    .await?;
+  Ok(image)
+}
+
 impl From<Image> for ImageRecord {
   fn from(image: Image) -> Self {
     Self {
