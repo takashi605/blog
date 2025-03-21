@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
   use crate::tests::{
-    handlers::images::{post::helper, test_helper},
+    handlers::images::{post::helper, test_helper::assert_image},
     helper::http::{methods::Methods, request::Request},
   };
   use anyhow::{Context, Result};
@@ -13,14 +13,12 @@ mod tests {
     let blog_post_json_for_req: String = serde_json::to_string(&image_for_req).context("JSON データに変換できませんでした").unwrap();
 
     let url = "http://localhost:8000/blog/images";
-    let request = Request::new(Methods::POST {
-      body: blog_post_json_for_req,
-    }, &url);
+    let request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
     let resp = request.send().await.unwrap().text().await.unwrap();
 
-    let image_by_resp:Image = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let image_by_resp: Image = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 
-    test_helper::assert_image(&image_by_resp, &image_for_req);
+    assert_image(&image_by_resp, &image_for_req);
 
     Ok(())
   }
