@@ -1,4 +1,4 @@
-import type { ImageDTO } from '../../ImageService/dto/imageDTO';
+import type { ImageDTO } from '../../imageService/dto/imageDTO';
 import type { ContentDTO } from './contentDTO';
 
 export type BlogPostDTO = {

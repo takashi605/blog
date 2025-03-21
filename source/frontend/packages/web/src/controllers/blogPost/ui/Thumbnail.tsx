@@ -1,6 +1,6 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import type { ImageDTO } from 'service/src/ImageService/dto/imageDTO';
+import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 
 // TODO Thumbnail に thumbnail を渡すというのは文脈的におかしいので直す
 type ThumbnailProps = {
