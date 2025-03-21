@@ -1,4 +1,4 @@
-export class Thumbnail {
+export class Image {
   private id: string;
   private path: string;
 
