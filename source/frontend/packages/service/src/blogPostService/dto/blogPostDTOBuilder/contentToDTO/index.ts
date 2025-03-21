@@ -6,7 +6,7 @@ import type {
   ContentDTO,
   H2DTO,
   H3DTO,
-  ImageDTO,
+  ImageContentDTO,
   ParagraphDTO,
 } from '../../contentDTO';
 import { ContentToDTOContext } from './context';
@@ -32,7 +32,7 @@ export function createContentToDTOContext(
 ): ContentToDTOContext<H3, H3DTO>;
 export function createContentToDTOContext(
   content: ImageContent,
-): ContentToDTOContext<ImageContent, ImageDTO>;
+): ContentToDTOContext<ImageContent, ImageContentDTO>;
 export function createContentToDTOContext(
   content: Content,
 ): ContentToDTOContext<Content, ContentDTO>;

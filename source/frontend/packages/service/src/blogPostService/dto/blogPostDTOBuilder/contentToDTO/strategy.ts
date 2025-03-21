@@ -6,7 +6,7 @@ import type {
   ContentDTO,
   H2DTO,
   H3DTO,
-  ImageDTO,
+  ImageContentDTO,
   ParagraphDTO,
 } from '../../contentDTO';
 
@@ -63,9 +63,9 @@ export class H3ToDTOStrategy extends ContentToDTOStrategy<H3, H3DTO> {
 
 export class ImageToDTOStrategy extends ContentToDTOStrategy<
   ImageContent,
-  ImageDTO
+  ImageContentDTO
 > {
-  toDTO(): ImageDTO {
+  toDTO(): ImageContentDTO {
     return {
       id: this.content.getId(),
       type: this.content.getType(),
