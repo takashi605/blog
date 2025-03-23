@@ -17,8 +17,8 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
-describe('ユースケース: 記事の投稿', () => {
-  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
+describe('ユースケース: 画像のアップロード', () => {
+  it('ユースケースを実行すると画像データを生成してデータリポジトリへ保存する', async () => {
     const mockSave = jest.fn().mockReturnValue(mockImageDTO);
     const mockRepository: ImageRepository = {
       ...mockImageRepository,
