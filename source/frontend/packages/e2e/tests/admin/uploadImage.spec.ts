@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-Given('画像管理ページにアクセスする', async function () {
+Given('【アップロード】画像管理ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
