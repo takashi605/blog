@@ -1,5 +1,5 @@
 import type { ImageRepository } from 'service/src/imageService/repository/imageRepository';
-import { mockImageDTO } from 'service/src/mockData/mockImageDTO';
+import { mockImageDTO1 } from 'service/src/mockData/mockImageDTO';
 import { mockImageRepository } from 'service/src/mockData/mockImageRepository';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import { CreateImageUseCase } from './createImage';
@@ -17,16 +17,16 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
-describe('ユースケース: 記事の投稿', () => {
-  it('ユースケースを実行すると記事データを生成してデータリポジトリへ保存する', async () => {
-    const mockSave = jest.fn().mockReturnValue(mockImageDTO);
+describe('ユースケース: 画像のアップロード', () => {
+  it('ユースケースを実行すると画像データを生成してデータリポジトリへ保存する', async () => {
+    const mockSave = jest.fn().mockReturnValue(mockImageDTO1);
     const mockRepository: ImageRepository = {
       ...mockImageRepository,
       save: mockSave,
     };
 
     const createImageUseCase = new CreateImageUseCase(
-      mockImageDTO,
+      mockImageDTO1,
       mockRepository,
     );
 
