@@ -108,6 +108,9 @@ importers:
       next:
         specifier: 14.2.4
         version: 14.2.4(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
+      next-cloudinary:
+        specifier: ^6.16.0
+        version: 6.16.0(next@14.2.4(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0))(react@18.3.1)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -7000,6 +7003,14 @@ snapshots:
       '@cloudinary-util/url-loader': 5.10.4
       '@cloudinary-util/util': 4.0.0
       next: 14.2.18(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.1)
+      react: 18.3.1
+
+  next-cloudinary@6.16.0(next@14.2.4(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0))(react@18.3.1):
+    dependencies:
+      '@cloudinary-util/types': 1.5.10
+      '@cloudinary-util/url-loader': 5.10.4
+      '@cloudinary-util/util': 4.0.0
+      next: 14.2.4(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.0)
       react: 18.3.1
 
   next@14.2.18(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.1):
