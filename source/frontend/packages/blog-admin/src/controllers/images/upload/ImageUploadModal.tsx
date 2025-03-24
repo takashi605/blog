@@ -12,7 +12,7 @@ import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
-function ImageUploadModal() {
+function ImageUploadModalWithOpenButton() {
   const { openModal } = useCommonModal();
 
   return (
@@ -66,4 +66,4 @@ function Modal() {
   );
 }
 
-export default React.memo(ImageUploadModal);
+export default React.memo(ImageUploadModalWithOpenButton);
