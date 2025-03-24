@@ -34,6 +34,24 @@ export class ApiImageRepository implements ImageRepository {
     return validatedResponse;
   }
 
+  async findAll(): Promise<ImageDTO[]> {
+    const response = await fetch(`${this.baseUrl}/blog/images`, {
+      ...this.baseFetchOptions,
+    });
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `画像の一括取得に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
+      );
+    }
+
+    const validatedResponse: ImageDTO[] = imageSchema
+      .array()
+      .parse(await response.json());
+
+    return validatedResponse;
+  }
+
   // TODO ヘッダー等の設定を blogpostRepository と共通化する
   private async post(image: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/blog/images`, {
