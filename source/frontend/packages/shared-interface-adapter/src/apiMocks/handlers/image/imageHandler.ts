@@ -20,6 +20,6 @@ export const createImageHandlers = (baseUrl: string): HttpHandler[] => {
     }),
     http.get(`${baseUrl}/blog/images`, async () => {
       return HttpResponse.json(createdImages, { status: 200 });
-    })
+    }),
   ];
 };
