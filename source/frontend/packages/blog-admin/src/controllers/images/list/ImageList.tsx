@@ -1,10 +1,7 @@
-import ImageUploadModal from '../upload/ImageUploadModal';
-
 function ImageList() {
   return (
     <>
-      <h2>画像の管理</h2>
-      <ImageUploadModal />
+      <h3>画像一覧</h3>
     </>
   );
 }
