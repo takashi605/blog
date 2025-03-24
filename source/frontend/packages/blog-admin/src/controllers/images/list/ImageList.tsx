@@ -1,17 +1,17 @@
-'use client';
-import { useCommonModal } from '../../../components/modal/CommonModalProvider';
-import ImageUploadModal from '../upload/ImageUploadModal';
+import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
+import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
+import ImageListClient from './ImageListClient';
 
-function ImageList() {
-  const { openModal } = useCommonModal();
+async function ImageList() {
+  const api_url = process.env.NEXT_PUBLIC_API_URL;
+  if (!api_url) {
+    throw new Error('API URL が設定されていません');
+  }
+  const imageRepository = new ApiImageRepository(api_url);
+  const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
+  const images = await viewImagesUsecase.execute();
 
-  return (
-    <>
-      <h2>画像の管理</h2>
-      <button onClick={openModal}>画像を追加</button>
-      <ImageUploadModal />
-    </>
-  );
+  return <ImageListClient imageList={images} />;
 }
 
 export default ImageList;

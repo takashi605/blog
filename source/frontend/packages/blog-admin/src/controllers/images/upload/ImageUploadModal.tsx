@@ -1,3 +1,4 @@
+'use client';
 import process from 'process';
 import React from 'react';
 import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
@@ -11,7 +12,18 @@ import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
-function ImageUploadModal() {
+function ImageUploadModalWithOpenButton() {
+  const { openModal } = useCommonModal();
+
+  return (
+    <>
+      <button onClick={openModal}>画像を追加</button>
+      <Modal />
+    </>
+  );
+}
+
+function Modal() {
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModal();
   const onSubmit = async (data: ImageUploadFormValues) => {
@@ -54,4 +66,4 @@ function ImageUploadModal() {
   );
 }
 
-export default React.memo(ImageUploadModal);
+export default React.memo(ImageUploadModalWithOpenButton);
