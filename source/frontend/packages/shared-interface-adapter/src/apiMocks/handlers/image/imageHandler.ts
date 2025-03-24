@@ -18,5 +18,8 @@ export const createImageHandlers = (baseUrl: string): HttpHandler[] => {
       createdImages.push(imageSchema.parse(newImage));
       return HttpResponse.json(newImage, { status: 200 });
     }),
+    http.get(`${baseUrl}/blog/images`, async () => {
+      return HttpResponse.json(createdImages, { status: 200 });
+    })
   ];
 };
