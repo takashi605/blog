@@ -7,6 +7,8 @@ import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/ap
 import CommonModal from '../../../components/modal/CommonModal';
 import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import { CreateImageUseCase } from '../../../usecases/create/createImage';
+import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
+import { useImageListContext } from '../list/ImageListProvider';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
@@ -24,8 +26,10 @@ function ImageUploadModalWithOpenButton() {
 }
 
 function Modal() {
+  const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModalContext();
+
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = uploadCloudinary(data);
     if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -50,6 +54,11 @@ function Modal() {
     } catch {
       alert('画像の保存に失敗しました。ログを確認してください。');
     }
+
+    const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
+    const fetchedImages = await viewImagesUsecase.execute();
+    updateImages(fetchedImages);
+
     setIsUploadSuccess(true);
   };
 
