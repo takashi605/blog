@@ -30,11 +30,11 @@ export default function CommonModalProvider({
 }
 
 // コンテキストを利用するためのカスタムフック
-export const useCommonModal = () => {
+export const useCommonModalContext = () => {
   const modalState = useContext(SetIsOpenModalContext);
   if (modalState === null) {
     throw new Error(
-      'useCommonModal は CommonModalProvider でラップされていなければ利用できません',
+      'useCommonModalContext は CommonModalProvider でラップされていなければ利用できません',
     );
   }
   return modalState;

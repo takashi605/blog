@@ -5,7 +5,7 @@ import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
-import { useCommonModal } from '../../../components/modal/CommonModalProvider';
+import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import { CreateImageUseCase } from '../../../usecases/create/createImage';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
@@ -13,7 +13,7 @@ import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModalWithOpenButton() {
-  const { openModal } = useCommonModal();
+  const { openModal } = useCommonModalContext();
 
   return (
     <>
@@ -25,7 +25,7 @@ function ImageUploadModalWithOpenButton() {
 
 function Modal() {
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const { closeModal } = useCommonModal();
+  const { closeModal } = useCommonModalContext();
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = uploadCloudinary(data);
     if (!process.env.NEXT_PUBLIC_API_URL) {
