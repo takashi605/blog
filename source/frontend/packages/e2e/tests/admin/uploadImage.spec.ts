@@ -5,12 +5,23 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
+let initialImageCount = 0;
+
 Given('【アップロード】画像管理ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
   await page.goto(`${process.env.ADMIN_URL}/images`);
+
+  // 画像データの fetch を待機
+  const fetchImagesResponse = await page.waitForResponse('**/blog/images');
+  expect(fetchImagesResponse.status()).toBe(200);
+
+  // 後で画像数が増えたことを確認するために初期画像数を取得
+  const images = page.locator('img');
+  const count = await images.count();
+  initialImageCount = count;
 });
 When('「画像を追加」ボタンを押下する', async function () {
   const page = playwrightHelper.getPage();
@@ -57,6 +68,14 @@ Then('処理成功のメッセージが表示される', async function () {
   const page = playwrightHelper.getPage();
   const message = page.getByText('画像のアップロードに成功しました');
   await expect(message).toBeVisible({ timeout: 10000 });
+});
+Then('投稿した画像が一覧内に表示される', async function () {
+  const page = playwrightHelper.getPage();
+  const images = page.locator('img');
+  const count = await images.count();
+  expect(count).toBe(initialImageCount + 1);
+  const pathText = page.getByText('test-image.jpg');
+  await expect(pathText).toBeVisible({ timeout: 10000 });
 });
 
 // 以下ヘルパ関数
