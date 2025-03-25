@@ -6,12 +6,11 @@ on:
       - "v*"
 
 jobs:
-  push_image:
+  # まずは共通の準備ジョブ
+  prepare:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: write
+    outputs:
+      IMAGE_VERSION: ${{ steps.get_version.outputs.IMAGE_VERSION }}
     steps:
       - name: "リポジトリのチェックアウト"
         uses: actions/checkout@v4
@@ -19,7 +18,6 @@ jobs:
           ref: main
           fetch-depth: 0 # タグを正しく取得するためにすべてのコミットを取得できるようにする
 
-      # 参考: https://zenn.dev/na_it_o/articles/cb7d0b9496496d
       - name: "push されたタグが main ブランチに存在していれば実行"
         run: |
           BRANCHES=$(git branch --contains ${{ github.ref_name }})
@@ -31,20 +29,23 @@ jobs:
           done
           exit 1
 
-      - name: "buildx のセットアップ"
-        uses: docker/setup-buildx-action@v3
+      - name: "git の最新タグを出力としてセット"
+        id: get_version
+        run: |
+          VERSION=$(git describe --tags --always)
+          echo "IMAGE_VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: "ghcr.io へのログイン"
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  # 以下、それぞれのイメージの Build & Push を並列化
 
-      - name: "git の最新タグを GITHUB_ENV に追加"
-        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
-
-      # TODO staging 用の Image も作成する
+  push_web_image:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "web Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -53,7 +54,7 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-web:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-web:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-web:cache
           build-args: |
@@ -62,6 +63,15 @@ jobs:
             CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
             NEXT_PUBLIC_BASIC_AUTHENTICATION=${{ secrets.NEXT_PUBLIC_BASIC_AUTHENTICATION }}
 
+  push_api_image_prod:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "本番用 api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -70,10 +80,19 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-api:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-api:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api:cache
 
+  push_api_image_staging:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "ステージング用 api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -82,10 +101,19 @@ jobs:
           target: staging
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-api-staging:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-api-staging:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api-staging:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api-staging:cache
 
+  push_postgres_image:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "postgres Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -93,10 +121,19 @@ jobs:
           file: ./containers/db/postgres/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-postgres:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-postgres:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-postgres:cache
 
+  push_admin_image_prod:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "本番用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -105,7 +142,7 @@ jobs:
           target: prod
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-blog-admin:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-blog-admin:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin:cache
           build-args: |
@@ -115,15 +152,24 @@ jobs:
             NEXT_PUBLIC_CLOUDINARY_API_KEY=${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
             CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
 
+  push_admin_image_staging:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "ステージング用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./containers/frontend/blog-admin/Dockerfile
-          target: prod # build-args のみの違いなので、target は prod で問題ない
+          target: prod # build-args のみの違いなので、target は prod で問題なし
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-blog-admin-staging:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-blog-admin-staging:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-blog-admin-staging:cache
           build-args: |
@@ -134,6 +180,15 @@ jobs:
             NEXT_PUBLIC_CLOUDINARY_API_KEY=${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
             CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
 
+  push_e2e_image:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "e2e Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -141,10 +196,19 @@ jobs:
           file: ./containers/frontend/e2e/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-e2e:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-e2e:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-e2e:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-e2e:cache
 
+  push_api_test_image:
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "ビルド環境の設定"
+        uses: ./.github/actions/setup-build
       - name: "api-test Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -152,13 +216,14 @@ jobs:
           file: ./containers/backend/api-test/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-api-test:${{ env.IMAGE_VERSION }}
+            ghcr.io/${{ github.repository }}-api-test:${{ needs.prepare.outputs.IMAGE_VERSION }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository }}-api-test:cache,mode=max
           cache-to: type=registry,ref=ghcr.io/${{ github.repository }}-api-test:cache
 
+  # Chart のパッケージ・Push
   push_chart_package:
     runs-on: ubuntu-latest
-
+    needs: [prepare]
     permissions:
       contents: read
       packages: write
@@ -167,29 +232,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0 # タグを正しく取得するためにすべてのコミットを取得できるようにする
-
-      - name: "push されたタグが main ブランチに存在していれば実行"
-        run: |
-          BRANCHES=$(git branch --contains ${{ github.ref_name }})
-          set -- $BRANCHES
-          for BRANCH in $BRANCHES ; do
-            if [[ "$BRANCH" == "main" ]]; then
-              exit 0
-            fi
-          done
-          exit 1
+          fetch-depth: 0
 
       - name: "Helm のセットアップ"
         uses: azure/setup-helm@v4.2.0
         with:
           version: v3.13.3
 
-      - name: "git の最新タグを GITHUB_ENV に追加"
-        run: echo "IMAGE_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
-
       - name: "Helm Chart のパッケージング"
-        run: helm package ${{ github.workspace }}/k8s/blog-chart --version ${{ env.IMAGE_VERSION }}
+        run: |
+          helm package ${{ github.workspace }}/k8s/blog-chart --version ${{ needs.prepare.outputs.IMAGE_VERSION }}
 
       - name: "GHCR へのログイン"
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
