@@ -44,6 +44,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "web Image の Build と Push"
@@ -70,6 +75,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "本番用 api Image の Build と Push"
@@ -91,6 +101,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "ステージング用 api Image の Build と Push"
@@ -112,6 +127,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "postgres Image の Build と Push"
@@ -132,6 +152,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "本番用 admin Image の Build と Push"
@@ -159,6 +184,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "ステージング用 admin Image の Build と Push"
@@ -187,6 +217,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "e2e Image の Build と Push"
@@ -207,6 +242,11 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: "リポジトリのチェックアウト"
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: "ビルド環境の設定"
         uses: ./.github/actions/setup-build
       - name: "api-test Image の Build と Push"
