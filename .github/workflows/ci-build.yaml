@@ -49,8 +49,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "web Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -80,8 +89,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "本番用 api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -106,8 +124,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "ステージング用 api Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -132,8 +159,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "postgres Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -157,8 +193,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "本番用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -189,8 +234,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "ステージング用 admin Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -222,8 +276,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "e2e Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
@@ -247,8 +310,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: "ビルド環境の設定"
-        uses: ./.github/actions/setup-build
+
+      - name: "buildx のセットアップ"
+        uses: docker/setup-buildx-action@v3
+
+      - name: "ghcr.io へのログイン"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "api-test Image の Build と Push"
         uses: docker/build-push-action@v5
         with:
