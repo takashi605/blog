@@ -1,19 +1,35 @@
+'use client';
 import process from 'process';
 import React from 'react';
 import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
-import { useCommonModal } from '../../../components/modal/CommonModalProvider';
+import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import { CreateImageUseCase } from '../../../usecases/create/createImage';
+import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
+import { useImageListContext } from '../list/ImageListProvider';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
-function ImageUploadModal() {
+function ImageUploadModalWithOpenButton() {
+  const { openModal } = useCommonModalContext();
+
+  return (
+    <>
+      <button onClick={openModal}>画像を追加</button>
+      <Modal />
+    </>
+  );
+}
+
+function Modal() {
+  const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const { closeModal } = useCommonModal();
+  const { closeModal } = useCommonModalContext();
+
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = uploadCloudinary(data);
     if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -38,6 +54,11 @@ function ImageUploadModal() {
     } catch {
       alert('画像の保存に失敗しました。ログを確認してください。');
     }
+
+    const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
+    const fetchedImages = await viewImagesUsecase.execute();
+    updateImages(fetchedImages);
+
     setIsUploadSuccess(true);
   };
 
@@ -54,4 +75,4 @@ function ImageUploadModal() {
   );
 }
 
-export default React.memo(ImageUploadModal);
+export default React.memo(ImageUploadModalWithOpenButton);

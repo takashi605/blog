@@ -1,15 +1,44 @@
 'use client';
-import { useCommonModal } from '../../../components/modal/CommonModalProvider';
-import ImageUploadModal from '../upload/ImageUploadModal';
+import { CldImage } from 'next-cloudinary';
+import { useCallback, useEffect } from 'react';
+import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
+import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
+import { useImageListContext } from './ImageListProvider';
 
 function ImageList() {
-  const { openModal } = useCommonModal();
+  const { getAllImages, updateImages } = useImageListContext();
+
+  const fetchImages = useCallback(async () => {
+    const api_url = process.env.NEXT_PUBLIC_API_URL;
+    if (!api_url) {
+      throw new Error('API URL が設定されていません');
+    }
+    const imageRepository = new ApiImageRepository(api_url);
+    const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
+    const fetchedImages = await viewImagesUsecase.execute();
+    updateImages(fetchedImages);
+  }, [updateImages]);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
 
   return (
     <>
-      <h2>画像の管理</h2>
-      <button onClick={openModal}>画像を追加</button>
-      <ImageUploadModal />
+      <h3>画像一覧</h3>
+      <ul>
+        {getAllImages().map((image) => (
+          <li key={image.id}>
+            <CldImage
+              src={image.path}
+              width={500}
+              height={500}
+              alt="画像コンテンツ"
+            />
+            <p>{image.path}</p>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
