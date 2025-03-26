@@ -31,7 +31,7 @@ function Modal() {
   const { closeModal } = useCommonModalContext();
 
   const onSubmit = async (data: ImageUploadFormValues) => {
-    const isSuccess = uploadCloudinary(data);
+    const isSuccess = await uploadCloudinary(data);
     if (!process.env.NEXT_PUBLIC_API_URL) {
       throw new Error('API の URL が設定されていません');
     }
