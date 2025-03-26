@@ -224,14 +224,14 @@ api-create-db:
 api-drop-db:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop -y"
 api-migrate-run:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run"
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run --source ./migrations/schema"
 api-migrate-revert:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert"
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert --source ./migrations/schema"
 
 # usage:
 #   make api-migrate-add name=xxxxx
 api-migrate-add:
-	cd source/backend/api && sqlx migrate add $(name)
+	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/schema
 
 ###
 ## api テスト系
