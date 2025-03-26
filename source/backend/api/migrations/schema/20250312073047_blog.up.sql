@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE IF NOT EXISTS popular_posts (
     id UUID PRIMARY KEY,
     post_id UUID NOT NULL UNIQUE REFERENCES blog_posts(id),
@@ -5,20 +7,4 @@ CREATE TABLE IF NOT EXISTS popular_posts (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO popular_posts (
-  id,
-  post_id
-)
-VALUES
-  (
-    '21568968-2ebb-4846-9791-0879430e874c',
-    '91450c47-9845-4398-ad3a-275118d223ea' -- 過去のマイグレーションで挿入した記事の id を指定
-  ),
-  (
-    '55b25b48-1533-4507-8637-a08e53353f25',
-    'f735a7b7-8bbc-4cb5-b6cf-c188734f64d3' -- 過去のマイグレーションで挿入した記事の id を指定
-  ),
-  (
-    '4f7c188d-33aa-4c2c-bcf1-f9e64fbfaa2c',
-    '672f2772-72b5-404a-8895-b1fbbf310801' -- 過去のマイグレーションで挿入した記事の id を指定
-  );
+COMMIT;
