@@ -5,6 +5,8 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import CommonModal from '../../../components/modal/CommonModal';
+import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
@@ -44,6 +46,8 @@ function CreateBlogPostForm() {
     router.push(`/posts/create/success?id=${createdBlogPost.id}`);
   };
 
+  const { openModal, closeModal } = useCommonModalContext();
+
   return (
     <>
       <FormProvider {...form}>
@@ -52,7 +56,15 @@ function CreateBlogPostForm() {
 
           <input id="title" {...register('title')} />
 
+          <button onClick={openModal}>サムネイル画像を選択</button>
+
           <button type="submit">投稿</button>
+
+          <CommonModal>
+            <button onClick={closeModal} className="modal-close" type="button">
+              閉じる
+            </button>
+          </CommonModal>
         </form>
       </FormProvider>
 
