@@ -1,6 +1,8 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
 Given('記事投稿ページにアクセスする', async function () {
@@ -30,6 +32,20 @@ Then('タイトルに「テスト記事」と表示される', async function ()
 
   const titleInput = page.getByRole('textbox', { name: 'タイトル' });
   await expect(titleInput).toHaveValue('テスト記事');
+});
+
+When('サムネイル画像を選択する', async () => {
+  // 参考：https://playwright.dev/docs/api/class-filechooser
+  const page = playwrightHelper.getPage();
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByText('サムネイル画像を選択').click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(path.join(dirname(), 'images/camera.jpg'));
+});
+Then('サムネイル画像が表示される', () => {
+  const page = playwrightHelper.getPage();
+  const thumbnailImage = page.locator('img');
+  expect(thumbnailImage).toBeVisible();
 });
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
@@ -238,3 +254,7 @@ export const formatDate2DigitString = (date: Date): string => {
   };
   return date.toLocaleDateString('ja-JP', options);
 };
+function dirname() {
+  const __filename = fileURLToPath(import.meta.url);
+  return path.dirname(__filename);
+}

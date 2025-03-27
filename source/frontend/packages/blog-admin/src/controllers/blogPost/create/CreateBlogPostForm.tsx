@@ -46,10 +46,6 @@ function CreateBlogPostForm() {
 
   return (
     <>
-      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
-        <BlogPostEditor />
-      </ContentsDTOSetterContext.Provider>
-
       <FormProvider {...form}>
         <form role="form" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="title">タイトル</label>
@@ -59,6 +55,10 @@ function CreateBlogPostForm() {
           <button type="submit">投稿</button>
         </form>
       </FormProvider>
+
+      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+        <BlogPostEditor />
+      </ContentsDTOSetterContext.Provider>
     </>
   );
 }
