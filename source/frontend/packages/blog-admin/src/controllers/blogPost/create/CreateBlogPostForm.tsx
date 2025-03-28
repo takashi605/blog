@@ -11,8 +11,8 @@ import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
 } from '../../../usecases/create/createBlogPost';
-import ImageList from '../../images/list/ImageList';
 import ImageListProvider from '../../images/list/ImageListProvider';
+import ImagePicker from '../../images/pick/ImagePicker';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
 
@@ -67,7 +67,7 @@ function CreateBlogPostForm() {
 
           <CommonModal>
             <ImageListProvider>
-              <ImageList />
+              <ImagePicker />
             </ImageListProvider>
             <button onClick={closeModal} className="modal-close" type="button">
               閉じる
