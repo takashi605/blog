@@ -9,10 +9,7 @@ type CommonModalProps = {
 function CommonModal({ children }: CommonModalProps) {
   const { isOpen, closeModal } = useCommonModalContext();
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={closeModal}
-    >
+    <Modal isOpen={isOpen} onRequestClose={closeModal}>
       {children}
     </Modal>
   );
