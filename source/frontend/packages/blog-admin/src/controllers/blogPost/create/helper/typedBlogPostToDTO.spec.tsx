@@ -8,7 +8,7 @@ describe('typedBlogPostToDTO', () => {
       thumbnail: {
         id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
         path: 'path/to/thumbnail',
-      }
+      },
     };
     const formDataDTO = typedBlogPostWithoutContentsToDTO(formData);
     expect(formDataDTO).toEqual({
