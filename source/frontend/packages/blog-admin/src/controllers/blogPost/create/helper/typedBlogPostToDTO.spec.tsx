@@ -5,6 +5,10 @@ describe('typedBlogPostToDTO', () => {
   it('フォームに入力されたコンテンツ以外のデータを DTO に変換する', () => {
     const formData: CreateBlogPostFormData = {
       title: 'ブログ記事のタイトル',
+      thumbnail: {
+        id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
+        path: 'path/to/thumbnail',
+      }
     };
     const formDataDTO = typedBlogPostWithoutContentsToDTO(formData);
     expect(formDataDTO).toEqual({
