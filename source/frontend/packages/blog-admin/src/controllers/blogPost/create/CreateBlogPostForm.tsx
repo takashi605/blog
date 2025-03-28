@@ -18,6 +18,10 @@ import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
 
 export type CreateBlogPostFormData = {
   title: string;
+  thumbnail: {
+    id: string;
+    path: string;
+  };
 };
 
 function CreateBlogPostForm() {
