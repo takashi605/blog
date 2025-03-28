@@ -12,8 +12,6 @@ function CommonModal({ children }: CommonModalProps) {
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
-      className="modal"
-      overlayClassName="overlay"
     >
       {children}
     </Modal>
