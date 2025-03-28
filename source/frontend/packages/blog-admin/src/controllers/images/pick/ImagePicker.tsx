@@ -11,13 +11,16 @@ function ImagePicker() {
       <ul>
         {getAllImages().map((image) => (
           <li key={image.id}>
-            <CldImage
-              src={image.path}
-              width={500}
-              height={500}
-              alt="画像コンテンツ"
-            />
-            <p>{image.path}</p>
+            <input id={image.id} type="radio" value="image_a.jpg" name="image" />
+            <label htmlFor={image.id}>
+              <CldImage
+                src={image.path}
+                width={500}
+                height={500}
+                alt="画像コンテンツ"
+              />
+              <p>{image.path}</p>
+            </label>
           </li>
         ))}
       </ul>
