@@ -25,11 +25,11 @@ function PickUpPostList() {
 
   return (
     <section>
-      <h3>現在設定中のピックアップ記事</h3>
+      <h2>現在のピックアップ記事</h2>
       <ul>
         {posts.map((post) => (
           <li key={post.id}>
-            <p>{post.title}</p>
+            <h3>{post.title}</h3>
           </li>
         ))}
       </ul>
