@@ -64,7 +64,7 @@ Then('モーダルを閉じると、投稿画面内にサムネイル画像が�
   await closeButton.click();
 
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
-  expect(thumbnailImage).toBeVisible();
+  await expect(thumbnailImage).toBeVisible();
 });
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
