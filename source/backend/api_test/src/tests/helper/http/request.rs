@@ -17,6 +17,7 @@ impl Request {
     let request_builder = match &method {
       Methods::GET => client.get(url),
       Methods::POST { body } => client.post(url).body(body.to_string()).header(CONTENT_TYPE, "application/json"),
+      Methods::PUT { body } => client.put(url).body(body.to_string()).header(CONTENT_TYPE, "application/json"),
     };
     Request {
       request_builder,
