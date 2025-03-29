@@ -14,7 +14,9 @@ function ImagePickModalWithOpenButton({
 
   return (
     <>
-      <button type="button" onClick={openModal}>{buttonText}</button>
+      <button type="button" onClick={openModal}>
+        {buttonText}
+      </button>
       <ImagePickModal />
     </>
   );

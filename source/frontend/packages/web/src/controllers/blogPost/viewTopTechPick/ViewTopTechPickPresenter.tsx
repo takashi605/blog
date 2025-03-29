@@ -1,8 +1,8 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import { useExcerpted } from '../hooks/useExcerpted';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import { Paragraph } from '../ui/contents/elements/Paragraph';
-import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewTopTechPick.module.scss';
 
 type ViewTopTechPickPresenterProps = {
