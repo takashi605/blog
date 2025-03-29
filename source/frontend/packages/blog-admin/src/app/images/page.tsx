@@ -3,7 +3,7 @@ import ImageList from '../../controllers/images/list/ImageList';
 import ImageListProvider from '../../controllers/images/list/ImageListProvider';
 import ImageUploadModalWithOpenButton from '../../controllers/images/upload/ImageUploadModal';
 
-export default function CreateBlogPostPage() {
+export default function ImageManagementPage() {
   return (
     <div>
       <CommonModalProvider>
