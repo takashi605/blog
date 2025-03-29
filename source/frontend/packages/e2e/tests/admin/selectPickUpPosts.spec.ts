@@ -85,7 +85,7 @@ When('トップページへ遷移する', async function () {
 Then(
   'ピックアップ記事のセクションに新規設定したピックアップ記事が表示されている',
   async function () {
-    const pickupPostsSection = new TopPage().getPickUpSection();
+    const pickupPostsSection = new HomePage().getPickUpSection();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
     expect(updatedPostTitles).toEqual(updatedPickUpPostsTitle);
@@ -136,7 +136,7 @@ class SelectPickUpPostsModal {
   }
 }
 
-class TopPage {
+class HomePage {
   getPickUpSection() {
     const page = playwrightHelper.getPage();
     const pickUpSectionTitle = page.locator('h2', { hasText: '注目記事' });
