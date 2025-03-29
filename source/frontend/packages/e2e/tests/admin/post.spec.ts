@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let selectedImageSrc: string | null = '';
+let selectedImageSrc: string | null = null;
 
 Given('記事投稿ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
