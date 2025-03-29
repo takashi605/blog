@@ -4,6 +4,7 @@ import CommonModal from '../../../../components/modal/CommonModal';
 import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
 import type { ImageUploadFormValues } from '../../../images/upload/form/ImageUploadFormProvider';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
+import PickUpPostsForm from './form/PickUpPostsForm';
 
 function PickUpPostSelectModalWithOpenButton() {
   const { openModal } = useCommonModalContext();
@@ -45,6 +46,7 @@ function Modal() {
 
   return (
     <CommonModal>
+      <PickUpPostsForm />
       {/* <ImageUploadFormProvider>
         <ImageUploadForm onSubmit={onSubmit} />
         {isUploadSuccess && <p>画像のアップロードに成功しました</p>}

@@ -14,7 +14,7 @@ Given('ピックアップ記事選択ページにアクセスする', async func
 
   // 画像一覧取得 API の fetch 完了を待つ
   const fetchPickUpPostsResponse = await page.waitForResponse(
-    '**/blog/posts/pickup?*',
+    '**/blog/posts/pickup*',
   );
   expect(fetchPickUpPostsResponse.status()).toBe(200);
 });
@@ -32,7 +32,22 @@ Then(
 
 When('「ピックアップ記事を選択」ボタンを押下する', async function () {
   const { getOpenModalButton } = new SelectPickUpPostsModal();
-  await getOpenModalButton().click();
+  const page = playwrightHelper.getPage();
+
+  const [response] = await Promise.all([
+    page.waitForResponse(
+      (resp) =>
+        resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+    ),
+    getOpenModalButton().click(),
+  ]);
+
+  expect(response.status()).toBe(200);
+
+  // これをしないとレスポンスが返るまで待てていない気がする
+  // 単純に処理に時間をかけているからたまたま上手くいくだけかもしれない
+  // 一応、ChatGPT に聞いたら「レスポンスを読み込み終えるまで待機する有効な方法」とのことだった
+  await response.json();
 });
 Then('ピックアップ記事選択モーダルが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
@@ -41,6 +56,7 @@ Then('ピックアップ記事選択モーダルが表示される', async funct
 Then('既存の記事すべてのタイトルが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
   const postTitles = modal.locator('h3');
+
   expect(await postTitles.count()).toBeGreaterThan(0);
 
   initialPickUpPostsTitle = await postTitles.allInnerTexts();
