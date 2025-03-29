@@ -1,5 +1,5 @@
 import PickUpPostList from '../../../controllers/blogPost/pickup/PickUpPostList';
-import PickUpPostListProvider from '../../../controllers/blogPost/pickup/PickUpPostsListProvider';
+import PickUpPostListProvider from '../../../controllers/blogPost/pickup/PickUpPostListProvider';
 
 export default function PickUpManagementPage() {
   return (
