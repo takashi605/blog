@@ -5,14 +5,11 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
-import CommonModal from '../../../components/modal/CommonModal';
-import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
 } from '../../../usecases/create/createBlogPost';
-import ImageListProvider from '../../images/list/ImageListProvider';
-import ImagePicker from '../../images/pick/ImagePicker';
+import ImagePickModalWithOpenButton from '../../images/pick/ImagePickModal';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import { formDataToDTO } from './helper/formDataToDTO';
 
@@ -52,31 +49,18 @@ function CreateBlogPostForm() {
     router.push(`/posts/create/success?id=${createdBlogPost.id}`);
   };
 
-  const { openModal, closeModal } = useCommonModalContext();
-
   return (
     <>
       <FormProvider {...form}>
         <form role="form" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="title">タイトル</label>
-
           <input id="title" {...register('title')} />
+          <br />
 
-          <button type="button" onClick={openModal}>
-            サムネイル画像を選択
-          </button>
+          <ImagePickModalWithOpenButton buttonText="サムネイル画像を選択" />
           <br />
 
           <button type="submit">投稿</button>
-
-          <CommonModal>
-            <ImageListProvider>
-              <ImagePicker />
-            </ImageListProvider>
-            <button onClick={closeModal} className="modal-close" type="button">
-              閉じる
-            </button>
-          </CommonModal>
         </form>
       </FormProvider>
 
