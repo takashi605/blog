@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
+let selectedImageSrc: string | null = '';
+
 Given('記事投稿ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
@@ -34,16 +36,33 @@ Then('タイトルに「テスト記事」と表示される', async function ()
   await expect(titleInput).toHaveValue('テスト記事');
 });
 
-When('サムネイル画像を選択する', async () => {
+When('サムネイル画像選択モーダルを開き、サムネイル画像を選択する', async () => {
   // 参考：https://playwright.dev/docs/api/class-filechooser
   const page = playwrightHelper.getPage();
-  const fileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByText('サムネイル画像を選択').click();
-  const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles(path.join(dirname(), 'images/camera.jpg'));
+
+  const openModalButton = page.getByRole('button', {
+    name: 'サムネイル画像を選択',
+  });
+  await openModalButton.click();
+
+  const modal = page.getByRole('dialog');
+  await expect(modal).toBeVisible({ timeout: 10000 });
+
+  const radioButtonsInModal = modal.getByRole('radio');
+  const firstRadioButton = radioButtonsInModal.first();
+  await firstRadioButton.click();
+
+  // 対応する画像の src 属性を取得して変数に保持
+  const labelsInModal = modal.locator('label');
+  const firstLabelInModal = labelsInModal.first();
+  selectedImageSrc = await firstLabelInModal.locator('img').getAttribute('src');
 });
-Then('サムネイル画像が表示される', () => {
+Then('モーダルを閉じると、投稿画面内にサムネイル画像が表示されている', async function() {
   const page = playwrightHelper.getPage();
+  const modal = page.getByRole('dialog');
+  const closeButton = modal.getByRole('button', { name: '閉じる' });
+  await closeButton.click();
+
   const thumbnailImage = page.locator('img');
   expect(thumbnailImage).toBeVisible();
 });
@@ -194,6 +213,13 @@ Then('タイトルが「テスト記事」になっている', async function ()
 
   const title = page.locator('h1');
   await expect(title).toHaveText('テスト記事');
+});
+Then('選択したサムネイル画像が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+  const src = await thumbnailImage.getAttribute('src');
+  expect(src).toBe(selectedImageSrc);
 });
 Then('本文に「こんにちは！世界」と表示されている', async function () {
   const page = playwrightHelper.getPage();
