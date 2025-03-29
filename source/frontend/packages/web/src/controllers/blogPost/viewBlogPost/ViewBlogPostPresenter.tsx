@@ -1,6 +1,6 @@
 import React from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import styles from 'shared-ui/src/styles/blogPostViewer.module.scss';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import Thumbnail from '../ui/Thumbnail';

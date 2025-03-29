@@ -233,7 +233,11 @@ importers:
 
   packages/shared-test-data: {}
 
-  packages/shared-ui: {}
+  packages/shared-ui:
+    dependencies:
+      next-cloudinary:
+        specifier: ^6.16.0
+        version: 6.16.0(next@14.2.18(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.1))(react@18.3.1)
 
   packages/web:
     dependencies:
