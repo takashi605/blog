@@ -20,15 +20,11 @@ fn posts_scope() -> Scope {
 
 mod handle_funcs {
   use crate::{
-    db::tables::{
-      pickup_posts_table::{update_pickup_blog_posts, PickUpPostRecord},
-      popular_posts_table::fetch_all_popular_blog_posts,
-      top_tech_pick_table::fetch_top_tech_pick_blog_post,
-    },
+    db::tables::{popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post},
     server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
-        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_single_blog_post},
+        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_single_blog_post, update_pickup_posts},
       },
       response::err::ApiCustomError,
     },
@@ -75,12 +71,7 @@ mod handle_funcs {
     println!("put_pickup_blog_posts");
 
     let pickup_blog_posts: Vec<BlogPost> = pickup_posts_req.into_inner();
-    // pickup_blog_posts を元に pickup_posts_table に insert する
-    let updated_pickup_blog_post_records =
-      pickup_blog_posts.iter().map(|blog_post| PickUpPostRecord::from(blog_post.clone())).collect::<Vec<PickUpPostRecord>>();
-    update_pickup_blog_posts(updated_pickup_blog_post_records)
-      .await
-      .map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
+    update_pickup_posts(pickup_blog_posts).await?;
 
     let result = fetch_pickup_posts().await?;
 
