@@ -1,11 +1,14 @@
 import PickUpPostList from '../../../controllers/blogPost/pickup/PickUpPostList';
+import PickUpPostListProvider from '../../../controllers/blogPost/pickup/PickUpPostsListProvider';
 
 export default function PickUpManagementPage() {
   return (
     <div>
       <h1>ピックアップ記事管理</h1>
       <section>
-        <PickUpPostList />
+        <PickUpPostListProvider>
+          <PickUpPostList />
+        </PickUpPostListProvider>
       </section>
     </div>
   );

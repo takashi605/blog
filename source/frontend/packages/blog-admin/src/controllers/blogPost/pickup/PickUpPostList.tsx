@@ -1,11 +1,12 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { ViewPickUpPostUseCase } from '../../../usecases/view/viewPickUpPost';
+import { usePickUpPostListContext } from './PickUpPostsListProvider';
 
 function PickUpPostList() {
-  const [posts, setPosts] = useState<BlogPostDTO[]>([]);
+  const { getAllPickUpPosts, updatePickUpPosts } = usePickUpPostListContext();
 
   const fetchPickUpPosts = useCallback(async () => {
     if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -16,8 +17,8 @@ function PickUpPostList() {
     );
     const usecase = new ViewPickUpPostUseCase(repository).setQuantity(3);
     const postsDTO: BlogPostDTO[] = await usecase.execute();
-    setPosts(postsDTO);
-  }, []);
+    updatePickUpPosts(postsDTO);
+  }, [updatePickUpPosts]);
 
   useEffect(() => {
     fetchPickUpPosts();
@@ -27,7 +28,7 @@ function PickUpPostList() {
     <>
       <h2>現在のピックアップ記事</h2>
       <ul>
-        {posts.map((post) => (
+        {getAllPickUpPosts().map((post) => (
           <li key={post.id}>
             <h3>{post.title}</h3>
           </li>
