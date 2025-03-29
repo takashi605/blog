@@ -1,5 +1,5 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import Thumbnail from '../ui/Thumbnail';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPopularPostsPresenter.module.scss';
 
 type ViewPopularPostsPresenterProps = {
