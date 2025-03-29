@@ -5,7 +5,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ParagraphNode, TextNode } from 'lexical';
-import styles from 'shared-styles/src/styles/blogPostViewer.module.scss';
+import styles from 'shared-ui/src/styles/blogPostViewer.module.scss';
 
 const theme = {
   code: 'editor-code',
