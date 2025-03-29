@@ -2,13 +2,10 @@ import type { BlogPostDTOForCreate } from '../../../../usecases/create/createBlo
 import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
 
 export function formDataToDTO(
-  blogPost: CreateBlogPostFormData,
+  formData: CreateBlogPostFormData,
 ): Omit<BlogPostDTOForCreate, 'contents'> {
   return {
-    title: blogPost.title,
-    thumbnail: {
-      id: '535c8105-fd92-47b7-93ce-dc01b379ae66',
-      path: 'path/to/thumbnail',
-    },
+    title: formData.title,
+    thumbnail: formData.thumbnail,
   };
 }
