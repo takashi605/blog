@@ -11,6 +11,12 @@ Given('ピックアップ記事選択ページにアクセスする', async func
   }
   const page = playwrightHelper.getPage();
   await page.goto(`${process.env.ADMIN_URL}/posts/pickup`);
+
+  // 画像一覧取得 API の fetch 完了を待つ
+  const fetchPickUpPostsResponse = await page.waitForResponse(
+    '**/blog/posts/pickup?*',
+  );
+  expect(fetchPickUpPostsResponse.status()).toBe(200);
 });
 Then(
   '現在ピックアップ記事に設定されている記事のタイトルが3件分表示されている',
