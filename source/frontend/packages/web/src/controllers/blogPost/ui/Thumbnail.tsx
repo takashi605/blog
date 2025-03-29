@@ -1,16 +1,15 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 
 // TODO Thumbnail に thumbnail を渡すというのは文脈的におかしいので直す
 type ThumbnailProps = {
-  thumbnail: ImageDTO;
+  path: string;
 };
 
-function Thumbnail({ thumbnail }: ThumbnailProps) {
+function Thumbnail({ path }: ThumbnailProps) {
   return (
     <CldImage
-      src={thumbnail.path}
+      src={path}
       alt="サムネイル画像"
       width={100}
       height={100}

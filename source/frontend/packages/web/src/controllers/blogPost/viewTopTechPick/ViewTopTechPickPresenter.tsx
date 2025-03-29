@@ -23,7 +23,7 @@ function ViewTopTechPickPresenter({
       </div>
       <div className={styles.contentSummary}>
         <div className={styles.thumbnail}>
-          <Thumbnail thumbnail={blogPostDTO.thumbnail} />
+          <Thumbnail path={blogPostDTO.thumbnail.path} />
         </div>
         <div className={styles.contentSummaryTexts}>
           <Paragraph richText={excerpted} />

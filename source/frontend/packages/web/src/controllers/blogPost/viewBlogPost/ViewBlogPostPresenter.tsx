@@ -23,7 +23,7 @@ export function ViewBlogPostPresenter({
         <BlogPostTitle>{blogPost?.title}</BlogPostTitle>
       </div>
       <div className={styles.thumbnail}>
-        <Thumbnail thumbnail={blogPost.thumbnail} />
+        <Thumbnail path={blogPost.thumbnail.path} />
       </div>
       {blogPost?.contents.map((content) => (
         <div key={content.id} className={generateContentClass(content.type)}>

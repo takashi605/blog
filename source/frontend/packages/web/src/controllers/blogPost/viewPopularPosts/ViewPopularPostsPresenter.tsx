@@ -22,7 +22,7 @@ function ViewPopularPostsPresenter({
       {blogPostsDTO.map((blogPostDTO) => (
         <div className={styles.flexItem} key={blogPostDTO.id}>
           <div className={styles.thumbnail}>
-            <Thumbnail thumbnail={blogPostDTO.thumbnail} />
+            <Thumbnail path={blogPostDTO.thumbnail.path} />
           </div>
           <h3 className={styles.postTitle}>{blogPostDTO.title}</h3>
         </div>
