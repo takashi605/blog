@@ -1,5 +1,6 @@
-import { CldImage } from 'next-cloudinary';
 import { useFormContext } from 'react-hook-form';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 function ThumbnailPreview() {
   const form = useFormContext();
@@ -7,7 +8,9 @@ function ThumbnailPreview() {
   return (
     <>
       {path && (
-        <CldImage src={path} width={500} height={500} alt="画像コンテンツ" />
+        <div className={styles.thumbnail}>
+          <Thumbnail path={path} />
+        </div>
       )}
     </>
   );
