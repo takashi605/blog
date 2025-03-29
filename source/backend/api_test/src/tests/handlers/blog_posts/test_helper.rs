@@ -1,4 +1,8 @@
-use common::types::api::response::{BlogPost, BlogPostContent, H2Block};
+use crate::tests::helper::http::methods::Methods;
+use crate::tests::helper::http::request::Request;
+use anyhow::{Context, Result};
+use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ParagraphBlock, RichText, Style};
+use uuid::Uuid;
 
 pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
   // BlogPost の id, title, post_date などを比較
@@ -56,4 +60,51 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
       }
     }
   }
+}
+
+pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {
+  // DB 上に存在する画像を使わないとエラーするので、適当な画像を取得する
+  let thumbnail = fetch_thumbnail_image().await?;
+  let blog_post = BlogPost {
+    id,
+    title: title.to_string(),
+    thumbnail,
+    post_date: "2021-01-01".parse()?,
+    last_update_date: "2021-01-02".parse()?,
+    contents: vec![
+      BlogPostContent::Paragraph(ParagraphBlock {
+        id: Uuid::new_v4(),
+        text: vec![RichText {
+          text: "これはテスト用の文字列です。".to_string(),
+          styles: Style { bold: true },
+        }],
+        type_field: "paragraph".to_string(),
+      }),
+      BlogPostContent::H2(H2Block {
+        id: Uuid::new_v4(),
+        text: "見出しレベル2".to_string(),
+        type_field: "h2".to_string(),
+      }),
+      BlogPostContent::H3(H3Block {
+        id: Uuid::new_v4(),
+        text: "見出しレベル3".to_string(),
+        type_field: "h3".to_string(),
+      }),
+    ],
+  };
+
+  Ok(blog_post)
+}
+
+async fn fetch_thumbnail_image() -> Result<Image> {
+  let url = "http://localhost:8000/blog/images";
+  let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
+
+  let images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+
+  if images_resp.len() == 0 {
+    panic!("画像が取得できませんでした");
+  }
+
+  Ok(images_resp[0].clone())
 }
