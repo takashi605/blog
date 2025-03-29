@@ -4,10 +4,9 @@ mod tests {
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
   use common::types::api::response::BlogPost;
-  use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
-  async fn pub_pickup_posts() -> Result<()> {
+  async fn put_pickup_posts() -> Result<()> {
     let url = "http://localhost:8000/blog/posts/pickup";
 
     let pickup_posts_for_req: Vec<BlogPost> = helper::create_pickup_posts_for_req().await.unwrap();

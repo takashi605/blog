@@ -191,100 +191,13 @@ mod tests {
     }
 
     pub fn expected_pickup_blog_posts() -> Result<Vec<BlogPost>> {
-      let result = vec![expected_minimal_blog_post1()?, expected_minimal_blog_post2()?, expected_regular_blog_post()?];
+      let result = vec![test_helper::expected_minimal_blog_post1()?, test_helper::expected_minimal_blog_post2()?, expected_regular_blog_post()?];
       Ok(result)
     }
 
     pub fn expected_popular_blog_posts() -> Result<Vec<BlogPost>> {
-      let result = vec![expected_minimal_blog_post2()?, expected_minimal_blog_post3()?, expected_regular_blog_post()?];
+      let result = vec![test_helper::expected_minimal_blog_post2()?, test_helper::expected_minimal_blog_post3()?, expected_regular_blog_post()?];
       Ok(result)
-    }
-
-    fn expected_minimal_blog_post1() -> Result<BlogPost> {
-      let blog_post = BlogPost {
-        id: Uuid::parse_str("20b73825-9a6f-4901-aa42-e104a8d2c4f6")?,
-        title: "ミニマル記事1".to_string(),
-        thumbnail: Image {
-          id: Uuid::new_v4(),
-          path: "test-book".to_string(),
-        },
-        post_date: "2025-01-01".parse()?,
-        last_update_date: "2025-01-01".parse()?,
-        contents: vec![
-          BlogPostContent::H2(H2Block {
-            id: Uuid::new_v4(),
-            text: "ミニマル記事1の見出し".to_string(),
-            type_field: "h2".to_string(),
-          }),
-          BlogPostContent::Paragraph(ParagraphBlock {
-            id: Uuid::new_v4(),
-            text: vec![RichText {
-              text: "これはミニマル記事1の段落です。".to_string(),
-              styles: Style { bold: false },
-            }],
-            type_field: "paragraph".to_string(),
-          }),
-        ],
-      };
-      Ok(blog_post)
-    }
-
-    fn expected_minimal_blog_post2() -> Result<BlogPost> {
-      let blog_post = BlogPost {
-        id: Uuid::parse_str("91450c47-9845-4398-ad3a-275118d223ea")?,
-        title: "ミニマル記事2".to_string(),
-        thumbnail: Image {
-          id: Uuid::new_v4(),
-          path: "test-mechanical".to_string(),
-        },
-        post_date: "2025-02-01".parse()?,
-        last_update_date: "2025-02-01".parse()?,
-        contents: vec![
-          BlogPostContent::H2(H2Block {
-            id: Uuid::new_v4(),
-            text: "ミニマル記事2の見出し".to_string(),
-            type_field: "h2".to_string(),
-          }),
-          BlogPostContent::Paragraph(ParagraphBlock {
-            id: Uuid::new_v4(),
-            text: vec![RichText {
-              text: "これはミニマル記事2の段落です。".to_string(),
-              styles: Style { bold: false },
-            }],
-            type_field: "paragraph".to_string(),
-          }),
-        ],
-      };
-      Ok(blog_post)
-    }
-
-    fn expected_minimal_blog_post3() -> Result<BlogPost> {
-      let blog_post = BlogPost {
-        id: Uuid::parse_str("f735a7b7-8bbc-4cb5-b6cf-c188734f64d3")?,
-        title: "ミニマル記事3".to_string(),
-        thumbnail: Image {
-          id: Uuid::new_v4(),
-          path: "test-coffee".to_string(),
-        },
-        post_date: "2025-03-01".parse()?,
-        last_update_date: "2025-03-01".parse()?,
-        contents: vec![
-          BlogPostContent::H2(H2Block {
-            id: Uuid::new_v4(),
-            text: "ミニマル記事3の見出し".to_string(),
-            type_field: "h2".to_string(),
-          }),
-          BlogPostContent::Paragraph(ParagraphBlock {
-            id: Uuid::new_v4(),
-            text: vec![RichText {
-              text: "これはミニマル記事3の段落です。".to_string(),
-              styles: Style { bold: false },
-            }],
-            type_field: "paragraph".to_string(),
-          }),
-        ],
-      };
-      Ok(blog_post)
     }
   }
 }
