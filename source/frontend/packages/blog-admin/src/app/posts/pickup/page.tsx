@@ -4,7 +4,9 @@ export default function PickUpManagementPage() {
   return (
     <div>
       <h1>ピックアップ記事管理</h1>
-      <PickUpPostList />
+      <section>
+        <PickUpPostList />
+      </section>
     </div>
   );
 }

@@ -24,7 +24,7 @@ function PickUpPostList() {
   }, [fetchPickUpPosts]);
 
   return (
-    <section>
+    <>
       <h2>現在のピックアップ記事</h2>
       <ul>
         {posts.map((post) => (
@@ -33,7 +33,7 @@ function PickUpPostList() {
           </li>
         ))}
       </ul>
-    </section>
+    </>
   );
 }
 
