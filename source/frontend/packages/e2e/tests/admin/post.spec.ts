@@ -1,8 +1,6 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
 let selectedImageSrc: string | null = null;
