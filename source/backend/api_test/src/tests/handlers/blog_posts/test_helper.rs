@@ -109,7 +109,7 @@ async fn fetch_thumbnail_image() -> Result<Image> {
   Ok(images_resp[0].clone())
 }
 
-pub fn expected_minimal_blog_post1() -> Result<BlogPost> {
+pub fn minimal_blog_post1() -> Result<BlogPost> {
   let blog_post = BlogPost {
     id: Uuid::parse_str("20b73825-9a6f-4901-aa42-e104a8d2c4f6")?,
     title: "ミニマル記事1".to_string(),
@@ -138,7 +138,7 @@ pub fn expected_minimal_blog_post1() -> Result<BlogPost> {
   Ok(blog_post)
 }
 
-pub fn expected_minimal_blog_post2() -> Result<BlogPost> {
+pub fn minimal_blog_post2() -> Result<BlogPost> {
   let blog_post = BlogPost {
     id: Uuid::parse_str("91450c47-9845-4398-ad3a-275118d223ea")?,
     title: "ミニマル記事2".to_string(),
@@ -167,7 +167,7 @@ pub fn expected_minimal_blog_post2() -> Result<BlogPost> {
   Ok(blog_post)
 }
 
-pub fn expected_minimal_blog_post3() -> Result<BlogPost> {
+pub fn minimal_blog_post3() -> Result<BlogPost> {
   let blog_post = BlogPost {
     id: Uuid::parse_str("f735a7b7-8bbc-4cb5-b6cf-c188734f64d3")?,
     title: "ミニマル記事3".to_string(),

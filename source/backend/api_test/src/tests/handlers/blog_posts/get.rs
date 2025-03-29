@@ -191,12 +191,20 @@ mod tests {
     }
 
     pub fn expected_pickup_blog_posts() -> Result<Vec<BlogPost>> {
-      let result = vec![test_helper::expected_minimal_blog_post1()?, test_helper::expected_minimal_blog_post2()?, expected_regular_blog_post()?];
+      let result = vec![
+        test_helper::minimal_blog_post1()?,
+        test_helper::minimal_blog_post2()?,
+        expected_regular_blog_post()?,
+      ];
       Ok(result)
     }
 
     pub fn expected_popular_blog_posts() -> Result<Vec<BlogPost>> {
-      let result = vec![test_helper::expected_minimal_blog_post2()?, test_helper::expected_minimal_blog_post3()?, expected_regular_blog_post()?];
+      let result = vec![
+        test_helper::minimal_blog_post2()?,
+        test_helper::minimal_blog_post3()?,
+        expected_regular_blog_post()?,
+      ];
       Ok(result)
     }
   }
