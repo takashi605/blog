@@ -14,7 +14,7 @@ function ImagePicker() {
 
   return (
     <>
-      <h3>画像を選択</h3>
+      <h2>画像を選択</h2>
       <ul>
         {getAllImages().map((image) => (
           <li key={image.id}>

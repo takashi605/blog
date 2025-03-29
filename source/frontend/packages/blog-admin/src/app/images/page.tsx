@@ -7,7 +7,7 @@ export default function ImageManagementPage() {
   return (
     <div>
       <CommonModalProvider>
-        <h2>画像の管理</h2>
+        <h1>画像の管理</h1>
         <ImageListProvider>
           <ImageUploadModalWithOpenButton />
           <ImageList />
