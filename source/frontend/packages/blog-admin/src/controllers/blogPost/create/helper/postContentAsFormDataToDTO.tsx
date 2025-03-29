@@ -12,7 +12,9 @@ import { createUUIDv4 } from 'service/src/utils/uuid';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 
-export function typedContentToDTO(contents: LexicalNode[]): ContentDTO[] {
+export function postContentAsFormDataToDTO(
+  contents: LexicalNode[],
+): ContentDTO[] {
   const contentsDTO: ContentDTO[] = [];
   contents.forEach((content) => {
     switch (content.getType()) {

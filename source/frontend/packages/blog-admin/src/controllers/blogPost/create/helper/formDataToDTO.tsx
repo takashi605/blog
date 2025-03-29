@@ -1,7 +1,7 @@
 import type { BlogPostDTOForCreate } from '../../../../usecases/create/createBlogPost';
 import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
 
-export function typedBlogPostWithoutContentsToDTO(
+export function formDataToDTO(
   blogPost: CreateBlogPostFormData,
 ): Omit<BlogPostDTOForCreate, 'contents'> {
   return {

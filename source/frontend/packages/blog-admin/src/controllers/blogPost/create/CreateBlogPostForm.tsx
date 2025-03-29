@@ -14,7 +14,7 @@ import {
 import ImageListProvider from '../../images/list/ImageListProvider';
 import ImagePicker from '../../images/pick/ImagePicker';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
-import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
+import { formDataToDTO } from './helper/formDataToDTO';
 
 export type CreateBlogPostFormData = {
   title: string;
@@ -35,7 +35,7 @@ function CreateBlogPostForm() {
   const onSubmit = async () => {
     const formValues = form.getValues();
     const blogPostDTO: BlogPostDTOForCreate = {
-      ...typedBlogPostWithoutContentsToDTO(formValues),
+      ...formDataToDTO(formValues),
       contents: contentsDTO,
     };
     if (!process.env.NEXT_PUBLIC_API_URL) {

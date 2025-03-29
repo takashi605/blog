@@ -63,7 +63,7 @@ Then('モーダルを閉じると、投稿画面内にサムネイル画像が�
   const closeButton = modal.getByRole('button', { name: '閉じる' });
   await closeButton.click();
 
-  const thumbnailImage = page.locator('img');
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
   expect(thumbnailImage).toBeVisible();
 });
 

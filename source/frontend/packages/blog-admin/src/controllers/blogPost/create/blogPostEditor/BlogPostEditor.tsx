@@ -7,7 +7,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
 import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
-import { typedContentToDTO } from '../helper/typedContentToDTO';
+import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
 
@@ -17,7 +17,7 @@ function BlogPostEditor() {
     editor.read(() => {
       const root = $getRoot();
       const nodes = root.getChildren();
-      setContentsDTO(typedContentToDTO(nodes));
+      setContentsDTO(postContentAsFormDataToDTO(nodes));
     });
   };
 
