@@ -17,6 +17,7 @@ Given('ピックアップ記事選択ページにアクセスする', async func
     '**/blog/posts/pickup*',
   );
   expect(fetchPickUpPostsResponse.status()).toBe(200);
+  await fetchPickUpPostsResponse.json();
 });
 Then(
   '現在ピックアップ記事に設定されている記事のタイトルが3件分表示されている',
