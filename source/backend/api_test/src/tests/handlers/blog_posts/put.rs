@@ -34,9 +34,9 @@ mod tests {
 
     pub async fn create_pickup_posts_for_req() -> Result<Vec<BlogPost>> {
       let pickup_posts = vec![
-        test_helper::create_blog_post_for_req(Uuid::new_v4(), "タイトル1").await?,
-        test_helper::create_blog_post_for_req(Uuid::new_v4(), "タイトル2").await?,
-        test_helper::create_blog_post_for_req(Uuid::new_v4(), "タイトル3").await?,
+        test_helper::expected_minimal_blog_post1().unwrap(),
+        test_helper::expected_minimal_blog_post2().unwrap(),
+        test_helper::expected_minimal_blog_post3().unwrap(),
       ];
 
       Ok(pickup_posts)
