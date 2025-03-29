@@ -1,9 +1,9 @@
 import React from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import styles from 'shared-styles/src/blogPostViewer.module.scss';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
-import Thumbnail from '../ui/Thumbnail';
 import ContentRenderer from '../ui/contents/Content';
 
 type ViewBlogPostPresenterProps = {
@@ -23,7 +23,7 @@ export function ViewBlogPostPresenter({
         <BlogPostTitle>{blogPost?.title}</BlogPostTitle>
       </div>
       <div className={styles.thumbnail}>
-        <Thumbnail thumbnail={blogPost.thumbnail} />
+        <Thumbnail path={blogPost.thumbnail.path} />
       </div>
       {blogPost?.contents.map((content) => (
         <div key={content.id} className={generateContentClass(content.type)}>

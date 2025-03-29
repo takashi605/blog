@@ -1,8 +1,8 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import { useExcerpted } from '../hooks/useExcerpted';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import { Paragraph } from '../ui/contents/elements/Paragraph';
-import Thumbnail from '../ui/Thumbnail';
 import styles from './viewTopTechPick.module.scss';
 
 type ViewTopTechPickPresenterProps = {
@@ -23,7 +23,7 @@ function ViewTopTechPickPresenter({
       </div>
       <div className={styles.contentSummary}>
         <div className={styles.thumbnail}>
-          <Thumbnail thumbnail={blogPostDTO.thumbnail} />
+          <Thumbnail path={blogPostDTO.thumbnail.path} />
         </div>
         <div className={styles.contentSummaryTexts}>
           <Paragraph richText={excerpted} />

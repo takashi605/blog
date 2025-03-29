@@ -1,5 +1,5 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import Thumbnail from '../ui/Thumbnail';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewLatestBlogPostsPresenter.module.scss';
 
 type ViewLatestBlogPostsPresenterProps = {
@@ -16,7 +16,7 @@ function ViewLatestBlogPostsPresenter({
         {blogPosts.map((blogPost) => (
           <li className={styles.blogPostItem} key={blogPost.id}>
             <div className={styles.thumbnail}>
-              <Thumbnail thumbnail={blogPost.thumbnail} />
+              <Thumbnail path={blogPost.thumbnail.path} />
               <p className={styles.postDate}>投稿日:{blogPost.postDate}</p>
             </div>
             <h3 className={styles.blogPostTitle}>{blogPost.title}</h3>

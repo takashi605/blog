@@ -1,5 +1,5 @@
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import Thumbnail from '../ui/Thumbnail';
+import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPickUpPostsPresenter.module.scss';
 
 type ViewPickUpPostsPresenterProps = {
@@ -22,7 +22,7 @@ function ViewPickUpPostsPresenter({
       {blogPostsDTO.map((blogPostDTO) => (
         <div className={styles.flexItem} key={blogPostDTO.id}>
           <div className={styles.thumbnail}>
-            <Thumbnail thumbnail={blogPostDTO.thumbnail} />
+            <Thumbnail path={blogPostDTO.thumbnail.path} />
           </div>
           <h3 className={styles.postTitle}>{blogPostDTO.title}</h3>
         </div>

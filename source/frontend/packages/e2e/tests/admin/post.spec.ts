@@ -219,7 +219,8 @@ Then('選択したサムネイル画像が表示されている', async function
 
   const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
   const src = await thumbnailImage.getAttribute('src');
-  expect(src).toBe(selectedImageSrc);
+
+  expectMatchImageResourceByCloudinary(src);
 });
 Then('本文に「こんにちは！世界」と表示されている', async function () {
   const page = playwrightHelper.getPage();
@@ -280,7 +281,22 @@ export const formatDate2DigitString = (date: Date): string => {
   };
   return date.toLocaleDateString('ja-JP', options);
 };
-function dirname() {
-  const __filename = fileURLToPath(import.meta.url);
-  return path.dirname(__filename);
+
+// Cloudinary の URL はリソースのパス以外の情報も含まれるため、
+// リソースのパス部分のみを比較する
+// 例: https://res.cloudinary.com/.../v1/test-book?_a=...
+// 「/v1/ から ? または # まで」の文字列を取り出す
+function expectMatchImageResourceByCloudinary(src: string | null) {
+  const resourceRegex = /\/v1\/([^?#]+)/;
+
+  const matchSelected = selectedImageSrc!.match(resourceRegex);
+  const matchCurrent = src!.match(resourceRegex);
+
+  // どちらも正規表現にマッチしているか確認
+  expect(matchSelected).not.toBeNull();
+  expect(matchCurrent).not.toBeNull();
+
+  // マッチした文字列同士を比較
+  // （例: v1/test-book）
+  expect(matchCurrent?.[1]).toBe(matchSelected?.[1]);
 }
