@@ -12,6 +12,7 @@ import {
 import ImagePickModalWithOpenButton from '../../images/pick/ImagePickModal';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import { formDataToDTO } from './helper/formDataToDTO';
+import ThumbnailPreview from './ThumbnailPreview';
 
 export type CreateBlogPostFormData = {
   title: string;
@@ -22,7 +23,15 @@ export type CreateBlogPostFormData = {
 };
 
 function CreateBlogPostForm() {
-  const form = useForm<CreateBlogPostFormData>();
+  const form = useForm<CreateBlogPostFormData>({
+    defaultValues: {
+      title: '',
+      thumbnail: {
+        id: '',
+        path: '',
+      },
+    },
+  });
   const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
 
   const { register, handleSubmit } = form;
@@ -62,11 +71,13 @@ function CreateBlogPostForm() {
 
           <button type="submit">投稿</button>
         </form>
-      </FormProvider>
 
-      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
-        <BlogPostEditor />
-      </ContentsDTOSetterContext.Provider>
+        <ThumbnailPreview />
+
+        <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+          <BlogPostEditor />
+        </ContentsDTOSetterContext.Provider>
+      </FormProvider>
     </>
   );
 }
