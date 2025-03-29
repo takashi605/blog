@@ -132,9 +132,9 @@ importers:
       shared-interface-adapter:
         specifier: workspace:*
         version: link:../shared-interface-adapter
-      shared-styles:
+      shared-ui:
         specifier: workspace:*
-        version: link:../shared-styles
+        version: link:../shared-ui
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.15(ts-node@10.9.2(@types/node@22.3.0)(typescript@5.5.4))
@@ -231,9 +231,13 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
 
-  packages/shared-styles: {}
-
   packages/shared-test-data: {}
+
+  packages/shared-ui:
+    dependencies:
+      next-cloudinary:
+        specifier: ^6.16.0
+        version: 6.16.0(next@14.2.18(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.81.1))(react@18.3.1)
 
   packages/web:
     dependencies:
@@ -264,12 +268,12 @@ importers:
       shared-interface-adapter:
         specifier: workspace:*
         version: link:../shared-interface-adapter
-      shared-styles:
-        specifier: workspace:*
-        version: link:../shared-styles
       shared-test-data:
         specifier: workspace:*
         version: link:../shared-test-data
+      shared-ui:
+        specifier: workspace:*
+        version: link:../shared-ui
       tailwindcss:
         specifier: ^3.4.15
         version: 3.4.15(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.5.4))

@@ -1,5 +1,4 @@
 import Header from '@/components/topLayout/header/Header';
-import 'destyle.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import styles from './layout.module.scss';

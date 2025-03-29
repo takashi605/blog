@@ -9,15 +9,29 @@ import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
 } from '../../../usecases/create/createBlogPost';
+import ImagePickModalWithOpenButton from '../../images/pick/ImagePickModal';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
-import { typedBlogPostWithoutContentsToDTO } from './helper/typedBlogPostToDTO';
+import { formDataToDTO } from './helper/formDataToDTO';
+import ThumbnailPreview from './ThumbnailPreview';
 
 export type CreateBlogPostFormData = {
   title: string;
+  thumbnail: {
+    id: string;
+    path: string;
+  };
 };
 
 function CreateBlogPostForm() {
-  const form = useForm<CreateBlogPostFormData>();
+  const form = useForm<CreateBlogPostFormData>({
+    defaultValues: {
+      title: '',
+      thumbnail: {
+        id: '',
+        path: '',
+      },
+    },
+  });
   const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
 
   const { register, handleSubmit } = form;
@@ -27,7 +41,7 @@ function CreateBlogPostForm() {
   const onSubmit = async () => {
     const formValues = form.getValues();
     const blogPostDTO: BlogPostDTOForCreate = {
-      ...typedBlogPostWithoutContentsToDTO(formValues),
+      ...formDataToDTO(formValues),
       contents: contentsDTO,
     };
     if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -46,18 +60,23 @@ function CreateBlogPostForm() {
 
   return (
     <>
-      <ContentsDTOSetterContext.Provider value={setContentsDTO}>
-        <BlogPostEditor />
-      </ContentsDTOSetterContext.Provider>
-
       <FormProvider {...form}>
         <form role="form" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="title">タイトル</label>
-
           <input id="title" {...register('title')} />
+          <br />
+
+          <ImagePickModalWithOpenButton buttonText="サムネイル画像を選択" />
+          <br />
 
           <button type="submit">投稿</button>
         </form>
+
+        <ThumbnailPreview />
+
+        <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+          <BlogPostEditor />
+        </ContentsDTOSetterContext.Provider>
       </FormProvider>
     </>
   );

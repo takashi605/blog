@@ -5,16 +5,16 @@ import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import {
   headingNodeToDTO,
   paragraphNodeToDTO,
+  postContentAsFormDataToDTO,
   textNodeToRichTextDTO,
-  typedContentToDTO,
-} from './typedContentToDTO';
+} from './postContentAsFormDataToDTO';
 
 describe('typedBlogPostToDTO', () => {
   it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {
     const editor = createTextEditor();
     editor.update(() => {
       const testNodes = createTestNodes();
-      const contentDTO = typedContentToDTO(testNodes);
+      const contentDTO = postContentAsFormDataToDTO(testNodes);
       expect(contentDTO).toEqual([
         {
           id: expect.any(String),

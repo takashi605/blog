@@ -1,7 +1,11 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import playwrightHelper from '../../support/playwrightHelper.ts';
+
+let selectedImageSrc: string | null = null;
 
 Given('記事投稿ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
@@ -30,6 +34,37 @@ Then('タイトルに「テスト記事」と表示される', async function ()
 
   const titleInput = page.getByRole('textbox', { name: 'タイトル' });
   await expect(titleInput).toHaveValue('テスト記事');
+});
+
+When('サムネイル画像選択モーダルを開き、サムネイル画像を選択する', async () => {
+  // 参考：https://playwright.dev/docs/api/class-filechooser
+  const page = playwrightHelper.getPage();
+
+  const openModalButton = page.getByRole('button', {
+    name: 'サムネイル画像を選択',
+  });
+  await openModalButton.click();
+
+  const modal = page.getByRole('dialog');
+  await expect(modal).toBeVisible({ timeout: 10000 });
+
+  const radioButtonsInModal = modal.getByRole('radio');
+  const firstRadioButton = radioButtonsInModal.first();
+  await firstRadioButton.click();
+
+  // 対応する画像の src 属性を取得して変数に保持
+  const labelsInModal = modal.locator('label');
+  const firstLabelInModal = labelsInModal.first();
+  selectedImageSrc = await firstLabelInModal.locator('img').getAttribute('src');
+});
+Then('モーダルを閉じると、投稿画面内にサムネイル画像が表示されている', async function() {
+  const page = playwrightHelper.getPage();
+  const modal = page.getByRole('dialog');
+  const closeButton = modal.getByRole('button', { name: '閉じる' });
+  await closeButton.click();
+
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+  await expect(thumbnailImage).toBeVisible();
 });
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
@@ -179,6 +214,14 @@ Then('タイトルが「テスト記事」になっている', async function ()
   const title = page.locator('h1');
   await expect(title).toHaveText('テスト記事');
 });
+Then('選択したサムネイル画像が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+  const src = await thumbnailImage.getAttribute('src');
+
+  expectMatchImageResourceByCloudinary(src);
+});
 Then('本文に「こんにちは！世界」と表示されている', async function () {
   const page = playwrightHelper.getPage();
 
@@ -238,3 +281,22 @@ export const formatDate2DigitString = (date: Date): string => {
   };
   return date.toLocaleDateString('ja-JP', options);
 };
+
+// Cloudinary の URL はリソースのパス以外の情報も含まれるため、
+// リソースのパス部分のみを比較する
+// 例: https://res.cloudinary.com/.../v1/test-book?_a=...
+// 「/v1/ から ? または # まで」の文字列を取り出す
+function expectMatchImageResourceByCloudinary(src: string | null) {
+  const resourceRegex = /\/v1\/([^?#]+)/;
+
+  const matchSelected = selectedImageSrc!.match(resourceRegex);
+  const matchCurrent = src!.match(resourceRegex);
+
+  // どちらも正規表現にマッチしているか確認
+  expect(matchSelected).not.toBeNull();
+  expect(matchCurrent).not.toBeNull();
+
+  // マッチした文字列同士を比較
+  // （例: v1/test-book）
+  expect(matchCurrent?.[1]).toBe(matchSelected?.[1]);
+}
