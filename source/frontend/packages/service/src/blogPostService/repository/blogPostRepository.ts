@@ -9,4 +9,5 @@ export type BlogPostRepository = {
   // TODO undefined を許容する
   fetchPickUpPosts: (quantity: number) => Promise<BlogPostDTO[]>;
   fetchPopularPosts: (quantity: number | undefined) => Promise<BlogPostDTO[]>;
+  selectPickUpPosts: (pickUpPosts: BlogPost[]) => Promise<BlogPostDTO[]>;
 };
