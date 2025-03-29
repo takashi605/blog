@@ -16,7 +16,7 @@ export class SelectPickUpPostsUseCase {
       return blogPostDTOToEntity(blogPostDTO);
     });
     const createdBlogPost =
-      await this.repository.selectPickUpPosts(blogPostsEntity);
+      await this.repository.updatePickUpPosts(blogPostsEntity);
     return createdBlogPost;
   }
 }

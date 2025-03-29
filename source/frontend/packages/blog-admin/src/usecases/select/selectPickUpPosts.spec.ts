@@ -26,7 +26,7 @@ describe('ユースケース: ピックアップ記事の選択', () => {
     const newPickUpPostsDTOMock: BlogPostDTO[] = createNewPickUpPostsDTOMock();
     const mockRepository: BlogPostRepository = {
       ...mockBlogPostRepository,
-      selectPickUpPosts: jest.fn().mockResolvedValue(newPickUpPostsDTOMock),
+      updatePickUpPosts: jest.fn().mockResolvedValue(newPickUpPostsDTOMock),
     };
 
     const selectPickUpPostsUseCase = new SelectPickUpPostsUseCase(
@@ -36,8 +36,8 @@ describe('ユースケース: ピックアップ記事の選択', () => {
 
     const selectedPickUpPosts = await selectPickUpPostsUseCase.execute();
 
-    expect(mockRepository.selectPickUpPosts).toHaveBeenCalledTimes(1);
-    expect(mockRepository.selectPickUpPosts).toHaveBeenCalledWith(
+    expect(mockRepository.updatePickUpPosts).toHaveBeenCalledTimes(1);
+    expect(mockRepository.updatePickUpPosts).toHaveBeenCalledWith(
       convertEntity(newPickUpPostsDTOMock),
     );
 

@@ -95,7 +95,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
-  async selectPickUpPosts(newPickUpPosts: BlogPost[]): Promise<BlogPostDTO[]> {
+  async updatePickUpPosts(newPickUpPosts: BlogPost[]): Promise<BlogPostDTO[]> {
     const body = blogPostsToJson(newPickUpPosts);
     const response = await fetch(`${this.baseUrl}/blog/posts/pickup`, {
       method: 'PUT',

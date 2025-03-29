@@ -110,7 +110,7 @@ describe('apiBlogPostRepository', () => {
     ];
 
     const resp: BlogPostDTO[] =
-      await apiRepository.selectPickUpPosts(pickUpPosts);
+      await apiRepository.updatePickUpPosts(pickUpPosts);
     expect(resp.length).toBe(3);
 
     resp.forEach((pickUpPost) => {
