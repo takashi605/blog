@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import ImageListProvider from '../../../../images/list/ImageListProvider';
 import PickUpPostsForm from './PickUpPostsForm';
 import PickUpPostsFormProvider from './PickUpPostsFormProvider';
-import userEvent from '@testing-library/user-event';
 
 const onSubmitMock = jest.fn();
 beforeEach(() => {
@@ -70,9 +70,9 @@ describe('PickUpPostsForm', () => {
     }
 
     function getCheckedCheckboxesValue() {
-      return screen.getAllByRole('checkbox', { checked: true }).map((checkbox) =>
-        checkbox.getAttribute('value'),
-      );
+      return screen
+        .getAllByRole('checkbox', { checked: true })
+        .map((checkbox) => checkbox.getAttribute('value'));
     }
 
     async function clickSubmitButton() {
@@ -80,6 +80,4 @@ describe('PickUpPostsForm', () => {
       await userEvent.click(submitButton);
     }
   });
-
 });
-

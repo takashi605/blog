@@ -1,10 +1,14 @@
 'use client';
 import React from 'react';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
 import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
-import type { ImageUploadFormValues } from '../../../images/upload/form/ImageUploadFormProvider';
+import { SelectPickUpPostsUseCase } from '../../../../usecases/select/selectPickUpPosts';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
 import PickUpPostsForm from './form/PickUpPostsForm';
+import type { PickUpPostsFormValues } from './form/PickUpPostsFormProvider';
+import PickUpPostsFormProvider from './form/PickUpPostsFormProvider';
+import { usePickUpPostsCheckBox } from './form/usePickUpPostsCheckBox';
 
 function PickUpPostSelectModalWithOpenButton() {
   const { openModal } = useCommonModalContext();
@@ -22,35 +26,36 @@ function Modal() {
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModalContext();
 
-  const onSubmit = async (data: ImageUploadFormValues) => {
+  const { selectedBlogPosts } = usePickUpPostsCheckBox();
+
+  const onSubmit = async (data: PickUpPostsFormValues) => {
     console.log(data);
-    // if (!process.env.NEXT_PUBLIC_API_URL) {
-    //   throw new Error('API の URL が設定されていません');
-    // }
-    // const blogPostRepository = new ApiBlogPostRepository(
-    //   process.env.NEXT_PUBLIC_API_URL,
-    // );
-    // const selectedPickUpPosts = null;
-    // const selectPickUpPostsUseCase = new SelectPickUpPostsUseCase(
-    //   selectedPickUpPosts,
-    //   blogPostRepository,
-    // );
-    // try {
-    //   const updatedPickUpPosts = await selectPickUpPostsUseCase.execute();
-    //   updatePickUpPosts(updatedPickUpPosts);
-    //   setIsUploadSuccess(true);
-    // } catch {
-    //   alert('ピックアップ記事の更新に失敗しました。ログを確認してください。');
-    // }
+    if (!process.env.NEXT_PUBLIC_API_URL) {
+      throw new Error('API の URL が設定されていません');
+    }
+    const blogPostRepository = new ApiBlogPostRepository(
+      process.env.NEXT_PUBLIC_API_URL,
+    );
+    const selectPickUpPostsUseCase = new SelectPickUpPostsUseCase(
+      selectedBlogPosts(data.pickUpPosts),
+      blogPostRepository,
+    );
+    try {
+      const updatedPickUpPosts = await selectPickUpPostsUseCase.execute();
+      updatePickUpPosts(updatedPickUpPosts);
+      setIsUploadSuccess(true);
+    } catch (e) {
+      console.error(e);
+      alert('ピックアップ記事の更新に失敗しました。ログを確認してください。');
+    }
   };
 
   return (
     <CommonModal>
-      <PickUpPostsForm />
-      {/* <ImageUploadFormProvider>
-        <ImageUploadForm onSubmit={onSubmit} />
-        {isUploadSuccess && <p>画像のアップロードに成功しました</p>}
-      </ImageUploadFormProvider> */}
+      <PickUpPostsFormProvider>
+        <PickUpPostsForm onSubmit={onSubmit} />
+      </PickUpPostsFormProvider>
+      {isUploadSuccess && <p>ピックアップ記事を更新しました。</p>}
       <button onClick={closeModal} className="modal-close" type="button">
         閉じる
       </button>
