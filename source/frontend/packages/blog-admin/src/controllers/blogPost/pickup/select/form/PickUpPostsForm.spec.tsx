@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
@@ -74,10 +75,48 @@ describe('PickUpPostsForm', () => {
         .getAllByRole('checkbox', { checked: true })
         .map((checkbox) => checkbox.getAttribute('value'));
     }
+  });
+  it('記事を3つ以上選択しないと送信できない', async () => {
+    render(
+      <ImageListProvider>
+        <PickUpPostsFormProvider>
+          <PickUpPostsForm onSubmit={onSubmitMock} />
+        </PickUpPostsFormProvider>
+      </ImageListProvider>,
+    );
 
-    async function clickSubmitButton() {
-      const submitButton = screen.getByRole('button', { name: '保存' });
-      await userEvent.click(submitButton);
-    }
+    const checkboxes = await screen.findAllByRole('checkbox');
+    await Promise.all(
+      checkboxes.slice(0, 2).map(async (checkbox) => {
+        await userEvent.click(checkbox);
+      }),
+    );
+
+    // 送信ボタンをクリック
+    await clickSubmitButton();
+
+    // エラーメッセージが表示されていることを確認
+    expect(
+      await screen.findByText('ピックアップ記事は3件選択してください'),
+    ).toBeInTheDocument();
+
+    // onSubmitMock が呼ばれていないことを確認
+    expect(onSubmitMock).not.toHaveBeenCalled();
+
+    await Promise.all(
+      checkboxes.slice(2, 5).map(async (checkbox) => {
+        await userEvent.click(checkbox);
+      }),
+    );
+    expect(
+      await screen.findByText('ピックアップ記事は3件選択してください'),
+    ).toBeInTheDocument();
+    expect(onSubmitMock).not.toHaveBeenCalled();
   });
 });
+
+/* 以下ヘルパー関数 */
+async function clickSubmitButton() {
+  const submitButton = screen.getByRole('button', { name: '保存' });
+  await userEvent.click(submitButton);
+}

@@ -9,7 +9,12 @@ type PickUpPostsFormProps = {
 
 function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
   const { getAllBlogPosts } = useBlogPostList();
-  const { register, handleSubmit } = useFormContext<PickUpPostsFormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext<PickUpPostsFormValues>();
+  const pickupError = errors?.pickUpPosts;
 
   return (
     <>
@@ -22,7 +27,9 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
                 <input
                   type="checkbox"
                   value={blogPost.id}
-                  {...register('pickUpPosts')}
+                  {...register('pickUpPosts', {
+                    validate: (value) => value.length === 3 || 'ピックアップ記事は3件選択してください',
+                  })}
                 />
                 <h3>{blogPost.title}</h3>
                 <br />
@@ -30,6 +37,8 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
             </li>
           ))}
         </ul>
+
+        {pickupError && <p>{pickupError.message}</p>}
 
         <button type="submit">保存</button>
       </form>
