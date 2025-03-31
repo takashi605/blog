@@ -39,32 +39,47 @@ describe('PickUpPostsForm', () => {
     // 4つ以上のlabelがあった方がテストに都合がいいので3より大きいことを確認
     expect(checkboxes.length).toBeGreaterThan(3);
 
-    // 上から3つまでのチェックボックスを選択
-    checkboxes.slice(0, 3).forEach((checkbox) => {
-      checkbox.click();
-    });
+    clickFirstThreeCheckboxes(checkboxes);
 
     // 選択したチェックボックスが3つであることを確認
-    const checkedCheckboxes = screen.getAllByRole('checkbox', {
-      checked: true,
-    });
-    expect(checkedCheckboxes.length).toBe(3);
+    expectCheckedCheckboxesLength(3);
 
     // 送信ボタンをクリック
-    const submitButton = screen.getByRole('button', { name: '送信' });
-    await userEvent.click(submitButton);
-
-    // 選択したチェックボックスの value を取得
-    const selectedValues = checkedCheckboxes.map((checkbox) =>
-      checkbox.getAttribute('value'),
-    );
+    await clickSubmitButton();
 
     // onSubmitMockの引数に選択したチェックボックスのvalueが渡されていることを確認
     expect(onSubmitMock).toHaveBeenCalledWith(
       {
-        pickUpPosts: selectedValues,
+        pickUpPosts: getCheckedCheckboxesValue(),
       },
       expect.any(Object),
     );
+
+    /* 以下ヘルパー関数 */
+    function clickFirstThreeCheckboxes(checkboxes: HTMLElement[]) {
+      checkboxes.slice(0, 3).forEach((checkbox) => {
+        checkbox.click();
+      });
+    }
+
+    function expectCheckedCheckboxesLength(expected: number) {
+      const checkedCheckboxes = screen.getAllByRole('checkbox', {
+        checked: true,
+      });
+      expect(checkedCheckboxes.length).toBe(expected);
+    }
+
+    function getCheckedCheckboxesValue() {
+      return screen.getAllByRole('checkbox', { checked: true }).map((checkbox) =>
+        checkbox.getAttribute('value'),
+      );
+    }
+
+    async function clickSubmitButton() {
+      const submitButton = screen.getByRole('button', { name: '送信' });
+      await userEvent.click(submitButton);
+    }
   });
+
 });
+
