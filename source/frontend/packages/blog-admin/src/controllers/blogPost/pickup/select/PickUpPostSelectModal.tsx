@@ -22,7 +22,7 @@ function PickUpPostSelectModalWithOpenButton() {
 }
 
 function Modal() {
-  const { updatePickUpPosts } = usePickUpPostListContext();
+  const { getAllPickUpPosts, updatePickUpPosts } = usePickUpPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModalContext();
 
@@ -52,7 +52,9 @@ function Modal() {
 
   return (
     <CommonModal>
-      <PickUpPostsFormProvider>
+      <PickUpPostsFormProvider
+        defaultValues={{ pickUpPosts: getAllPickUpPosts().map((post) => post.id) }}
+      >
         <PickUpPostsForm onSubmit={onSubmit} />
       </PickUpPostsFormProvider>
       {isUploadSuccess && <p>ピックアップ記事を更新しました。</p>}

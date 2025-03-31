@@ -148,16 +148,20 @@ class SelectPickUpPostsModal {
 
   async getSelectedPostTitles() {
     const modal = this.getLocator();
-    const checkboxes = modal.getByRole('checkbox', { checked: true });
-    const parentListItems = [];
-    for (let i = 0; i < await checkboxes.count(); i++) {
-      parentListItems.push(await modal.locator('li', { has: checkboxes.nth(i) }));
-    }
-    const postTitles = parentListItems.map((li) => li.locator('h3'));
-    const selectedPostTitles = await Promise.all(
-      postTitles.map(async (title) => await title.innerText()),
-    );
-    return selectedPostTitles;
+
+    // 「チェックされているチェックボックス」をまとめて取得
+    const checkedBoxes = modal.locator('input[type=checkbox]:checked');
+
+    // 各チェックボックスに対し、親（先祖）の<label>をたどってテキストを取得
+    const labelTexts = await checkedBoxes.evaluateAll((boxes) => {
+      return boxes.map((box) => {
+        const label = box.closest('label');
+        // ラベル要素が見つかればそのテキストを返す。なければ空文字にする。
+        return label ? label.innerText : '';
+      });
+    });
+
+    return labelTexts;
   }
 
   async selectFirstThreePostTitles() {

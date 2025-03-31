@@ -17,15 +17,17 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <ul>
           {getAllBlogPosts().map((blogPost) => (
-            <label key={blogPost.id}>
-              <input
-                type="checkbox"
-                value={blogPost.id}
-                {...register('pickUpPosts')}
-              />
-              <h3>{blogPost.title}</h3>
-              <br />
-            </label>
+            <li key={blogPost.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={blogPost.id}
+                  {...register('pickUpPosts')}
+                />
+                <h3>{blogPost.title}</h3>
+                <br />
+              </label>
+            </li>
           ))}
         </ul>
 

@@ -5,14 +5,13 @@ export type PickUpPostsFormValues = {
 };
 
 type PickUpPostsFormProviderProps = {
+  defaultValues?: PickUpPostsFormValues;
   children: React.ReactNode;
 };
 
-function PickUpPostsFormProvider({ children }: PickUpPostsFormProviderProps) {
+function PickUpPostsFormProvider({ defaultValues, children }: PickUpPostsFormProviderProps) {
   const form = useForm<PickUpPostsFormValues>({
-    defaultValues: {
-      pickUpPosts: [],
-    },
+    defaultValues,
   });
 
   return <FormProvider {...form}>{children}</FormProvider>;
