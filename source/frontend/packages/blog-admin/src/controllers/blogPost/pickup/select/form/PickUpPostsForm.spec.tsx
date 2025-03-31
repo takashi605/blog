@@ -76,7 +76,7 @@ describe('PickUpPostsForm', () => {
     }
 
     async function clickSubmitButton() {
-      const submitButton = screen.getByRole('button', { name: '送信' });
+      const submitButton = screen.getByRole('button', { name: '保存' });
       await userEvent.click(submitButton);
     }
   });

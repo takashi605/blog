@@ -29,7 +29,7 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
           ))}
         </ul>
 
-        <button type="submit">送信</button>
+        <button type="submit">保存</button>
       </form>
     </>
   );

@@ -66,26 +66,25 @@ Then('既存の記事すべてのタイトルが表示される', async function
 When(
   'デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
-    const { selectFirstThreePostTitles, getSaveButton } =
-      new SelectPickUpPostsModal();
-    const selectedPostTitles = await selectFirstThreePostTitles();
+    const modal = new SelectPickUpPostsModal();
+    const selectedPostTitles = await modal.selectFirstThreePostTitles();
     updatedPickUpPostsTitle = selectedPostTitles;
 
     // 選択した記事がデフォルトのピックアップ記事と異なることを確認
     expect(selectedPostTitles).not.toEqual(initialPickUpPostsTitle);
 
-    await getSaveButton().click();
+    await modal.getSaveButton().click();
   },
 );
 Then('モーダル内に保存した旨のメッセージが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
-  const message = modal.getByText('ピックアップ記事を保存しました');
+  const message = modal.getByText('ピックアップ記事を更新しました');
   await expect(message).toBeVisible({ timeout: 10000 });
 });
 
 When('モーダルを閉じる', async function () {
-  const { getCloseModalButton } = new SelectPickUpPostsModal();
-  await getCloseModalButton().click();
+  const closeButton = new SelectPickUpPostsModal().getCloseModalButton();
+  await closeButton.click();
 });
 Then(
   '一覧表示されていたタイトルが新しいものに更新されている',
@@ -152,9 +151,12 @@ class SelectPickUpPostsModal {
     const thirdPostTitle = postTitles.nth(2);
     await thirdPostTitle.click();
 
-    const selectedPostTitles = await modal
-      .locator('h3[aria-selected="true"]')
-      .allInnerTexts();
+    const selectedPostTitles = [
+      await firstPostTitle.innerText(),
+      await secondPostTitle.innerText(),
+      await thirdPostTitle.innerText(),
+    ]
+
     return selectedPostTitles;
   }
 }
