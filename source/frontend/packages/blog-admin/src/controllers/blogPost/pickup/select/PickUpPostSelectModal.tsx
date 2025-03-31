@@ -8,7 +8,7 @@ import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
 import PickUpPostsForm from './form/PickUpPostsForm';
 import type { PickUpPostsFormValues } from './form/PickUpPostsFormProvider';
 import PickUpPostsFormProvider from './form/PickUpPostsFormProvider';
-import { usePickUpPostsCheckBox } from './form/usePickUpPostsCheckBox';
+import { usePickUpPostsCheckbox } from './form/usePickUpPostsCheckBox';
 
 function PickUpPostSelectModalWithOpenButton() {
   const { openModal } = useCommonModalContext();
@@ -26,7 +26,7 @@ function Modal() {
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const { closeModal } = useCommonModalContext();
 
-  const { selectedBlogPosts } = usePickUpPostsCheckBox();
+  const { selectedBlogPosts } = usePickUpPostsCheckbox();
 
   const onSubmit = async (data: PickUpPostsFormValues) => {
     console.log(data);
