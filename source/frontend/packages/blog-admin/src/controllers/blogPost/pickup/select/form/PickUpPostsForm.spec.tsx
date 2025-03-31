@@ -24,15 +24,19 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
+function renderComponent() {
+  render(
+    <ImageListProvider>
+      <PickUpPostsFormProvider>
+        <PickUpPostsForm onSubmit={onSubmitMock} />
+      </PickUpPostsFormProvider>
+    </ImageListProvider>,
+  );
+}
+
 describe('PickUpPostsForm', () => {
   it('ピックアップ記事を選択可能である', async () => {
-    render(
-      <ImageListProvider>
-        <PickUpPostsFormProvider>
-          <PickUpPostsForm onSubmit={onSubmitMock} />
-        </PickUpPostsFormProvider>
-      </ImageListProvider>,
-    );
+    renderComponent();
 
     // 全てのチェックボックスを取得
     const checkboxes = await screen.findAllByRole('checkbox');
@@ -40,7 +44,7 @@ describe('PickUpPostsForm', () => {
     // 4つ以上のlabelがあった方がテストに都合がいいので3より大きいことを確認
     expect(checkboxes.length).toBeGreaterThan(3);
 
-    clickFirstThreeCheckboxes(checkboxes);
+    await clickCheckbox(0, 3);
 
     // 選択したチェックボックスが3つであることを確認
     expectCheckedCheckboxesLength(3);
@@ -57,12 +61,6 @@ describe('PickUpPostsForm', () => {
     );
 
     /* 以下ヘルパー関数 */
-    function clickFirstThreeCheckboxes(checkboxes: HTMLElement[]) {
-      checkboxes.slice(0, 3).forEach((checkbox) => {
-        checkbox.click();
-      });
-    }
-
     function expectCheckedCheckboxesLength(expected: number) {
       const checkedCheckboxes = screen.getAllByRole('checkbox', {
         checked: true,
@@ -77,41 +75,37 @@ describe('PickUpPostsForm', () => {
     }
   });
   it('記事を3つ以上選択しないと送信できない', async () => {
-    render(
-      <ImageListProvider>
-        <PickUpPostsFormProvider>
-          <PickUpPostsForm onSubmit={onSubmitMock} />
-        </PickUpPostsFormProvider>
-      </ImageListProvider>,
-    );
+    renderComponent();
 
-    const checkboxes = await screen.findAllByRole('checkbox');
-    await Promise.all(
-      checkboxes.slice(0, 2).map(async (checkbox) => {
-        await userEvent.click(checkbox);
-      }),
-    );
+    await checkTwoBoxes();
 
     // 送信ボタンをクリック
     await clickSubmitButton();
 
     // エラーメッセージが表示されていることを確認
-    expect(
-      await screen.findByText('ピックアップ記事は3件選択してください'),
-    ).toBeInTheDocument();
+    await expectDisplayErrorText();
 
     // onSubmitMock が呼ばれていないことを確認
     expect(onSubmitMock).not.toHaveBeenCalled();
 
-    await Promise.all(
-      checkboxes.slice(2, 5).map(async (checkbox) => {
-        await userEvent.click(checkbox);
-      }),
-    );
-    expect(
-      await screen.findByText('ピックアップ記事は3件選択してください'),
-    ).toBeInTheDocument();
+    await checkFourBoxes();
+    await expectDisplayErrorText();
     expect(onSubmitMock).not.toHaveBeenCalled();
+
+    /* 以下ヘルパー関数 */
+    function checkTwoBoxes() {
+      return clickCheckbox(0, 2);
+    }
+
+    function checkFourBoxes() {
+      return clickCheckbox(2, 5);
+    }
+
+    async function expectDisplayErrorText() {
+      expect(
+        await screen.findByText('ピックアップ記事は3件選択してください'),
+      ).toBeInTheDocument();
+    }
   });
 });
 
@@ -119,4 +113,13 @@ describe('PickUpPostsForm', () => {
 async function clickSubmitButton() {
   const submitButton = screen.getByRole('button', { name: '保存' });
   await userEvent.click(submitButton);
+}
+
+async function clickCheckbox(start: number, end: number) {
+  const checkboxes = await screen.findAllByRole('checkbox');
+  await Promise.all(
+    checkboxes.slice(start, end).map(async (checkbox) => {
+      await userEvent.click(checkbox);
+    }),
+  );
 }
