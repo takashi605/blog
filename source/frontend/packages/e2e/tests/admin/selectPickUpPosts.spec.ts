@@ -59,14 +59,19 @@ Then('既存の記事すべてのタイトルが表示される', async function
   const postTitles = modal.locator('h3');
 
   expect(await postTitles.count()).toBeGreaterThan(0);
-
-  initialPickUpPostsTitle = await postTitles.allInnerTexts();
+});
+Then('デフォルトで3件の記事が選択されている', async function () {
+  const modal = new SelectPickUpPostsModal();
+  const selectedPostTitles = await modal.getSelectedPostTitles();
+  initialPickUpPostsTitle = selectedPostTitles;
+  expect(selectedPostTitles.length).toBe(3);
 });
 
 When(
   'デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
     const modal = new SelectPickUpPostsModal();
+    modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
     updatedPickUpPostsTitle = selectedPostTitles;
 
@@ -141,6 +146,20 @@ class SelectPickUpPostsModal {
     return modal.getByRole('button', { name: '閉じる' });
   }
 
+  async getSelectedPostTitles() {
+    const modal = this.getLocator();
+    const checkboxes = modal.getByRole('checkbox', { checked: true });
+    const parentListItems = [];
+    for (let i = 0; i < await checkboxes.count(); i++) {
+      parentListItems.push(await modal.locator('li', { has: checkboxes.nth(i) }));
+    }
+    const postTitles = parentListItems.map((li) => li.locator('h3'));
+    const selectedPostTitles = await Promise.all(
+      postTitles.map(async (title) => await title.innerText()),
+    );
+    return selectedPostTitles;
+  }
+
   async selectFirstThreePostTitles() {
     const modal = this.getLocator();
     const postTitles = modal.locator('h3');
@@ -155,9 +174,18 @@ class SelectPickUpPostsModal {
       await firstPostTitle.innerText(),
       await secondPostTitle.innerText(),
       await thirdPostTitle.innerText(),
-    ]
+    ];
 
     return selectedPostTitles;
+  }
+
+  async uncheckAllPosts() {
+    const modal = this.getLocator();
+    const checkboxes = modal.getByRole('checkbox', { checked: true });
+    const count = await checkboxes.count();
+    for (let i = 0; i < count; i++) {
+      await checkboxes.nth(i).click();
+    }
   }
 }
 
