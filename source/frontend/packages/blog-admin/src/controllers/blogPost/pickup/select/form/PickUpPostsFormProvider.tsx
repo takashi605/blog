@@ -9,7 +9,10 @@ type PickUpPostsFormProviderProps = {
   children: React.ReactNode;
 };
 
-function PickUpPostsFormProvider({ defaultValues, children }: PickUpPostsFormProviderProps) {
+function PickUpPostsFormProvider({
+  defaultValues,
+  children,
+}: PickUpPostsFormProviderProps) {
   const form = useForm<PickUpPostsFormValues>({
     defaultValues,
   });

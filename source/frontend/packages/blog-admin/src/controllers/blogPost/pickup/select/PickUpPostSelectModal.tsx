@@ -53,7 +53,9 @@ function Modal() {
   return (
     <CommonModal>
       <PickUpPostsFormProvider
-        defaultValues={{ pickUpPosts: getAllPickUpPosts().map((post) => post.id) }}
+        defaultValues={{
+          pickUpPosts: getAllPickUpPosts().map((post) => post.id),
+        }}
       >
         <PickUpPostsForm onSubmit={onSubmit} />
       </PickUpPostsFormProvider>

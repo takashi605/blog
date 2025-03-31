@@ -28,7 +28,9 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
                   type="checkbox"
                   value={blogPost.id}
                   {...register('pickUpPosts', {
-                    validate: (value) => value.length === 3 || 'ピックアップ記事は3件選択してください',
+                    validate: (value) =>
+                      value.length === 3 ||
+                      'ピックアップ記事は3件選択してください',
                   })}
                 />
                 <h3>{blogPost.title}</h3>
