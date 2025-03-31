@@ -9,9 +9,15 @@ function PickUpPostsForm() {
       <h2>ピックアップ記事を選択</h2>
       <ul>
         {getAllBlogPosts().map((blogPost) => (
-          <li key={blogPost.id}>
+          <label key={blogPost.id}>
+            <input
+              type="checkbox"
+              value={blogPost.id}
+              // {...register('pickupPosts')}
+            />
             <h3>{blogPost.title}</h3>
-          </li>
+            <br />
+          </label>
         ))}
       </ul>
     </>
