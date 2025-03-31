@@ -41,6 +41,8 @@ function Modal() {
     const imageRepository = new ApiImageRepository(
       process.env.NEXT_PUBLIC_API_URL,
     );
+
+    // TODO id の生成をエンティティに移動する
     const imageDTO: ImageDTO = {
       id: createUUIDv4(),
       path: data.imagePath,

@@ -36,11 +36,16 @@ export class BlogPostBuilder {
   }
 
   setPostDate(postDate: string) {
+    // YYYY/MM/DD -> YYYY-MM-DD に変換
+    postDate = postDate.replace(/\//g, '-');
     this.postDate = postDate;
     return this;
   }
 
   setLastUpdateDate(lastUpdateDate: string) {
+    // YYYY/MM/DD -> YYYY-MM-DD に変換
+    lastUpdateDate = lastUpdateDate.replace(/\//g, '-');
+
     this.lastUpdateDate = lastUpdateDate;
     return this;
   }

@@ -14,9 +14,10 @@ Given('ピックアップ記事選択ページにアクセスする', async func
 
   // 画像一覧取得 API の fetch 完了を待つ
   const fetchPickUpPostsResponse = await page.waitForResponse(
-    '**/blog/posts/pickup?*',
+    '**/blog/posts/pickup*',
   );
   expect(fetchPickUpPostsResponse.status()).toBe(200);
+  await fetchPickUpPostsResponse.json();
 });
 Then(
   '現在ピックアップ記事に設定されている記事のタイトルが3件分表示されている',
@@ -32,7 +33,22 @@ Then(
 
 When('「ピックアップ記事を選択」ボタンを押下する', async function () {
   const { getOpenModalButton } = new SelectPickUpPostsModal();
-  await getOpenModalButton().click();
+  const page = playwrightHelper.getPage();
+
+  const [response] = await Promise.all([
+    page.waitForResponse(
+      (resp) =>
+        resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+    ),
+    getOpenModalButton().click(),
+  ]);
+
+  expect(response.status()).toBe(200);
+
+  // これをしないとレスポンスが返るまで待てていない気がする
+  // 単純に処理に時間をかけているからたまたま上手くいくだけかもしれない
+  // 一応、ChatGPT に聞いたら「レスポンスを読み込み終えるまで待機する有効な方法」とのことだった
+  await response.json();
 });
 Then('ピックアップ記事選択モーダルが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
@@ -41,34 +57,39 @@ Then('ピックアップ記事選択モーダルが表示される', async funct
 Then('既存の記事すべてのタイトルが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
   const postTitles = modal.locator('h3');
-  expect(await postTitles.count()).toBeGreaterThan(0);
 
-  initialPickUpPostsTitle = await postTitles.allInnerTexts();
+  expect(await postTitles.count()).toBeGreaterThan(0);
+});
+Then('デフォルトで3件の記事が選択されている', async function () {
+  const modal = new SelectPickUpPostsModal();
+  const selectedPostTitles = await modal.getSelectedPostTitles();
+  initialPickUpPostsTitle = selectedPostTitles;
+  expect(selectedPostTitles.length).toBe(3);
 });
 
 When(
   'デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
-    const { selectFirstThreePostTitles, getSaveButton } =
-      new SelectPickUpPostsModal();
-    const selectedPostTitles = await selectFirstThreePostTitles();
+    const modal = new SelectPickUpPostsModal();
+    modal.uncheckAllPosts();
+    const selectedPostTitles = await modal.selectFirstThreePostTitles();
     updatedPickUpPostsTitle = selectedPostTitles;
 
     // 選択した記事がデフォルトのピックアップ記事と異なることを確認
     expect(selectedPostTitles).not.toEqual(initialPickUpPostsTitle);
 
-    await getSaveButton().click();
+    await modal.getSaveButton().click();
   },
 );
 Then('モーダル内に保存した旨のメッセージが表示される', async function () {
   const modal = new SelectPickUpPostsModal().getLocator();
-  const message = modal.getByText('ピックアップ記事を保存しました');
+  const message = modal.getByText('ピックアップ記事を更新しました');
   await expect(message).toBeVisible({ timeout: 10000 });
 });
 
 When('モーダルを閉じる', async function () {
-  const { getCloseModalButton } = new SelectPickUpPostsModal();
-  await getCloseModalButton().click();
+  const closeButton = new SelectPickUpPostsModal().getCloseModalButton();
+  await closeButton.click();
 });
 Then(
   '一覧表示されていたタイトルが新しいものに更新されている',
@@ -125,6 +146,24 @@ class SelectPickUpPostsModal {
     return modal.getByRole('button', { name: '閉じる' });
   }
 
+  async getSelectedPostTitles() {
+    const modal = this.getLocator();
+
+    // 「チェックされているチェックボックス」をまとめて取得
+    const checkedBoxes = modal.locator('input[type=checkbox]:checked');
+
+    // 各チェックボックスに対し、親（先祖）の<label>をたどってテキストを取得
+    const labelTexts = await checkedBoxes.evaluateAll((boxes) => {
+      return boxes.map((box) => {
+        const label = box.closest('label');
+        // ラベル要素が見つかればそのテキストを返す。なければ空文字にする。
+        return label ? label.innerText : '';
+      });
+    });
+
+    return labelTexts;
+  }
+
   async selectFirstThreePostTitles() {
     const modal = this.getLocator();
     const postTitles = modal.locator('h3');
@@ -135,10 +174,22 @@ class SelectPickUpPostsModal {
     const thirdPostTitle = postTitles.nth(2);
     await thirdPostTitle.click();
 
-    const selectedPostTitles = await modal
-      .locator('h3[aria-selected="true"]')
-      .allInnerTexts();
+    const selectedPostTitles = [
+      await firstPostTitle.innerText(),
+      await secondPostTitle.innerText(),
+      await thirdPostTitle.innerText(),
+    ];
+
     return selectedPostTitles;
+  }
+
+  async uncheckAllPosts() {
+    const modal = this.getLocator();
+    const checkboxes = modal.getByRole('checkbox', { checked: true });
+    const count = await checkboxes.count();
+    for (let i = 0; i < count; i++) {
+      await checkboxes.nth(i).click();
+    }
   }
 }
 

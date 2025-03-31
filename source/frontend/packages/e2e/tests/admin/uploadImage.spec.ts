@@ -17,6 +17,7 @@ Given('【アップロード】画像管理ページにアクセスする', asyn
   // 画像データの fetch を待機
   const fetchImagesResponse = await page.waitForResponse('**/blog/images');
   expect(fetchImagesResponse.status()).toBe(200);
+  await fetchImagesResponse.json();
 
   // 後で画像数が増えたことを確認するために初期画像数を取得
   const images = page.locator('img');

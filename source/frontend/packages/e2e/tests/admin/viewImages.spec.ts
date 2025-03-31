@@ -15,6 +15,7 @@ Then('画像データが取得される', async function () {
   // 画像一覧取得 API の fetch 完了を待つ
   const fetchImagesResponse = await page.waitForResponse('**/blog/images');
   expect(fetchImagesResponse.status()).toBe(200);
+  await fetchImagesResponse.json();
 });
 Then('3件以上の画像が表示される', async function () {
   const page = playwrightHelper.getPage();

@@ -1,5 +1,7 @@
-import PickUpPostList from '../../../controllers/blogPost/pickup/PickUpPostList';
-import PickUpPostListProvider from '../../../controllers/blogPost/pickup/PickUpPostListProvider';
+import CommonModalProvider from '../../../components/modal/CommonModalProvider';
+import PickUpPostList from '../../../controllers/blogPost/pickup/list/PickUpPostList';
+import PickUpPostListProvider from '../../../controllers/blogPost/pickup/list/PickUpPostListProvider';
+import PickUpPostSelectModalWithOpenButton from '../../../controllers/blogPost/pickup/select/PickUpPostSelectModal';
 
 export default function PickUpManagementPage() {
   return (
@@ -8,6 +10,9 @@ export default function PickUpManagementPage() {
       <section>
         <PickUpPostListProvider>
           <PickUpPostList />
+          <CommonModalProvider>
+            <PickUpPostSelectModalWithOpenButton />
+          </CommonModalProvider>
         </PickUpPostListProvider>
       </section>
     </div>
