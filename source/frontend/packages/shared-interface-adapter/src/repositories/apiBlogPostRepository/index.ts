@@ -132,9 +132,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
-  async updatePopularPosts(
-    popularPosts: BlogPost[],
-  ): Promise<BlogPostDTO[]> {
+  async updatePopularPosts(popularPosts: BlogPost[]): Promise<BlogPostDTO[]> {
     if (popularPosts.length !== 3) {
       throw new Error('人気記事は3件指定してください');
     }
