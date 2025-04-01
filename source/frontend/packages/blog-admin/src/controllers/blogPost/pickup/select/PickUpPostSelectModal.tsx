@@ -8,7 +8,7 @@ import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
 import PickUpPostsForm from './form/PickUpPostsForm';
 import type { PickUpPostsFormValues } from './form/PickUpPostsFormProvider';
 import PickUpPostsFormProvider from './form/PickUpPostsFormProvider';
-import { usePickUpPostsCheckbox } from './form/usePickUpPostsCheckBox';
+import { usePickUpPostsCheckbox } from './form/usePickUpPostsCheckbox';
 
 function PickUpPostSelectModalWithOpenButton() {
   const { openModal } = useCommonModalContext();
