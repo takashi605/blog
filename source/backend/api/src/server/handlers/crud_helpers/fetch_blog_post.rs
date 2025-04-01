@@ -4,8 +4,8 @@ use crate::{
   db::tables::{
     blog_posts_table::{fetch_all_latest_blog_posts_records, fetch_blog_post_by_id, BlogPostRecord, BlogPostRecordWithRelations},
     images_table::{fetch_image_by_id, ImageRecord},
-    pickup_posts_table::{fetch_all_pickup_blog_posts, update_pickup_blog_posts, PickUpPostRecord},
-    popular_posts_table::{fetch_all_popular_blog_posts, update_popular_blog_posts, PopularPostRecord},
+    pickup_posts_table::fetch_all_pickup_blog_posts,
+    popular_posts_table::fetch_all_popular_blog_posts,
     post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
   server::handlers::response::{convert_to_response::generate_blog_post_response, err::ApiCustomError},
@@ -172,18 +172,4 @@ pub async fn fetch_popular_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
     blog_posts.push(blog_post);
   }
   Ok(blog_posts)
-}
-
-pub async fn update_pickup_posts(new_pickup_posts: Vec<BlogPost>) -> Result<(), ApiCustomError> {
-  let pickup_post_records: Vec<PickUpPostRecord> =
-    new_pickup_posts.iter().map(|blog_post| PickUpPostRecord::from(blog_post.clone())).collect::<Vec<PickUpPostRecord>>();
-  update_pickup_blog_posts(pickup_post_records).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
-  Ok(())
-}
-
-pub async fn update_popular_posts(new_popular_posts: Vec<BlogPost>) -> Result<(), ApiCustomError> {
-  let popular_post_records: Vec<PopularPostRecord> =
-    new_popular_posts.iter().map(|blog_post| PopularPostRecord::from(blog_post.clone())).collect::<Vec<PopularPostRecord>>();
-  update_popular_blog_posts(popular_post_records).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の更新に失敗しました。")))?;
-  Ok(())
 }

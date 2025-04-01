@@ -21,11 +21,12 @@ fn posts_scope() -> Scope {
 
 mod handle_funcs {
   use crate::{
-    db::tables::{popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post},
+    db::tables::top_tech_pick_table::fetch_top_tech_pick_blog_post,
     server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
-        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post, update_pickup_posts, update_popular_posts},
+        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
+        update_blog_post::{update_pickup_posts, update_popular_posts},
       },
       response::err::ApiCustomError,
     },
