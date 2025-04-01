@@ -25,7 +25,7 @@ pub async fn start_api_server() -> Result<()> {
 fn configure_cors() -> Cors {
   Cors::default()
     .allow_any_origin()
-    .allowed_methods(vec!["GET", "POST"])
+    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
     .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT, http::header::CONTENT_TYPE])
     .max_age(3600)
 }

@@ -1,4 +1,6 @@
+import type { BlogPost } from 'entities/src/blogPost';
 import { MockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
 import { ApiBlogPostRepository } from '.';
@@ -96,6 +98,53 @@ describe('apiBlogPostRepository', () => {
       expect(pickUpPost.lastUpdateDate).toBeDefined();
       expect(pickUpPost.contents.length).toBeGreaterThan(0);
     });
+  });
+
+  it('api を通じてピックアップ記事を更新できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const pickUpPosts: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+      new MockBlogPost(UUIDList.UUID3).successfulMock(),
+    ];
+
+    const resp: BlogPostDTO[] =
+      await apiRepository.updatePickUpPosts(pickUpPosts);
+    expect(resp.length).toBe(3);
+
+    resp.forEach((pickUpPost) => {
+      expect(pickUpPost.id).toBeDefined();
+      expect(pickUpPost.title).toBeDefined();
+      expect(pickUpPost.thumbnail).toBeDefined();
+      expect(pickUpPost.postDate).toBeDefined();
+      expect(pickUpPost.lastUpdateDate).toBeDefined();
+      expect(pickUpPost.contents.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('ピックアップ記事を更新する際、3件のデータを渡さないとエラーが返される', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const pickUpPosts: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePickUpPosts(pickUpPosts)).rejects.toThrow(
+      'ピックアップ記事は3件指定してください',
+    );
+
+    const pickUpPosts2: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+      new MockBlogPost(UUIDList.UUID3).successfulMock(),
+      new MockBlogPost(UUIDList.UUID4).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePickUpPosts(pickUpPosts2)).rejects.toThrow(
+      'ピックアップ記事は3件指定してください',
+    );
   });
 
   it('api から人気記事を複数件取得できる', async () => {

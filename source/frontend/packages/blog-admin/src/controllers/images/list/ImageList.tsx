@@ -7,7 +7,7 @@ function ImageList() {
 
   return (
     <>
-      <h3>画像一覧</h3>
+      <h2>画像一覧</h2>
       <ul>
         {getAllImages().map((image) => (
           <li key={image.id}>

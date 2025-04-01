@@ -3,11 +3,11 @@ import ImageList from '../../controllers/images/list/ImageList';
 import ImageListProvider from '../../controllers/images/list/ImageListProvider';
 import ImageUploadModalWithOpenButton from '../../controllers/images/upload/ImageUploadModal';
 
-export default function CreateBlogPostPage() {
+export default function ImageManagementPage() {
   return (
     <div>
       <CommonModalProvider>
-        <h2>画像の管理</h2>
+        <h1>画像の管理</h1>
         <ImageListProvider>
           <ImageUploadModalWithOpenButton />
           <ImageList />

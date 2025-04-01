@@ -4,7 +4,7 @@ import type { BlogPostRepository } from 'service/src/blogPostService/repository/
 import { z } from 'zod';
 import { HttpError } from '../../error/httpError';
 import { blogPostResponseSchema } from './jsonMapper/blogPostSchema';
-import { blogPostToJson } from './jsonMapper/blogPostToJson';
+import { blogPostsToJson, blogPostToJson } from './jsonMapper/blogPostToJson';
 
 export class ApiBlogPostRepository implements BlogPostRepository {
   private baseUrl: string;
@@ -92,6 +92,28 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       .array(blogPostResponseSchema)
       .parse(await response.json());
 
+    return validatedResponse;
+  }
+
+  async updatePickUpPosts(newPickUpPosts: BlogPost[]): Promise<BlogPostDTO[]> {
+    if (newPickUpPosts.length !== 3) {
+      throw new Error('ピックアップ記事は3件指定してください');
+    }
+    const body = blogPostsToJson(newPickUpPosts);
+    const response = await fetch(`${this.baseUrl}/blog/posts/pickup`, {
+      method: 'PUT',
+      body,
+      ...this.baseFetchOptions,
+    });
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `ピックアップ記事の更新に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
+      );
+    }
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
     return validatedResponse;
   }
 

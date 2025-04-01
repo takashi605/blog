@@ -12,6 +12,7 @@ fn posts_scope() -> Scope {
     .route("/latest", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
+    .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
     .route("", web::post().to(handle_funcs::create_blog_post))
@@ -19,11 +20,12 @@ fn posts_scope() -> Scope {
 
 mod handle_funcs {
   use crate::{
-    db::tables::{
-      pickup_posts_table::fetch_all_pickup_blog_posts, popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post,
-    },
+    db::tables::{popular_posts_table::fetch_all_popular_blog_posts, top_tech_pick_table::fetch_top_tech_pick_blog_post},
     server::handlers::{
-      crud_helpers::{create_blog_post::create_single_blog_post, fetch_blog_post::{fetch_all_latest_blog_posts, fetch_single_blog_post}},
+      crud_helpers::{
+        create_blog_post::create_single_blog_post,
+        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_single_blog_post, update_pickup_posts},
+      },
       response::err::ApiCustomError,
     },
   };
@@ -59,16 +61,21 @@ mod handle_funcs {
 
   pub async fn get_pickup_blog_posts() -> Result<impl Responder, ApiCustomError> {
     println!("get_pickup_blog_posts");
-    let pickup_blog_posts =
-      fetch_all_pickup_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
 
-    // pickup_blog_posts.post_id を元に実際のブログ記事を fetch する
-    let mut blog_posts: Vec<BlogPost> = vec![];
-    for pickup_blog_post in pickup_blog_posts {
-      let blog_post = fetch_single_blog_post(pickup_blog_post.post_id).await?;
-      blog_posts.push(blog_post);
-    }
-    Ok(HttpResponse::Ok().json(blog_posts))
+    let result = fetch_pickup_posts().await?;
+
+    Ok(HttpResponse::Ok().json(result))
+  }
+
+  pub async fn put_pickup_blog_posts(pickup_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
+    println!("put_pickup_blog_posts");
+
+    let pickup_blog_posts: Vec<BlogPost> = pickup_posts_req.into_inner();
+    update_pickup_posts(pickup_blog_posts).await?;
+
+    let result = fetch_pickup_posts().await?;
+
+    Ok(HttpResponse::Ok().json(result))
   }
 
   pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
