@@ -81,15 +81,8 @@ mod handle_funcs {
 
   pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
     println!("get_popular_blog_posts");
-    let popular_blog_posts = fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
-
-    // popular_blog_posts.post_id を元に実際のブログ記事を fetch する
-    let mut blog_posts: Vec<BlogPost> = vec![];
-    for popular_blog_post in popular_blog_posts {
-      let blog_post = fetch_single_blog_post(popular_blog_post.post_id).await?;
-      blog_posts.push(blog_post);
-    }
-    Ok(HttpResponse::Ok().json(blog_posts))
+    let result = fetch_popular_posts().await?;
+    Ok(HttpResponse::Ok().json(result))
   }
 
   pub async fn put_popular_blog_posts(popular_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
