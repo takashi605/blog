@@ -2,8 +2,8 @@ import { Given, Then, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let initialPickUpPostsTitle: string[] = [];
-let updatedPickUpPostsTitle: string[] = [];
+let initialPickUpPostTitles: string[] = [];
+let updatedPickUpPostTitles: string[] = [];
 
 Given(
   '【ピックアップ記事選択】ピックアップ記事選択ページにアクセスする',
@@ -77,7 +77,7 @@ Then(
   async function () {
     const modal = new SelectPickUpPostsModal();
     const selectedPostTitles = await modal.getSelectedPostTitles();
-    initialPickUpPostsTitle = selectedPostTitles;
+    initialPickUpPostTitles = selectedPostTitles;
     expect(selectedPostTitles.length).toBe(3);
   },
 );
@@ -88,10 +88,10 @@ When(
     const modal = new SelectPickUpPostsModal();
     modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
-    updatedPickUpPostsTitle = selectedPostTitles;
+    updatedPickUpPostTitles = selectedPostTitles;
 
     // 選択した記事がデフォルトのピックアップ記事と異なることを確認
-    expect(selectedPostTitles).not.toEqual(initialPickUpPostsTitle);
+    expect(selectedPostTitles).not.toEqual(initialPickUpPostTitles);
 
     await modal.getSaveButton().click();
   },
@@ -115,7 +115,7 @@ Then(
     const pickupPostsSection = new PickUpPostsSection().getLocator();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).not.toEqual(initialPickUpPostsTitle);
+    expect(updatedPostTitles).not.toEqual(initialPickUpPostTitles);
   },
 );
 
@@ -133,7 +133,7 @@ Then(
     const pickupPostsSection = new HomePage().getPickUpSection();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).toEqual(updatedPickUpPostsTitle);
+    expect(updatedPostTitles).toEqual(updatedPickUpPostTitles);
   },
 );
 

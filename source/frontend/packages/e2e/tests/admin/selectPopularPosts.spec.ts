@@ -2,8 +2,8 @@ import { Given, Then, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let initialPopularPostsTitle: string[] = [];
-let updatedPopularPostsTitle: string[] = [];
+let initialPopularPostTitles: string[] = [];
+let updatedPopularPostTitles: string[] = [];
 
 Given('【人気記事選択】人気記事選択ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
@@ -68,7 +68,7 @@ Then(
   async function () {
     const modal = new SelectPopularPostsModal();
     const selectedPostTitles = await modal.getSelectedPostTitles();
-    initialPopularPostsTitle = selectedPostTitles;
+    initialPopularPostTitles = selectedPostTitles;
     expect(selectedPostTitles.length).toBe(3);
   },
 );
@@ -79,10 +79,10 @@ When(
     const modal = new SelectPopularPostsModal();
     modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
-    updatedPopularPostsTitle = selectedPostTitles;
+    updatedPopularPostTitles = selectedPostTitles;
 
     // 選択した記事がデフォルトの人気記事と異なることを確認
-    expect(selectedPostTitles).not.toEqual(initialPopularPostsTitle);
+    expect(selectedPostTitles).not.toEqual(initialPopularPostTitles);
 
     await modal.getSaveButton().click();
   },
@@ -106,7 +106,7 @@ Then(
     const pickupPostsSection = new PopularPostsSection().getLocator();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).not.toEqual(initialPopularPostsTitle);
+    expect(updatedPostTitles).not.toEqual(initialPopularPostTitles);
   },
 );
 
@@ -124,7 +124,7 @@ Then(
     const pickupPostsSection = new HomePage().getPopularSection();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).toEqual(updatedPopularPostsTitle);
+    expect(updatedPostTitles).toEqual(updatedPopularPostTitles);
   },
 );
 
