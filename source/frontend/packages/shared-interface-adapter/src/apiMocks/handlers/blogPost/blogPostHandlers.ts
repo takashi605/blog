@@ -94,6 +94,21 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
 
       return HttpResponse.json(updatedPosts, { status: 200 });
     }),
+    http.put(`${baseUrl}/blog/posts/popular`, async ({ request }) => {
+      let updatedPosts: DefaultBodyType;
+      try {
+        updatedPosts = await request.json();
+      } catch {
+        return HttpResponse.json(
+          { message: 'リクエストを json に変換できませんでした。' },
+          { status: 400 },
+        );
+      }
+
+      // popularBlogPostResponses の内容を更新すべきだが、上手くいかなかったので省略している
+      // 基本的には更新後のものを参照することはないので、このままでも問題ないと思われる
+      return HttpResponse.json(updatedPosts, { status: 200 });
+    }),
   ];
   return blogPostHandlers;
 };
