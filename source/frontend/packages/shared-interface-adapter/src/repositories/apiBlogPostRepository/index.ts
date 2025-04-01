@@ -96,6 +96,9 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async updatePickUpPosts(newPickUpPosts: BlogPost[]): Promise<BlogPostDTO[]> {
+    if (newPickUpPosts.length !== 3) {
+      throw new Error('ピックアップ記事は3件指定してください');
+    }
     const body = blogPostsToJson(newPickUpPosts);
     const response = await fetch(`${this.baseUrl}/blog/posts/pickup`, {
       method: 'PUT',

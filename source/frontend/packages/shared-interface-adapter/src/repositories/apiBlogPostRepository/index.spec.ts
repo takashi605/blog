@@ -123,6 +123,30 @@ describe('apiBlogPostRepository', () => {
     });
   });
 
+  it('ピックアップ記事を更新する際、3件のデータを渡さないとエラーが返される', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const pickUpPosts: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePickUpPosts(pickUpPosts)).rejects.toThrow(
+      'ピックアップ記事は3件指定してください',
+    );
+
+    const pickUpPosts2: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+      new MockBlogPost(UUIDList.UUID3).successfulMock(),
+      new MockBlogPost(UUIDList.UUID4).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePickUpPosts(pickUpPosts2)).rejects.toThrow(
+      'ピックアップ記事は3件指定してください',
+    );
+  });
+
   it('api から人気記事を複数件取得できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
