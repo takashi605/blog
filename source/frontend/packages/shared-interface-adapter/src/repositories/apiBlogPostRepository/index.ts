@@ -95,11 +95,11 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
-  async updatePickUpPosts(newPickUpPosts: BlogPost[]): Promise<BlogPostDTO[]> {
-    if (newPickUpPosts.length !== 3) {
+  async updatePickUpPosts(pickupPosts: BlogPost[]): Promise<BlogPostDTO[]> {
+    if (pickupPosts.length !== 3) {
       throw new Error('ピックアップ記事は3件指定してください');
     }
-    const body = blogPostsToJson(newPickUpPosts);
+    const body = blogPostsToJson(pickupPosts);
     const response = await fetch(`${this.baseUrl}/blog/posts/pickup`, {
       method: 'PUT',
       body,
@@ -133,12 +133,12 @@ export class ApiBlogPostRepository implements BlogPostRepository {
   }
 
   async updatePopularPosts(
-    newPopularPosts: BlogPost[],
+    popularPosts: BlogPost[],
   ): Promise<BlogPostDTO[]> {
-    if (newPopularPosts.length !== 3) {
+    if (popularPosts.length !== 3) {
       throw new Error('人気記事は3件指定してください');
     }
-    const body = blogPostsToJson(newPopularPosts);
+    const body = blogPostsToJson(popularPosts);
     const response = await fetch(`${this.baseUrl}/blog/posts/popular`, {
       method: 'PUT',
       body,
