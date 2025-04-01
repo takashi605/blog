@@ -23,7 +23,8 @@ afterAll(() => {
 
 describe('ユースケース: 人気記事の選択', () => {
   it('ユースケースを実行するとデータリポジトリ内の人気記事が新しいものに更新される', async () => {
-    const newPopularPostsDTOMock: BlogPostDTO[] = createNewPopularPostsDTOMock();
+    const newPopularPostsDTOMock: BlogPostDTO[] =
+      createNewPopularPostsDTOMock();
     const mockRepository: BlogPostRepository = {
       ...mockBlogPostRepository,
       updatePopularPosts: jest.fn().mockResolvedValue(newPopularPostsDTOMock),

@@ -194,9 +194,9 @@ describe('apiBlogPostRepository', () => {
       new MockBlogPost(UUIDList.UUID2).successfulMock(),
     ];
 
-    await expect(apiRepository.updatePopularPosts(popularPosts)).rejects.toThrow(
-      '人気記事は3件指定してください',
-    );
+    await expect(
+      apiRepository.updatePopularPosts(popularPosts),
+    ).rejects.toThrow('人気記事は3件指定してください');
 
     const popularPosts2: BlogPost[] = [
       new MockBlogPost(UUIDList.UUID1).successfulMock(),
@@ -205,9 +205,9 @@ describe('apiBlogPostRepository', () => {
       new MockBlogPost(UUIDList.UUID4).successfulMock(),
     ];
 
-    await expect(apiRepository.updatePopularPosts(popularPosts2)).rejects.toThrow(
-      '人気記事は3件指定してください',
-    );
+    await expect(
+      apiRepository.updatePopularPosts(popularPosts2),
+    ).rejects.toThrow('人気記事は3件指定してください');
   });
 
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
