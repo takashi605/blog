@@ -2,25 +2,28 @@ import { Given, Then, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let initialPickUpPostsTitle: string[] = [];
-let updatedPickUpPostsTitle: string[] = [];
+let initialPickUpPostTitles: string[] = [];
+let updatedPickUpPostTitles: string[] = [];
 
-Given('ピックアップ記事選択ページにアクセスする', async function () {
-  if (!process.env.ADMIN_URL) {
-    throw new Error('ADMIN_URL 環境変数が設定されていません');
-  }
-  const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/pickup`);
+Given(
+  '【ピックアップ記事選択】ピックアップ記事選択ページにアクセスする',
+  async function () {
+    if (!process.env.ADMIN_URL) {
+      throw new Error('ADMIN_URL 環境変数が設定されていません');
+    }
+    const page = playwrightHelper.getPage();
+    await page.goto(`${process.env.ADMIN_URL}/posts/pickup`);
 
-  // 画像一覧取得 API の fetch 完了を待つ
-  const fetchPickUpPostsResponse = await page.waitForResponse(
-    '**/blog/posts/pickup*',
-  );
-  expect(fetchPickUpPostsResponse.status()).toBe(200);
-  await fetchPickUpPostsResponse.json();
-});
+    // 画像一覧取得 API の fetch 完了を待つ
+    const fetchPickUpPostsResponse = await page.waitForResponse(
+      '**/blog/posts/pickup*',
+    );
+    expect(fetchPickUpPostsResponse.status()).toBe(200);
+    await fetchPickUpPostsResponse.json();
+  },
+);
 Then(
-  '現在ピックアップ記事に設定されている記事のタイトルが3件分表示されている',
+  '【ピックアップ記事選択】現在ピックアップ記事に設定されている記事のタイトルが3件分表示されている',
   async function () {
     // ピックアップの一覧表示セクションを取得
     const pickupPostsSection = new PickUpPostsSection().getLocator();
@@ -31,77 +34,92 @@ Then(
   },
 );
 
-When('「ピックアップ記事を選択」ボタンを押下する', async function () {
-  const { getOpenModalButton } = new SelectPickUpPostsModal();
-  const page = playwrightHelper.getPage();
+When(
+  '【ピックアップ記事選択】「ピックアップ記事を選択」ボタンを押下する',
+  async function () {
+    const { getOpenModalButton } = new SelectPickUpPostsModal();
+    const page = playwrightHelper.getPage();
 
-  const [response] = await Promise.all([
-    page.waitForResponse(
-      (resp) =>
-        resp.url().includes('/blog/posts/latest') && resp.status() === 200,
-    ),
-    getOpenModalButton().click(),
-  ]);
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        (resp) =>
+          resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+      ),
+      getOpenModalButton().click(),
+    ]);
 
-  expect(response.status()).toBe(200);
+    expect(response.status()).toBe(200);
 
-  // これをしないとレスポンスが返るまで待てていない気がする
-  // 単純に処理に時間をかけているからたまたま上手くいくだけかもしれない
-  // 一応、ChatGPT に聞いたら「レスポンスを読み込み終えるまで待機する有効な方法」とのことだった
-  await response.json();
-});
-Then('ピックアップ記事選択モーダルが表示される', async function () {
-  const modal = new SelectPickUpPostsModal().getLocator();
-  await expect(modal).toBeVisible({ timeout: 10000 });
-});
-Then('既存の記事すべてのタイトルが表示される', async function () {
-  const modal = new SelectPickUpPostsModal().getLocator();
-  const postTitles = modal.locator('h3');
+    // これをしないとレスポンスが返るまで待てていない気がする
+    // 単純に処理に時間をかけているからたまたま上手くいくだけかもしれない
+    // 一応、ChatGPT に聞いたら「レスポンスを読み込み終えるまで待機する有効な方法」とのことだった
+    await response.json();
+  },
+);
+Then(
+  '【ピックアップ記事選択】ピックアップ記事選択モーダルが表示される',
+  async function () {
+    const modal = new SelectPickUpPostsModal().getLocator();
+    await expect(modal).toBeVisible({ timeout: 10000 });
+  },
+);
+Then(
+  '【ピックアップ記事選択】既存の記事すべてのタイトルが表示される',
+  async function () {
+    const modal = new SelectPickUpPostsModal().getLocator();
+    const postTitles = modal.locator('h3');
 
-  expect(await postTitles.count()).toBeGreaterThan(0);
-});
-Then('デフォルトで3件の記事が選択されている', async function () {
-  const modal = new SelectPickUpPostsModal();
-  const selectedPostTitles = await modal.getSelectedPostTitles();
-  initialPickUpPostsTitle = selectedPostTitles;
-  expect(selectedPostTitles.length).toBe(3);
-});
+    expect(await postTitles.count()).toBeGreaterThan(0);
+  },
+);
+Then(
+  '【ピックアップ記事選択】デフォルトで3件の記事が選択されている',
+  async function () {
+    const modal = new SelectPickUpPostsModal();
+    const selectedPostTitles = await modal.getSelectedPostTitles();
+    initialPickUpPostTitles = selectedPostTitles;
+    expect(selectedPostTitles.length).toBe(3);
+  },
+);
 
 When(
-  'デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
+  '【ピックアップ記事選択】デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
     const modal = new SelectPickUpPostsModal();
     modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
-    updatedPickUpPostsTitle = selectedPostTitles;
+    updatedPickUpPostTitles = selectedPostTitles;
 
     // 選択した記事がデフォルトのピックアップ記事と異なることを確認
-    expect(selectedPostTitles).not.toEqual(initialPickUpPostsTitle);
+    expect(selectedPostTitles).not.toEqual(initialPickUpPostTitles);
 
     await modal.getSaveButton().click();
   },
 );
-Then('モーダル内に保存した旨のメッセージが表示される', async function () {
-  const modal = new SelectPickUpPostsModal().getLocator();
-  const message = modal.getByText('ピックアップ記事を更新しました');
-  await expect(message).toBeVisible({ timeout: 10000 });
-});
+Then(
+  '【ピックアップ記事選択】モーダル内に保存した旨のメッセージが表示される',
+  async function () {
+    const modal = new SelectPickUpPostsModal().getLocator();
+    const message = modal.getByText('ピックアップ記事を更新しました');
+    await expect(message).toBeVisible({ timeout: 10000 });
+  },
+);
 
-When('モーダルを閉じる', async function () {
+When('【ピックアップ記事選択】モーダルを閉じる', async function () {
   const closeButton = new SelectPickUpPostsModal().getCloseModalButton();
   await closeButton.click();
 });
 Then(
-  '一覧表示されていたタイトルが新しいものに更新されている',
+  '【ピックアップ記事選択】一覧表示されていたタイトルが新しいものに更新されている',
   async function () {
     const pickupPostsSection = new PickUpPostsSection().getLocator();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).not.toEqual(initialPickUpPostsTitle);
+    expect(updatedPostTitles).not.toEqual(initialPickUpPostTitles);
   },
 );
 
-When('トップページへ遷移する', async function () {
+When('【ピックアップ記事選択】トップページへ遷移する', async function () {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
@@ -110,12 +128,12 @@ When('トップページへ遷移する', async function () {
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
 Then(
-  'ピックアップ記事のセクションに新規設定したピックアップ記事が表示されている',
+  '【ピックアップ記事選択】ピックアップ記事のセクションに新規設定したピックアップ記事が表示されている',
   async function () {
     const pickupPostsSection = new HomePage().getPickUpSection();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).toEqual(updatedPickUpPostsTitle);
+    expect(updatedPostTitles).toEqual(updatedPickUpPostTitles);
   },
 );
 
