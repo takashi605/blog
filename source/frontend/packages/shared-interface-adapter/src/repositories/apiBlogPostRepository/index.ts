@@ -132,6 +132,28 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  async updatePopularPosts(newPopularPosts: BlogPost[]): Promise<BlogPostDTO[]> {
+    if (newPopularPosts.length !== 3) {
+      throw new Error('人気記事は3件指定してください');
+    }
+    const body = blogPostsToJson(newPopularPosts);
+    const response = await fetch(`${this.baseUrl}/blog/posts/popular`, {
+      method: 'PUT',
+      body,
+      ...this.baseFetchOptions,
+    });
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `人気記事の更新に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
+      );
+    }
+    const validatedResponse = z
+      .array(blogPostResponseSchema)
+      .parse(await response.json());
+    return validatedResponse;
+  }
+
   // TODO 引数で url を受け取れるようにする
   private async post(blogPostJson: string): Promise<Response> {
     const response = await fetch(`${this.baseUrl}/blog/posts`, {

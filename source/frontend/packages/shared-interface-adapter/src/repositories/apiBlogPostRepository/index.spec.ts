@@ -163,6 +163,53 @@ describe('apiBlogPostRepository', () => {
     });
   });
 
+  it('api を通じて人気記事を更新できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const popularPosts: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+      new MockBlogPost(UUIDList.UUID3).successfulMock(),
+    ];
+
+    const resp: BlogPostDTO[] =
+      await apiRepository.updatePopularPosts(popularPosts);
+    expect(resp.length).toBe(3);
+
+    resp.forEach((popularPost) => {
+      expect(popularPost.id).toBeDefined();
+      expect(popularPost.title).toBeDefined();
+      expect(popularPost.thumbnail).toBeDefined();
+      expect(popularPost.postDate).toBeDefined();
+      expect(popularPost.lastUpdateDate).toBeDefined();
+      expect(popularPost.contents.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('人気記事を更新する際、3件のデータを渡さないとエラーが返される', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const popularPosts: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePopularPosts(popularPosts)).rejects.toThrow(
+      '人気記事は3件指定してください',
+    );
+
+    const popularPosts2: BlogPost[] = [
+      new MockBlogPost(UUIDList.UUID1).successfulMock(),
+      new MockBlogPost(UUIDList.UUID2).successfulMock(),
+      new MockBlogPost(UUIDList.UUID3).successfulMock(),
+      new MockBlogPost(UUIDList.UUID4).successfulMock(),
+    ];
+
+    await expect(apiRepository.updatePopularPosts(popularPosts2)).rejects.toThrow(
+      '人気記事は3件指定してください',
+    );
+  });
+
   it('404 エラーレスポンスが返るとエラーが throw される', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
     try {
