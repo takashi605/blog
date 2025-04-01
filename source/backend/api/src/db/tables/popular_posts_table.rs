@@ -11,7 +11,7 @@ pub struct PopularPostRecord {
 }
 
 pub async fn fetch_all_popular_blog_posts() -> Result<Vec<PopularPostRecord>> {
-  // 新しい順に3件取得
+  // 古い順に3件取得
   let post = sqlx::query_as::<_, PopularPostRecord>("select id, post_id from popular_posts order by updated_at asc limit 3").fetch_all(&*POOL).await?;
   Ok(post)
 }
