@@ -1,7 +1,7 @@
-// import CommonModalProvider from '../../../components/modal/CommonModalProvider';
+import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import PopularPostList from '../../../controllers/blogPost/popular/list/PopularPostList';
 import PopularPostListProvider from '../../../controllers/blogPost/popular/list/PopularPostListProvider';
-// import PopularPostSelectModalWithOpenButton from '../../../controllers/blogPost/popular/select/PopularPostSelectModal';
+import PopularPostSelectModalWithOpenButton from '../../../controllers/blogPost/popular/select/PopularPostSelectModal';
 
 export default function PopularManagementPage() {
   return (
@@ -10,9 +10,9 @@ export default function PopularManagementPage() {
       <section>
         <PopularPostListProvider>
           <PopularPostList />
-          {/* <CommonModalProvider>
+          <CommonModalProvider>
             <PopularPostSelectModalWithOpenButton />
-          </CommonModalProvider> */}
+          </CommonModalProvider>
         </PopularPostListProvider>
       </section>
     </div>

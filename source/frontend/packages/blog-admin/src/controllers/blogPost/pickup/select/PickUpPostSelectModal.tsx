@@ -29,7 +29,6 @@ function Modal() {
   const { selectedBlogPosts } = usePickUpPostsCheckbox();
 
   const onSubmit = async (data: PickUpPostsFormValues) => {
-    console.log(data);
     if (!process.env.NEXT_PUBLIC_API_URL) {
       throw new Error('API の URL が設定されていません');
     }
