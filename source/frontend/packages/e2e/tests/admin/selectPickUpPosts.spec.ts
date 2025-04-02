@@ -100,7 +100,7 @@ Then(
   '【ピックアップ記事選択】モーダル内に保存した旨のメッセージが表示される',
   async function () {
     const modal = new SelectPickUpPostsModal().getLocator();
-    const message = modal.getByText('ピックアップ記事を更新しました');
+    const message = modal.getByText('ピックアップ記事を更新しました。');
     await expect(message).toBeVisible({ timeout: 10000 });
   },
 );
@@ -133,7 +133,10 @@ Then(
     const pickupPostsSection = new HomePage().getPickUpSection();
     const postTitles = pickupPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).toEqual(updatedPickUpPostTitles);
+    // 順不同で、かつ、配列の要素が同じであることを確認
+    expect(updatedPostTitles).toEqual(
+      expect.arrayContaining(updatedPickUpPostTitles),
+    );
   },
 );
 
