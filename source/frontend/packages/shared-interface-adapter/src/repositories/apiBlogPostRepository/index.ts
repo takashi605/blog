@@ -14,6 +14,8 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       Authorization: `${process.env.NEXT_PUBLIC_BASIC_AUTHENTICATION}`,
       'Content-Type': 'application/json',
     },
+    next: { revalidate: 60 },
+    cache: 'no-store',
   };
 
   constructor(url: string) {
