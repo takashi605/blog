@@ -29,7 +29,8 @@
     "funcs",
     "nonroot",
     "sqlx",
-    "Usecase"
+    "Usecase",
+    "usecases"
   ],
   "rust-analyzer.server.extraEnv": {
     "SQLX_OFFLINE": "true"
