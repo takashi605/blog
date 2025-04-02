@@ -1,20 +1,20 @@
-import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-// import PopularPostList from '../../../controllers/blogPost/popular/list/PopularPostList';
-// import PopularPostListProvider from '../../../controllers/blogPost/popular/list/PopularPostListProvider';
+// import CommonModalProvider from '../../../components/modal/CommonModalProvider';
+import PopularPostList from '../../../controllers/blogPost/popular/list/PopularPostList';
+import PopularPostListProvider from '../../../controllers/blogPost/popular/list/PopularPostListProvider';
 // import PopularPostSelectModalWithOpenButton from '../../../controllers/blogPost/popular/select/PopularPostSelectModal';
 
 export default function PopularManagementPage() {
   return (
     <div>
-      <h1>ピックアップ記事管理</h1>
-      {/* <section>
+      <h1>人気記事管理</h1>
+      <section>
         <PopularPostListProvider>
           <PopularPostList />
-          <CommonModalProvider>
+          {/* <CommonModalProvider>
             <PopularPostSelectModalWithOpenButton />
-          </CommonModalProvider>
+          </CommonModalProvider> */}
         </PopularPostListProvider>
-      </section> */}
+      </section>
     </div>
   );
 }
