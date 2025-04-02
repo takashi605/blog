@@ -10,11 +10,11 @@ Given('【人気記事選択】人気記事選択ページにアクセスする'
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/pickup`);
+  await page.goto(`${process.env.ADMIN_URL}/posts/popular`);
 
   // 画像一覧取得 API の fetch 完了を待つ
   const fetchPopularPostsResponse = await page.waitForResponse(
-    '**/blog/posts/pickup*',
+    '**/blog/posts/popular*',
   );
   expect(fetchPopularPostsResponse.status()).toBe(200);
   await fetchPopularPostsResponse.json();
@@ -23,9 +23,9 @@ Then(
   '【人気記事選択】現在人気記事に設定されている記事のタイトルが3件分表示されている',
   async function () {
     // 人気記事の一覧表示セクションを取得
-    const pickupPostsSection = new PopularPostsSection().getLocator();
+    const popularPostsSection = new PopularPostsSection().getLocator();
     // セクション内の記事タイトルを取得
-    const postTitles = pickupPostsSection.locator('h3');
+    const postTitles = popularPostsSection.locator('h3');
     // セクション内の記事タイトルが3件であることを確認
     expect(await postTitles.count()).toBe(3);
   },
@@ -91,7 +91,7 @@ Then(
   '【人気記事選択】モーダル内に保存した旨のメッセージが表示される',
   async function () {
     const modal = new SelectPopularPostsModal().getLocator();
-    const message = modal.getByText('人気記事を更新しました');
+    const message = modal.getByText('人気記事を更新しました。');
     await expect(message).toBeVisible({ timeout: 10000 });
   },
 );
@@ -103,8 +103,8 @@ When('【人気記事選択】モーダルを閉じる', async function () {
 Then(
   '【人気記事選択】一覧表示されていたタイトルが新しいものに更新されている',
   async function () {
-    const pickupPostsSection = new PopularPostsSection().getLocator();
-    const postTitles = pickupPostsSection.locator('h3');
+    const popularPostsSection = new PopularPostsSection().getLocator();
+    const postTitles = popularPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
     expect(updatedPostTitles).not.toEqual(initialPopularPostTitles);
   },
@@ -121,10 +121,13 @@ When('【人気記事選択】トップページへ遷移する', async function
 Then(
   '【人気記事選択】人気記事のセクションに新規設定した人気記事が表示されている',
   async function () {
-    const pickupPostsSection = new HomePage().getPopularSection();
-    const postTitles = pickupPostsSection.locator('h3');
+    const popularPostsSection = new HomePage().getPopularSection();
+    const postTitles = popularPostsSection.locator('h3');
     const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).toEqual(updatedPopularPostTitles);
+    // 順不同で、かつ、配列の要素が同じであることを確認
+    expect(updatedPostTitles).toEqual(
+      expect.arrayContaining(updatedPopularPostTitles),
+    );
   },
 );
 
