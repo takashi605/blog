@@ -123,8 +123,12 @@ When('【ピックアップ記事選択】トップページへ遷移する', as
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
-  const page = playwrightHelper.getPage();
 
+  // 2秒の revalidate を待つ
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  // トップページに遷移
+  const page = playwrightHelper.getPage();
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
 Then(
