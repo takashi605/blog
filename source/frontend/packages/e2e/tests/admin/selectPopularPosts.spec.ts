@@ -77,14 +77,14 @@ When(
   '【人気記事選択】デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
     const modal = new SelectPopularPostsModal();
-    modal.uncheckAllPosts();
+    await modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
     updatedPopularPostTitles = selectedPostTitles;
 
     // 選択した記事がデフォルトの人気記事と異なることを確認
     expect(selectedPostTitles).not.toEqual(initialPopularPostTitles);
 
-    await modal.getSaveButton().click();
+    modal.getSaveButton().click();
   },
 );
 Then(
@@ -202,9 +202,10 @@ class SelectPopularPostsModal {
   async uncheckAllPosts() {
     const modal = this.getLocator();
     const checkboxes = modal.getByRole('checkbox', { checked: true });
-    const count = await checkboxes.count();
-    for (let i = 0; i < count; i++) {
-      await checkboxes.nth(i).click();
+    while (true) {
+      const checkedCount = await checkboxes.count();
+      if (checkedCount === 0) break;
+      await checkboxes.first().click();
     }
   }
 }

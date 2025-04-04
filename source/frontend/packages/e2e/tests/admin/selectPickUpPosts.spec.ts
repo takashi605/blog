@@ -86,14 +86,14 @@ When(
   '【ピックアップ記事選択】デフォルトで設定されているものとは違う組み合わせで3件の記事を選択して「保存」ボタンを押す',
   async function () {
     const modal = new SelectPickUpPostsModal();
-    modal.uncheckAllPosts();
+    await modal.uncheckAllPosts();
     const selectedPostTitles = await modal.selectFirstThreePostTitles();
     updatedPickUpPostTitles = selectedPostTitles;
 
     // 選択した記事がデフォルトのピックアップ記事と異なることを確認
     expect(selectedPostTitles).not.toEqual(initialPickUpPostTitles);
 
-    await modal.getSaveButton().click();
+    modal.getSaveButton().click();
   },
 );
 Then(
@@ -211,9 +211,12 @@ class SelectPickUpPostsModal {
   async uncheckAllPosts() {
     const modal = this.getLocator();
     const checkboxes = modal.getByRole('checkbox', { checked: true });
-    const count = await checkboxes.count();
-    for (let i = 0; i < count; i++) {
-      await checkboxes.nth(i).click();
+    await expect(checkboxes).toHaveCount(3); // 取得処理の待機のために、3件選択されていることを確認
+
+    while (true) {
+      const checkedCount = await checkboxes.count();
+      if (checkedCount === 0) break;
+      await checkboxes.first().click();
     }
   }
 }
