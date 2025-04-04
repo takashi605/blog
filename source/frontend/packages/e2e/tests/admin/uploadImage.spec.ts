@@ -12,12 +12,15 @@ Given('【アップロード】画像管理ページにアクセスする', asyn
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/images`);
+
+  const [response] = await Promise.all([
+    page.waitForResponse('**/blog/images'),
+    page.goto(`${process.env.ADMIN_URL}/images`),
+  ]);
 
   // 画像データの fetch を待機
-  const fetchImagesResponse = await page.waitForResponse('**/blog/images');
-  expect(fetchImagesResponse.status()).toBe(200);
-  await fetchImagesResponse.json();
+  expect(response.status()).toBe(200);
+  await response.json();
 
   // 後で画像数が増えたことを確認するために初期画像数を取得
   const images = page.locator('img');

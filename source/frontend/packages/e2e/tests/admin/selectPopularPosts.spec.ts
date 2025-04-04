@@ -10,14 +10,13 @@ Given('【人気記事選択】人気記事選択ページにアクセスする'
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/popular`);
+  const [response] = await Promise.all([
+    page.waitForResponse('**/blog/posts/popular*'),
+    page.goto(`${process.env.ADMIN_URL}/posts/popular`),
+  ]);
 
-  // 画像一覧取得 API の fetch 完了を待つ
-  const fetchPopularPostsResponse = await page.waitForResponse(
-    '**/blog/posts/popular*',
-  );
-  expect(fetchPopularPostsResponse.status()).toBe(200);
-  await fetchPopularPostsResponse.json();
+  expect(response.status()).toBe(200);
+  await response.json();
 });
 Then(
   '【人気記事選択】現在人気記事に設定されている記事のタイトルが3件分表示されている',

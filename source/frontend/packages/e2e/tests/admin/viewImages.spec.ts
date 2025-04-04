@@ -7,12 +7,15 @@ Given('【一覧表示】画像管理ページにアクセスする', async func
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/images`);
+
+  const [response] = await Promise.all([
+    page.waitForResponse('**/blog/images'),
+    page.goto(`${process.env.ADMIN_URL}/images`),
+  ]);
 
   // 画像一覧取得 API の fetch 完了を待つ
-  const fetchImagesResponse = await page.waitForResponse('**/blog/images');
-  expect(fetchImagesResponse.status()).toBe(200);
-  await fetchImagesResponse.json();
+  expect(response.status()).toBe(200);
+  await response.json();
 });
 Then('3件以上の画像が表示される', async function () {
   const page = playwrightHelper.getPage();

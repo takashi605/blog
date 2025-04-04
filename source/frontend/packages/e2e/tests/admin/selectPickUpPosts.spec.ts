@@ -12,14 +12,14 @@ Given(
       throw new Error('ADMIN_URL 環境変数が設定されていません');
     }
     const page = playwrightHelper.getPage();
-    await page.goto(`${process.env.ADMIN_URL}/posts/pickup`);
 
-    // 画像一覧取得 API の fetch 完了を待つ
-    const fetchPickUpPostsResponse = await page.waitForResponse(
-      '**/blog/posts/pickup*',
-    );
-    expect(fetchPickUpPostsResponse.status()).toBe(200);
-    await fetchPickUpPostsResponse.json();
+    const [response] = await Promise.all([
+      page.waitForResponse('**/blog/posts/pickup*'),
+      page.goto(`${process.env.ADMIN_URL}/posts/pickup`),
+    ]);
+
+    expect(response.status()).toBe(200);
+    await response.json();
   },
 );
 Then(
