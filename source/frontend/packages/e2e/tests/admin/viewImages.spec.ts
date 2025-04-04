@@ -8,9 +8,6 @@ Given('【一覧表示】画像管理ページにアクセスする', async func
   }
   const page = playwrightHelper.getPage();
   await page.goto(`${process.env.ADMIN_URL}/images`);
-});
-Then('画像データが取得される', async function () {
-  const page = playwrightHelper.getPage();
 
   // 画像一覧取得 API の fetch 完了を待つ
   const fetchImagesResponse = await page.waitForResponse('**/blog/images');
