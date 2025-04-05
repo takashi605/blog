@@ -1,9 +1,13 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
+import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { useImageList } from '../list/useImageList';
 
 type ImagePickerProps = {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    imageDTO: ImageDTO,
+  ) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
   ref?: React.Ref<HTMLInputElement>;
@@ -21,8 +25,8 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
             <input
               id={image.id}
               type="radio"
-              value={image.id}
-              onChange={onChange}
+              value={image.path}
+              onChange={(e) => onChange(e, image)}
               {...(onBlur && { onBlur })}
               {...(name && { name })}
               {...(ref && { ref })}

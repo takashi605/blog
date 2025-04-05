@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
+import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
@@ -12,9 +13,9 @@ function ThumbnailPickModalWithOpenButton() {
   const { onChange, onBlur, name, ref } = register('thumbnail.id');
 
   const onChangePickHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>, imageDTO: ImageDTO) => {
       onChange(e);
-      setValue('thumbnail.path', e.target.value);
+      setValue('thumbnail.path', imageDTO.path);
     },
     [onChange, setValue],
   );
