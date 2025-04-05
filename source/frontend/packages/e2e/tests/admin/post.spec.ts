@@ -199,6 +199,11 @@ When('画像選択モーダルを開き、画像を選択する', async function
   const firstRadioButton = radioButtonsInModal.first();
   await firstRadioButton.click();
 
+  const imageInsertButton = modal.getByRole('button', {
+    name: '挿入',
+  });
+  await imageInsertButton.click();
+
   // 対応する画像の src 属性を取得して変数に保持
   const labelsInModal = modal.locator('label');
   const firstLabelInModal = labelsInModal.first();

@@ -5,6 +5,7 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
@@ -66,7 +67,9 @@ function CreateBlogPostForm() {
           <input id="title" {...register('title')} />
           <br />
 
-          <ThumbnailPickModalWithOpenButton />
+          <CommonModalProvider>
+            <ThumbnailPickModalWithOpenButton />
+          </CommonModalProvider>
           <br />
 
           <button type="submit">投稿</button>
