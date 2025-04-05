@@ -42,3 +42,13 @@ pub async fn fetch_image_blocks_by_content_id(content_id: Uuid) -> Result<ImageB
   let block = sqlx::query_as::<_, ImageBlockRecord>("select id, image_id from image_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
   Ok(block)
 }
+
+pub async fn insert_image_block(image_block: ImageBlockRecord) -> Result<()> {
+  sqlx::query("insert into image_blocks (id, image_id) values ($1, $2)")
+    .bind(image_block.id)
+    .bind(image_block.image_id)
+    .execute(&*POOL)
+    .await
+    .context("画像ブロックの挿入に失敗しました。")?;
+  Ok(())
+}
