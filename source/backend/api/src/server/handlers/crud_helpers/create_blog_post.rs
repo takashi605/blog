@@ -20,8 +20,8 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   let text_style_records: Vec<TextStyleRecord> =
     fetch_text_styles_all().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
-  let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, rich_text_records, rich_text_styles) =
-    generate_blog_post_records_by(blog_post.clone(), text_style_records)
+  let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records,image_block_records, rich_text_records, rich_text_styles) =
+    generate_blog_post_records_by(blog_post.clone(), text_style_records, vec![])
       .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   insert_blog_post(blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
