@@ -5,11 +5,12 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
 import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
 } from '../../../usecases/create/createBlogPost';
-import ImagePickModalWithOpenButton from '../../images/pick/ImagePickModal';
+import ImagePickModal from '../../images/pick/ImagePickModal';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import { formDataToDTO } from './helper/formDataToDTO';
 import ThumbnailPreview from './ThumbnailPreview';
@@ -66,7 +67,8 @@ function CreateBlogPostForm() {
           <input id="title" {...register('title')} />
           <br />
 
-          <ImagePickModalWithOpenButton buttonText="サムネイル画像を選択" />
+          <ImagePickModal />
+          <CommonModalOpenButton>サムネイル画像を選択</CommonModalOpenButton>
           <br />
 
           <button type="submit">投稿</button>
