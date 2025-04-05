@@ -7,6 +7,7 @@ use crate::{
     blog_posts_table::insert_blog_post,
     generate_blog_post_records_by,
     heading_blocks_table::insert_heading_block,
+    images_table::{fetch_all_images, ImageRecord},
     paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
     post_contents_table::insert_blog_post_content,
   },
@@ -19,9 +20,11 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   let post_id = blog_post.id;
   let text_style_records: Vec<TextStyleRecord> =
     fetch_text_styles_all().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  let image_records: Vec<ImageRecord> =
+    fetch_all_images().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
-  let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records,image_block_records, rich_text_records, rich_text_styles) =
-    generate_blog_post_records_by(blog_post.clone(), text_style_records, vec![])
+  let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, image_block_records, rich_text_records, rich_text_styles) =
+    generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
       .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   insert_blog_post(blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
