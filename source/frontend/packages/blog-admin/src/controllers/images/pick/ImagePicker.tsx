@@ -25,7 +25,7 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
             <input
               id={image.id}
               type="radio"
-              value={image.path}
+              value={image.id}
               onChange={(e) => onChange(e, image)}
               {...(onBlur && { onBlur })}
               {...(name && { name })}
