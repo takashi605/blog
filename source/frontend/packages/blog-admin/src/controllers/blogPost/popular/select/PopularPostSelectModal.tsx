@@ -2,6 +2,7 @@
 import React from 'react';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
+import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
 import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
 import { SelectPopularPostsUseCase } from '../../../../usecases/select/selectPopularPosts';
 import { usePopularPostListContext } from '../list/PopularPostListProvider';
@@ -11,11 +12,9 @@ import PopularPostsFormProvider from './form/PopularPostsFormProvider';
 import { usePopularPostsCheckbox } from './form/usePopularPostsCheckbox';
 
 function PopularPostSelectModalWithOpenButton() {
-  const { openModal } = useCommonModalContext();
-
   return (
     <>
-      <button onClick={openModal}>人気記事を選択</button>
+      <CommonModalOpenButton>人気記事を選択</CommonModalOpenButton>
       <Modal />
     </>
   );

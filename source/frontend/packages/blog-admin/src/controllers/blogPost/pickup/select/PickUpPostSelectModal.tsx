@@ -2,6 +2,7 @@
 import React from 'react';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
+import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
 import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
 import { SelectPickUpPostsUseCase } from '../../../../usecases/select/selectPickUpPosts';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
@@ -11,11 +12,9 @@ import PickUpPostsFormProvider from './form/PickUpPostsFormProvider';
 import { usePickUpPostsCheckbox } from './form/usePickUpPostsCheckbox';
 
 function PickUpPostSelectModalWithOpenButton() {
-  const { openModal } = useCommonModalContext();
-
   return (
     <>
-      <button onClick={openModal}>ピックアップ記事を選択</button>
+      <CommonModalOpenButton>ピックアップ記事を選択</CommonModalOpenButton>
       <Modal />
     </>
   );

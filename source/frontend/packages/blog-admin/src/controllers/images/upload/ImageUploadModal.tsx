@@ -5,6 +5,7 @@ import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
+import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
 import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import { CreateImageUseCase } from '../../../usecases/create/createImage';
 import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
@@ -15,11 +16,9 @@ import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModalWithOpenButton() {
-  const { openModal } = useCommonModalContext();
-
   return (
     <>
-      <button onClick={openModal}>画像を追加</button>
+      <CommonModalOpenButton>画像を追加</CommonModalOpenButton>
       <Modal />
     </>
   );
