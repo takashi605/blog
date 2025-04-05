@@ -8,7 +8,7 @@ import type {
 } from 'lexical';
 
 import { $applyNodeReplacement, DecoratorNode } from 'lexical';
-import Image from 'next/image';
+import { CldImage } from 'next-cloudinary';
 
 // ImageNode の生成時に渡す引数の型
 export interface ImagePayload {
@@ -48,8 +48,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     super(key);
     this.__src = src;
     this.__altText = altText;
-    this.__width = width || undefined;
-    this.__height = height || undefined;
+    this.__width = width || 100;
+    this.__height = height || 100;
   }
 
   // decorate メソッドで返されるノードについて、なんの要素でラップするか
@@ -80,7 +80,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
           focus: 'relative outline outline-indigo-300',
         }}
       >
-        <Image
+        <CldImage
           src={this.__src}
           height={this.__height}
           width={this.__width}
@@ -88,6 +88,10 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
         />
       </BlockWithAlignableContents>
     );
+  }
+
+  static getType(): string {
+    return 'image';
   }
 }
 
