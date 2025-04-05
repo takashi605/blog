@@ -1,9 +1,15 @@
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
+import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { LexicalEditor, LexicalNode } from 'lexical';
 import { $createParagraphNode, $createTextNode, createEditor } from 'lexical';
-import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type {
+  ImageContentDTO,
+  RichTextDTO,
+} from 'service/src/blogPostService/dto/contentDTO';
+import { $createImageNode, ImageNode } from '../blogPostEditor/customNodes/ImageNode';
 import {
   headingNodeToDTO,
+  imageNodeToImageDTO,
   paragraphNodeToDTO,
   postContentAsFormDataToDTO,
   textNodeToRichTextDTO,
@@ -55,6 +61,26 @@ describe('typedBlogPostToDTO', () => {
     }
   });
 
+  it('自作 Node である imageNode を DTO に変換する', () => {
+    const editor = createTextEditor();
+
+    editor.update(() => {
+      const imageNode = $createImageNode({
+        altText: 'testAltText',
+        height: 100,
+        width: 100,
+        src: 'http://example.com/test.png',
+      });
+      const imageDTO: ImageContentDTO = imageNodeToImageDTO(imageNode);
+
+      const expectedImageDTO: ImageContentDTO = {
+        id: expect.any(String),
+        type: ContentType.Image,
+        path: 'http://example.com/test.png',
+      };
+      expect(imageDTO).toEqual(expectedImageDTO);
+    });
+  });
   it('textNode をリッチテキスト DTO に変換する', () => {
     const editor = createTextEditor();
 
@@ -129,7 +155,7 @@ function createTextEditor(): LexicalEditor {
     onError: (e: Error) => {
       throw e;
     },
-    nodes: [HeadingNode],
+    nodes: [HeadingNode, ImageNode],
   };
 
   return createEditor(config);

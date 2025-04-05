@@ -5,10 +5,12 @@ import type {
   ContentDTO,
   H2DTO,
   H3DTO,
+  ImageContentDTO,
   ParagraphDTO,
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import type { ImageNode } from '../blogPostEditor/customNodes/ImageNode';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 
@@ -22,6 +24,13 @@ export function postContentAsFormDataToDTO(
         contentsDTO.push(headingNodeToDTO(content as HeadingNode));
         break;
       case 'paragraph':
+        const elementNode = content as ElementNode;
+        // elementNode の中に imageNode がある場合は早期リターン
+        if (
+          elementNode.getChildren().some((child) => child.getType() === 'image')
+        ) {
+          return;
+        }
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
         break;
       default:
@@ -77,7 +86,14 @@ export function textNodeToRichTextDTO(textNodes: TextNode[]): RichTextDTO {
   }));
 }
 
-// TODO ElementNode -> 画像ノードの変換を考慮する
+export function imageNodeToImageDTO(imageNode: ImageNode): ImageContentDTO {
+  return {
+    id: createUUIDv4(),
+    type: ContentType.Image,
+    path: imageNode.__src,
+  };
+}
+
 // 以下ヘルパ関数
 function extractTextNode(elementNode: ElementNode): TextNode[] {
   return elementNode.getChildren().map((child) => {
