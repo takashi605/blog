@@ -77,6 +77,7 @@ export function textNodeToRichTextDTO(textNodes: TextNode[]): RichTextDTO {
   }));
 }
 
+// TODO ElementNode -> 画像ノードの変換を考慮する
 // 以下ヘルパ関数
 function extractTextNode(elementNode: ElementNode): TextNode[] {
   return elementNode.getChildren().map((child) => {

@@ -9,6 +9,7 @@ import { useContext } from 'react';
 import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
+import { ImageRegister } from './customNodes/ImageNode/register/ImageRegister';
 import ToolBarPlugin from './plugins/ToolBarPlugin';
 
 function BlogPostEditor() {
@@ -32,6 +33,7 @@ function BlogPostEditor() {
       <MarkdownShortcutPlugin />
       <OnChangePlugin onChange={onChange} />
       <HistoryPlugin />
+      <ImageRegister />
     </CustomizedLexicalComposer>
   );
 }
