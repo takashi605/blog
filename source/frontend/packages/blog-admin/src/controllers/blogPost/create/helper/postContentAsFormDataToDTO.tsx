@@ -25,10 +25,14 @@ export function postContentAsFormDataToDTO(
         break;
       case 'paragraph':
         const elementNode = content as ElementNode;
-        // elementNode の中に imageNode がある場合は早期リターン
+        // elementNode の中に imageNode がある場合は imageContentDTO に変換する
         if (
           elementNode.getChildren().some((child) => child.getType() === 'image')
         ) {
+          const imageNode = elementNode.getChildren().find(
+            (child) => child.getType() === 'image',
+          ) as ImageNode;
+          contentsDTO.push(imageNodeToImageDTO(imageNode));
           return;
         }
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));

@@ -6,7 +6,10 @@ import type {
   ImageContentDTO,
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
-import { $createImageNode, ImageNode } from '../blogPostEditor/customNodes/ImageNode';
+import {
+  $createImageNode,
+  ImageNode,
+} from '../blogPostEditor/customNodes/ImageNode';
 import {
   headingNodeToDTO,
   imageNodeToImageDTO,
@@ -34,6 +37,11 @@ describe('typedBlogPostToDTO', () => {
         },
         {
           id: expect.any(String),
+          type: ContentType.Image,
+          path: 'http://example.com/test.png',
+        },
+        {
+          id: expect.any(String),
           type: 'paragraph',
           text: [
             { text: 'Hello', styles: { bold: false } },
@@ -50,13 +58,27 @@ describe('typedBlogPostToDTO', () => {
       const h3Node = $createHeadingNode('h3');
       h3Node.append($createTextNode('見出し3'));
 
+      const imageNode = $createImageNode({
+        altText: 'testAltText',
+        height: 100,
+        width: 100,
+        src: 'http://example.com/test.png',
+      });
+      const imageInParagraphNode = $createParagraphNode();
+      imageInParagraphNode.append(imageNode);
+
       const paragraphNode = $createParagraphNode();
       paragraphNode.append(
         $createTextNode('Hello'),
         $createTextNode('World').setFormat('bold'),
       );
 
-      const nodeArray: LexicalNode[] = [h2Node, h3Node, paragraphNode];
+      const nodeArray: LexicalNode[] = [
+        h2Node,
+        h3Node,
+        imageInParagraphNode,
+        paragraphNode,
+      ];
       return nodeArray;
     }
   });
