@@ -1,6 +1,6 @@
 import CommonModal from '../../../components/modal/CommonModal';
+import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
-import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
 import ImageListProvider from '../list/ImageListProvider';
 import ImagePicker from './ImagePicker';
 
@@ -20,16 +20,12 @@ function ImagePickModalWithOpenButton({
 }
 
 function ImagePickModal() {
-  const { closeModal } = useCommonModalContext();
-
   return (
     <CommonModal>
       <ImageListProvider>
         <ImagePicker />
       </ImageListProvider>
-      <button onClick={closeModal} className="modal-close" type="button">
-        閉じる
-      </button>
+      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
 }

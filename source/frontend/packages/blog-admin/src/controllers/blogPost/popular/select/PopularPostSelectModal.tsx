@@ -2,8 +2,8 @@
 import React from 'react';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
+import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
 import { SelectPopularPostsUseCase } from '../../../../usecases/select/selectPopularPosts';
 import { usePopularPostListContext } from '../list/PopularPostListProvider';
 import PopularPostsForm from './form/PopularPostsForm';
@@ -24,7 +24,6 @@ function Modal() {
   const { getAllPopularPosts, updatePopularPosts } =
     usePopularPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const { closeModal } = useCommonModalContext();
 
   const { selectedBlogPosts } = usePopularPostsCheckbox();
 
@@ -59,9 +58,7 @@ function Modal() {
         <PopularPostsForm onSubmit={onSubmit} />
       </PopularPostsFormProvider>
       {isUploadSuccess && <p>人気記事を更新しました。</p>}
-      <button onClick={closeModal} className="modal-close" type="button">
-        閉じる
-      </button>
+      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
 }

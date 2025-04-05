@@ -2,8 +2,8 @@
 import React from 'react';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
+import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import { useCommonModalContext } from '../../../../components/modal/CommonModalProvider';
 import { SelectPickUpPostsUseCase } from '../../../../usecases/select/selectPickUpPosts';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
 import PickUpPostsForm from './form/PickUpPostsForm';
@@ -23,7 +23,6 @@ function PickUpPostSelectModalWithOpenButton() {
 function Modal() {
   const { getAllPickUpPosts, updatePickUpPosts } = usePickUpPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const { closeModal } = useCommonModalContext();
 
   const { selectedBlogPosts } = usePickUpPostsCheckbox();
 
@@ -58,9 +57,7 @@ function Modal() {
         <PickUpPostsForm onSubmit={onSubmit} />
       </PickUpPostsFormProvider>
       {isUploadSuccess && <p>ピックアップ記事を更新しました。</p>}
-      <button onClick={closeModal} className="modal-close" type="button">
-        閉じる
-      </button>
+      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
 }
