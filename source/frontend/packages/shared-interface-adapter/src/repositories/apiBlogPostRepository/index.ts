@@ -13,7 +13,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     headers: {
       Authorization: `${process.env.NEXT_PUBLIC_BASIC_AUTHENTICATION}`,
       'Content-Type': 'application/json',
-    }
+    },
   };
 
   constructor(url: string) {
