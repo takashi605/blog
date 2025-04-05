@@ -27,16 +27,16 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, Style};
+  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {
     // DB 上に存在する画像を使わないとエラーするので、適当な画像を取得する
-    let thumbnail = test_helper::fetch_thumbnail_image().await?;
+    let any_image = test_helper::fetch_any_image().await?;
     let blog_post = BlogPost {
       id,
       title: title.to_string(),
-      thumbnail,
+      thumbnail: any_image.clone(),
       post_date: "2021-01-01".parse()?,
       last_update_date: "2021-01-02".parse()?,
       contents: vec![
@@ -57,6 +57,11 @@ mod helper {
           id: Uuid::new_v4(),
           text: "見出しレベル3".to_string(),
           type_field: "h3".to_string(),
+        }),
+        BlogPostContent::Image(ImageBlock {
+          id: any_image.id,
+          path: any_image.path,
+          type_field: "image".to_string(),
         }),
       ],
     };

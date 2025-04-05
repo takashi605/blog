@@ -62,7 +62,7 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
   }
 }
 
-pub async fn fetch_thumbnail_image() -> Result<Image> {
+pub async fn fetch_any_image() -> Result<Image> {
   let url = "http://localhost:8000/blog/images";
   let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
 
