@@ -12,6 +12,8 @@ use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
+use image_blocks_table::ImageBlockRecord;
+use images_table::ImageRecord;
 use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
@@ -19,11 +21,13 @@ use uuid::Uuid;
 pub fn generate_blog_post_records_by(
   post: BlogPost,
   style_records: Vec<TextStyleRecord>,
+  image_records: Vec<ImageRecord>,
 ) -> Result<(
   BlogPostRecord,
   Vec<PostContentRecord>,
   Vec<HeadingBlockRecord>,
   Vec<ParagraphBlockRecord>,
+  Vec<ImageBlockRecord>,
   Vec<RichTextRecord>,
   Vec<RichTextStyleRecord>,
 )> {
@@ -37,6 +41,7 @@ pub fn generate_blog_post_records_by(
   let mut post_content_records: Vec<PostContentRecord> = vec![];
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
+  let mut image_block_records: Vec<ImageBlockRecord> = vec![];
   let mut rich_text_records: Vec<RichTextRecord> = vec![];
   let mut rich_text_styles: Vec<RichTextStyleRecord> = vec![];
 
@@ -110,8 +115,23 @@ pub fn generate_blog_post_records_by(
           sort_order: index as i32,
         }
       }
-      BlogPostContent::Image(_image) => {
-        anyhow::bail!("イメージブロックへの変換は未実装です。");
+      BlogPostContent::Image(image_block) => {
+        // path を元に、image_records から image_id を取得する
+        let image_id = image_records
+          .iter()
+          .find(|image| image.file_path == image_block.path)
+          .ok_or_else(|| anyhow::anyhow!("画像コンテンツのパスが見つかりませんでした。"))?
+          .id;
+        image_block_records.push(ImageBlockRecord {
+          id: image_block.id,
+          image_id: image_id,
+        });
+        PostContentRecord {
+          id: image_block.id,
+          post_id: post.id,
+          content_type: "image".to_string(),
+          sort_order: index as i32,
+        }
       }
     };
     post_content_records.push(content_record);
@@ -123,6 +143,7 @@ pub fn generate_blog_post_records_by(
     post_content_records,
     heading_block_records,
     paragraph_block_records,
+    image_block_records,
     rich_text_records,
     rich_text_styles,
   ))
@@ -130,7 +151,11 @@ pub fn generate_blog_post_records_by(
 
 #[cfg(test)]
 mod tests {
-  use crate::db::tables::paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
+  use crate::db::tables::{
+    image_blocks_table::ImageBlockRecord,
+    images_table::ImageRecord,
+    paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord},
+  };
 
   use super::*;
   use anyhow::Result;
@@ -144,21 +169,33 @@ mod tests {
       id: Uuid::new_v4(),
       style_type: "bold".to_string(),
     }];
+    let mock_image_records: Vec<ImageRecord> = vec![
+      ImageRecord {
+        id: Uuid::new_v4(),
+        file_path: "test-coffee".to_string(),
+      },
+      ImageRecord {
+        id: Uuid::new_v4(),
+        file_path: "test-book".to_string(),
+      },
+    ];
+    let expected_image_block_id = mock_image_records[1].id;
 
-    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, rich_text_records, rich_text_styles): (
+    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, image_block_records, rich_text_records, rich_text_styles): (
       BlogPostRecord,
       Vec<PostContentRecord>,
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
+      Vec<ImageBlockRecord>,
       Vec<RichTextRecord>,
       Vec<RichTextStyleRecord>,
-    ) = generate_blog_post_records_by(mock_post, mock_style_records).unwrap();
+    ) = generate_blog_post_records_by(mock_post, mock_style_records, mock_image_records).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
     assert_eq!(blog_post_record.last_update_date, "2021-01-02".parse().unwrap());
 
-    assert_eq!(post_content_records.len(), 3);
+    assert_eq!(post_content_records.len(), 4);
     assert_eq!(post_content_records[0].post_id, post_id);
     assert_eq!(post_content_records[1].post_id, post_id);
     assert_eq!(post_content_records[2].post_id, post_id);
@@ -189,12 +226,16 @@ mod tests {
     assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id);
 
+    assert_eq!(image_block_records.len(), 1);
+    assert_eq!(image_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(image_block_records[0].image_id, expected_image_block_id); // file_path が "test-book" の画像が使用されていることを確認
+
     Ok(())
   }
 
   mod helper {
     use super::*;
-    use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ParagraphBlock, RichText, Style};
+    use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
     use uuid::Uuid;
 
     pub fn create_blog_post_mock(post_id: Uuid) -> Result<BlogPost> {
@@ -225,6 +266,11 @@ mod tests {
             id: Uuid::new_v4(),
             text: "見出しレベル3".to_string(),
             type_field: "h3".to_string(),
+          }),
+          BlogPostContent::Image(ImageBlock {
+            id: Uuid::new_v4(),
+            path: "test-book".to_string(),
+            type_field: "image".to_string(),
           }),
         ],
       };

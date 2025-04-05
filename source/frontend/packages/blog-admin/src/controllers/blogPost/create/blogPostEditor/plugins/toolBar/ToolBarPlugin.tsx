@@ -1,5 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
+import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import {
   useSelectedNode,
   useSelectedTextStyle,
@@ -61,8 +62,11 @@ function ToolBarPlugin() {
       <button role="button" onClick={onClickBoldButton}>
         bold
       </button>
+      <ImageInsertModalWithOpenButton />
+      <br />
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
+      <br />
     </div>
   );
 }

@@ -20,6 +20,11 @@ export const mockBlogPostDTO: BlogPostDTO = {
       type: ContentType.Paragraph,
       text: mockRichTextDTO(),
     },
+    {
+      id: createUUIDv4(),
+      type: ContentType.Image,
+      path: 'path/to/image',
+    },
   ],
 };
 

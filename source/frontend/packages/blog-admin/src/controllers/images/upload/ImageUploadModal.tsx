@@ -5,7 +5,8 @@ import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
-import { useCommonModalContext } from '../../../components/modal/CommonModalProvider';
+import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
+import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
 import { CreateImageUseCase } from '../../../usecases/create/createImage';
 import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
 import { useImageListContext } from '../list/ImageListProvider';
@@ -15,11 +16,9 @@ import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
 
 function ImageUploadModalWithOpenButton() {
-  const { openModal } = useCommonModalContext();
-
   return (
     <>
-      <button onClick={openModal}>画像を追加</button>
+      <CommonModalOpenButton>画像を追加</CommonModalOpenButton>
       <Modal />
     </>
   );
@@ -28,7 +27,6 @@ function ImageUploadModalWithOpenButton() {
 function Modal() {
   const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const { closeModal } = useCommonModalContext();
 
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = await uploadCloudinary(data);
@@ -70,9 +68,7 @@ function Modal() {
         <ImageUploadForm onSubmit={onSubmit} />
         {isUploadSuccess && <p>画像のアップロードに成功しました</p>}
       </ImageUploadFormProvider>
-      <button onClick={closeModal} className="modal-close" type="button">
-        閉じる
-      </button>
+      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
 }

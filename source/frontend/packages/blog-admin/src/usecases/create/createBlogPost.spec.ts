@@ -107,7 +107,9 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     expect(createdBlogPost.thumbnail.path).toBe('path/to/thumbnail');
     expect(createdBlogPost.postDate).toBe(today);
     expect(createdBlogPost.lastUpdateDate).toBe(today);
-    expect(createdBlogPost.contents).toHaveLength(3);
+
+    // テスト対象にするコンテンツ数が増えた時にこのテストも修正されるように、Length を明示している
+    expect(createdBlogPost.contents).toHaveLength(4);
 
     const h2Content = createdBlogPost.contents.find(
       (content) => content.type === 'h2',
@@ -131,6 +133,13 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
     expect(
       paragraphContent.text.find((text) => text.styles?.bold),
     ).toBeDefined();
+
+    // 画像コンテンツが含まれているか
+    const imageContent = createdBlogPost.contents.find(
+      (content) => content.type === 'image',
+    )!;
+    expect(imageContent.type).toBe('image');
+    expect(imageContent.path).toBe('path/to/image');
   });
 });
 
