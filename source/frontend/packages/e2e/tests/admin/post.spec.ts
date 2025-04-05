@@ -3,7 +3,8 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import playwrightHelper from '../../support/playwrightHelper.ts';
 
-let selectedImageSrc: string | null = null;
+let selectedThumbnailImageSrc: string | null = null;
+let selectedImageContentSrc: string | null = null;
 
 Given('記事投稿ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
@@ -53,17 +54,22 @@ When('サムネイル画像選択モーダルを開き、サムネイル画像�
   // 対応する画像の src 属性を取得して変数に保持
   const labelsInModal = modal.locator('label');
   const firstLabelInModal = labelsInModal.first();
-  selectedImageSrc = await firstLabelInModal.locator('img').getAttribute('src');
+  selectedThumbnailImageSrc = await firstLabelInModal
+    .locator('img')
+    .getAttribute('src');
 });
-Then('モーダルを閉じると、投稿画面内にサムネイル画像が表示されている', async function() {
-  const page = playwrightHelper.getPage();
-  const modal = page.getByRole('dialog');
-  const closeButton = modal.getByRole('button', { name: '閉じる' });
-  await closeButton.click();
+Then(
+  'モーダルを閉じると、投稿画面内にサムネイル画像が表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
+    const modal = page.getByRole('dialog');
+    const closeButton = modal.getByRole('button', { name: '閉じる' });
+    await closeButton.click();
 
-  const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
-  await expect(thumbnailImage).toBeVisible();
-});
+    const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
+    await expect(thumbnailImage).toBeVisible();
+  },
+);
 
 When('リッチテキストエディタに「こんにちは！」と入力する', async function () {
   const page = playwrightHelper.getPage();
@@ -180,6 +186,45 @@ Then(
     await expect(h3Text).toHaveText('見出し3', { timeout: 10000 });
   },
 );
+When('画像選択モーダルを開き、画像を選択する', async function () {
+  const page = playwrightHelper.getPage();
+
+  const openModalButton = page.getByRole('button', { name: '画像を挿入' });
+  await openModalButton.click();
+
+  const modal = page.getByRole('dialog');
+  await expect(modal).toBeVisible({ timeout: 10000 });
+
+  const radioButtonsInModal = modal.getByRole('radio');
+  const firstRadioButton = radioButtonsInModal.first();
+  await firstRadioButton.click();
+
+  // 対応する画像の src 属性を取得して変数に保持
+  const labelsInModal = modal.locator('label');
+  const firstLabelInModal = labelsInModal.first();
+  selectedImageContentSrc = await firstLabelInModal
+    .locator('img')
+    .getAttribute('src');
+
+  // 選択した画像の src を保持
+  selectedThumbnailImageSrc = selectedImageContentSrc;
+});
+Then(
+  'モーダルを閉じると、リッチテキストエディタ内に画像が表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
+    const modal = page.getByRole('dialog');
+    const closeButton = modal.getByRole('button', { name: '閉じる' });
+    await closeButton.click();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    const imageContent = richTextEditor.locator('img');
+    await expect(imageContent).toBeVisible({ timeout: 10000 });
+    const src = await imageContent.getAttribute('src');
+
+    expectMatchImageResourceByCloudinary(src);
+  },
+);
 When('「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
@@ -242,6 +287,14 @@ Then('「見出し3」という文字の h3 が存在する', async function () 
   const h3 = page.locator('h3');
   await expect(h3).toHaveText('見出し3');
 });
+Then('画像が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const thumbnailImage = page.getByRole('img', { name: '画像コンテンツ' });
+  const src = await thumbnailImage.getAttribute('src');
+
+  expectMatchImageResourceByCloudinary(src);
+});
 Then('投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   const postDate = page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
@@ -287,7 +340,7 @@ export const formatDate2DigitString = (date: Date): string => {
 function expectMatchImageResourceByCloudinary(src: string | null) {
   const resourceRegex = /\/v1\/([^?#]+)/;
 
-  const matchSelected = selectedImageSrc!.match(resourceRegex);
+  const matchSelected = selectedThumbnailImageSrc!.match(resourceRegex);
   const matchCurrent = src!.match(resourceRegex);
 
   // どちらも正規表現にマッチしているか確認
