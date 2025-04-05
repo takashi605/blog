@@ -14,10 +14,10 @@ function ThumbnailPickModalWithOpenButton() {
 
   const onChangePickHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, imageDTO: ImageDTO) => {
-      onChange(e);
+      setValue('thumbnail.id', imageDTO.id);
       setValue('thumbnail.path', imageDTO.path);
     },
-    [onChange, setValue],
+    [setValue],
   );
 
   return (
