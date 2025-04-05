@@ -94,7 +94,7 @@ export function imageNodeToImageDTO(imageNode: ImageNode): ImageContentDTO {
   return {
     id: createUUIDv4(),
     type: ContentType.Image,
-    path: imageNode.__src,
+    path: imageNode.getSrc(),
   };
 }
 
