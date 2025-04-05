@@ -189,7 +189,11 @@ Then(
 When('画像選択モーダルを開き、画像を選択する', async function () {
   const page = playwrightHelper.getPage();
 
-  const openModalButton = page.getByRole('button', { name: '画像を挿入' });
+  // 改行を入れて、画像を挿入する位置を確保
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  richTextEditor.press('Enter');
+
+   const openModalButton = page.getByRole('button', { name: '画像を挿入' });
   await openModalButton.click();
 
   const modal = page.getByRole('dialog');

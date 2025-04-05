@@ -93,6 +93,10 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   static getType(): string {
     return 'image';
   }
+
+  getSrc(): string {
+    return this.__src;
+  }
 }
 
 export function $createImageNode({

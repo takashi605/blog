@@ -10,14 +10,14 @@ import ImagePicker from '../../images/pick/ImagePicker';
 function ThumbnailPickModalWithOpenButton() {
   const { register, setValue } = useFormContext();
 
-  const { onChange, onBlur, name, ref } = register('thumbnail.id');
+  const { onBlur, name, ref } = register('thumbnail.id');
 
   const onChangePickHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, imageDTO: ImageDTO) => {
-      onChange(e);
+    (_e: React.ChangeEvent<HTMLInputElement>, imageDTO: ImageDTO) => {
+      setValue('thumbnail.id', imageDTO.id);
       setValue('thumbnail.path', imageDTO.path);
     },
-    [onChange, setValue],
+    [setValue],
   );
 
   return (
