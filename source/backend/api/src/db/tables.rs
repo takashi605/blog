@@ -117,7 +117,11 @@ pub fn generate_blog_post_records_by(
       }
       BlogPostContent::Image(image_block) => {
         // path を元に、image_records から image_id を取得する
-        let image_id = image_records.iter().find(|image| image.file_path == image_block.path).ok_or_else(|| anyhow::anyhow!("画像コンテンツのパスが見つかりませんでした。"))?.id;
+        let image_id = image_records
+          .iter()
+          .find(|image| image.file_path == image_block.path)
+          .ok_or_else(|| anyhow::anyhow!("画像コンテンツのパスが見つかりませんでした。"))?
+          .id;
         image_block_records.push(ImageBlockRecord {
           id: image_block.id,
           image_id: image_id,
