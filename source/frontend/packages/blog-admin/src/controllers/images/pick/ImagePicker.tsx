@@ -1,16 +1,16 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import { useFormContext } from 'react-hook-form';
 import { useImageList } from '../list/useImageList';
 
-function ImagePicker() {
-  const { getAllImages } = useImageList();
-  const { register, setValue } = useFormContext();
+type ImagePickerProps = {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  name?: string;
+  ref?: React.Ref<HTMLInputElement>;
+};
 
-  // 各ラジオボタンに共通の register を渡すために上部で定義
-  // 個別に register を実行して渡すと、最後の要素だけが反映されてしまう
-  // これは id が共通のものは上書きする react-hook-form の仕様による挙動
-  const { onChange, onBlur, name, ref } = register('thumbnail.id');
+function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
+  const { getAllImages } = useImageList();
 
   return (
     <>
@@ -22,13 +22,10 @@ function ImagePicker() {
               id={image.id}
               type="radio"
               value={image.id}
-              name={name}
-              ref={ref}
-              onChange={(e) => {
-                onChange(e);
-                setValue('thumbnail.path', image.path);
-              }}
-              onBlur={onBlur}
+              onChange={onChange}
+              {...(onBlur && { onBlur })}
+              {...(name && { name })}
+              {...(ref && { ref })}
             />
             <label htmlFor={image.id}>
               <CldImage
