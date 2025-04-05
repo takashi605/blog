@@ -10,7 +10,7 @@ import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { ImageRegister } from './customNodes/ImageNode/register/ImageRegister';
-import ToolBarPlugin from './plugins/ToolBarPlugin';
+import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);

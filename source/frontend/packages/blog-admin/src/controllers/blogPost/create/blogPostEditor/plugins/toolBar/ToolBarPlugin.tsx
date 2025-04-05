@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
-import { INSERT_IMAGE_COMMAND } from '../customNodes/ImageNode/register/InsertImageCommand';
+import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import {
   useSelectedNode,
   useSelectedTextStyle,
@@ -43,16 +43,6 @@ function ToolBarPlugin() {
     });
   };
 
-  const onClickInsertImageButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    editor.update(() => {
-      editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-        altText: '画像の説明',
-        src: 'test-book',
-      });
-    });
-  };
-
   return (
     <div>
       <button
@@ -72,9 +62,7 @@ function ToolBarPlugin() {
       <button role="button" onClick={onClickBoldButton}>
         bold
       </button>
-      <button role="button" onClick={onClickInsertImageButton}>
-        画像を挿入
-      </button>
+      <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
