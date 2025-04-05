@@ -4,12 +4,7 @@ use futures::future::join_all;
 
 use crate::{
   db::tables::{
-    blog_posts_table::insert_blog_post,
-    generate_blog_post_records_by,
-    heading_blocks_table::insert_heading_block,
-    images_table::{fetch_all_images, ImageRecord},
-    paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
-    post_contents_table::insert_blog_post_content,
+    blog_posts_table::insert_blog_post, generate_blog_post_records_by, heading_blocks_table::insert_heading_block, image_blocks_table::insert_image_block, images_table::{fetch_all_images, ImageRecord}, paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord}, post_contents_table::insert_blog_post_content
   },
   server::handlers::response::err::ApiCustomError,
 };
@@ -63,6 +58,13 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   }
   let results = join_all(insert_rich_text_style_tasks).await;
 
+  let mut insert_image_tasks = vec![];
+  for image_block in image_block_records {
+    let task = tokio::spawn(insert_image_block(image_block));
+    insert_image_tasks.push(task);
+  }
+  join_all(insert_image_tasks).await;
+
   // TODO エラーハンドリングをする
   // 他の join_all も同じくエラーハンドリングが必要
   for task_result in results {
@@ -84,6 +86,5 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let inserted_blog_post = fetch_single_blog_post(post_id).await?;
 
-  // TODO 実際にデータベースに格納したデータを返すように変更
   Ok(inserted_blog_post)
 }
