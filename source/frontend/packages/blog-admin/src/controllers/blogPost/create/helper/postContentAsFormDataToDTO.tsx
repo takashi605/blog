@@ -29,9 +29,9 @@ export function postContentAsFormDataToDTO(
         if (
           elementNode.getChildren().some((child) => child.getType() === 'image')
         ) {
-          const imageNode = elementNode.getChildren().find(
-            (child) => child.getType() === 'image',
-          ) as ImageNode;
+          const imageNode = elementNode
+            .getChildren()
+            .find((child) => child.getType() === 'image') as ImageNode;
           contentsDTO.push(imageNodeToImageDTO(imageNode));
           return;
         }
