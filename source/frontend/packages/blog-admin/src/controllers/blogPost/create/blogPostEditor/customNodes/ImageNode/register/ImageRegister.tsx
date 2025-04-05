@@ -16,7 +16,9 @@ export const ImageRegister = () => {
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
-      throw new Error('ImageRegister でエラー: LexicalNode「ImageNode」が見つかりませんでした。');
+      throw new Error(
+        'ImageRegister でエラー: LexicalNode「ImageNode」が見つかりませんでした。',
+      );
     }
 
     return mergeRegister(
