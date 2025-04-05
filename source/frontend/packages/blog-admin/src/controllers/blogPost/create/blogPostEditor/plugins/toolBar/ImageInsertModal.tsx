@@ -1,5 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useState } from 'react';
+import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import CommonModal from '../../../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
@@ -10,13 +11,11 @@ import { INSERT_IMAGE_COMMAND } from '../../customNodes/ImageNode/register/Inser
 
 function ImageInsertModalWithOpenButton() {
   const [editor] = useLexicalComposerContext();
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImageDTO | null>(null);
 
   const onChangePickerHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      const imageId = e.target.value;
-      setSelectedImageId(imageId);
+    (_e: React.ChangeEvent<HTMLInputElement>, imageDTO: ImageDTO) => {
+      setSelectedImage(imageDTO);
     },
     [],
   );
@@ -26,7 +25,7 @@ function ImageInsertModalWithOpenButton() {
     editor.update(() => {
       editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
         altText: '画像の説明',
-        src: 'test-book',
+        src: selectedImage?.path ?? '',
       });
     });
   };
@@ -37,7 +36,7 @@ function ImageInsertModalWithOpenButton() {
         <CommonModalOpenButton>画像を挿入</CommonModalOpenButton>
         <CommonModal>
           <ImageListProvider>
-            <ImagePicker onChange={onChangePickerHandler} />
+            <ImagePicker onChange={onChangePickerHandler} name="imageContent" />
           </ImageListProvider>
           <button type="button" onClick={onClickInsertImageButton}>
             挿入
