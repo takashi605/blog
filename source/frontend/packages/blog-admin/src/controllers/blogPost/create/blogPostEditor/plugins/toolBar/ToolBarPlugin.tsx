@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
-import { INSERT_IMAGE_COMMAND } from '../customNodes/ImageNode/register/InsertImageCommand';
+import { INSERT_IMAGE_COMMAND } from '../../customNodes/ImageNode/register/InsertImageCommand';
 import {
   useSelectedNode,
   useSelectedTextStyle,
