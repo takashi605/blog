@@ -9,7 +9,7 @@ import type {
 import {
   $createImageNode,
   ImageNode,
-} from '../blogPostEditor/customNodes/ImageNode';
+} from '../blogPostEditor/plugins/customNodes/image/ImageNode';
 import {
   headingNodeToDTO,
   imageNodeToImageDTO,

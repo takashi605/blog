@@ -7,7 +7,7 @@ import {
   COMMAND_PRIORITY_EDITOR,
 } from 'lexical';
 import { useEffect } from 'react';
-import { $createImageNode, ImageNode } from '..';
+import { $createImageNode, ImageNode } from './ImageNode';
 import type { InsertImagePayload } from './InsertImageCommand';
 import { INSERT_IMAGE_COMMAND } from './InsertImageCommand';
 

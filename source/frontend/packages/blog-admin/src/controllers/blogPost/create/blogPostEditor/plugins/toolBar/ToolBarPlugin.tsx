@@ -1,29 +1,36 @@
+import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect, useState } from 'react';
+import { $setBlocksType } from '@lexical/selection';
+import { $getSelection, $isRangeSelection } from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import {
   useSelectedNode,
   useSelectedTextStyle,
   useUpdateBlockType,
 } from './toolBarPluginHooks';
+import type { SupportedNodeType } from './types/supportedNodeType';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
+  const [selectedNodeType, setSelectedNodeType] =
+    useState<SupportedNodeType | null>(null);
   const { $setHeadingToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $checkStylesForSelection, $toggleBoldToSelection } =
+  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
 
   useEffect(() => {
     return editor.registerUpdateListener(() => {
-      editor.update(() => {
+      editor.read(() => {
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
-        $checkStylesForSelection();
+
+        // 選択中のテキストスタイルを確認して isBoldSelected 等のステートに保持
+        $storeSelectedTextStyle();
       });
     });
-  }, [editor, $getElementTypeOfSelected, $checkStylesForSelection]);
+  }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
 
   const onClickH2Button = () => {
     editor.update(() => {
@@ -43,6 +50,17 @@ function ToolBarPlugin() {
     });
   };
 
+  const onClickCodeButton = useCallback(() => {
+    if (selectedNodeType !== 'code') {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $setBlocksType(selection, () => $createCodeNode());
+        }
+      });
+    }
+  }, [editor, selectedNodeType]);
+
   return (
     <div>
       <button
@@ -61,6 +79,9 @@ function ToolBarPlugin() {
       </button>
       <button role="button" onClick={onClickBoldButton}>
         bold
+      </button>
+      <button type="button" onClick={onClickCodeButton}>
+        code
       </button>
       <ImageInsertModalWithOpenButton />
       <br />

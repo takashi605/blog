@@ -1,6 +1,6 @@
 import type { LexicalCommand } from 'lexical';
 import { createCommand } from 'lexical';
-import type { ImagePayload } from '..';
+import type { ImagePayload } from './ImageNode';
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 
