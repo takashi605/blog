@@ -186,6 +186,44 @@ Then(
     await expect(h3Text).toHaveText('見出し3', { timeout: 10000 });
   },
 );
+
+When('言語選択セレクトボックスから、「JavaScript」を選択', async function () {
+  const page = playwrightHelper.getPage();
+
+  const languageSelect = page.getByRole('combobox', {
+    name: '言語',
+  });
+  await languageSelect.click();
+  await languageSelect.selectOption('JavaScript');
+})
+When('「const a = 1」入力し、「code」ボタンを押す', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('const a = 1');
+  const codeButton = page.getByRole('button', { name: 'code' });
+  await codeButton.click();
+})
+Then('エディタ内にコードブロックが存在している', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+
+  // class 属性に editor-code が含まれているかで判別
+  const codeBlock = richTextEditor.locator('.editor-code');
+  await expect(codeBlock).toBeVisible({ timeout: 10000 });
+})
+Then('コードブロックのランゲージデータ属性が「javascript」になっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const codeBlock = richTextEditor.locator('.editor-code');
+  const languageDataAttribute = await codeBlock.getAttribute('data-language');
+
+  expect(languageDataAttribute).toBe('javascript');
+})
+
 When('画像選択モーダルを開き、画像を選択する', async function () {
   const page = playwrightHelper.getPage();
 
