@@ -6,6 +6,7 @@ const supportedNodes = [
   'h5',
   'h6',
   'paragraph',
+  'code',
   null,
 ] as const;
 export type SupportedNodeType = (typeof supportedNodes)[number];

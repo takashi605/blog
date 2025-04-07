@@ -50,7 +50,9 @@ export function useSelectedNode() {
     return focusNode;
   }
 
-  function $getSelectedNodeType(selectedElementNode: LexicalNode) {
+  function $getSelectedNodeType(
+    selectedElementNode: LexicalNode,
+  ): SupportedNodeType {
     if ($isHeadingNode(selectedElementNode)) {
       // h2,h3,h4 等の文字列を返す
       // getType だと heading という文字しか返さないので、別途分岐している
@@ -61,11 +63,11 @@ export function useSelectedNode() {
     const selectedElementType = selectedElementNode.getType();
     if (!isSupportedNode(selectedElementType)) {
       throw new Error(
-        `useSelectedNode でエラー: ${selectedElementType} はサポートされていないノードです。`,
-      );
+        `useSelectedNode でエラー: 選択中のノードのタイプがサポートされていません。type: ${selectedElementType}`,
+      )
     }
 
-    return selectedElementType as SupportedNodeType;
+    return selectedElementType;
   }
   /* ここまでヘルパー関数 */
 }

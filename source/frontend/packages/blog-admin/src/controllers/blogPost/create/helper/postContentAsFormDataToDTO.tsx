@@ -37,7 +37,11 @@ export function postContentAsFormDataToDTO(
         }
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
         break;
+      case 'code':
+        // 未実装
+        break;
       default:
+        console.log('不正なコンテンツタイプです', content.getType());
         throw new Error('不正なコンテンツタイプです');
     }
   });

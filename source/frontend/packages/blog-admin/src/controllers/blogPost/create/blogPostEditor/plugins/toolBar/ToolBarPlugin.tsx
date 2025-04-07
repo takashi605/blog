@@ -1,5 +1,8 @@
+import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect, useState } from 'react';
+import { $setBlocksType } from '@lexical/selection';
+import { $getSelection, $isRangeSelection } from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import {
   useSelectedNode,
@@ -19,7 +22,7 @@ function ToolBarPlugin() {
 
   useEffect(() => {
     return editor.registerUpdateListener(() => {
-      editor.update(() => {
+      editor.read(() => {
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
 
@@ -47,6 +50,17 @@ function ToolBarPlugin() {
     });
   };
 
+  const onClickCodeButton = useCallback(() => {
+    if (selectedNodeType !== 'code') {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $setBlocksType(selection, () => $createCodeNode());
+        }
+      });
+    }
+  }, [editor, selectedNodeType]);
+
   return (
     <div>
       <button
@@ -65,6 +79,12 @@ function ToolBarPlugin() {
       </button>
       <button role="button" onClick={onClickBoldButton}>
         bold
+      </button>
+      <button
+        type="button"
+        onClick={onClickCodeButton}
+      >
+        code
       </button>
       <ImageInsertModalWithOpenButton />
       <br />
