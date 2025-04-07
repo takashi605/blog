@@ -214,7 +214,7 @@ Then('エディタ内にコードブロックが存在している', async funct
   const codeBlock = richTextEditor.locator('.editor-code');
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
 })
-Then('コードブロックのランゲージデータ属性が「javascript」になっている', async function () {
+Then('コードブロックの言語データ属性が「javascript」になっている', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
