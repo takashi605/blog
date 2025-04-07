@@ -64,7 +64,7 @@ export function useSelectedNode() {
     if (!isSupportedNode(selectedElementType)) {
       throw new Error(
         `useSelectedNode でエラー: 選択中のノードのタイプがサポートされていません。type: ${selectedElementType}`,
-      )
+      );
     }
 
     return selectedElementType;

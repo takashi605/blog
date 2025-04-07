@@ -80,10 +80,7 @@ function ToolBarPlugin() {
       <button role="button" onClick={onClickBoldButton}>
         bold
       </button>
-      <button
-        type="button"
-        onClick={onClickCodeButton}
-      >
+      <button type="button" onClick={onClickCodeButton}>
         code
       </button>
       <ImageInsertModalWithOpenButton />
