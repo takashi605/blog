@@ -6,13 +6,15 @@ import {
   useSelectedTextStyle,
   useUpdateBlockType,
 } from './toolBarPluginHooks';
+import type { SupportedNodeType } from './types/supportedNodeType';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
+  const [selectedNodeType, setSelectedNodeType] =
+    useState<SupportedNodeType | null>(null);
   const { $setHeadingToSelection } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $checkStylesForSelection, $toggleBoldToSelection } =
+  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
 
   useEffect(() => {
@@ -20,10 +22,12 @@ function ToolBarPlugin() {
       editor.update(() => {
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
-        $checkStylesForSelection();
+
+        // 選択中のテキストスタイルを確認して isBoldSelected 等のステートに保持
+        $storeSelectedTextStyle();
       });
     });
-  }, [editor, $getElementTypeOfSelected, $checkStylesForSelection]);
+  }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
 
   const onClickH2Button = () => {
     editor.update(() => {

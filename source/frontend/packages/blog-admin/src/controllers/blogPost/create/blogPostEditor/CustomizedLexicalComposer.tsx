@@ -1,4 +1,4 @@
-import { CodeNode } from '@lexical/code';
+import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -38,6 +38,7 @@ function CustomizedLexicalComposer({
       ListItemNode,
       HorizontalRuleNode,
       CodeNode,
+      CodeHighlightNode,
       HeadingNode,
       LinkNode,
       ListNode,
