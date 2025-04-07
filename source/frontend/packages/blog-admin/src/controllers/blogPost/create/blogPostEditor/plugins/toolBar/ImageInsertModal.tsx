@@ -7,7 +7,7 @@ import CommonModalOpenButton from '../../../../../../components/modal/CommonModa
 import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
 import ImageListProvider from '../../../../../images/list/ImageListProvider';
 import ImagePicker from '../../../../../images/pick/ImagePicker';
-import { INSERT_IMAGE_COMMAND } from '../../customNodes/ImageNode/register/InsertImageCommand';
+import { INSERT_IMAGE_COMMAND } from '../customNodes/image/InsertImageCommand';
 
 function ImageInsertModalWithOpenButton() {
   const [editor] = useLexicalComposerContext();

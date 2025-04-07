@@ -6,7 +6,7 @@ import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ParagraphNode, TextNode } from 'lexical';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
-import { ImageNode } from './customNodes/ImageNode';
+import { ImageNode } from './plugins/customNodes/image/ImageNode';
 
 const theme = {
   code: 'editor-code',

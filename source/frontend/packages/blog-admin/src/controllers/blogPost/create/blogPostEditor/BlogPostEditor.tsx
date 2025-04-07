@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
-import { ImageRegister } from './customNodes/ImageNode/register/ImageRegister';
+import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 
 function BlogPostEditor() {
