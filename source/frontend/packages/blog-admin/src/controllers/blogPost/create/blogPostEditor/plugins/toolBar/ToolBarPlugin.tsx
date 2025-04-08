@@ -17,7 +17,8 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { $setHeadingToSelection } = useUpdateBlockType();
+  const { $setHeadingToSelection, $setParagraphInSelection } =
+    useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
@@ -36,12 +37,20 @@ function ToolBarPlugin() {
 
   const onClickH2Button = () => {
     editor.update(() => {
+      if (selectedNodeType === 'h2') {
+        $setParagraphInSelection();
+        return;
+      }
       $setHeadingToSelection('h2');
     });
   };
 
   const onClickH3Button = () => {
     editor.update(() => {
+      if (selectedNodeType === 'h3') {
+        $setParagraphInSelection();
+        return;
+      }
       $setHeadingToSelection('h3');
     });
   };
@@ -53,37 +62,33 @@ function ToolBarPlugin() {
   };
 
   const onClickCodeButton = useCallback(() => {
-    if (selectedNodeType !== 'code') {
-      editor.update(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          $setBlocksType(selection, () => $createCodeNode());
-        }
-      });
+    if (!(selectedNodeType === 'code' || selectedNodeType === 'paragraph')) {
+      return;
     }
-  }, [editor, selectedNodeType]);
+    editor.update(() => {
+      if (selectedNodeType === 'code') {
+        $setParagraphInSelection();
+        return;
+      }
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        $setBlocksType(selection, () => $createCodeNode());
+      }
+    });
+  }, [$setParagraphInSelection, editor, selectedNodeType]);
 
   return (
     <div>
-      <ToolBarButton
-        onClick={onClickH2Button}
-        disabled={selectedNodeType === 'h2'}
-      >
+      <ToolBarButton onClick={onClickH2Button} disabled={false}>
         <TbH2 />
       </ToolBarButton>
-      <ToolBarButton
-        onClick={onClickH3Button}
-        disabled={selectedNodeType === 'h3'}
-      >
+      <ToolBarButton onClick={onClickH3Button} disabled={false}>
         <TbH3 />
       </ToolBarButton>
       <ToolBarButton onClick={onClickBoldButton} disabled={isBoldSelected}>
         <TbBold />
       </ToolBarButton>
-      <ToolBarButton
-        onClick={onClickCodeButton}
-        disabled={selectedNodeType === 'code'}
-      >
+      <ToolBarButton onClick={onClickCodeButton} disabled={false}>
         <TbCode />
       </ToolBarButton>
       <ImageInsertModalWithOpenButton />
