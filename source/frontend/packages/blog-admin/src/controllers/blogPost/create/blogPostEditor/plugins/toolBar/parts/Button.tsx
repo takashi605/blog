@@ -18,7 +18,6 @@ export function ToolBarButton({
     <button
       className={styles.button}
       onClick={onClick}
-      // disabled={disabled}
       type="button"
       role="checkbox"
       aria-checked={disabled}
