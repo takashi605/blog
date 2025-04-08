@@ -1,4 +1,4 @@
-const supportedNodes = [
+export const supportedNodes = [
   'h1',
   'h2',
   'h3',

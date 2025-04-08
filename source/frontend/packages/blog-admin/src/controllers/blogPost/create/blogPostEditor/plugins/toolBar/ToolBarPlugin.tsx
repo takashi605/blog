@@ -3,7 +3,9 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $setBlocksType } from '@lexical/selection';
 import { $getSelection, $isRangeSelection } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
+import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
+import { ToolBarButton } from './parts/Button';
 import {
   useSelectedNode,
   useSelectedTextStyle,
@@ -63,26 +65,27 @@ function ToolBarPlugin() {
 
   return (
     <div>
-      <button
-        role="button"
+      <ToolBarButton
         onClick={onClickH2Button}
         disabled={selectedNodeType === 'h2'}
       >
-        h2
-      </button>
-      <button
-        role="button"
+        <TbH2 />
+      </ToolBarButton>
+      <ToolBarButton
         onClick={onClickH3Button}
         disabled={selectedNodeType === 'h3'}
       >
-        h3
-      </button>
-      <button role="button" onClick={onClickBoldButton}>
-        bold
-      </button>
-      <button type="button" onClick={onClickCodeButton}>
-        code
-      </button>
+        <TbH3 />
+      </ToolBarButton>
+      <ToolBarButton onClick={onClickBoldButton} disabled={isBoldSelected}>
+        <TbBold />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={onClickCodeButton}
+        disabled={selectedNodeType === 'code'}
+      >
+        <TbCode />
+      </ToolBarButton>
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
