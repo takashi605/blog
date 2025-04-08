@@ -10,7 +10,7 @@ type ButtonPropsType = {
 
 export const ToolBarButton = React.memo(function Button({
   onClick,
-  checked: disabled,
+  checked,
   children,
   ariaLabel,
 }: ButtonPropsType) {
@@ -20,7 +20,7 @@ export const ToolBarButton = React.memo(function Button({
       onClick={onClick}
       type="button"
       role="checkbox"
-      aria-checked={disabled}
+      aria-checked={checked}
       aria-label={ariaLabel}
     >
       {children}
