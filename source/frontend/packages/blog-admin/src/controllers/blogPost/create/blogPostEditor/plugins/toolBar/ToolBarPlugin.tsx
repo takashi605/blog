@@ -79,16 +79,25 @@ function ToolBarPlugin() {
 
   return (
     <div>
-      <ToolBarButton onClick={onClickH2Button} disabled={false}>
+      <ToolBarButton
+        onClick={onClickH2Button}
+        checked={selectedNodeType === 'h2'}
+      >
         <TbH2 />
       </ToolBarButton>
-      <ToolBarButton onClick={onClickH3Button} disabled={false}>
+      <ToolBarButton
+        onClick={onClickH3Button}
+        checked={selectedNodeType === 'h3'}
+      >
         <TbH3 />
       </ToolBarButton>
-      <ToolBarButton onClick={onClickBoldButton} disabled={isBoldSelected}>
+      <ToolBarButton onClick={onClickBoldButton} checked={isBoldSelected}>
         <TbBold />
       </ToolBarButton>
-      <ToolBarButton onClick={onClickCodeButton} disabled={false}>
+      <ToolBarButton
+        onClick={onClickCodeButton}
+        checked={selectedNodeType === 'code'}
+      >
         <TbCode />
       </ToolBarButton>
       <ImageInsertModalWithOpenButton />
