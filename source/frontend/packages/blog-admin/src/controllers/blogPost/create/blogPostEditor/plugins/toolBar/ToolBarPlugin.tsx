@@ -17,7 +17,7 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { $setHeadingToSelection, $setParagraphInSelection } =
+  const { $setHeadingInSelection, $setParagraphInSelection } =
     useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
@@ -41,7 +41,7 @@ function ToolBarPlugin() {
         $setParagraphInSelection();
         return;
       }
-      $setHeadingToSelection('h2');
+      $setHeadingInSelection('h2');
     });
   };
 
@@ -51,7 +51,7 @@ function ToolBarPlugin() {
         $setParagraphInSelection();
         return;
       }
-      $setHeadingToSelection('h3');
+      $setHeadingInSelection('h3');
     });
   };
 
@@ -103,7 +103,7 @@ function ToolBarPlugin() {
       <ToolBarButton
         onClick={onClickCodeButton}
         checked={selectedNodeType === 'code'}
-        ariaLabel='code'
+        ariaLabel="code"
       >
         <TbCode />
       </ToolBarButton>
