@@ -93,7 +93,7 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   await selectByArrowLeft(page, richTextEditor, 2);
 
   // 太字ボタンを押す
-  const boldButton = page.getByRole('button', { name: 'bold' });
+  const boldButton = page.getByRole('checkbox', { name: 'bold' });
   await boldButton.click();
 
   // 選択の解除
@@ -120,7 +120,7 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   const richTextEditor = page.locator('[contenteditable="true"]');
   await selectByArrowLeft(page, richTextEditor, 2);
 
-  const boldButton = page.getByRole('button', { name: 'bold' });
+  const boldButton = page.getByRole('checkbox', { name: 'bold' });
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
 });
@@ -147,7 +147,7 @@ When(
     richTextEditor.press('Enter');
     await richTextEditor.pressSequentially('見出し2');
     await selectByArrowLeft(page, richTextEditor, 4);
-    const h2Button = page.getByRole('button', { name: 'h2' });
+    const h2Button = page.getByRole('checkbox', { name: 'h2' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -171,7 +171,7 @@ When(
     richTextEditor.press('Enter');
     await richTextEditor.pressSequentially('見出し3');
     await selectByArrowLeft(page, richTextEditor, 4);
-    const h2Button = page.getByRole('button', { name: 'h3' });
+    const h2Button = page.getByRole('checkbox', { name: 'h3' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -202,7 +202,7 @@ When('「const a = 1」入力し、「code」ボタンを押す', async function
   const richTextEditor = page.locator('[contenteditable="true"]');
   richTextEditor.press('Enter');
   await richTextEditor.pressSequentially('const a = 1');
-  const codeButton = page.getByRole('button', { name: 'code' });
+  const codeButton = page.getByRole('checkbox', { name: 'code' });
   await codeButton.click();
 })
 Then('エディタ内にコードブロックが存在している', async function () {

@@ -1,22 +1,43 @@
+import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import type { LexicalNode } from 'lexical';
-import { $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
+import {
+  $createParagraphNode,
+  $getSelection,
+  $isRangeSelection,
+  FORMAT_TEXT_COMMAND,
+} from 'lexical';
 import { useState } from 'react';
 import type { SupportedNodeType } from './types/supportedNodeType';
 import { isSupportedNode } from './types/supportedNodeType';
 
 export function useUpdateBlockType() {
-  const $setHeadingToSelection = (headingType: 'h2' | 'h3') => {
+  const $setHeadingInSelection = (headingType: 'h2' | 'h3') => {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
       return;
     }
     $setBlocksType(selection, () => $createHeadingNode(headingType));
   };
+  const $setParagraphInSelection = () => {
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) {
+      return;
+    }
+    $setBlocksType(selection, () => $createParagraphNode());
+  };
+  const $setCodeInSelection = () => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      $setBlocksType(selection, () => $createCodeNode());
+    }
+  };
   return {
-    $setHeadingToSelection,
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
   } as const;
 }
 

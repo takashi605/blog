@@ -1,9 +1,8 @@
-import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $setBlocksType } from '@lexical/selection';
-import { $getSelection, $isRangeSelection } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
+import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
+import { ToolBarButton } from './parts/Button';
 import {
   useSelectedNode,
   useSelectedTextStyle,
@@ -15,7 +14,11 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { $setHeadingToSelection } = useUpdateBlockType();
+  const {
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
+  } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
@@ -32,57 +35,89 @@ function ToolBarPlugin() {
     });
   }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
 
-  const onClickH2Button = () => {
+  const onClickH2Button = useCallback(() => {
     editor.update(() => {
-      $setHeadingToSelection('h2');
+      if (selectedNodeType === 'h2') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setHeadingInSelection('h2');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickH3Button = () => {
+  const onClickH3Button = useCallback(() => {
     editor.update(() => {
-      $setHeadingToSelection('h3');
+      if (selectedNodeType === 'h3') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setHeadingInSelection('h3');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickBoldButton = () => {
+  const onClickBoldButton = useCallback(() => {
+    // TODO すでに太字の paragraph を見出しにした場合等に太字が解除されない問題があるので、修正する
+    if (selectedNodeType !== 'paragraph') {
+      return;
+    }
     editor.update(() => {
       $toggleBoldToSelection();
     });
-  };
+  }, [$toggleBoldToSelection, editor, selectedNodeType]);
 
   const onClickCodeButton = useCallback(() => {
-    if (selectedNodeType !== 'code') {
-      editor.update(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          $setBlocksType(selection, () => $createCodeNode());
-        }
-      });
+    if (!(selectedNodeType === 'code' || selectedNodeType === 'paragraph')) {
+      return;
     }
-  }, [editor, selectedNodeType]);
+    editor.update(() => {
+      if (selectedNodeType === 'code') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setCodeInSelection();
+    });
+  }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
   return (
     <div>
-      <button
-        role="button"
+      <ToolBarButton
         onClick={onClickH2Button}
-        disabled={selectedNodeType === 'h2'}
+        checked={selectedNodeType === 'h2'}
+        ariaLabel="h2"
       >
-        h2
-      </button>
-      <button
-        role="button"
+        <TbH2 />
+      </ToolBarButton>
+      <ToolBarButton
         onClick={onClickH3Button}
-        disabled={selectedNodeType === 'h3'}
+        checked={selectedNodeType === 'h3'}
+        ariaLabel="h3"
       >
-        h3
-      </button>
-      <button role="button" onClick={onClickBoldButton}>
-        bold
-      </button>
-      <button type="button" onClick={onClickCodeButton}>
-        code
-      </button>
+        <TbH3 />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={onClickBoldButton}
+        checked={isBoldSelected}
+        ariaLabel="bold"
+      >
+        <TbBold />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={onClickCodeButton}
+        checked={selectedNodeType === 'code'}
+        ariaLabel="code"
+      >
+        <TbCode />
+      </ToolBarButton>
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
