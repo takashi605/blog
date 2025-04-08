@@ -66,10 +66,14 @@ function ToolBarPlugin() {
   ]);
 
   const onClickBoldButton = useCallback(() => {
+    // TODO すでに太字の paragraph を見出しにした場合等に太字が解除されない問題があるので、修正する
+    if (selectedNodeType !== 'paragraph') {
+      return;
+    }
     editor.update(() => {
       $toggleBoldToSelection();
     });
-  }, [$toggleBoldToSelection, editor]);
+  }, [$toggleBoldToSelection, editor, selectedNodeType]);
 
   const onClickCodeButton = useCallback(() => {
     if (!(selectedNodeType === 'code' || selectedNodeType === 'paragraph')) {
