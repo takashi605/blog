@@ -8,11 +8,11 @@ type ButtonPropsType = {
   ariaLabel: string;
 };
 
-export function ToolBarButton({
+export const ToolBarButton = React.memo(function Button({
   onClick,
   checked: disabled,
   children,
-  ariaLabel
+  ariaLabel,
 }: ButtonPropsType) {
   return (
     <button
@@ -26,4 +26,4 @@ export function ToolBarButton({
       {children}
     </button>
   );
-}
+});
