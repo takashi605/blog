@@ -82,21 +82,28 @@ function ToolBarPlugin() {
       <ToolBarButton
         onClick={onClickH2Button}
         checked={selectedNodeType === 'h2'}
+        ariaLabel="h2"
       >
         <TbH2 />
       </ToolBarButton>
       <ToolBarButton
         onClick={onClickH3Button}
         checked={selectedNodeType === 'h3'}
+        ariaLabel="h3"
       >
         <TbH3 />
       </ToolBarButton>
-      <ToolBarButton onClick={onClickBoldButton} checked={isBoldSelected}>
+      <ToolBarButton
+        onClick={onClickBoldButton}
+        checked={isBoldSelected}
+        ariaLabel="bold"
+      >
         <TbBold />
       </ToolBarButton>
       <ToolBarButton
         onClick={onClickCodeButton}
         checked={selectedNodeType === 'code'}
+        ariaLabel='code'
       >
         <TbCode />
       </ToolBarButton>
