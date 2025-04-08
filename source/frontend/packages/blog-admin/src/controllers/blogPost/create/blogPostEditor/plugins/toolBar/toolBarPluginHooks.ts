@@ -1,3 +1,4 @@
+import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -27,9 +28,16 @@ export function useUpdateBlockType() {
     }
     $setBlocksType(selection, () => $createParagraphNode());
   };
+  const $setCodeInSelection = () => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      $setBlocksType(selection, () => $createCodeNode());
+    }
+  };
   return {
     $setHeadingInSelection,
     $setParagraphInSelection,
+    $setCodeInSelection,
   } as const;
 }
 

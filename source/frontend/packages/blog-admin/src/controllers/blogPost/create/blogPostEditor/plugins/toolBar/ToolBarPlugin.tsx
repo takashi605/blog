@@ -1,7 +1,4 @@
-import { $createCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $setBlocksType } from '@lexical/selection';
-import { $getSelection, $isRangeSelection } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
 import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
@@ -17,8 +14,11 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { $setHeadingInSelection, $setParagraphInSelection } =
-    useUpdateBlockType();
+  const {
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
+  } = useUpdateBlockType();
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
@@ -70,12 +70,9 @@ function ToolBarPlugin() {
         $setParagraphInSelection();
         return;
       }
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        $setBlocksType(selection, () => $createCodeNode());
-      }
+      $setCodeInSelection();
     });
-  }, [$setParagraphInSelection, editor, selectedNodeType]);
+  }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
   return (
     <div>
