@@ -35,7 +35,7 @@ function ToolBarPlugin() {
     });
   }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
 
-  const onClickH2Button = () => {
+  const onClickH2Button = useCallback(() => {
     editor.update(() => {
       if (selectedNodeType === 'h2') {
         $setParagraphInSelection();
@@ -43,9 +43,14 @@ function ToolBarPlugin() {
       }
       $setHeadingInSelection('h2');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickH3Button = () => {
+  const onClickH3Button = useCallback(() => {
     editor.update(() => {
       if (selectedNodeType === 'h3') {
         $setParagraphInSelection();
@@ -53,13 +58,18 @@ function ToolBarPlugin() {
       }
       $setHeadingInSelection('h3');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickBoldButton = () => {
+  const onClickBoldButton = useCallback(() => {
     editor.update(() => {
       $toggleBoldToSelection();
     });
-  };
+  }, [$toggleBoldToSelection, editor]);
 
   const onClickCodeButton = useCallback(() => {
     if (!(selectedNodeType === 'code' || selectedNodeType === 'paragraph')) {
