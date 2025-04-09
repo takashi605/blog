@@ -51,6 +51,6 @@ function blogPostContentSchema() {
       title: z.string(),
       code: z.string(),
       language: z.string(),
-    })
+    }),
   ]);
 }
