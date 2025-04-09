@@ -66,7 +66,7 @@ mod helper {
         }),
         BlogPostContent::Code(CodeBlock {
           id: Uuid::new_v4(),
-          type_field: "code".to_string(),
+          type_field: "code_block".to_string(),
           title: "サンプルコード".to_string(),
           code: "console.log(Hello, World!)".to_string(),
           language: "javascript".to_string(),

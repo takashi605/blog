@@ -5,6 +5,7 @@ use futures::future::join_all;
 use crate::{
   db::tables::{
     blog_posts_table::insert_blog_post,
+    code_blocks_table::insert_code_block,
     generate_blog_post_records_by,
     heading_blocks_table::insert_heading_block,
     image_blocks_table::insert_image_block,
@@ -24,9 +25,17 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   let image_records: Vec<ImageRecord> =
     fetch_all_images().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
-  let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, image_block_records, rich_text_records, rich_text_styles) =
-    generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
-      .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  let (
+    blog_post_record,
+    post_content_records,
+    heading_block_records,
+    paragraph_block_records,
+    image_block_records,
+    code_block_records,
+    rich_text_records,
+    rich_text_styles,
+  ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
+    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   insert_blog_post(blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let mut insert_content_tasks = vec![];
@@ -81,6 +90,15 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   }
   let results = join_all(insert_image_tasks).await;
   helper::result_err_handle(results, "画像ブロックの挿入に失敗しました。")
+    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+
+  let mut insert_code_tasks = vec![];
+  for code_block in code_block_records {
+    let task = tokio::spawn(insert_code_block(code_block));
+    insert_code_tasks.push(task);
+  }
+  let results = join_all(insert_code_tasks).await;
+  helper::result_err_handle(results, "コードブロックの挿入に失敗しました。")
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let inserted_blog_post = fetch_single_blog_post(post_id).await?;
