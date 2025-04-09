@@ -1,4 +1,5 @@
 import { MockBlogPost } from '../../mockData/blogPost/mockBlogPost';
+import type { Code } from './code';
 import { ContentType } from './content';
 import { RichText, RichTextPart } from './richText';
 
@@ -31,5 +32,18 @@ describe('エンティティ: 投稿記事のコンテント', () => {
     expect(image.getPath()).toBe('path/to/image');
     expect(image.getType()).toBe(ContentType.Image);
     expect(image.getId()).toBeDefined();
+  });
+
+  it('コードブロックを生成できる', () => {
+    const blogPost = new MockBlogPost('1').successfulMock();
+    const code = blogPost.getContents().find((content) => {
+      return content.getType() === ContentType.Code;
+    }) as Code;
+
+    expect(code.getType()).toBe('code');
+    expect(code.getId()).toBeDefined();
+    expect(code.getTitle()).toBe('サンプルコード');
+    expect(code.getCode()).toBe('console.log("Hello World");');
+    expect(code.getLanguage()).toBe('javascript');
   });
 });
