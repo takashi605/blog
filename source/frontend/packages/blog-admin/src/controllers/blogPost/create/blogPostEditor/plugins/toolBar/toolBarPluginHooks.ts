@@ -43,7 +43,7 @@ export function useUpdateBlockType() {
 
 export function useSelectedNode() {
   const $getElementTypeOfSelected = (): SupportedNodeType => {
-    const selectedElementNode = $getElementOfSelected();
+    const selectedElementNode = $getSelectionTopLevelElement();
     if (!selectedElementNode) {
       return null;
     }
@@ -51,17 +51,19 @@ export function useSelectedNode() {
 
     return selectedElementType;
   };
-  return { $getElementTypeOfSelected } as const;
-
-  /* 以下ヘルパー関数 */
-  function $getElementOfSelected() {
+  function $getSelectionTopLevelElement() {
     const selectedNode = $getSelectedNode();
     if (!selectedNode) {
       return null;
     }
-    return selectedNode.getTopLevelElementOrThrow();
+    const targetNode = $findTopLevelElementBy(selectedNode);
+
+    return targetNode;
   }
 
+  return { $getElementTypeOfSelected, $getSelectionTopLevelElement } as const;
+
+  /* 以下ヘルパー関数 */
   function $getSelectedNode() {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
@@ -69,6 +71,15 @@ export function useSelectedNode() {
     }
     const focusNode = selection.focus.getNode();
     return focusNode;
+  }
+
+  function $findTopLevelElementBy(
+    node: LexicalNode,
+  ): LexicalNode | null {
+    if (node.getKey() === 'root') {
+      return node;
+    }
+    return node.getTopLevelElementOrThrow();
   }
 
   function $getSelectedNodeType(

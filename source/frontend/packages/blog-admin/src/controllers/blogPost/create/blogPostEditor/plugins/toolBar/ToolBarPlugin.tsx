@@ -1,6 +1,5 @@
 import { $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getSelection, $isRangeSelection } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
@@ -18,12 +17,6 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const {
-    $setHeadingInSelection,
-    $setParagraphInSelection,
-    $setCodeInSelection,
-  } = useUpdateBlockType();
-  const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
   const [codeLanguage, setCodeLanguage] = useState('');
@@ -31,29 +24,40 @@ function ToolBarPlugin() {
     CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   ).map(([value, label]) => ({ value, label }));
 
+  const {
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
+  } = useUpdateBlockType();
+
+  const { $getElementTypeOfSelected, $getSelectionTopLevelElement } =
+    useSelectedNode();
+
+  // Lexical の Node を source of truth にするため、
+  // エディタの状態が変化するタイミングで Node をチェックして各種ステートを更新する
   useEffect(() => {
     return editor.registerUpdateListener(() => {
       editor.read(() => {
+        // 選択中のノードの種類を取得して、selectedNodeType に保持
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
 
-        // 選択中のテキストスタイルを確認して isBoldSelected 等のステートに保持
+        // 選択中のテキストスタイルを取得して isBoldSelected に保持
         $storeSelectedTextStyle();
 
         // 選択中のコードノードの言語を取得して、codeLanguage に保持
-        const selection = $getSelection();
-        if (!$isRangeSelection(selection)) return;
-        const anchorNode = selection.anchor.getNode();
-        const targetNode =
-          anchorNode.getKey() === 'root'
-            ? anchorNode
-            : anchorNode.getTopLevelElementOrThrow();
+        const targetNode = $getSelectionTopLevelElement();
         if ($isCodeNode(targetNode)) {
           setCodeLanguage(targetNode.getLanguage() || '');
         }
       });
     });
-  }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
+  }, [
+    editor,
+    $getElementTypeOfSelected,
+    $storeSelectedTextStyle,
+    $getSelectionTopLevelElement,
+  ]);
 
   const onClickH2Button = useCallback(() => {
     editor.update(() => {
@@ -86,7 +90,6 @@ function ToolBarPlugin() {
   ]);
 
   const onClickBoldButton = useCallback(() => {
-    // TODO すでに太字の paragraph を見出しにした場合等に太字が解除されない問題があるので、修正する
     if (selectedNodeType !== 'paragraph') {
       return;
     }
