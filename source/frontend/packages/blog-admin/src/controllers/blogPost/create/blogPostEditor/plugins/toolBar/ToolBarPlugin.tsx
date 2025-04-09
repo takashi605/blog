@@ -1,9 +1,13 @@
+import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useState } from 'react';
+import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
+import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import {
+  useCodeLanguage,
   useSelectedNode,
   useSelectedTextStyle,
   useUpdateBlockType,
@@ -14,26 +18,46 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
+  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
+    useSelectedTextStyle();
+  const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
+    useCodeLanguage();
+
   const {
     $setHeadingInSelection,
     $setParagraphInSelection,
     $setCodeInSelection,
   } = useUpdateBlockType();
-  const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
-    useSelectedTextStyle();
 
+  const { $getElementTypeOfSelected, $getSelectionTopLevelElement } =
+    useSelectedNode();
+
+  // Lexical の Node を source of truth にするため、
+  // エディタの状態が変化するタイミングで Node をチェックして各種ステートを更新する
   useEffect(() => {
     return editor.registerUpdateListener(() => {
       editor.read(() => {
+        // 選択中のノードの種類を取得して、selectedNodeType に保持
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
 
-        // 選択中のテキストスタイルを確認して isBoldSelected 等のステートに保持
+        // 選択中のテキストスタイルを取得して isBoldSelected に保持
         $storeSelectedTextStyle();
+
+        // 選択中のコードノードの言語を取得して、codeLanguage に保持
+        const targetNode = $getSelectionTopLevelElement();
+        if ($isCodeNode(targetNode)) {
+          setCodeLanguage(targetNode.getLanguage() || '');
+        }
       });
     });
-  }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
+  }, [
+    editor,
+    $getElementTypeOfSelected,
+    $storeSelectedTextStyle,
+    $getSelectionTopLevelElement,
+    setCodeLanguage,
+  ]);
 
   const onClickH2Button = useCallback(() => {
     editor.update(() => {
@@ -66,7 +90,6 @@ function ToolBarPlugin() {
   ]);
 
   const onClickBoldButton = useCallback(() => {
-    // TODO すでに太字の paragraph を見出しにした場合等に太字が解除されない問題があるので、修正する
     if (selectedNodeType !== 'paragraph') {
       return;
     }
@@ -118,6 +141,25 @@ function ToolBarPlugin() {
       >
         <TbCode />
       </ToolBarButton>
+      {selectedNodeType === 'code' && (
+        <div>
+          <select
+            aria-label="code languages"
+            value={codeLanguage}
+            onChange={(event) =>
+              editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
+            }
+          >
+            <option value="">select...</option>
+            {codeLanguagesOptions.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+          <MdExpandMore />
+        </div>
+      )}
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
