@@ -25,6 +25,13 @@ export const mockBlogPostDTO: BlogPostDTO = {
       type: ContentType.Image,
       path: 'path/to/image',
     },
+    {
+      id: createUUIDv4(),
+      type: ContentType.CodeBlock,
+      title: 'サンプルコード',
+      code: 'console.log("Hello, World!");',
+      language: 'javascript',
+    },
   ],
 };
 
