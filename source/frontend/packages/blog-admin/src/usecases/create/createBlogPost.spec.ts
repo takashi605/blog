@@ -62,6 +62,22 @@ describe('ユースケース: 記事の投稿', () => {
     )!;
     expect(paragraphContent.type).toBe('paragraph');
     expect(paragraphContent.text).toBeDefined();
+
+    const imageContent = createdBlogPost.contents.find(
+      (content) => content.type === 'image',
+    )!;
+    expect(imageContent.id).toBeDefined();
+    expect(imageContent.type).toBe('image');
+    expect(imageContent.path).toBeDefined();
+
+    const codeBlockContent = createdBlogPost.contents.find(
+      (content) => content.type === 'codeBlock',
+    )!;
+    expect(codeBlockContent.id).toBeDefined();
+    expect(codeBlockContent.type).toBe('codeBlock');
+    expect(codeBlockContent.title).toBeDefined();
+    expect(codeBlockContent.code).toBeDefined();
+    expect(codeBlockContent.language).toBeDefined();
   });
 
   it('投稿日時と更新日時が今日の日付になる', () => {
