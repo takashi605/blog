@@ -40,7 +40,7 @@ describe('エンティティ: 投稿記事のコンテント', () => {
       return content.getType() === ContentType.CodeBlock;
     }) as CodeBlock;
 
-    expect(code.getType()).toBe('code');
+    expect(code.getType()).toBe('codeBlock');
     expect(code.getId()).toBeDefined();
     expect(code.getTitle()).toBe('サンプルコード');
     expect(code.getCode()).toBe('console.log("Hello, World!");');

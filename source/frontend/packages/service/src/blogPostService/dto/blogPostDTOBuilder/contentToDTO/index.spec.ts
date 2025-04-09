@@ -69,6 +69,6 @@ describe('contentDTO', () => {
     expect(dto.title).toBe('サンプルコード');
     expect(dto.code).toBe('console.log("Hello, World!");');
     expect(dto.language).toBe('javascript');
-    expect(dto.type).toBe('code');
+    expect(dto.type).toBe('codeBlock');
   });
 });
