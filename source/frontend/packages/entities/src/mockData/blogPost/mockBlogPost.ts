@@ -108,9 +108,9 @@ class MockBlogPostParts {
   public getMockCode(): Code {
     return new Code(
       '5',
-      'javascript',
-      'console.log("Hello World");',
       'サンプルコード',
+      'console.log("Hello, World!");',
+      'javascript',
     );
   }
 }

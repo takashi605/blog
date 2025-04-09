@@ -7,7 +7,7 @@ export class Code implements ContentBase {
   private code: string;
   private title: string;
 
-  constructor(id: string, language: string, code: string, title: string) {
+  constructor(id: string, title: string, code: string, language: string) {
     this.id = id;
     this.language = language;
     this.code = code;

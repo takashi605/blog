@@ -1,8 +1,9 @@
+import type { Code } from 'entities/src/blogPost/postContents/code';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 
-export type ContentDTO = H2DTO | H3DTO | ParagraphDTO | ImageContentDTO;
+export type ContentDTO = H2DTO | H3DTO | ParagraphDTO | ImageContentDTO | CodeDTO;
 
 export type H2DTO = Readonly<{
   id: ReturnType<H2['getId']>;
@@ -32,4 +33,12 @@ export type RichTextDTO = ReadonlyArray<{
   styles?: {
     bold: boolean;
   };
+}>;
+
+export type CodeDTO = Readonly<{
+  id: ReturnType<Code['getId']>;
+  type: ReturnType<Code['getType']>;
+  title: ReturnType<Code['getTitle']>;
+  code: ReturnType<Code['getCode']>;
+  language: ReturnType<Code['getLanguage']>;
 }>;
