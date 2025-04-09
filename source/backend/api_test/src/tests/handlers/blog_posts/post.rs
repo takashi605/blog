@@ -11,11 +11,12 @@ mod tests {
   async fn post_single_blog_post() -> Result<()> {
     let url = "http://localhost:8000/blog/posts";
 
+    // テスト用のブログ記事 json を作成
     let blog_post_for_req: BlogPost = helper::create_blog_post_for_req(Uuid::new_v4(), "テスト記事").await.unwrap();
     let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした").unwrap();
 
+    // POST リクエストを送信 -> レスポンスを取得 -> JSON データを構造体にパース
     let post_request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
-
     let resp = post_request.send().await.unwrap().text().await.unwrap();
     let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 
@@ -27,7 +28,7 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, ImageBlock, ParagraphBlock, RichText, Style};
+  use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {
@@ -62,6 +63,13 @@ mod helper {
           id: any_image.id,
           path: any_image.path,
           type_field: "image".to_string(),
+        }),
+        BlogPostContent::Code(CodeBlock {
+          id: Uuid::new_v4(),
+          type_field: "code".to_string(),
+          title: "サンプルコード".to_string(),
+          code: "console.log(Hello, World!)".to_string(),
+          language: "javascript".to_string(),
         }),
       ],
     };
