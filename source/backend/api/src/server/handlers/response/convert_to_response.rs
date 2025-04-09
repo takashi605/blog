@@ -50,7 +50,7 @@ async fn content_to_response(content_block_record: AnyContentBlockRecord) -> Res
       type_field: "code_block".to_string(),
       title: code_block_record.title,
       code: code_block_record.code,
-      language: code_block_record.lang,
+      language: code_block_record.language,
     }),
   };
   Ok(result)

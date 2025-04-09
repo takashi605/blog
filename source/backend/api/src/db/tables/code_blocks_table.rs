@@ -12,7 +12,8 @@ pub struct CodeBlockRecord {
   pub id: Uuid,
   pub title: String,
   pub code: String,
-  pub lang: String,
+  #[sqlx(rename = "lang")]
+  pub language: String,
 }
 
 /*
@@ -23,7 +24,7 @@ pub async fn insert_code_block(code_block: CodeBlockRecord) -> Result<()> {
     .bind(code_block.id)
     .bind(code_block.title)
     .bind(code_block.code)
-    .bind(code_block.lang)
+    .bind(code_block.language)
     .execute(&*POOL)
     .await
     .context("コードブロックの挿入に失敗しました。")?;
@@ -31,9 +32,6 @@ pub async fn insert_code_block(code_block: CodeBlockRecord) -> Result<()> {
 }
 
 pub async fn fetch_code_block_by_content_id(content_id: Uuid) -> Result<CodeBlockRecord> {
-  let block = sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1")
-    .bind(content_id)
-    .fetch_one(&*POOL)
-    .await?;
+  let block = sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
   Ok(block)
 }

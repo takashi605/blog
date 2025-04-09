@@ -5,7 +5,10 @@ use uuid::Uuid;
 use crate::db::pool::POOL;
 
 use super::{
-  code_blocks_table::{fetch_code_block_by_content_id, CodeBlockRecord}, heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord}, image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecordWithRelations}, paragraph_blocks_table::{fetch_paragraph_block_record_with_relations, ParagraphBlockRecordWithRelations}
+  code_blocks_table::{fetch_code_block_by_content_id, CodeBlockRecord},
+  heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
+  image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecordWithRelations},
+  paragraph_blocks_table::{fetch_paragraph_block_record_with_relations, ParagraphBlockRecordWithRelations},
 };
 
 /*
@@ -79,13 +82,12 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
       AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
     }
     PostContentType::CodeBlock => {
-      let code_block_record: CodeBlockRecord =
-        fetch_code_block_by_content_id(content_record.id).await.context("コードブロックの取得に失敗しました。")?;
-      AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord{
+      let code_block_record: CodeBlockRecord = fetch_code_block_by_content_id(content_record.id).await.context("コードブロックの取得に失敗しました。")?;
+      AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord {
         id: code_block_record.id,
         title: code_block_record.title,
         code: code_block_record.code,
-        lang: code_block_record.lang,
+        language: code_block_record.language,
       })
     }
   };

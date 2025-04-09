@@ -142,7 +142,7 @@ pub fn generate_blog_post_records_by(
           id: code_block.id,
           title: code_block.title,
           code: code_block.code,
-          lang: code_block.language,
+          language: code_block.language,
         });
         PostContentRecord {
           id: code_block.id,
@@ -263,7 +263,7 @@ mod tests {
     assert_eq!(code_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(code_block_records[0].title, "サンプルコード");
     assert_eq!(code_block_records[0].code, "console.log(Hello, World!)");
-    assert_eq!(code_block_records[0].lang, "javascript");
+    assert_eq!(code_block_records[0].language, "javascript");
 
     Ok(())
   }
