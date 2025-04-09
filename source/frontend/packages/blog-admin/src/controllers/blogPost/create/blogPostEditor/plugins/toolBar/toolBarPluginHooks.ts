@@ -137,5 +137,5 @@ export function useCodeLanguage() {
     codeLanguage,
     setCodeLanguage,
     codeLanguagesOptions,
-  }
+  };
 }

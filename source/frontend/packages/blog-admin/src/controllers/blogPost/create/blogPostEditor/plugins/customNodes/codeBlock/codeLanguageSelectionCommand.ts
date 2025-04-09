@@ -10,7 +10,9 @@ import {
 
 export const CODE_LANGUAGE_COMMAND = createCommand<string>();
 
-export function registerCodeLanguageSelecting(editor: LexicalEditor): () => void {
+export function registerCodeLanguageSelecting(
+  editor: LexicalEditor,
+): () => void {
   return editor.registerCommand(
     CODE_LANGUAGE_COMMAND,
     (language, editor) => {
