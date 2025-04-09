@@ -1,5 +1,5 @@
 import { MockBlogPost } from '../../mockData/blogPost/mockBlogPost';
-import type { Code } from './code';
+import type { CodeBlock } from './code';
 import { ContentType } from './content';
 import { RichText, RichTextPart } from './richText';
 
@@ -37,8 +37,8 @@ describe('エンティティ: 投稿記事のコンテント', () => {
   it('コードブロックを生成できる', () => {
     const blogPost = new MockBlogPost('1').successfulMock();
     const code = blogPost.getContents().find((content) => {
-      return content.getType() === ContentType.Code;
-    }) as Code;
+      return content.getType() === ContentType.CodeBlock;
+    }) as CodeBlock;
 
     expect(code.getType()).toBe('code');
     expect(code.getId()).toBeDefined();

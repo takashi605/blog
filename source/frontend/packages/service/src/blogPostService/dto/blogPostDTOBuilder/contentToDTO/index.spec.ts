@@ -1,4 +1,4 @@
-import { Code } from 'entities/src/blogPost/postContents/code';
+import { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
@@ -54,8 +54,8 @@ describe('contentDTO', () => {
     expect(dto.type).toBe('image');
   });
 
-  it('type「Code」を持つコンテントを DTO に変換できる', () => {
-    const content = new Code(
+  it('type「CodeBlock」を持つコンテントを DTO に変換できる', () => {
+    const content = new CodeBlock(
       '5',
       'サンプルコード',
       'console.log("Hello, World!");',

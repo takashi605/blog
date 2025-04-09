@@ -1,5 +1,5 @@
 import type { ImageContent } from '../postContents/image';
-import type { Code } from './code';
+import type { CodeBlock } from './code';
 import type { H2, H3 } from './heading';
 import type { Paragraph } from './paragraph';
 
@@ -8,7 +8,7 @@ export const enum ContentType {
   H3 = 'h3',
   Paragraph = 'paragraph',
   Image = 'image',
-  Code = 'code',
+  CodeBlock = 'codeBlock',
 }
 
 export type ContentBase = {
@@ -16,4 +16,4 @@ export type ContentBase = {
   getType: () => ContentType;
 };
 
-export type Content = H2 | H3 | Paragraph | ImageContent | Code;
+export type Content = H2 | H3 | Paragraph | ImageContent | CodeBlock;

@@ -1,10 +1,10 @@
-import type { Code } from 'entities/src/blogPost/postContents/code';
+import type { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type {
-  CodeDTO,
+  CodeBlockDTO,
   ContentDTO,
   H2DTO,
   H3DTO,
@@ -76,8 +76,11 @@ export class ImageToDTOStrategy extends ContentToDTOStrategy<
   }
 }
 
-export class CodeToDTOStrategy extends ContentToDTOStrategy<Code, CodeDTO> {
-  toDTO(): CodeDTO {
+export class CodeBlockToDTOStrategy extends ContentToDTOStrategy<
+  CodeBlock,
+  CodeBlockDTO
+> {
+  toDTO(): CodeBlockDTO {
     return {
       id: this.content.getId(),
       type: this.content.getType(),

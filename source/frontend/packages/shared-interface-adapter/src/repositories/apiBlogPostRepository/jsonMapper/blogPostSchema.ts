@@ -46,7 +46,7 @@ function blogPostContentSchema() {
       path: z.string(),
     }),
     z.object({
-      type: z.literal(ContentType.Code),
+      type: z.literal(ContentType.CodeBlock),
       id: z.string(),
       title: z.string(),
       code: z.string(),

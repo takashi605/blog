@@ -1,5 +1,5 @@
 import { BlogPost } from '../../blogPost';
-import { Code } from '../../blogPost/postContents/code';
+import { CodeBlock } from '../../blogPost/postContents/code';
 import { H2, H3 } from '../../blogPost/postContents/heading';
 import { ImageContent } from '../../blogPost/postContents/image';
 import { Paragraph } from '../../blogPost/postContents/paragraph';
@@ -56,7 +56,7 @@ export class MockBlogPost {
       .addContent(this.mockParts.getMockH3())
       .addContent(this.mockParts.getMockParagraph())
       .addContent(this.mockParts.getMockImageContent())
-      .addContent(this.mockParts.getMockCode());
+      .addContent(this.mockParts.getMockCodeBlock());
   }
 }
 
@@ -105,8 +105,8 @@ class MockBlogPostParts {
     return new ImageContent('4', 'path/to/image');
   }
 
-  public getMockCode(): Code {
-    return new Code(
+  public getMockCodeBlock(): CodeBlock {
+    return new CodeBlock(
       '5',
       'サンプルコード',
       'console.log("Hello, World!");',

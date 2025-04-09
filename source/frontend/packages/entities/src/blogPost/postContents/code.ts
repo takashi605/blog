@@ -1,7 +1,7 @@
 import type { ContentBase } from '../postContents/content';
 import { ContentType } from '../postContents/content';
 
-export class Code implements ContentBase {
+export class CodeBlock implements ContentBase {
   private id: string;
   private language: string;
   private code: string;
@@ -17,8 +17,8 @@ export class Code implements ContentBase {
   getId() {
     return this.id;
   }
-  getType(): ContentType.Code {
-    return ContentType.Code;
+  getType(): ContentType.CodeBlock {
+    return ContentType.CodeBlock;
   }
   getTitle() {
     return this.title;
