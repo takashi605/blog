@@ -58,6 +58,16 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
         assert_eq!(a.path, e.path, "Imageのpath不一致: contents[{}]", i);
         assert_eq!(a.type_field, e.type_field, "Imageのtype_field不一致: contents[{}]", i);
       }
+      BlogPostContent::Code(actual_code_block) => {
+        let expected_code_block = match expected_block {
+          BlogPostContent::Code(e) => e,
+          _ => panic!("CodeBlock 以外の要素が入っています"),
+        };
+        assert_eq!(actual_code_block.type_field, expected_code_block.type_field, "CodeBlock の type_field 不一致: contents[{}]", i);
+        assert_eq!(actual_code_block.title, expected_code_block.title, "CodeBlock の title 不一致: contents[{}]", i);
+        assert_eq!(actual_code_block.code, expected_code_block.code, "CodeBlock の code 不一致: contents[{}]", i);
+        assert_eq!(actual_code_block.language, expected_code_block.language, "CodeBlock の language 不一致: contents[{}]", i);
+      }
     }
   }
 }

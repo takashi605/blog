@@ -9,7 +9,7 @@ use crate::db::tables::{
   post_contents_table::AnyContentBlockRecord,
 };
 use anyhow::Result;
-use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
 
 pub async fn generate_blog_post_response(blog_post_record_with_relations: BlogPostRecordWithRelations) -> Result<BlogPost> {
   let blog_post_record = blog_post_record_with_relations.blog_post_record;
@@ -45,6 +45,13 @@ async fn content_to_response(content_block_record: AnyContentBlockRecord) -> Res
     AnyContentBlockRecord::HeadingBlockRecord(heading_block_record) => heading_to_response(heading_block_record),
     AnyContentBlockRecord::ImageBlockRecord(image_block_record_with_relations) => image_to_response(image_block_record_with_relations),
     AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record_with_relations) => paragraph_to_response(paragraph_block_record_with_relations),
+    AnyContentBlockRecord::CodeBlockRecord(code_block_record) => BlogPostContent::Code(CodeBlock {
+      id: code_block_record.id,
+      type_field: "code_block".to_string(),
+      title: code_block_record.title,
+      code: code_block_record.code,
+      language: code_block_record.language,
+    }),
   };
   Ok(result)
 }

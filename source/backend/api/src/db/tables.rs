@@ -1,4 +1,5 @@
 pub mod blog_posts_table;
+pub mod code_blocks_table;
 pub mod heading_blocks_table;
 pub mod image_blocks_table;
 pub mod images_table;
@@ -10,6 +11,7 @@ pub mod top_tech_pick_table;
 
 use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
+use code_blocks_table::CodeBlockRecord;
 use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
 use image_blocks_table::ImageBlockRecord;
@@ -28,6 +30,7 @@ pub fn generate_blog_post_records_by(
   Vec<HeadingBlockRecord>,
   Vec<ParagraphBlockRecord>,
   Vec<ImageBlockRecord>,
+  Vec<CodeBlockRecord>,
   Vec<RichTextRecord>,
   Vec<RichTextStyleRecord>,
 )> {
@@ -41,9 +44,10 @@ pub fn generate_blog_post_records_by(
   let mut post_content_records: Vec<PostContentRecord> = vec![];
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
-  let mut image_block_records: Vec<ImageBlockRecord> = vec![];
   let mut rich_text_records: Vec<RichTextRecord> = vec![];
   let mut rich_text_styles: Vec<RichTextStyleRecord> = vec![];
+  let mut image_block_records: Vec<ImageBlockRecord> = vec![];
+  let mut code_block_records: Vec<CodeBlockRecord> = vec![];
 
   post.contents.into_iter().enumerate().try_for_each(|(index, content)| -> Result<(), anyhow::Error> {
     let content_record = match content {
@@ -133,6 +137,20 @@ pub fn generate_blog_post_records_by(
           sort_order: index as i32,
         }
       }
+      BlogPostContent::Code(code_block) => {
+        code_block_records.push(CodeBlockRecord {
+          id: code_block.id,
+          title: code_block.title,
+          code: code_block.code,
+          language: code_block.language,
+        });
+        PostContentRecord {
+          id: code_block.id,
+          post_id: post.id,
+          content_type: "code_block".to_string(),
+          sort_order: index as i32,
+        }
+      }
     };
     post_content_records.push(content_record);
     Ok(())
@@ -144,6 +162,7 @@ pub fn generate_blog_post_records_by(
     heading_block_records,
     paragraph_block_records,
     image_block_records,
+    code_block_records,
     rich_text_records,
     rich_text_styles,
   ))
@@ -181,12 +200,22 @@ mod tests {
     ];
     let expected_image_block_id = mock_image_records[1].id;
 
-    let (blog_post_record, post_content_records, heading_block_records, paragraph_block_records, image_block_records, rich_text_records, rich_text_styles): (
+    let (
+      blog_post_record,
+      post_content_records,
+      heading_block_records,
+      paragraph_block_records,
+      image_block_records,
+      code_block_records,
+      rich_text_records,
+      rich_text_styles,
+    ): (
       BlogPostRecord,
       Vec<PostContentRecord>,
       Vec<HeadingBlockRecord>,
       Vec<ParagraphBlockRecord>,
       Vec<ImageBlockRecord>,
+      Vec<CodeBlockRecord>,
       Vec<RichTextRecord>,
       Vec<RichTextStyleRecord>,
     ) = generate_blog_post_records_by(mock_post, mock_style_records, mock_image_records).unwrap();
@@ -195,7 +224,7 @@ mod tests {
     assert_eq!(blog_post_record.post_date, "2021-01-01".parse().unwrap());
     assert_eq!(blog_post_record.last_update_date, "2021-01-02".parse().unwrap());
 
-    assert_eq!(post_content_records.len(), 4);
+    assert_eq!(post_content_records.len(), 5);
     assert_eq!(post_content_records[0].post_id, post_id);
     assert_eq!(post_content_records[1].post_id, post_id);
     assert_eq!(post_content_records[2].post_id, post_id);
@@ -230,12 +259,18 @@ mod tests {
     assert_eq!(image_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(image_block_records[0].image_id, expected_image_block_id); // file_path が "test-book" の画像が使用されていることを確認
 
+    assert_eq!(code_block_records.len(), 1);
+    assert_eq!(code_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(code_block_records[0].title, "サンプルコード");
+    assert_eq!(code_block_records[0].code, "console.log(Hello, World!)");
+    assert_eq!(code_block_records[0].language, "javascript");
+
     Ok(())
   }
 
   mod helper {
     use super::*;
-    use common::types::api::response::{BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+    use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
     use uuid::Uuid;
 
     pub fn create_blog_post_mock(post_id: Uuid) -> Result<BlogPost> {
@@ -271,6 +306,13 @@ mod tests {
             id: Uuid::new_v4(),
             path: "test-book".to_string(),
             type_field: "image".to_string(),
+          }),
+          BlogPostContent::Code(CodeBlock {
+            id: Uuid::new_v4(),
+            type_field: "code_block".to_string(),
+            title: "サンプルコード".to_string(),
+            code: "console.log(Hello, World!)".to_string(),
+            language: "javascript".to_string(),
           }),
         ],
       };
