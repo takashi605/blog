@@ -1,8 +1,10 @@
+import { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type {
+  CodeBlockDTO,
   ContentDTO,
   H2DTO,
   H3DTO,
@@ -11,6 +13,7 @@ import type {
 } from '../../contentDTO';
 import { ContentToDTOContext } from './context';
 import {
+  CodeBlockToDTOStrategy,
   H2ToDTOStrategy,
   H3ToDTOStrategy,
   ImageToDTOStrategy,
@@ -34,6 +37,9 @@ export function createContentToDTOContext(
   content: ImageContent,
 ): ContentToDTOContext<ImageContent, ImageContentDTO>;
 export function createContentToDTOContext(
+  content: CodeBlock,
+): ContentToDTOContext<CodeBlock, CodeBlockDTO>;
+export function createContentToDTOContext(
   content: Content,
 ): ContentToDTOContext<Content, ContentDTO>;
 
@@ -49,6 +55,8 @@ export function createContentToDTOContext(
     return new ContentToDTOContext(new H3ToDTOStrategy(content));
   } else if (content instanceof ImageContent) {
     return new ContentToDTOContext(new ImageToDTOStrategy(content));
+  } else if (content instanceof CodeBlock) {
+    return new ContentToDTOContext(new CodeBlockToDTOStrategy(content));
   } else {
     throw new Error('存在しないコンテンツタイプを DTO に変換しようとしました');
   }

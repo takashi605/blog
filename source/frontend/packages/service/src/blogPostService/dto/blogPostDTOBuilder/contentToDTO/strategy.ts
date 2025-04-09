@@ -1,8 +1,10 @@
+import type { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import type { ImageContent } from 'entities/src/blogPost/postContents/image';
 import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type {
+  CodeBlockDTO,
   ContentDTO,
   H2DTO,
   H3DTO,
@@ -70,6 +72,21 @@ export class ImageToDTOStrategy extends ContentToDTOStrategy<
       id: this.content.getId(),
       type: this.content.getType(),
       path: this.content.getPath(),
+    };
+  }
+}
+
+export class CodeBlockToDTOStrategy extends ContentToDTOStrategy<
+  CodeBlock,
+  CodeBlockDTO
+> {
+  toDTO(): CodeBlockDTO {
+    return {
+      id: this.content.getId(),
+      type: this.content.getType(),
+      title: this.content.getTitle(),
+      code: this.content.getCode(),
+      language: this.content.getLanguage(),
     };
   }
 }

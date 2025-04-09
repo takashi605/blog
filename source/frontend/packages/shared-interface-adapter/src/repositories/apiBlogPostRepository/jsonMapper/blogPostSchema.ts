@@ -45,5 +45,12 @@ function blogPostContentSchema() {
       id: z.string(),
       path: z.string(),
     }),
+    z.object({
+      type: z.literal(ContentType.CodeBlock),
+      id: z.string(),
+      title: z.string(),
+      code: z.string(),
+      language: z.string(),
+    }),
   ]);
 }

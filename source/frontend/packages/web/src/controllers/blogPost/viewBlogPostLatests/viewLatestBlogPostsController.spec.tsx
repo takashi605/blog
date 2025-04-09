@@ -34,6 +34,8 @@ describe('viewLatestBlogPostsController', () => {
 
         if (content.type === 'image') {
           expect(content.path).toBeDefined();
+        } else if (content.type === 'codeBlock') {
+          expect(content.code).toBeDefined();
         } else {
           expect(content.text).toBeDefined();
         }
