@@ -161,12 +161,6 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       body: blogPostJson,
       ...this.baseFetchOptions,
     });
-    if (!response.ok) {
-      const message = await response.text();
-      throw new Error(
-        `ブログ記事の保存に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
-      );
-    }
     return response;
   }
 }
