@@ -1,4 +1,7 @@
-import { $createCodeNode } from '@lexical/code';
+import {
+  $createCodeNode,
+  CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+} from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -73,9 +76,7 @@ export function useSelectedNode() {
     return focusNode;
   }
 
-  function $findTopLevelElementBy(
-    node: LexicalNode,
-  ): LexicalNode | null {
+  function $findTopLevelElementBy(node: LexicalNode): LexicalNode | null {
     if (node.getKey() === 'root') {
       return node;
     }
@@ -124,4 +125,17 @@ export function useSelectedTextStyle() {
     $storeSelectedTextStyle,
     $toggleBoldToSelection,
   } as const;
+}
+
+export function useCodeLanguage() {
+  const [codeLanguage, setCodeLanguage] = useState('');
+  const codeLanguagesOptions = Object.entries(
+    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+  ).map(([value, label]) => ({ value, label }));
+
+  return {
+    codeLanguage,
+    setCodeLanguage,
+    codeLanguagesOptions,
+  }
 }

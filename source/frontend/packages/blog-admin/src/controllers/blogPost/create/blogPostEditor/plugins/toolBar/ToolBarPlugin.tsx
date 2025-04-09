@@ -1,4 +1,4 @@
-import { $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
+import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
@@ -7,6 +7,7 @@ import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSele
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import {
+  useCodeLanguage,
   useSelectedNode,
   useSelectedTextStyle,
   useUpdateBlockType,
@@ -19,10 +20,8 @@ function ToolBarPlugin() {
     useState<SupportedNodeType | null>(null);
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
-  const [codeLanguage, setCodeLanguage] = useState('');
-  const CodeLanguagesOptions = Object.entries(
-    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
-  ).map(([value, label]) => ({ value, label }));
+  const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
+    useCodeLanguage();
 
   const {
     $setHeadingInSelection,
@@ -57,6 +56,7 @@ function ToolBarPlugin() {
     $getElementTypeOfSelected,
     $storeSelectedTextStyle,
     $getSelectionTopLevelElement,
+    setCodeLanguage,
   ]);
 
   const onClickH2Button = useCallback(() => {
@@ -151,7 +151,7 @@ function ToolBarPlugin() {
             }
           >
             <option value="">select...</option>
-            {CodeLanguagesOptions.map((item) => (
+            {codeLanguagesOptions.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>
