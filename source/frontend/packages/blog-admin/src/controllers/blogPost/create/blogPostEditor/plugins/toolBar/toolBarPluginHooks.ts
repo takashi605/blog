@@ -59,7 +59,7 @@ export function useSelectedNode() {
     if (!selectedNode) {
       return null;
     }
-    const targetNode = $findTopLevelElementBy(selectedNode);
+    const targetNode = $findTopLevelElementByNode(selectedNode);
 
     return targetNode;
   }
@@ -76,7 +76,7 @@ export function useSelectedNode() {
     return focusNode;
   }
 
-  function $findTopLevelElementBy(node: LexicalNode): LexicalNode | null {
+  function $findTopLevelElementByNode(node: LexicalNode): LexicalNode | null {
     if (node.getKey() === 'root') {
       return node;
     }
