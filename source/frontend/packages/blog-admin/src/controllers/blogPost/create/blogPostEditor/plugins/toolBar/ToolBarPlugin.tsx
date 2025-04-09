@@ -1,6 +1,10 @@
+import { $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getSelection, $isRangeSelection } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
+import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
+import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import {
@@ -22,6 +26,10 @@ function ToolBarPlugin() {
   const { $getElementTypeOfSelected } = useSelectedNode();
   const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
+  const [codeLanguage, setCodeLanguage] = useState('');
+  const CodeLanguagesOptions = Object.entries(
+    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+  ).map(([value, label]) => ({ value, label }));
 
   useEffect(() => {
     return editor.registerUpdateListener(() => {
@@ -31,6 +39,18 @@ function ToolBarPlugin() {
 
         // 選択中のテキストスタイルを確認して isBoldSelected 等のステートに保持
         $storeSelectedTextStyle();
+
+        // 選択中のコードノードの言語を取得して、codeLanguage に保持
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection)) return;
+        const anchorNode = selection.anchor.getNode();
+        const targetNode =
+          anchorNode.getKey() === 'root'
+            ? anchorNode
+            : anchorNode.getTopLevelElementOrThrow();
+        if ($isCodeNode(targetNode)) {
+          setCodeLanguage(targetNode.getLanguage() || '');
+        }
       });
     });
   }, [editor, $getElementTypeOfSelected, $storeSelectedTextStyle]);
@@ -118,6 +138,25 @@ function ToolBarPlugin() {
       >
         <TbCode />
       </ToolBarButton>
+      {selectedNodeType === 'code' && (
+        <div>
+          <select
+            aria-label="code languages"
+            value={codeLanguage}
+            onChange={(event) =>
+              editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
+            }
+          >
+            <option value="">select...</option>
+            {CodeLanguagesOptions.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+          <MdExpandMore />
+        </div>
+      )}
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
