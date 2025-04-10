@@ -68,7 +68,7 @@ mod helper {
           id: Uuid::new_v4(),
           type_field: "codeBlock".to_string(),
           title: "サンプルコード".to_string(),
-          code: "console.log(Hello, World!)".to_string(),
+          code: "console.log('Hello, World!')".to_string(),
           language: "javascript".to_string(),
         }),
       ],
