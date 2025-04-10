@@ -56,7 +56,7 @@ describe('エンティティ: 投稿記事の閲覧', () => {
       'サンプルコード',
       'console.log("Hello World")',
       'javascript',
-    )
+    );
     const strategyContext = new ContentBuildStrategyContext(codeBlockInput);
     const codeBlock: CodeBlock = strategyContext.build();
 
