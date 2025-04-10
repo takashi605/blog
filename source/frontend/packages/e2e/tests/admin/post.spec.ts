@@ -205,7 +205,7 @@ Then('エディタ内にコードブロックが存在している', async funct
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
 })
 
-When('言語選択セレクトボックスから、「JavaScript」を選択', async function () {
+When('言語選択セレクトボックスから、「js」を選択', async function () {
   const page = playwrightHelper.getPage();
 
   const languageSelect = page.getByRole('combobox', {
@@ -214,7 +214,7 @@ When('言語選択セレクトボックスから、「JavaScript」を選択', a
   await languageSelect.click();
   await languageSelect.selectOption('js');
 });
-Then('コードブロックの言語データ属性が「javascript」になっている', async function () {
+Then('コードブロックの言語データ属性が「js」になっている', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
@@ -343,7 +343,7 @@ Then('コードブロックが存在している', async function () {
   const codeBlock = page.getByRole('code')
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
 })
-Then('コードブロックの言語が「JavaScript」になっている', async function () {
+Then('コードブロックの言語が「js」になっている', async function () {
   const page = playwrightHelper.getPage();
 
   const codeBlock = page.getByRole('code');
