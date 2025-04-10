@@ -1,3 +1,4 @@
+import { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
@@ -6,7 +7,13 @@ import {
   RichText,
   RichTextPart,
 } from 'entities/src/blogPost/postContents/richText';
-import type { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
+import type {
+  CodeBlockInput,
+  H2Input,
+  H3Input,
+  ImageInput,
+  ParagraphInput,
+} from './input';
 
 export type ContentBuildStrategy<T extends Content> = {
   build(): T;
@@ -57,5 +64,21 @@ export class ImageBuildStrategy implements ContentBuildStrategy<ImageContent> {
 
   build(): ImageContent {
     return new ImageContent(this.input.id, this.input.path);
+  }
+}
+export class CodeBlockBuildStrategy implements ContentBuildStrategy<CodeBlock> {
+  private input: CodeBlockInput;
+
+  constructor(input: CodeBlockInput) {
+    this.input = input;
+  }
+
+  build(): CodeBlock {
+    return new CodeBlock(
+      this.input.id,
+      this.input.title,
+      this.input.code,
+      this.input.language,
+    );
   }
 }

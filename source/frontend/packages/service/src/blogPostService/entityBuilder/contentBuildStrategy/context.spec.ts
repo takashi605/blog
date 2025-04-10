@@ -1,6 +1,13 @@
+import type { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import { mockRichTextDTO } from '../../../mockData/mockBlogPostDTO';
 import { ContentBuildStrategyContext } from './context';
-import { H2Input, H3Input, ImageInput, ParagraphInput } from './input';
+import {
+  CodeBlockInput,
+  H2Input,
+  H3Input,
+  ImageInput,
+  ParagraphInput,
+} from './input';
 
 describe('エンティティ: 投稿記事の閲覧', () => {
   it('h2 を生成するストラテジー', () => {
@@ -41,5 +48,22 @@ describe('エンティティ: 投稿記事の閲覧', () => {
     expect(image.getId()).toBe('1');
     expect(image.getPath()).toBe('path/to/image');
     expect(image.getType()).toBe('image');
+  });
+
+  it('codeBlock を生成するストラテジー', () => {
+    const codeBlockInput = new CodeBlockInput(
+      '1',
+      'サンプルコード',
+      'console.log("Hello World")',
+      'javascript',
+    )
+    const strategyContext = new ContentBuildStrategyContext(codeBlockInput);
+    const codeBlock: CodeBlock = strategyContext.build();
+
+    expect(codeBlock.getId()).toBe('1');
+    expect(codeBlock.getTitle()).toBe('サンプルコード');
+    expect(codeBlock.getCode()).toBe('console.log("Hello World")');
+    expect(codeBlock.getLanguage()).toBe('javascript');
+    expect(codeBlock.getType()).toBe('codeBlock');
   });
 });
