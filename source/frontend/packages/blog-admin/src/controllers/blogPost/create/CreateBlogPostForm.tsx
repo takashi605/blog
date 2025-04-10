@@ -40,7 +40,6 @@ function CreateBlogPostForm() {
   const router = useRouter();
 
   const onSubmit = async () => {
-    console.log(contentsDTO);
     const formValues = form.getValues();
     const blogPostDTO: BlogPostDTOForCreate = {
       ...formDataToDTO(formValues),
