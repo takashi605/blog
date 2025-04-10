@@ -91,7 +91,7 @@ mod tests {
   }
 
   mod helper {
-    use common::types::api::response::H3Block;
+    use common::types::api::response::{CodeBlock, H3Block};
 
     use super::*;
 
@@ -179,6 +179,13 @@ mod tests {
             }],
             type_field: "paragraph".to_string(),
           }),
+          BlogPostContent::Code(CodeBlock {
+            id: Uuid::new_v4(),
+            type_field: "codeBlock".to_string(),
+            title: "サンプルコード".to_string(),
+            code: "console.log(\"Hello, World!\");".to_string(),
+            language: "javascript".to_string(),
+          })
         ],
       };
 
