@@ -46,8 +46,8 @@ admin:
     # Always だとリモートから pull してしまう
     # 今回はローカルのイメージを使うために Never にしている
     imagePullPolicy: Never
-    memoryLimit: "2500Mi"
-    cpuLimit: "750m"
+    memoryLimit: "3500Mi"
+    cpuLimit: "1000m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
     containerPort: 3000

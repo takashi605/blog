@@ -47,7 +47,7 @@ async fn content_to_response(content_block_record: AnyContentBlockRecord) -> Res
     AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record_with_relations) => paragraph_to_response(paragraph_block_record_with_relations),
     AnyContentBlockRecord::CodeBlockRecord(code_block_record) => BlogPostContent::Code(CodeBlock {
       id: code_block_record.id,
-      type_field: "code_block".to_string(),
+      type_field: "codeBlock".to_string(),
       title: code_block_record.title,
       code: code_block_record.code,
       language: code_block_record.language,

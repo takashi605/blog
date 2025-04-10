@@ -25,6 +25,13 @@ function contentToEntity(dto: BlogPostDTO, entityBuilder: BlogPostBuilder) {
       entityBuilder.addParagraph(content.id, content.text);
     } else if (content.type === 'image') {
       entityBuilder.addImage(content.id, content.path);
+    } else if (content.type === 'codeBlock') {
+      entityBuilder.addCodeBlock(
+        content.id,
+        content.title,
+        content.code,
+        content.language,
+      );
     }
   });
 }
