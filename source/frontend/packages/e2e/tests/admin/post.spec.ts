@@ -337,6 +337,26 @@ Then('「見出し3」という文字の h3 が存在する', async function () 
   const h3 = page.locator('h3');
   await expect(h3).toHaveText('見出し3');
 });
+Then('コードブロックが存在している', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code')
+  await expect(codeBlock).toBeVisible({ timeout: 10000 });
+})
+Then('コードブロックの言語が「JavaScript」になっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code');
+  const languageDataAttribute = await codeBlock.getAttribute('data-language');
+
+  expect(languageDataAttribute).toBe('js');
+})
+Then('コードブロック内に「const a = 1」が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code');
+  await expect(codeBlock).toHaveText('const a = 1');
+})
 Then('画像が表示されている', async function () {
   const page = playwrightHelper.getPage();
 
