@@ -20,6 +20,14 @@ describe('ユースケース: 投稿記事の閲覧', () => {
         { id: createUUIDv4(), type: 'paragraph', text: mockRichTextDTO() },
         { id: createUUIDv4(), type: 'h3', text: 'h3見出し2' },
         { id: createUUIDv4(), type: 'paragraph', text: mockRichTextDTO() },
+        { id: createUUIDv4(), type: 'image', path: 'path/to/image' },
+        {
+          id: createUUIDv4(),
+          type: 'codeBlock',
+          title: 'コードブロックタイトル',
+          code: 'console.log("Hello World")',
+          language: 'javascript',
+        },
       ],
     };
     const mockRepository: BlogPostRepository = {
