@@ -1,3 +1,4 @@
+import { $createCodeNode, CodeNode } from '@lexical/code';
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { LexicalEditor, LexicalNode } from 'lexical';
@@ -48,6 +49,13 @@ describe('typedBlogPostToDTO', () => {
             { text: 'World', styles: { bold: true } },
           ],
         },
+        {
+          id: expect.any(String),
+          type: 'codeBlock',
+          title: 'サンプルコード',
+          code: 'console.log("Hello World")',
+          language: 'javascript',
+        },
       ]);
     });
     // テスト用のノードを作成するヘルパ関数
@@ -72,12 +80,16 @@ describe('typedBlogPostToDTO', () => {
         $createTextNode('Hello'),
         $createTextNode('World').setFormat('bold'),
       );
+      const codeNode = $createCodeNode('javascript');
+      const textNode = $createTextNode('console.log("Hello World")');
+      codeNode.append(textNode);
 
       const nodeArray: LexicalNode[] = [
         h2Node,
         h3Node,
         imageInParagraphNode,
         paragraphNode,
+        codeNode,
       ];
       return nodeArray;
     }
@@ -177,7 +189,7 @@ function createTextEditor(): LexicalEditor {
     onError: (e: Error) => {
       throw e;
     },
-    nodes: [HeadingNode, ImageNode],
+    nodes: [HeadingNode, ImageNode, CodeNode],
   };
 
   return createEditor(config);
