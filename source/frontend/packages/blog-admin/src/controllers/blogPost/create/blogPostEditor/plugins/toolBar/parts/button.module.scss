@@ -1,0 +1,18 @@
+.button {
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 6px;
+  margin: 0 4px;
+
+  &[aria-checked="true"] {
+    background-color: #ddd;
+    border: 1px solid #666;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}

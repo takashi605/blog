@@ -1,3 +1,4 @@
+import type { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import type { Content } from 'entities/src/blogPost/postContents/content';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
@@ -6,6 +7,7 @@ import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
 import type { RichTextDTO } from '../../dto/contentDTO';
 import type { ContentBuildStrategy } from './strategy';
 import {
+  CodeBlockBuildStrategy,
   H2BuildStrategy,
   H3BuildStrategy,
   ImageBuildStrategy,
@@ -75,5 +77,23 @@ export class ImageInput implements ContentInput<ImageContent> {
 
   buildStrategy(): ContentBuildStrategy<ImageContent> {
     return new ImageBuildStrategy(this);
+  }
+}
+export class CodeBlockInput implements ContentInput<CodeBlock> {
+  id: string;
+  type: ContentType;
+  title: string;
+  code: string;
+  language: string;
+
+  constructor(id: string, title: string, code: string, language: string) {
+    this.id = id;
+    this.type = ContentType.CodeBlock;
+    this.title = title;
+    this.code = code;
+    this.language = language;
+  }
+  buildStrategy(): ContentBuildStrategy<CodeBlock> {
+    return new CodeBlockBuildStrategy(this);
   }
 }

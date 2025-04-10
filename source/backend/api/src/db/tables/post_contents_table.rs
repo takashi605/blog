@@ -5,6 +5,7 @@ use uuid::Uuid;
 use crate::db::pool::POOL;
 
 use super::{
+  code_blocks_table::{fetch_code_block_by_content_id, CodeBlockRecord},
   heading_blocks_table::{fetch_heading_blocks_by_content_id, HeadingBlockRecord},
   image_blocks_table::{fetch_image_block_record_with_relations, ImageBlockRecordWithRelations},
   paragraph_blocks_table::{fetch_paragraph_block_record_with_relations, ParagraphBlockRecordWithRelations},
@@ -19,6 +20,7 @@ pub enum AnyContentBlockRecord {
   HeadingBlockRecord(HeadingBlockRecord),
   ParagraphBlockRecord(ParagraphBlockRecordWithRelations),
   ImageBlockRecord(ImageBlockRecordWithRelations),
+  CodeBlockRecord(CodeBlockRecord),
 }
 
 /*
@@ -41,6 +43,7 @@ pub enum PostContentType {
   Paragraph,
   Heading,
   Image,
+  CodeBlock,
 }
 
 impl TryFrom<String> for PostContentType {
@@ -50,8 +53,9 @@ impl TryFrom<String> for PostContentType {
       "heading" => Ok(PostContentType::Heading),
       "image" => Ok(PostContentType::Image),
       "paragraph" => Ok(PostContentType::Paragraph),
+      "code_block" => Ok(PostContentType::CodeBlock),
       // 何らかの理由で想定外の文字列が来る場合
-      other => anyhow::bail!("unexpected content type: {}", other),
+      other => anyhow::bail!("想定しない content type: {}", other),
     }
   }
 }
@@ -76,6 +80,15 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
       let paragraph_block_record: ParagraphBlockRecordWithRelations =
         fetch_paragraph_block_record_with_relations(content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
       AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
+    }
+    PostContentType::CodeBlock => {
+      let code_block_record: CodeBlockRecord = fetch_code_block_by_content_id(content_record.id).await.context("コードブロックの取得に失敗しました。")?;
+      AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord {
+        id: code_block_record.id,
+        title: code_block_record.title,
+        code: code_block_record.code,
+        language: code_block_record.language,
+      })
     }
   };
   Ok(result)

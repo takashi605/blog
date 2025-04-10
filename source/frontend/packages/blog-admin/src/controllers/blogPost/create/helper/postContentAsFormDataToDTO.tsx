@@ -1,3 +1,4 @@
+import type { CodeNode } from '@lexical/code';
 import type { HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
@@ -10,7 +11,7 @@ import type {
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import type { ImageNode } from '../blogPostEditor/customNodes/ImageNode';
+import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 
@@ -37,7 +38,20 @@ export function postContentAsFormDataToDTO(
         }
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
         break;
+      case 'code':
+        const codeNode = content as CodeNode;
+        const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
+        contentsDTO.push({
+          id: createUUIDv4(),
+          type: ContentType.CodeBlock,
+          // TODO CodeBlock をカスタムノードにして、title を設定可能にする
+          title: 'サンプルコード',
+          code: codeNode.getTextContent(),
+          language: lang as string,
+        });
+        break;
       default:
+        console.log('不正なコンテンツタイプです', content.getType());
         throw new Error('不正なコンテンツタイプです');
     }
   });

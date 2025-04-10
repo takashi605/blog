@@ -34,6 +34,7 @@ pub enum BlogPostContent {
   H3(H3Block),
   Paragraph(ParagraphBlock),
   Image(ImageBlock),
+  Code(CodeBlock),
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
@@ -75,6 +76,17 @@ pub struct RichText {
 pub struct ImageBlock {
   pub id: Uuid,
   pub path: String,
+  #[serde(rename = "type")]
+  pub type_field: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CodeBlock {
+  pub id: Uuid,
+  pub title: String,
+  pub code: String,
+  pub language: String,
   #[serde(rename = "type")]
   pub type_field: String,
 }

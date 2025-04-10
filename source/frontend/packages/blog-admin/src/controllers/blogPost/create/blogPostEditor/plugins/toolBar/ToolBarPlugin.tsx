@@ -1,67 +1,165 @@
+import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { MdExpandMore } from 'react-icons/md';
+import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
+import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
+import { ToolBarButton } from './parts/Button';
 import {
+  useCodeLanguage,
   useSelectedNode,
   useSelectedTextStyle,
   useUpdateBlockType,
 } from './toolBarPluginHooks';
+import type { SupportedNodeType } from './types/supportedNodeType';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [selectedNodeType, setSelectedNodeType] = useState<string | null>(null);
-  const { $setHeadingToSelection } = useUpdateBlockType();
-  const { $getElementTypeOfSelected } = useSelectedNode();
-  const { isBoldSelected, $checkStylesForSelection, $toggleBoldToSelection } =
+  const [selectedNodeType, setSelectedNodeType] =
+    useState<SupportedNodeType | null>(null);
+  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
     useSelectedTextStyle();
+  const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
+    useCodeLanguage();
 
+  const {
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
+  } = useUpdateBlockType();
+
+  const { $getElementTypeOfSelected, $getSelectionTopLevelElement } =
+    useSelectedNode();
+
+  // Lexical の Node を source of truth にするため、
+  // エディタの状態が変化するタイミングで Node をチェックして各種ステートを更新する
   useEffect(() => {
     return editor.registerUpdateListener(() => {
-      editor.update(() => {
+      editor.read(() => {
+        // 選択中のノードの種類を取得して、selectedNodeType に保持
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
-        $checkStylesForSelection();
+
+        // 選択中のテキストスタイルを取得して isBoldSelected に保持
+        $storeSelectedTextStyle();
+
+        // 選択中のコードノードの言語を取得して、codeLanguage に保持
+        const targetNode = $getSelectionTopLevelElement();
+        if ($isCodeNode(targetNode)) {
+          setCodeLanguage(targetNode.getLanguage() || '');
+        }
       });
     });
-  }, [editor, $getElementTypeOfSelected, $checkStylesForSelection]);
+  }, [
+    editor,
+    $getElementTypeOfSelected,
+    $storeSelectedTextStyle,
+    $getSelectionTopLevelElement,
+    setCodeLanguage,
+  ]);
 
-  const onClickH2Button = () => {
+  const onClickH2Button = useCallback(() => {
     editor.update(() => {
-      $setHeadingToSelection('h2');
+      if (selectedNodeType === 'h2') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setHeadingInSelection('h2');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickH3Button = () => {
+  const onClickH3Button = useCallback(() => {
     editor.update(() => {
-      $setHeadingToSelection('h3');
+      if (selectedNodeType === 'h3') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setHeadingInSelection('h3');
     });
-  };
+  }, [
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    editor,
+    selectedNodeType,
+  ]);
 
-  const onClickBoldButton = () => {
+  const onClickBoldButton = useCallback(() => {
+    if (selectedNodeType !== 'paragraph') {
+      return;
+    }
     editor.update(() => {
       $toggleBoldToSelection();
     });
-  };
+  }, [$toggleBoldToSelection, editor, selectedNodeType]);
+
+  const onClickCodeButton = useCallback(() => {
+    if (!(selectedNodeType === 'code' || selectedNodeType === 'paragraph')) {
+      return;
+    }
+    editor.update(() => {
+      if (selectedNodeType === 'code') {
+        $setParagraphInSelection();
+        return;
+      }
+      $setCodeInSelection();
+    });
+  }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
   return (
     <div>
-      <button
-        role="button"
+      <ToolBarButton
         onClick={onClickH2Button}
-        disabled={selectedNodeType === 'h2'}
+        checked={selectedNodeType === 'h2'}
+        ariaLabel="h2"
       >
-        h2
-      </button>
-      <button
-        role="button"
+        <TbH2 />
+      </ToolBarButton>
+      <ToolBarButton
         onClick={onClickH3Button}
-        disabled={selectedNodeType === 'h3'}
+        checked={selectedNodeType === 'h3'}
+        ariaLabel="h3"
       >
-        h3
-      </button>
-      <button role="button" onClick={onClickBoldButton}>
-        bold
-      </button>
+        <TbH3 />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={onClickBoldButton}
+        checked={isBoldSelected}
+        ariaLabel="bold"
+      >
+        <TbBold />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={onClickCodeButton}
+        checked={selectedNodeType === 'code'}
+        ariaLabel="code"
+      >
+        <TbCode />
+      </ToolBarButton>
+      {selectedNodeType === 'code' && (
+        <div>
+          <select
+            aria-label="code languages"
+            value={codeLanguage}
+            onChange={(event) =>
+              editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
+            }
+          >
+            <option value="">select...</option>
+            {codeLanguagesOptions.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+          <MdExpandMore />
+        </div>
+      )}
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>

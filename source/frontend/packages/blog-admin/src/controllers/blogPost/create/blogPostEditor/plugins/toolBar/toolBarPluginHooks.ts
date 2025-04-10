@@ -1,45 +1,72 @@
+import {
+  $createCodeNode,
+  CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+} from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { $getSelection, $isRangeSelection, FORMAT_TEXT_COMMAND } from 'lexical';
+import type { LexicalNode } from 'lexical';
+import {
+  $createParagraphNode,
+  $getSelection,
+  $isRangeSelection,
+  FORMAT_TEXT_COMMAND,
+} from 'lexical';
 import { useState } from 'react';
+import type { SupportedNodeType } from './types/supportedNodeType';
+import { isSupportedNode } from './types/supportedNodeType';
 
 export function useUpdateBlockType() {
-  const $setHeadingToSelection = (headingType: 'h2' | 'h3') => {
+  const $setHeadingInSelection = (headingType: 'h2' | 'h3') => {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
       return;
     }
     $setBlocksType(selection, () => $createHeadingNode(headingType));
   };
+  const $setParagraphInSelection = () => {
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) {
+      return;
+    }
+    $setBlocksType(selection, () => $createParagraphNode());
+  };
+  const $setCodeInSelection = () => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      $setBlocksType(selection, () => $createCodeNode());
+    }
+  };
   return {
-    $setHeadingToSelection,
+    $setHeadingInSelection,
+    $setParagraphInSelection,
+    $setCodeInSelection,
   } as const;
 }
 
 export function useSelectedNode() {
-  const $getElementTypeOfSelected = () => {
-    const selectedElementNode = $getElementOfSelected();
+  const $getElementTypeOfSelected = (): SupportedNodeType => {
+    const selectedElementNode = $getSelectionTopLevelElement();
     if (!selectedElementNode) {
       return null;
     }
-    if ($isHeadingNode(selectedElementNode)) {
-      // h2,h3,h4 等の文字列を返す
-      const headingTag = selectedElementNode.getTag();
-      return headingTag;
-    }
-    return selectedElementNode.getType();
-  };
-  return { $getElementTypeOfSelected } as const;
+    const selectedElementType = $getSelectedNodeType(selectedElementNode);
 
-  function $getElementOfSelected() {
+    return selectedElementType;
+  };
+  function $getSelectionTopLevelElement() {
     const selectedNode = $getSelectedNode();
     if (!selectedNode) {
       return null;
     }
-    return selectedNode.getTopLevelElementOrThrow();
+    const targetNode = $findTopLevelElementByNode(selectedNode);
+
+    return targetNode;
   }
 
+  return { $getElementTypeOfSelected, $getSelectionTopLevelElement } as const;
+
+  /* 以下ヘルパー関数 */
   function $getSelectedNode() {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
@@ -48,13 +75,41 @@ export function useSelectedNode() {
     const focusNode = selection.focus.getNode();
     return focusNode;
   }
+
+  function $findTopLevelElementByNode(node: LexicalNode): LexicalNode | null {
+    if (node.getKey() === 'root') {
+      return node;
+    }
+    return node.getTopLevelElementOrThrow();
+  }
+
+  function $getSelectedNodeType(
+    selectedElementNode: LexicalNode,
+  ): SupportedNodeType {
+    if ($isHeadingNode(selectedElementNode)) {
+      // h2,h3,h4 等の文字列を返す
+      // getType だと heading という文字しか返さないので、別途分岐している
+      const headingTag = selectedElementNode.getTag();
+
+      return headingTag;
+    }
+    const selectedElementType = selectedElementNode.getType();
+    if (!isSupportedNode(selectedElementType)) {
+      throw new Error(
+        `useSelectedNode でエラー: 選択中のノードのタイプがサポートされていません。type: ${selectedElementType}`,
+      );
+    }
+
+    return selectedElementType;
+  }
+  /* ここまでヘルパー関数 */
 }
 
 export function useSelectedTextStyle() {
   const [isBoldSelected, setIsBoldSelected] = useState(false);
   const [editor] = useLexicalComposerContext();
 
-  const $checkStylesForSelection = () => {
+  const $storeSelectedTextStyle = () => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
       setIsBoldSelected(selection.hasFormat('bold'));
@@ -67,7 +122,20 @@ export function useSelectedTextStyle() {
 
   return {
     isBoldSelected,
-    $checkStylesForSelection,
+    $storeSelectedTextStyle,
     $toggleBoldToSelection,
   } as const;
+}
+
+export function useCodeLanguage() {
+  const [codeLanguage, setCodeLanguage] = useState('');
+  const codeLanguagesOptions = Object.entries(
+    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+  ).map(([value, label]) => ({ value, label }));
+
+  return {
+    codeLanguage,
+    setCodeLanguage,
+    codeLanguagesOptions,
+  };
 }

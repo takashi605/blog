@@ -1,3 +1,4 @@
+import { CodeBlock } from 'entities/src/blogPost/postContents/code';
 import { H2, H3 } from 'entities/src/blogPost/postContents/heading';
 import { ImageContent } from 'entities/src/blogPost/postContents/image';
 import { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
@@ -51,5 +52,23 @@ describe('contentDTO', () => {
     expect(dto.id).toBe('4');
     expect(dto.path).toBe('path/to/image');
     expect(dto.type).toBe('image');
+  });
+
+  it('type「CodeBlock」を持つコンテントを DTO に変換できる', () => {
+    const content = new CodeBlock(
+      '5',
+      'サンプルコード',
+      'console.log("Hello, World!");',
+      'javascript',
+    );
+
+    const context = createContentToDTOContext(content);
+
+    const dto = context.toDTO();
+    expect(dto.id).toBe('5');
+    expect(dto.title).toBe('サンプルコード');
+    expect(dto.code).toBe('console.log("Hello, World!");');
+    expect(dto.language).toBe('javascript');
+    expect(dto.type).toBe('codeBlock');
   });
 });

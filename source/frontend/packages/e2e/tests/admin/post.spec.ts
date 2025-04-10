@@ -93,7 +93,7 @@ When('「世界」と入力し、その文字を選択して太字ボタンを�
   await selectByArrowLeft(page, richTextEditor, 2);
 
   // 太字ボタンを押す
-  const boldButton = page.getByRole('button', { name: 'bold' });
+  const boldButton = page.getByRole('checkbox', { name: 'bold' });
   await boldButton.click();
 
   // 選択の解除
@@ -120,7 +120,7 @@ When('「世界」を再び選択し、太字ボタンを押す', async function
   const richTextEditor = page.locator('[contenteditable="true"]');
   await selectByArrowLeft(page, richTextEditor, 2);
 
-  const boldButton = page.getByRole('button', { name: 'bold' });
+  const boldButton = page.getByRole('checkbox', { name: 'bold' });
   await boldButton.click();
   await clearSelectionByArrow(page, richTextEditor);
 });
@@ -147,7 +147,7 @@ When(
     richTextEditor.press('Enter');
     await richTextEditor.pressSequentially('見出し2');
     await selectByArrowLeft(page, richTextEditor, 4);
-    const h2Button = page.getByRole('button', { name: 'h2' });
+    const h2Button = page.getByRole('checkbox', { name: 'h2' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -171,7 +171,7 @@ When(
     richTextEditor.press('Enter');
     await richTextEditor.pressSequentially('見出し3');
     await selectByArrowLeft(page, richTextEditor, 4);
-    const h2Button = page.getByRole('button', { name: 'h3' });
+    const h2Button = page.getByRole('checkbox', { name: 'h3' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
   },
@@ -186,11 +186,52 @@ Then(
     await expect(h3Text).toHaveText('見出し3', { timeout: 10000 });
   },
 );
+When('「const a = 1」入力し、「code」ボタンを押す', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  richTextEditor.press('Enter');
+  await richTextEditor.pressSequentially('const a = 1');
+  const codeButton = page.getByRole('checkbox', { name: 'code' });
+  await codeButton.click();
+})
+Then('エディタ内にコードブロックが存在している', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+
+  // class 属性に editor-code が含まれているかで判別
+  const codeBlock = richTextEditor.locator('.editor-code');
+  await expect(codeBlock).toBeVisible({ timeout: 10000 });
+})
+
+When('言語選択セレクトボックスから、「JavaScript」を選択', async function () {
+  const page = playwrightHelper.getPage();
+
+  const languageSelect = page.getByRole('combobox', {
+    name: 'code languages',
+  });
+  await languageSelect.click();
+  await languageSelect.selectOption('js');
+});
+Then('コードブロックの言語データ属性が「javascript」になっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  const codeBlock = richTextEditor.locator('.editor-code');
+  const languageDataAttribute = await codeBlock.getAttribute('data-language');
+
+  expect(languageDataAttribute).toBe('js');
+})
+
 When('画像選択モーダルを開き、画像を選択する', async function () {
   const page = playwrightHelper.getPage();
 
   // 改行を入れて、画像を挿入する位置を確保
+  // コードブロックから抜けるには、3回 Enter を押す
   const richTextEditor = page.locator('[contenteditable="true"]');
+  richTextEditor.press('Enter');
+  richTextEditor.press('Enter');
   richTextEditor.press('Enter');
 
    const openModalButton = page.getByRole('button', { name: '画像を挿入' });

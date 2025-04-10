@@ -4,6 +4,7 @@ import { uuidv4Regex } from '../../utils/uuid';
 import type { RichTextDTO } from '../dto/contentDTO';
 import { ContentBuildStrategyContext } from './contentBuildStrategy/context';
 import {
+  CodeBlockInput,
   H2Input,
   H3Input,
   ImageInput,
@@ -74,6 +75,13 @@ export class BlogPostBuilder {
   addImage(id: string, imagePath: string) {
     const imageInput = new ImageInput(id, imagePath);
     const builder = new ContentBuildStrategyContext(imageInput);
+    this.contentBuilders.push(builder);
+    return this;
+  }
+
+  addCodeBlock(id: string, title: string, code: string, language: string) {
+    const codeBlockInput = new CodeBlockInput(id, title, code, language);
+    const builder = new ContentBuildStrategyContext(codeBlockInput);
     this.contentBuilders.push(builder);
     return this;
   }

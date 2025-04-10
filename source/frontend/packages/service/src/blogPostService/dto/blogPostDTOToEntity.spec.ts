@@ -18,6 +18,14 @@ describe('blogPostDTOToEntity', () => {
       contents: [
         { id: createUUIDv4(), type: ContentType.H2, text: 'h2 text' },
         { id: createUUIDv4(), type: ContentType.H3, text: 'h3 text' },
+        { id: createUUIDv4(), type: ContentType.Image, path: 'path/to/image' },
+        {
+          id: createUUIDv4(),
+          type: ContentType.CodeBlock,
+          title: 'サンプルコード',
+          code: 'console.log("Hello World")',
+          language: 'javascript',
+        },
       ],
     };
     const entity = blogPostDTOToEntity(dto);
