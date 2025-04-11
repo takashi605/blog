@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import CodeBlock from './elements/CodeBlock';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
 import ImageContent from './elements/ImageContent';
@@ -19,6 +20,8 @@ function ContentRenderer({ content }: BlogPostContentProps) {
       return <Paragraph richText={content.text} />;
     case 'image':
       return <ImageContent imageContent={content} />;
+    case 'codeBlock':
+      return <CodeBlock codeBlockData={content} />;
     default:
       return null;
   }
