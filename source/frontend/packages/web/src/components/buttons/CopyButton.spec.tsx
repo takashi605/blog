@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CopyButton from './CopyButton';
@@ -9,6 +9,8 @@ Object.assign(navigator, {
     writeText: jest.fn().mockResolvedValue(undefined),
   },
 });
+
+document.execCommand = jest.fn();
 
 describe('CopyButton', () => {
   it('クリックすると文字列を clipboard に書き込む', async () => {
@@ -31,5 +33,19 @@ describe('CopyButton', () => {
     await screen.findByText('Copied!');
     expect(screen.getByText('Copied!')).toBeInTheDocument();
     expect(button).toHaveTextContent('Copied!');
+  });
+
+  // 開発環境だと https ではない都合上、Clipboard API が使えないため、execCommand を使う
+  it('Clipboard API が無い場合は execCommand を使う', async () => {
+    // Clipboard API を無効化
+    (navigator.clipboard.writeText as jest.Mock).mockImplementationOnce(() => {
+      throw new Error('clipboard not available');
+    });
+
+    render(<CopyButton textForCopy="hello world">Copy</CopyButton>);
+    await userEvent.click(screen.getByRole('button', { name: /copy/i }));
+
+    // フォールバックが呼ばれたか
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
   });
 });
