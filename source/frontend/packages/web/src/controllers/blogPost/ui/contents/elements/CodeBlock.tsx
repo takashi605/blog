@@ -12,22 +12,25 @@ type CodeBlockProps = {
 
 function CodeBlock({ codeBlockData }: CodeBlockProps) {
   return (
-    <div className={styles.codeBlockWrapper}>
-      <div className={styles.copyIcon}>
-        <CopyButton
-          label={<MdCopyAll size="28px" color="#fff" />}
-          successLabel={<FaRegSquareCheck size="28px" color="#5cb85c" />}
-          textForCopy={codeBlockData.code}
-        />
+    <>
+      <span className={styles.codeTitle}>{codeBlockData.title}</span>
+      <div className={styles.codeBlockWrapper}>
+        <div className={styles.copyIcon}>
+          <CopyButton
+            label={<MdCopyAll size="28px" color="#fff" />}
+            successLabel={<FaRegSquareCheck size="28px" color="#5cb85c" />}
+            textForCopy={codeBlockData.code}
+          />
+        </div>
+        <SyntaxHighlighter
+          style={vscDarkPlus}
+          language={codeBlockData.language}
+          PreTag="div"
+        >
+          {codeBlockData.code}
+        </SyntaxHighlighter>
       </div>
-      <SyntaxHighlighter
-        style={vscDarkPlus}
-        language={codeBlockData.language}
-        PreTag="div"
-      >
-        {codeBlockData.code}
-      </SyntaxHighlighter>
-    </div>
+    </>
   );
 }
 
