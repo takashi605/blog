@@ -32,9 +32,6 @@ export function ViewBlogPostPresenter({
           <ContentRenderer content={content} />
         </div>
       ))}
-      <SyntaxHighlighter style={vscDarkPlus} language="javascript" PreTag="div">
-        console.log(text);
-      </SyntaxHighlighter>
     </article>
   );
 }
