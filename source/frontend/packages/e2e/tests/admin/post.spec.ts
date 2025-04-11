@@ -347,9 +347,9 @@ Then('コードブロックの言語が「js」になっている', async functi
   const page = playwrightHelper.getPage();
 
   const codeBlock = page.getByRole('code');
-  const languageDataAttribute = await codeBlock.getAttribute('data-language');
+  const languageDataAttribute = await codeBlock.getAttribute('class');
 
-  expect(languageDataAttribute).toBe('js');
+  expect(languageDataAttribute).toBe('language-js');
 })
 Then('コードブロック内に「const a = 1」が表示されている', async function () {
   const page = playwrightHelper.getPage();
@@ -357,6 +357,13 @@ Then('コードブロック内に「const a = 1」が表示されている', asy
   const codeBlock = page.getByRole('code');
   await expect(codeBlock).toHaveText('const a = 1');
 })
+Then('コードのコピーボタンが表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const copyButton = page.getByRole('button', { name: 'copy-button' });
+  await expect(copyButton).toBeVisible();
+});
+
 Then('画像が表示されている', async function () {
   const page = playwrightHelper.getPage();
 

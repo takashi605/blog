@@ -51,7 +51,7 @@ export default function CopyButton({
     <button
       className={styles.copyButton}
       type="button"
-      aria-label="copy button"
+      aria-label="copy-button"
       onClick={copyToClipboard}
     >
       {copyResultMessage ? successLabel : label}
