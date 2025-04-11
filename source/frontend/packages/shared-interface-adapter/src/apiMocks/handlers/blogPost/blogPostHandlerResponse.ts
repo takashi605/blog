@@ -172,7 +172,7 @@ function createResponseBase() {
         title: 'サンプルコード',
         code: 'console.log("Hello, World!");',
         language: 'javascript',
-      }
+      },
     ],
   };
 }

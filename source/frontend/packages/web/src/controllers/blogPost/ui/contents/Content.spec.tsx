@@ -76,12 +76,12 @@ describe('コンポーネント: viewBlogPostController', () => {
           language: 'javascript',
         }}
       />,
-    )
+    );
     const codeBlock = screen.getByRole('code');
     expect(codeBlock).toBeInTheDocument();
 
     // span で細かく分けられているので、一部のテキストが含まれているかのみ確認
-    const codeBlockFragment = within(codeBlock).getByText("console")
+    const codeBlockFragment = within(codeBlock).getByText('console');
     expect(codeBlockFragment).toBeInTheDocument();
   });
 });

@@ -1,10 +1,10 @@
+import { FaRegSquareCheck } from 'react-icons/fa6';
+import { MdCopyAll } from 'react-icons/md';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type { CodeBlockDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { MdCopyAll } from 'react-icons/md';
-import { FaRegSquareCheck } from 'react-icons/fa6';
-import styles from './codeBlock.module.scss'
 import CopyButton from '../../../../../components/buttons/CopyButton';
+import styles from './codeBlock.module.scss';
 
 type CodeBlockProps = {
   codeBlockData: CodeBlockDTO;
