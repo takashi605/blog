@@ -1,0 +1,16 @@
+.codeBlockWrapper {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+.copyIcon {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  z-index: 1;
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+  width: 30px;
+  height: 30px;
+}
