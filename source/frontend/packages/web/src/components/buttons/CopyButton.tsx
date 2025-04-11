@@ -1,14 +1,20 @@
 'use client';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import styles from './copyButton.module.scss';
 
 type Props = {
   /** コピーしたい文字列 */
   textForCopy: string;
-  children: React.ReactNode;
+  label: React.ReactNode;
+  successLabel?: React.ReactNode;
 };
 
-export default function CopyButton({ textForCopy, children }: Props) {
-  const [copyResultMessage, setCopySuccess] = useState('');
+export default function CopyButton({
+  textForCopy,
+  label,
+  successLabel = textForCopy,
+}: Props) {
+  const [copyResultMessage, setCopyResultMessage] = useState('');
 
   const copyToClipboard = async () => {
     try {
@@ -32,22 +38,25 @@ export default function CopyButton({ textForCopy, children }: Props) {
         document.execCommand('copy');
         document.body.removeChild(textarea);
       }
-      setCopySuccess('Copied!');
+      setCopyResultMessage('Copied!');
+
+      setTimeout(() => setCopyResultMessage(''), 2000);
     } catch (err) {
       console.error('Failed to copy: ', err);
-      setCopySuccess('コピーに失敗しました...');
+      setCopyResultMessage('コピーに失敗しました...');
     }
   };
 
   return (
-    <button type="button" aria-label="copy button" onClick={copyToClipboard}>
-      {children}
+    <button
+      className={styles.copyButton}
+      type="button"
+      aria-label="copy button"
+      onClick={copyToClipboard}
+    >
+      {copyResultMessage ? successLabel : label}
       {copyResultMessage && (
-        <span
-          style={{ marginLeft: '8px', color: 'green', position: 'absolute' }}
-        >
-          {copyResultMessage}
-        </span>
+        <span className={styles.successMessage}>{copyResultMessage}</span>
       )}
     </button>
   );

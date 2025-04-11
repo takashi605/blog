@@ -2,6 +2,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type { CodeBlockDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { MdCopyAll } from 'react-icons/md';
+import { FaRegSquareCheck } from 'react-icons/fa6';
 import styles from './codeBlock.module.scss'
 import CopyButton from '../../../../../components/buttons/CopyButton';
 
@@ -13,9 +14,11 @@ function CodeBlock({ codeBlockData }: CodeBlockProps) {
   return (
     <div className={styles.codeBlockWrapper}>
       <div className={styles.copyIcon}>
-        <CopyButton textForCopy={codeBlockData.code}>
-          <MdCopyAll size="28px"/>
-        </CopyButton>
+        <CopyButton
+          label={<MdCopyAll size="28px" color="#fff" />}
+          successLabel={<FaRegSquareCheck size="28px" color="#5cb85c" />}
+          textForCopy={codeBlockData.code}
+        />
       </div>
       <SyntaxHighlighter
         style={vscDarkPlus}
