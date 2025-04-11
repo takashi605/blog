@@ -205,7 +205,7 @@ Then('エディタ内にコードブロックが存在している', async funct
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
 })
 
-When('言語選択セレクトボックスから、「JavaScript」を選択', async function () {
+When('言語選択セレクトボックスから、「js」を選択', async function () {
   const page = playwrightHelper.getPage();
 
   const languageSelect = page.getByRole('combobox', {
@@ -214,7 +214,7 @@ When('言語選択セレクトボックスから、「JavaScript」を選択', a
   await languageSelect.click();
   await languageSelect.selectOption('js');
 });
-Then('コードブロックの言語データ属性が「javascript」になっている', async function () {
+Then('コードブロックの言語データ属性が「js」になっている', async function () {
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
@@ -337,6 +337,33 @@ Then('「見出し3」という文字の h3 が存在する', async function () 
   const h3 = page.locator('h3');
   await expect(h3).toHaveText('見出し3');
 });
+Then('コードブロックが存在している', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code')
+  await expect(codeBlock).toBeVisible({ timeout: 10000 });
+})
+Then('コードブロックの言語が「js」になっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code');
+  const languageDataAttribute = await codeBlock.getAttribute('class');
+
+  expect(languageDataAttribute).toBe('language-js');
+})
+Then('コードブロック内に「const a = 1」が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const codeBlock = page.getByRole('code');
+  await expect(codeBlock).toHaveText('const a = 1');
+})
+Then('コードのコピーボタンが表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const copyButton = page.getByRole('button', { name: 'copy-button' });
+  await expect(copyButton).toBeVisible();
+});
+
 Then('画像が表示されている', async function () {
   const page = playwrightHelper.getPage();
 
