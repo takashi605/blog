@@ -1,7 +1,6 @@
 import { memo } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import CodeBlock from './elements/CodeBlock';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
 import ImageContent from './elements/ImageContent';
@@ -22,15 +21,7 @@ function ContentRenderer({ content }: BlogPostContentProps) {
     case 'image':
       return <ImageContent imageContent={content} />;
     case 'codeBlock':
-      return (
-        <SyntaxHighlighter
-          style={vscDarkPlus}
-          language={content.language}
-          PreTag="div"
-        >
-          {content.code}
-        </SyntaxHighlighter>
-      );
+      return <CodeBlock codeBlockData={content} />;
     default:
       return null;
   }

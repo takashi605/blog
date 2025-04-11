@@ -1,6 +1,4 @@
 import React from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';

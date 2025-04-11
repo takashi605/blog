@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
 import ContentRenderer from './Content';
@@ -63,5 +63,25 @@ describe('コンポーネント: viewBlogPostController', () => {
 
     const img = screen.getByRole('img') as HTMLImageElement;
     expect(img.src).toMatch('path/to/image');
+  });
+
+  it('type に codeBlock を渡したとき、code タグを表示する', async () => {
+    render(
+      <ContentRenderer
+        content={{
+          id: '1',
+          type: ContentType.CodeBlock,
+          title: 'サンプルコード',
+          code: 'console.log("Hello, world!")',
+          language: 'javascript',
+        }}
+      />,
+    )
+    const codeBlock = screen.getByRole('code');
+    expect(codeBlock).toBeInTheDocument();
+
+    // span で細かく分けられているので、一部のテキストが含まれているかのみ確認
+    const codeBlockFragment = within(codeBlock).getByText("console")
+    expect(codeBlockFragment).toBeInTheDocument();
   });
 });

@@ -94,5 +94,12 @@ describe('コンポーネント: ViewBlogPostController', () => {
       const img = await screen.findAllByRole('img', { name: '画像コンテンツ' });
       expect(img).not.toHaveLength(0);
     });
+
+    it('コードブロックが表示されている', async () => {
+      await renderPresenter();
+
+      const codeBlock = await screen.findAllByRole('code');
+      expect(codeBlock).not.toHaveLength(0);
+    });
   });
 });

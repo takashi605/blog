@@ -166,6 +166,13 @@ function createResponseBase() {
           },
         ],
       },
+      {
+        id: createUUIDv4(),
+        type: 'codeBlock',
+        title: 'サンプルコード',
+        code: 'console.log("Hello, World!");',
+        language: 'javascript',
+      }
     ],
   };
 }
