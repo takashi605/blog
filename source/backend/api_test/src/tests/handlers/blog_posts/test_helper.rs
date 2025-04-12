@@ -105,7 +105,7 @@ pub fn minimal_blog_post1() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事1の段落です。".to_string(),
-          styles: Style { bold: false },
+          styles: Style { bold: false, inline: false },
         }],
         type_field: "paragraph".to_string(),
       }),
@@ -134,7 +134,7 @@ pub fn minimal_blog_post2() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事2の段落です。".to_string(),
-          styles: Style { bold: false },
+          styles: Style { bold: false, inline: false },
         }],
         type_field: "paragraph".to_string(),
       }),
@@ -163,7 +163,7 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事3の段落です。".to_string(),
-          styles: Style { bold: false },
+          styles: Style { bold: false, inline: false },
         }],
         type_field: "paragraph".to_string(),
       }),
