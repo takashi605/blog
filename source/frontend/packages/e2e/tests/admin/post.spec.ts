@@ -11,7 +11,7 @@ Given('記事投稿ページにアクセスする', async function () {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/create`, {timeout: 10000});
+  await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 10000 });
 });
 
 Then('リッチテキストエディタが表示されていることを確認する', async function () {
@@ -138,6 +138,35 @@ Then(
     await expect(boldText).not.toBeVisible({ timeout: 10000 });
   },
 );
+
+When('「世界」を選択し、インラインコードボタンを押す', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await selectByArrowLeft(page, richTextEditor, 2);
+
+  const inlineCodeButton = page.getByRole('checkbox', { name: 'inline-code' });
+  await inlineCodeButton.click();
+  await clearSelectionByArrow(page, richTextEditor);
+});
+
+Then(
+  'リッチテキストエディタに「こんにちは！世界」と表示され、世界がインラインコードになっている',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toHaveText('こんにちは！世界', {
+      timeout: 10000,
+    });
+    // 「世界」が code タグで囲われているか確認
+    const inlineCode = richTextEditor
+      .getByRole('code')
+      .filter({ hasText: '世界' });
+    await expect(inlineCode).toBeVisible({ timeout: 10000 });
+  },
+);
+
 When(
   '「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',
   async function () {
@@ -192,18 +221,20 @@ When('「const a = 1」入力し、「code」ボタンを押す', async function
   const richTextEditor = page.locator('[contenteditable="true"]');
   richTextEditor.press('Enter');
   await richTextEditor.pressSequentially('const a = 1');
-  const codeButton = page.getByRole('checkbox', { name: 'code' });
+  const codeButton = page.getByRole('checkbox', { name: /^code$/ });
   await codeButton.click();
-})
+});
 Then('エディタ内にコードブロックが存在している', async function () {
   const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
+  const richTextEditor = page.locator('[contenteditable="true"]').filter({
+    hasText: 'const a = 1',
+  });
 
   // class 属性に editor-code が含まれているかで判別
   const codeBlock = richTextEditor.locator('.editor-code');
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
-})
+});
 
 When('言語選択セレクトボックスから、「js」を選択', async function () {
   const page = playwrightHelper.getPage();
@@ -222,7 +253,7 @@ Then('コードブロックの言語データ属性が「js」になっている
   const languageDataAttribute = await codeBlock.getAttribute('data-language');
 
   expect(languageDataAttribute).toBe('js');
-})
+});
 
 When('画像選択モーダルを開き、画像を選択する', async function () {
   const page = playwrightHelper.getPage();
@@ -234,7 +265,7 @@ When('画像選択モーダルを開き、画像を選択する', async function
   richTextEditor.press('Enter');
   richTextEditor.press('Enter');
 
-   const openModalButton = page.getByRole('button', { name: '画像を挿入' });
+  const openModalButton = page.getByRole('button', { name: '画像を挿入' });
   await openModalButton.click();
 
   const modal = page.getByRole('dialog');
@@ -327,6 +358,14 @@ Then('世界が太字になっていない', async function () {
   const boldText = page.locator('strong');
   await expect(boldText).not.toBeVisible();
 });
+Then('世界がインラインコードになっている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const inlineCode = page.getByRole('code').filter({
+    hasText: '世界',
+  });
+  await expect(inlineCode).toBeVisible();
+});
 Then('「見出し2」という文字の h2 が存在する', async function () {
   const page = playwrightHelper.getPage();
   const h2 = page.locator('h2');
@@ -340,23 +379,29 @@ Then('「見出し3」という文字の h3 が存在する', async function () 
 Then('コードブロックが存在している', async function () {
   const page = playwrightHelper.getPage();
 
-  const codeBlock = page.getByRole('code')
+  const codeBlock = page.getByRole('code').filter({
+    hasText: 'const a = 1',
+  });
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
-})
+});
 Then('コードブロックの言語が「js」になっている', async function () {
   const page = playwrightHelper.getPage();
 
-  const codeBlock = page.getByRole('code');
+  const codeBlock = page.getByRole('code').filter({
+    hasText: 'const a = 1',
+  });
   const languageDataAttribute = await codeBlock.getAttribute('class');
 
   expect(languageDataAttribute).toBe('language-js');
-})
+});
 Then('コードブロック内に「const a = 1」が表示されている', async function () {
   const page = playwrightHelper.getPage();
 
-  const codeBlock = page.getByRole('code');
-  await expect(codeBlock).toHaveText('const a = 1');
-})
+  const codeBlock = page.getByRole('code').filter({
+    hasText: 'const a = 1',
+  });
+  await expect(codeBlock).toBeVisible({ timeout: 10000 });
+});
 Then('コードのコピーボタンが表示されている', async function () {
   const page = playwrightHelper.getPage();
 

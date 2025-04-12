@@ -15,6 +15,9 @@ const theme = {
     h3: styles.h3,
   },
   paragraph: styles.paragraph,
+  text: {
+    code: styles.inlineCodeText,
+  },
 };
 
 type CustomizedLexicalComposerProps = {

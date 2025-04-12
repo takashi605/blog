@@ -159,7 +159,7 @@ VALUES (
 INSERT INTO text_styles (id, style_type)
 VALUES
   ('6f3af5a8-3a70-493e-8f2c-766da07b46c5', 'bold'),
-  ('e730615e-a726-471c-9e11-8756031e4d24', 'inline'),
+  ('e730615e-a726-471c-9e11-8756031e4d24', 'inline-code'),
   (gen_random_uuid(), 'italic'),
   (gen_random_uuid(), 'underline');
 

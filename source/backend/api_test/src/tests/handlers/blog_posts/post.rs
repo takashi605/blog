@@ -45,7 +45,10 @@ mod helper {
           id: Uuid::new_v4(),
           text: vec![RichText {
             text: "これはテスト用の文字列です。".to_string(),
-            styles: Style { bold: true, inline: false },
+            styles: Style {
+              bold: true,
+              inline_code: true,
+            },
           }],
           type_field: "paragraph".to_string(),
         }),

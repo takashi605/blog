@@ -2,7 +2,7 @@ import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
-import { TbBold, TbCode, TbH2, TbH3 } from 'react-icons/tb';
+import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import ImageInsertModalWithOpenButton from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
@@ -18,8 +18,13 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
-    useSelectedTextStyle();
+  const {
+    isBoldSelected,
+    isInlineCodeSelected,
+    $toggleBoldToSelection,
+    $toggleInlineCodeInSelection,
+    $storeSelectedTextStyle,
+  } = useSelectedTextStyle();
   const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
     useCodeLanguage();
 
@@ -128,21 +133,14 @@ function ToolBarPlugin() {
         <TbH3 />
       </ToolBarButton>
       <ToolBarButton
-        onClick={onClickBoldButton}
-        checked={isBoldSelected}
-        ariaLabel="bold"
-      >
-        <TbBold />
-      </ToolBarButton>
-      <ToolBarButton
         onClick={onClickCodeButton}
         checked={selectedNodeType === 'code'}
         ariaLabel="code"
       >
-        <TbCode />
+        <TbSourceCode />
       </ToolBarButton>
       {selectedNodeType === 'code' && (
-        <div>
+        <>
           <select
             aria-label="code languages"
             value={codeLanguage}
@@ -158,8 +156,24 @@ function ToolBarPlugin() {
             ))}
           </select>
           <MdExpandMore />
-        </div>
+        </>
       )}
+      <br />
+      <ToolBarButton
+        onClick={onClickBoldButton}
+        checked={isBoldSelected}
+        ariaLabel="bold"
+      >
+        <TbBold />
+      </ToolBarButton>
+      <ToolBarButton
+        onClick={$toggleInlineCodeInSelection}
+        checked={isInlineCodeSelected}
+        ariaLabel="inline-code"
+      >
+        <TbCode />
+      </ToolBarButton>
+      <br />
       <ImageInsertModalWithOpenButton />
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
