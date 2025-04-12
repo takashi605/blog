@@ -17,15 +17,15 @@ describe('コンポーネント： Paragraph', () => {
         richText={[
           {
             text: 'これは',
-            styles: { bold: false },
+            styles: { bold: false, inline: false },
           },
           {
             text: 'テストテキスト',
-            styles: { bold: true },
+            styles: { bold: true, inline: false },
           },
           {
             text: 'です',
-            styles: { bold: false },
+            styles: { bold: false, inline: false },
           },
         ]}
       />,

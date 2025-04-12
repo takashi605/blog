@@ -100,7 +100,7 @@ export function textNodeToRichTextDTO(textNodes: TextNode[]): RichTextDTO {
     text: node.getTextContent(),
     styles: {
       bold: node.hasFormat('bold'),
-      inline: false
+      inline: false,
     },
   }));
 }
