@@ -288,7 +288,7 @@ mod tests {
             id: Uuid::new_v4(),
             text: vec![RichText {
               text: "これはテスト用の文字列です。".to_string(),
-              styles: Style { bold: true },
+              styles: Style { bold: true, inline: false },
             }],
             type_field: "paragraph".to_string(),
           }),
