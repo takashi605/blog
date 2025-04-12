@@ -18,8 +18,13 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const { isBoldSelected, $storeSelectedTextStyle, $toggleBoldToSelection } =
-    useSelectedTextStyle();
+  const {
+    isBoldSelected,
+    isInlineCodeSelected,
+    $toggleBoldToSelection,
+    $toggleInlineCodeInSelection,
+    $storeSelectedTextStyle,
+  } = useSelectedTextStyle();
   const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
     useCodeLanguage();
 
@@ -162,10 +167,8 @@ function ToolBarPlugin() {
         <TbBold />
       </ToolBarButton>
       <ToolBarButton
-        onClick={() => {
-          console.log('未実装');
-        }}
-        checked={false}
+        onClick={$toggleInlineCodeInSelection}
+        checked={isInlineCodeSelected}
         ariaLabel="code-inline"
       >
         <TbCode />
