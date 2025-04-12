@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import styles from './paragraph.module.scss';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 type ParagraphProps = {
   richText: RichTextDTO;

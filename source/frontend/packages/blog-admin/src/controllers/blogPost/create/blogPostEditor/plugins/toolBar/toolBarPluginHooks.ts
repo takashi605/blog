@@ -107,12 +107,14 @@ export function useSelectedNode() {
 
 export function useSelectedTextStyle() {
   const [isBoldSelected, setIsBoldSelected] = useState(false);
+  const [isInlineCodeSelected, setIsInlineCodeSelected] = useState(false);
   const [editor] = useLexicalComposerContext();
 
   const $storeSelectedTextStyle = () => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
       setIsBoldSelected(selection.hasFormat('bold'));
+      setIsInlineCodeSelected(selection.hasFormat('code'));
     }
   };
 
@@ -120,10 +122,16 @@ export function useSelectedTextStyle() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
   };
 
+  const $toggleInlineCodeInSelection = () => {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+  };
+
   return {
     isBoldSelected,
-    $storeSelectedTextStyle,
+    isInlineCodeSelected,
     $toggleBoldToSelection,
+    $toggleInlineCodeInSelection,
+    $storeSelectedTextStyle,
   } as const;
 }
 
