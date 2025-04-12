@@ -169,7 +169,7 @@ function ToolBarPlugin() {
       <ToolBarButton
         onClick={$toggleInlineCodeInSelection}
         checked={isInlineCodeSelected}
-        ariaLabel="code-inline"
+        ariaLabel="inline-code"
       >
         <TbCode />
       </ToolBarButton>
