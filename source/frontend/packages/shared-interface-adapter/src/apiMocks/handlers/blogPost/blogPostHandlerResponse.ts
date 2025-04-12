@@ -136,10 +136,11 @@ function createResponseBase() {
           },
           {
             text: '繰り返しの実践が技術力を向上させる鍵です。',
-            styles: { bold: true },
+            styles: { bold: true, inline: false },
           },
           {
             text: '新しいコードを試し、デバッグしながら学ぶことで、単なる理論以上の実践的なスキルを身に付けることができます。',
+            styles: { bold: false, inline: true },
           },
         ],
       },

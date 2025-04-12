@@ -40,11 +40,11 @@ export function mockRichTextDTO(): RichTextDTO {
   return [
     {
       text: 'これは',
-      styles: { bold: false },
+      styles: { bold: false, inline: false },
     },
     {
       text: 'テストテキスト',
-      styles: { bold: true },
+      styles: { bold: true, inline: false },
     },
     {
       text: 'です',
