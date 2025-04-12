@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
 import Paragraph from './Paragraph';
 
@@ -32,6 +32,56 @@ describe('コンポーネント： Paragraph', () => {
     );
 
     const strong = screen.getByRole('strong');
+    expect(strong).toHaveTextContent('テストテキスト');
+  });
+
+  it('インラインフォーマットが含まれる RichText 配列が渡された場合、code タグによるインライン対応がされている', async () => {
+    render(
+      <Paragraph
+        richText={[
+          {
+            text: 'これは',
+            styles: { bold: false, inline: false },
+          },
+          {
+            text: 'テストテキスト',
+            styles: { bold: false, inline: true },
+          },
+          {
+            text: 'です',
+            styles: { bold: false, inline: false },
+          },
+        ]}
+      />,
+    );
+
+    const code = screen.getByRole('code');
+    expect(code).toHaveTextContent('テストテキスト');
+  });
+
+  it('全てのスタイルが渡された場合、<code><strong>text</strong></code> の優先度でタグがラッピングされる', async () => {
+    render(
+      <Paragraph
+        richText={[
+          {
+            text: 'これは',
+            styles: { bold: false, inline: false },
+          },
+          {
+            text: 'テストテキスト',
+            styles: { bold: true, inline: true },
+          },
+          {
+            text: 'です',
+            styles: { bold: false, inline: false },
+          },
+        ]}
+      />,
+    );
+
+    const code = screen.getByRole('code');
+    const strong = within(code).getByRole('strong');
+    expect(code).toHaveTextContent('テストテキスト');
     expect(strong).toHaveTextContent('テストテキスト');
   });
 

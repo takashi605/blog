@@ -27,5 +27,8 @@ function StyledText({ richText }: { richText: RichTextDTO[number] }) {
   if (richText.styles?.bold) {
     text = <strong>{text}</strong>;
   }
+  if (richText.styles?.inline) {
+    text = <code>{text}</code>;
+  }
   return <span key={createUUIDv4()}>{text}</span>;
 }
