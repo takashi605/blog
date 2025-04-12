@@ -67,6 +67,14 @@ pub fn generate_blog_post_records_by(
               rich_text_id: rich_text_records.last().unwrap().id,
             });
           }
+          // inline_code:true が含まれている場合、対応する style_id を取得する
+          if rt.styles.inline_code {
+            let style_id = style_records.iter().find(|style| style.style_type == "inline-code").unwrap().id;
+            rich_text_styles.push(RichTextStyleRecord {
+              style_id,
+              rich_text_id: rich_text_records.last().unwrap().id,
+            });
+          }
         });
         PostContentRecord {
           id: paragraph.id,
