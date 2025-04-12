@@ -63,10 +63,18 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
           BlogPostContent::Code(e) => e,
           _ => panic!("CodeBlock 以外の要素が入っています"),
         };
-        assert_eq!(actual_code_block.type_field, expected_code_block.type_field, "CodeBlock の type_field 不一致: contents[{}]", i);
+        assert_eq!(
+          actual_code_block.type_field, expected_code_block.type_field,
+          "CodeBlock の type_field 不一致: contents[{}]",
+          i
+        );
         assert_eq!(actual_code_block.title, expected_code_block.title, "CodeBlock の title 不一致: contents[{}]", i);
         assert_eq!(actual_code_block.code, expected_code_block.code, "CodeBlock の code 不一致: contents[{}]", i);
-        assert_eq!(actual_code_block.language, expected_code_block.language, "CodeBlock の language 不一致: contents[{}]", i);
+        assert_eq!(
+          actual_code_block.language, expected_code_block.language,
+          "CodeBlock の language 不一致: contents[{}]",
+          i
+        );
       }
     }
   }
@@ -105,7 +113,10 @@ pub fn minimal_blog_post1() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事1の段落です。".to_string(),
-          styles: Style { bold: false, inline: false },
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
         }],
         type_field: "paragraph".to_string(),
       }),
@@ -134,7 +145,10 @@ pub fn minimal_blog_post2() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事2の段落です。".to_string(),
-          styles: Style { bold: false, inline: false },
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
         }],
         type_field: "paragraph".to_string(),
       }),
@@ -163,7 +177,10 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
         id: Uuid::new_v4(),
         text: vec![RichText {
           text: "これはミニマル記事3の段落です。".to_string(),
-          styles: Style { bold: false, inline: false },
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
         }],
         type_field: "paragraph".to_string(),
       }),

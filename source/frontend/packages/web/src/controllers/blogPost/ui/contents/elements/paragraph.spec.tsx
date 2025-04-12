@@ -17,15 +17,15 @@ describe('コンポーネント： Paragraph', () => {
         richText={[
           {
             text: 'これは',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
           {
             text: 'テストテキスト',
-            styles: { bold: true, inline: false },
+            styles: { bold: true, inlineCode: false },
           },
           {
             text: 'です',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
         ]}
       />,
@@ -41,15 +41,15 @@ describe('コンポーネント： Paragraph', () => {
         richText={[
           {
             text: 'これは',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
           {
             text: 'テストテキスト',
-            styles: { bold: false, inline: true },
+            styles: { bold: false, inlineCode: true },
           },
           {
             text: 'です',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
         ]}
       />,
@@ -65,15 +65,15 @@ describe('コンポーネント： Paragraph', () => {
         richText={[
           {
             text: 'これは',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
           {
             text: 'テストテキスト',
-            styles: { bold: true, inline: true },
+            styles: { bold: true, inlineCode: true },
           },
           {
             text: 'です',
-            styles: { bold: false, inline: false },
+            styles: { bold: false, inlineCode: false },
           },
         ]}
       />,

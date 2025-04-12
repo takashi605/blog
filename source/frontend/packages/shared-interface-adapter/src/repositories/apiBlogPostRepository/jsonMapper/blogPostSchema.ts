@@ -35,7 +35,7 @@ function blogPostContentSchema() {
           styles: z.optional(
             z.object({
               bold: z.boolean(),
-              inline: z.boolean(),
+              inlineCode: z.boolean(),
             }),
           ),
         }),
