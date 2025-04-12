@@ -38,5 +38,14 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.5px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+}
+
+.inlineCodeText {
+  font-family: "source-code-pro", monospace;
+  background: #f5f2f0;
+  color: #b6261e;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
 }
