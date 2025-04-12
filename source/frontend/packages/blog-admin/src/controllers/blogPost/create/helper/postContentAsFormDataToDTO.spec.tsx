@@ -45,8 +45,8 @@ describe('typedBlogPostToDTO', () => {
           id: expect.any(String),
           type: 'paragraph',
           text: [
-            { text: 'Hello', styles: { bold: false } },
-            { text: 'World', styles: { bold: true } },
+            { text: 'Hello', styles: { bold: false, inline: false } },
+            { text: 'World', styles: { bold: true, inline: false } },
           ],
         },
         {
@@ -126,8 +126,8 @@ describe('typedBlogPostToDTO', () => {
         boldText,
       ]);
       expect(normalTextDTO).toEqual([
-        { text: 'normalText', styles: { bold: false } },
-        { text: 'boldText', styles: { bold: true } },
+        { text: 'normalText', styles: { bold: false, inline: false } },
+        { text: 'boldText', styles: { bold: true, inline: false } },
       ]);
     });
   });
@@ -147,8 +147,8 @@ describe('typedBlogPostToDTO', () => {
         id: expect.any(String),
         type: 'paragraph',
         text: [
-          { text: 'Hello', styles: { bold: false } },
-          { text: 'World', styles: { bold: true } },
+          { text: 'Hello', styles: { bold: false, inline: false } },
+          { text: 'World', styles: { bold: true, inline: false } },
         ],
       });
     });

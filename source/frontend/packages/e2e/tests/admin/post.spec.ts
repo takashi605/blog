@@ -11,7 +11,7 @@ Given('記事投稿ページにアクセスする', async function () {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/create`);
+  await page.goto(`${process.env.ADMIN_URL}/posts/create`, {timeout: 10000});
 });
 
 Then('リッチテキストエディタが表示されていることを確認する', async function () {

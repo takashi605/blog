@@ -25,6 +25,7 @@ pub struct Image {
 #[serde(rename_all = "camelCase")]
 pub struct Style {
   pub bold: bool,
+  pub inline: bool,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]

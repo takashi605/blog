@@ -1,5 +1,6 @@
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { BlogPostDTO } from '../blogPostService/dto/blogPostDTO';
+import type { RichTextDTO } from '../blogPostService/dto/contentDTO';
 import { createUUIDv4 } from '../utils/uuid';
 
 // これを直接 import して使えばいい
@@ -35,19 +36,19 @@ export const mockBlogPostDTO: BlogPostDTO = {
   ],
 };
 
-export function mockRichTextDTO() {
+export function mockRichTextDTO(): RichTextDTO {
   return [
     {
       text: 'これは',
-      styles: { bold: false },
+      styles: { bold: false, inline: false },
     },
     {
       text: 'テストテキスト',
-      styles: { bold: true },
+      styles: { bold: true, inline: false },
     },
     {
       text: 'です',
-      styles: { bold: false },
+      styles: { bold: false, inline: true },
     },
   ];
 }

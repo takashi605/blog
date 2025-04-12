@@ -17,12 +17,25 @@ describe('richText', () => {
   it('太字が含まれるテキスト構造を返却する', () => {
     const richText = new RichText([
       new RichTextPart('テストテキスト1'),
-      new RichTextPart('テストテキスト2', { bold: true }),
+      new RichTextPart('テストテキスト2', { bold: true, inline: false }),
       new RichTextPart('テストテキスト3'),
     ]);
     expect(richText.getText()).toEqual([
       new RichTextPart('テストテキスト1'),
-      new RichTextPart('テストテキスト2', { bold: true }),
+      new RichTextPart('テストテキスト2', { bold: true, inline: false }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+  });
+
+  it('インライン文字装飾が含まれるテキスト構造を返却する', () => {
+    const richText = new RichText([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { bold: false, inline: true }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+    expect(richText.getText()).toEqual([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { bold: false, inline: true }),
       new RichTextPart('テストテキスト3'),
     ]);
   });

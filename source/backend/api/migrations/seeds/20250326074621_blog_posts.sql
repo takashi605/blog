@@ -138,7 +138,7 @@ VALUES
     '繰り返しの実践が技術力を向上させる鍵です。'
   ),
   (
-    gen_random_uuid(),
+    '90d4b5ae-6970-4fb7-ba33-8bada6f5b775',  -- style を指定するため id を明示
     '35739804-80f4-4307-b5b6-8999466a618e',
     '新しいコードを試し、デバッグしながら学ぶことで、単なる理論以上の実践的なスキルを身に付けることができます。'
   ),
@@ -159,14 +159,20 @@ VALUES (
 INSERT INTO text_styles (id, style_type)
 VALUES
   ('6f3af5a8-3a70-493e-8f2c-766da07b46c5', 'bold'),
+  ('e730615e-a726-471c-9e11-8756031e4d24', 'inline'),
   (gen_random_uuid(), 'italic'),
   (gen_random_uuid(), 'underline');
 
 -- 8. rich_text_styles に挿入
 INSERT INTO rich_text_styles (style_id, rich_text_id)
-VALUES (
+VALUES
+  (
     '6f3af5a8-3a70-493e-8f2c-766da07b46c5',
     'cc4b395f-6204-4f2f-8cd7-59ed10cf3090'
-);
+  ),
+  (
+    'e730615e-a726-471c-9e11-8756031e4d24',
+    '90d4b5ae-6970-4fb7-ba33-8bada6f5b775'
+  );
 
 COMMIT;

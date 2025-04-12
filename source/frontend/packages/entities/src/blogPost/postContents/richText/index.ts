@@ -14,6 +14,7 @@ export class RichTextPart {
   private text: string;
   private styles: RichTextStyles = {
     bold: false,
+    inline: false,
   };
 
   constructor(text: string, styles?: RichTextStyles) {
@@ -34,4 +35,5 @@ export class RichTextPart {
 
 type RichTextStyles = {
   bold: boolean;
+  inline: boolean;
 };
