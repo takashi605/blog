@@ -33,5 +33,6 @@ export class RichTextPart {
 }
 
 type RichTextStyles = {
-  bold: boolean;
+  bold?: boolean;
+  inline?: boolean;
 };
