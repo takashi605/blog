@@ -26,4 +26,17 @@ describe('richText', () => {
       new RichTextPart('テストテキスト3'),
     ]);
   });
+
+  it('インライン文字装飾が含まれるテキスト構造を返却する', () => {
+    const richText = new RichText([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { inline: true }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+    expect(richText.getText()).toEqual([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { inline: true }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+  });
 });
