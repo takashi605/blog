@@ -40,15 +40,15 @@ export function mockRichTextDTO(): RichTextDTO {
   return [
     {
       text: 'これは',
-      styles: { bold: false, inline: false },
+      styles: { bold: false, inlineCode: false },
     },
     {
       text: 'テストテキスト',
-      styles: { bold: true, inline: false },
+      styles: { bold: true, inlineCode: false },
     },
     {
       text: 'です',
-      styles: { bold: false, inline: true },
+      styles: { bold: false, inlineCode: true },
     },
   ];
 }

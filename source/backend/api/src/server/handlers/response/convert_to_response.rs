@@ -97,7 +97,7 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelatio
 fn rich_text_to_response(rich_text_record_with_styles: RichTextRecordWithStyles) -> RichText {
   let styles = Style {
     bold: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "bold"),
-    inline: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "inline"),
+    inline_code: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "inline-code"),
   };
   RichText {
     text: rich_text_record_with_styles.text_record.text_content,

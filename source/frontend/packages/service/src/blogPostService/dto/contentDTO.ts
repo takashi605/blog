@@ -37,7 +37,7 @@ export type RichTextDTO = ReadonlyArray<{
   text: string;
   styles?: {
     bold: boolean;
-    inline: boolean;
+    inlineCode: boolean;
   };
 }>;
 
