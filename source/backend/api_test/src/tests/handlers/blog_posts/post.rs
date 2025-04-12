@@ -47,7 +47,7 @@ mod helper {
             text: "これはテスト用の文字列です。".to_string(),
             styles: Style {
               bold: true,
-              inline_code: false,
+              inline_code: true,
             },
           }],
           type_field: "paragraph".to_string(),
