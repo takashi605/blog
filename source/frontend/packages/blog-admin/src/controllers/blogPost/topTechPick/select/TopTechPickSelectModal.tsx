@@ -1,15 +1,15 @@
 'use client';
 import React from 'react';
-// import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-// import { SelectTopTechPickPostsUseCase } from '../../../../usecases/select/selectTopTechPickPosts';
-// import { useTopTechPickPostViewContext } from '../view/TopTechPickViewProvider';
-// import TopTechPickPostsForm from './form/TopTechPickPostsForm';
-// import type { TopTechPickPostsFormValues } from './form/TopTechPickPostsFormProvider';
-// import TopTechPickPostsFormProvider from './form/TopTechPickPostsFormProvider';
-// import { useTopTechPickPostsCheckbox } from './form/useTopTechPickPostsCheckbox';
+import { SelectTopTechPickPostUseCase } from '../../../../usecases/select/selectTopTechPickPost';
+import { useTopTechPickPostViewContext } from '../view/TopTechPickViewProvider';
+import TopTechPickForm from './form/TopTechPickForm';
+import type { TopTechPickFormValues } from './form/TopTechPickFormProvider';
+import TopTechPickFormProvider from './form/TopTechPickFormProvider';
+import { useTopTechPickPostsCheckbox } from './form/useTopTechPickCheckbox';
 
 function TopTechPickSelectModalWithOpenButton() {
   return (
@@ -21,43 +21,52 @@ function TopTechPickSelectModalWithOpenButton() {
 }
 
 function Modal() {
-  // const { getTopTechPickPost, updateTopTechPickPost } =
-  //   useTopTechPickPostViewContext();
-  // const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const { getTopTechPickPost, updateTopTechPickPost } =
+    useTopTechPickPostViewContext();
+  const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
 
-  // const { selectedBlogPosts } = useTopTechPickPostsCheckbox();
+  const { findSelectedBlogPosts } = useTopTechPickPostsCheckbox();
 
-  // const onSubmit = async (data: TopTechPickPostsFormValues) => {
-  //   if (!process.env.NEXT_PUBLIC_API_URL) {
-  //     throw new Error('API の URL が設定されていません');
-  //   }
-  //   const blogPostRepository = new ApiBlogPostRepository(
-  //     process.env.NEXT_PUBLIC_API_URL,
-  //   );
-  //   const selectTopTechPickPostsUseCase = new SelectTopTechPickPostsUseCase(
-  //     selectedBlogPosts(data.topTechPickPosts),
-  //     blogPostRepository,
-  //   );
-  //   try {
-  //     const updatedTopTechPickPosts = await selectTopTechPickPostsUseCase.execute();
-  //     updateTopTechPickPost(updatedTopTechPickPosts);
-  //     setIsUploadSuccess(true);
-  //   } catch (e) {
-  //     console.error(e);
-  //     alert('トップテック記事の更新に失敗しました。ログを確認してください。');
-  //   }
-  // };
+  const onSubmit = async (data: TopTechPickFormValues) => {
+    if (!process.env.NEXT_PUBLIC_API_URL) {
+      throw new Error('API の URL が設定されていません');
+    }
+    const blogPostRepository = new ApiBlogPostRepository(
+      process.env.NEXT_PUBLIC_API_URL,
+    );
+
+    const selectedBlogPosts = findSelectedBlogPosts(data.topTechPickPosts);
+    if (selectedBlogPosts.length !== 1) {
+      alert('トップテック記事は1つだけ選択してください。');
+      return;
+    }
+
+    const selectTopTechPickPostsUseCase = new SelectTopTechPickPostUseCase(
+      selectedBlogPosts[0],
+      blogPostRepository,
+    );
+
+    try {
+      const updatedTopTechPickPosts =
+        await selectTopTechPickPostsUseCase.execute();
+      updateTopTechPickPost(updatedTopTechPickPosts);
+      setIsUploadSuccess(true);
+    } catch (e) {
+      console.error(e);
+      alert('トップテック記事の更新に失敗しました。ログを確認してください。');
+    }
+  };
 
   return (
     <CommonModal>
-      {/* <TopTechPickPostsFormProvider
+      <TopTechPickFormProvider
         defaultValues={{
-          topTechPickPost: getTopTechPickPost,
+          topTechPickPosts: [getTopTechPickPost()?.id ?? ''],
         }}
       >
-        <TopTechPickPostsForm onSubmit={onSubmit} />
-      </TopTechPickPostsFormProvider>
-      {isUploadSuccess && <p>トップテック記事を更新しました。</p>} */}
+        <TopTechPickForm onSubmit={onSubmit} />
+      </TopTechPickFormProvider>
+      {isUploadSuccess && <p>トップテック記事を更新しました。</p>}
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
