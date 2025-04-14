@@ -9,4 +9,5 @@ export const mockBlogPostRepository: BlogPostRepository = {
   fetchPopularPosts: jest.fn(),
   updatePickUpPosts: jest.fn(),
   updatePopularPosts: jest.fn(),
+  updateTopTechPickPost: jest.fn(),
 };

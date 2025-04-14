@@ -83,6 +83,25 @@ export class ApiBlogPostRepository implements BlogPostRepository {
     return validatedResponse;
   }
 
+  async updateTopTechPickPost(topTechPickPost: BlogPost): Promise<BlogPostDTO> {
+    const body = blogPostToJson(topTechPickPost);
+    const response = await fetch(`${this.baseUrl}/blog/posts/top-tech-pick`, {
+      method: 'PUT',
+      body,
+      ...this.baseFetchOptions,
+    });
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `トップテックピック記事の更新に失敗しました:\n${message.replace(/\\n/g, '\n').replace(/\\"/g, '"')}`,
+      );
+    }
+    const validatedResponse = blogPostResponseSchema.parse(
+      await response.json(),
+    );
+    return validatedResponse;
+  }
+
   async fetchPickUpPosts(quantity: number): Promise<BlogPostDTO[]> {
     const response = await fetch(
       `${this.baseUrl}/blog/posts/pickup?quantity=${quantity}`,
