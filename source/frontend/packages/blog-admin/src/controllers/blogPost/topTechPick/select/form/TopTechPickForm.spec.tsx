@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
 import ImageListProvider from '../../../../images/list/ImageListProvider';
-import TopTechPickPostsForm from './TopTechPickForm';
-import TopTechPickPostsFormProvider from './TopTechPickFormProvider';
+import TopTechPickForm from './TopTechPickForm';
+import TopTechPickFormProvider from './TopTechPickFormProvider';
 
 const onSubmitMock = jest.fn();
 beforeEach(() => {
@@ -27,14 +27,14 @@ afterAll(() => {
 function renderComponent() {
   render(
     <ImageListProvider>
-      <TopTechPickPostsFormProvider>
-        <TopTechPickPostsForm onSubmit={onSubmitMock} />
-      </TopTechPickPostsFormProvider>
+      <TopTechPickFormProvider>
+        <TopTechPickForm onSubmit={onSubmitMock} />
+      </TopTechPickFormProvider>
     </ImageListProvider>,
   );
 }
 
-describe('TopTechPickPostsForm', () => {
+describe('TopTechPickForm', () => {
   it('トップテック記事を選択可能である', async () => {
     renderComponent();
 
