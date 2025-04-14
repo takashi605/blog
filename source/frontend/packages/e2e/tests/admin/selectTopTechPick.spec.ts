@@ -25,12 +25,12 @@ Given(
 Then(
   '【トップテックピック記事選択】現在トップテックピック記事に設定されている記事のタイトルが表示されている',
   async function () {
-    // ピックアップの一覧表示セクションを取得
+    // トップテック記事の表示セクションを取得
     const topTechPickPostsSection = new TopTechPickSection().getLocator();
     // セクション内の記事タイトルを取得
-    const postTitles = topTechPickPostsSection.locator('h3');
+    const postTitle = topTechPickPostsSection.locator('h3');
     // セクション内の記事タイトルが1件のみであることを確認
-    expect(await postTitles.count()).toBe(1);
+    expect(await postTitle.count()).toBe(1);
   },
 );
 
@@ -49,6 +49,7 @@ When(
     ]);
 
     expect(response.status()).toBe(200);
+    await response.json();
   },
 );
 Then(
@@ -82,11 +83,11 @@ When(
   async function () {
     const modal = new SelectTopTechPickPostsModal();
     await modal.uncheckAllPosts();
-    const selectedPostTitles = await modal.selectFirstPostTitle();
-    updatedTopTechPickPostTitle = selectedPostTitles;
+    const selectedPostTitle = await modal.selectFirstPostTitle();
+    updatedTopTechPickPostTitle = selectedPostTitle;
 
     // 選択した記事がデフォルトのトップテックピック記事と異なることを確認
-    expect(selectedPostTitles).not.toEqual(initialTopTechPickPostTitle);
+    expect(selectedPostTitle).not.toEqual(initialTopTechPickPostTitle);
 
     modal.getSaveButton().click();
   },
@@ -108,9 +109,9 @@ Then(
   '【トップテックピック記事選択】表示されていたタイトルが新しいものに更新されている',
   async function () {
     const topTechPickPostsSection = new TopTechPickSection().getLocator();
-    const postTitles = topTechPickPostsSection.locator('h3');
-    const updatedPostTitles = await postTitles.allInnerTexts();
-    expect(updatedPostTitles).not.toEqual(initialTopTechPickPostTitle);
+    const postTitle = topTechPickPostsSection.locator('h3');
+    const updatedPostTitle = await postTitle.innerText();
+    expect(updatedPostTitle).not.toEqual(initialTopTechPickPostTitle);
   },
 );
 
@@ -130,8 +131,7 @@ Then(
   '【トップテックピック記事選択】トップテックピック記事のセクションに新規設定したトップテックピック記事が表示されている',
   async function () {
     const topTechPickPostsSection = new HomePage().getTopTechPickSection();
-    const postTitle = await topTechPickPostsSection.locator('h3').innerText();
-    // 順不同で、かつ、配列の要素が同じであることを確認
+    const postTitle = await topTechPickPostsSection.locator('h1').innerText();
     expect(postTitle).toEqual(updatedTopTechPickPostTitle);
   },
 );
@@ -198,7 +198,7 @@ class SelectTopTechPickPostsModal {
   async uncheckAllPosts() {
     const modal = this.getLocator();
     const checkboxes = modal.getByRole('checkbox', { checked: true });
-    await expect(checkboxes).toHaveCount(3); // 取得処理の待機のために、3件選択されていることを確認
+    await expect(checkboxes).toHaveCount(1); // 取得待機のため、1件のチェックボックスがあることを確認
 
     while (true) {
       const checkedCount = await checkboxes.count();
@@ -211,7 +211,7 @@ class SelectTopTechPickPostsModal {
 class HomePage {
   getTopTechPickSection() {
     const page = playwrightHelper.getPage();
-    const topTechPickSectionTitle = page.locator('h2', {
+    const topTechPickSectionTitle = page.locator('span', {
       hasText: 'TOP TECH PICK!',
     });
     return page.locator('section', { has: topTechPickSectionTitle });

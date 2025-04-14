@@ -14,7 +14,9 @@ import { useTopTechPickPostsCheckbox } from './form/useTopTechPickCheckbox';
 function TopTechPickSelectModalWithOpenButton() {
   return (
     <>
-      <CommonModalOpenButton>トップテック記事を選択</CommonModalOpenButton>
+      <CommonModalOpenButton>
+        トップテックピック記事を選択
+      </CommonModalOpenButton>
       <Modal />
     </>
   );
@@ -37,7 +39,7 @@ function Modal() {
 
     const selectedBlogPosts = findSelectedBlogPosts(data.topTechPickPosts);
     if (selectedBlogPosts.length !== 1) {
-      alert('トップテック記事は1つだけ選択してください。');
+      alert('トップテックピック記事は1つだけ選択してください。');
       return;
     }
 
@@ -53,7 +55,7 @@ function Modal() {
       setIsUploadSuccess(true);
     } catch (e) {
       console.error(e);
-      alert('トップテック記事の更新に失敗しました。ログを確認してください。');
+      alert('トップテックピック記事の更新に失敗しました。ログを確認してください。');
     }
   };
 
@@ -66,7 +68,7 @@ function Modal() {
       >
         <TopTechPickForm onSubmit={onSubmit} />
       </TopTechPickFormProvider>
-      {isUploadSuccess && <p>トップテック記事を更新しました。</p>}
+      {isUploadSuccess && <p>トップテックピック記事を更新しました。</p>}
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
   );
