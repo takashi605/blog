@@ -11,4 +11,5 @@ export type BlogPostRepository = {
   fetchPopularPosts: (quantity: number | undefined) => Promise<BlogPostDTO[]>;
   updatePickUpPosts: (pickUpPosts: BlogPost[]) => Promise<BlogPostDTO[]>;
   updatePopularPosts: (popularPosts: BlogPost[]) => Promise<BlogPostDTO[]>;
+  updateTopTechPickPost: (topTechPickPost: BlogPost) => Promise<BlogPostDTO>;
 };

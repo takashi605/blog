@@ -84,6 +84,24 @@ describe('apiBlogPostRepository', () => {
     expect(resp.contents.length).toBeGreaterThan(0);
   });
 
+  it('api を通じてトップテックピック記事を更新できる', async () => {
+    const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
+
+    const topTechPickPost: BlogPost = new MockBlogPost(
+      UUIDList.UUID1,
+    ).successfulMock();
+
+    const topTechPickPostByResp: BlogPostDTO =
+      await apiRepository.updateTopTechPickPost(topTechPickPost);
+
+    expect(topTechPickPostByResp.id).toBeDefined();
+    expect(topTechPickPostByResp.title).toBeDefined();
+    expect(topTechPickPostByResp.thumbnail).toBeDefined();
+    expect(topTechPickPostByResp.postDate).toBeDefined();
+    expect(topTechPickPostByResp.lastUpdateDate).toBeDefined();
+    expect(topTechPickPostByResp.contents.length).toBeGreaterThan(0);
+  });
+
   it('api からピックアップ記事を複数件取得できる', async () => {
     const apiRepository = new ApiBlogPostRepository('http://localhost:8000');
 
