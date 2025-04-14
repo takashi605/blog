@@ -11,6 +11,7 @@ fn posts_scope() -> Scope {
   web::scope("/posts")
     .route("/latest", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
+    .route("/top-tech-pick", web::put().to(handle_funcs::put_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
     .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
@@ -21,7 +22,7 @@ fn posts_scope() -> Scope {
 
 mod handle_funcs {
   use crate::{
-    db::tables::top_tech_pick_table::fetch_top_tech_pick_blog_post,
+    db::tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
     server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
@@ -59,6 +60,19 @@ mod handle_funcs {
     // top_tech_pick_blog_post.post_id を元に実際のブログ記事を fetch する
     let blog_post = fetch_single_blog_post(top_tech_pick_blog_post.post_id).await?;
     Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  pub async fn put_top_tech_pick_blog_post(top_tech_pick_posts_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
+    println!("put_top_tech_pick_blog_post");
+
+    let blog_post_by_req: BlogPost = top_tech_pick_posts_req.into_inner();
+    update_top_tech_pick_post(blog_post_by_req.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
+
+    let updated_post = fetch_top_tech_pick_blog_post().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+    let updated_post_id = updated_post.post_id;
+    let result = fetch_single_blog_post(updated_post_id).await?;
+
+    Ok(HttpResponse::Ok().json(result))
   }
 
   pub async fn get_pickup_blog_posts() -> Result<impl Responder, ApiCustomError> {
