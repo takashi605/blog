@@ -78,6 +78,19 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
+    http.put(`${baseUrl}/blog/posts/top-tech-pick`, async ({ request }) => {
+      let updatedPost: DefaultBodyType;
+      try {
+        updatedPost = await request.json();
+      } catch {
+        return HttpResponse.json(
+          { message: 'リクエストを json に変換できませんでした。' },
+          { status: 400 },
+        );
+      }
+
+      return HttpResponse.json(updatedPost, { status: 200 });
+    }),
     http.put(`${baseUrl}/blog/posts/pickup`, async ({ request }) => {
       let updatedPosts: DefaultBodyType;
       try {

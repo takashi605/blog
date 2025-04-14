@@ -6,6 +6,27 @@ mod tests {
   use common::types::api::response::BlogPost;
 
   #[tokio::test(flavor = "current_thread")]
+  async fn put_top_tech_pick_post() -> Result<()> {
+    let url = "http://localhost:8000/blog/posts/top-tech-pick";
+
+    let top_tech_pick_post_for_req: BlogPost =test_helper::minimal_blog_post1().unwrap();
+    let top_tech_pick_post_json_for_req: String = serde_json::to_string(&top_tech_pick_post_for_req).context("JSON データに変換できませんでした").unwrap();
+
+    let put_request = Request::new(
+      Methods::PUT {
+        body: top_tech_pick_post_json_for_req,
+      },
+      &url,
+    );
+
+    let resp = put_request.send().await.unwrap().text().await.unwrap();
+    let top_tech_pick_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&top_tech_pick_post_by_resp, &top_tech_pick_post_for_req);
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
   async fn put_pickup_posts() -> Result<()> {
     let url = "http://localhost:8000/blog/posts/pickup";
 

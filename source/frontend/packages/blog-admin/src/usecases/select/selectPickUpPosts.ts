@@ -3,16 +3,16 @@ import { blogPostDTOToEntity } from 'service/src/blogPostService/dto/blogPostDTO
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
 
 export class SelectPickUpPostsUseCase {
-  private newPickUpPosts: BlogPostDTO[];
+  private newPickUpPostsDTO: BlogPostDTO[];
   private repository: BlogPostRepository;
 
   constructor(blogPostsDTO: BlogPostDTO[], repository: BlogPostRepository) {
-    this.newPickUpPosts = blogPostsDTO;
+    this.newPickUpPostsDTO = blogPostsDTO;
     this.repository = repository;
   }
 
   async execute(): Promise<BlogPostDTO[]> {
-    const blogPostsEntity = this.newPickUpPosts.map((blogPostDTO) => {
+    const blogPostsEntity = this.newPickUpPostsDTO.map((blogPostDTO) => {
       return blogPostDTOToEntity(blogPostDTO);
     });
     const createdBlogPost =

@@ -38,7 +38,7 @@ describe('ユースケース: ピックアップ記事の選択', () => {
 
     expect(mockRepository.updatePickUpPosts).toHaveBeenCalledTimes(1);
     expect(mockRepository.updatePickUpPosts).toHaveBeenCalledWith(
-      convertEntity(newPickUpPostsDTOMock),
+      convertToEntities(newPickUpPostsDTOMock),
     );
 
     expect(selectedPickUpPosts).toEqual(newPickUpPostsDTOMock);
@@ -66,7 +66,7 @@ function createNewPickUpPostsDTOMock(): BlogPostDTO[] {
   ];
 }
 
-function convertEntity(blogPostsDTO: BlogPostDTO[]): BlogPost[] {
+function convertToEntities(blogPostsDTO: BlogPostDTO[]): BlogPost[] {
   return blogPostsDTO.map((blogPostDTO) => {
     return blogPostDTOToEntity(blogPostDTO);
   });
