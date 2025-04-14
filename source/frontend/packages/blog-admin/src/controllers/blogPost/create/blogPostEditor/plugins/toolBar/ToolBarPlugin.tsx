@@ -3,8 +3,10 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useCallback, useEffect, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
+import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
+import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
-import ImageInsertModalWithOpenButton from './ImageInsertModal';
+import ImageInsertModal from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import {
   useCodeLanguage,
@@ -174,7 +176,10 @@ function ToolBarPlugin() {
         <TbCode />
       </ToolBarButton>
       <br />
-      <ImageInsertModalWithOpenButton />
+      <CommonModalProvider>
+        <CommonModalOpenButton>画像を挿入</CommonModalOpenButton>
+        <ImageInsertModal />
+      </CommonModalProvider>
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
