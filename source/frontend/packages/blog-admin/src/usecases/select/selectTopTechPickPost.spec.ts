@@ -1,4 +1,3 @@
-import type { BlogPost } from 'entities/src/blogPost';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { blogPostDTOToEntity } from 'service/src/blogPostService/dto/blogPostDTOToEntity';
 import type { BlogPostRepository } from 'service/src/blogPostService/repository/blogPostRepository';
@@ -42,7 +41,7 @@ describe('ユースケース: トップテックピック記事の選択', () =>
 
     expect(mockRepository.updateTopTechPickPost).toHaveBeenCalledTimes(1);
     expect(mockRepository.updateTopTechPickPost).toHaveBeenCalledWith(
-      convertToEntity(newTopTechPickPostDTOMock),
+      blogPostDTOToEntity(newTopTechPickPostDTOMock),
     );
 
     expect(selectedTopTechPickPost).toEqual(newTopTechPickPostDTOMock);
@@ -56,8 +55,4 @@ function createNewTopTechPickPostDTOMock(): BlogPostDTO {
     id: createUUIDv4(),
     title: '新しい記事タイトル1',
   };
-}
-
-function convertToEntity(blogPostDTO: BlogPostDTO): BlogPost {
-  return blogPostDTOToEntity(blogPostDTO);
 }
