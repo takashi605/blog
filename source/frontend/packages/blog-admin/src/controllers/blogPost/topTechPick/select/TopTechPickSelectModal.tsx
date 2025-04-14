@@ -55,7 +55,9 @@ function Modal() {
       setIsUploadSuccess(true);
     } catch (e) {
       console.error(e);
-      alert('トップテックピック記事の更新に失敗しました。ログを確認してください。');
+      alert(
+        'トップテックピック記事の更新に失敗しました。ログを確認してください。',
+      );
     }
   };
 
