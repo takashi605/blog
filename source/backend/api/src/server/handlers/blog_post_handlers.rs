@@ -65,8 +65,8 @@ mod handle_funcs {
   pub async fn put_top_tech_pick_blog_post(top_tech_pick_posts_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
     println!("put_top_tech_pick_blog_post");
 
-    let blog_post_by_req: BlogPost = top_tech_pick_posts_req.into_inner();
-    update_top_tech_pick_post(blog_post_by_req.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
+    let requested_post: BlogPost = top_tech_pick_posts_req.into_inner();
+    update_top_tech_pick_post(requested_post.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
 
     let updated_post = fetch_top_tech_pick_blog_post().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
     let updated_post_id = updated_post.post_id;

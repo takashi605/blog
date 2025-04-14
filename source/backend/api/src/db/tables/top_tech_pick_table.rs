@@ -15,7 +15,7 @@ pub async fn fetch_top_tech_pick_blog_post() -> Result<TopTechPickRecord> {
   Ok(post)
 }
 
-pub async fn update_top_tech_pick_post(new_top_tech_pick_post_id: Uuid) -> Result<(), sqlx::Error> {
-  sqlx::query("update top_tech_pick_post set post_id = $1").bind(new_top_tech_pick_post_id).execute(&*POOL).await?;
+pub async fn update_top_tech_pick_post(new_post_id: Uuid) -> Result<(), sqlx::Error> {
+  sqlx::query("update top_tech_pick_post set post_id = $1").bind(new_post_id).execute(&*POOL).await?;
   Ok(())
 }
