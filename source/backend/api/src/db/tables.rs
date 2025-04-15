@@ -53,27 +53,25 @@ pub fn generate_blog_post_records_by(
     let content_record = match content {
       BlogPostContent::Paragraph(paragraph) => {
         paragraph_block_records.push(ParagraphBlockRecord { id: paragraph.id });
-        rich_text_records.push(RichTextRecord {
-          id: Uuid::new_v4(),
-          paragraph_block_id: paragraph.id,
-          text_content: paragraph.text.iter().map(|rt| rt.text.clone()).collect::<String>(),
-        });
+
         paragraph.text.iter().for_each(|rt| {
+          let rich_text_id = Uuid::new_v4();
+          // rich_text_records に追加
+          rich_text_records.push(RichTextRecord {
+            id: rich_text_id,
+            paragraph_block_id: paragraph.id,
+            text_content: rt.text.clone(),
+          });
           // paragraph.text に bold:true が含まれている場合、対応する style_id を取得する
           if rt.styles.bold {
             let style_id = style_records.iter().find(|style| style.style_type == "bold").unwrap().id;
-            rich_text_styles.push(RichTextStyleRecord {
-              style_id,
-              rich_text_id: rich_text_records.last().unwrap().id,
-            });
+            rich_text_styles.push(RichTextStyleRecord { style_id, rich_text_id });
           }
+
           // inline_code:true が含まれている場合、対応する style_id を取得する
           if rt.styles.inline_code {
             let style_id = style_records.iter().find(|style| style.style_type == "inline-code").unwrap().id;
-            rich_text_styles.push(RichTextStyleRecord {
-              style_id,
-              rich_text_id: rich_text_records.last().unwrap().id,
-            });
+            rich_text_styles.push(RichTextStyleRecord { style_id, rich_text_id });
           }
         });
         PostContentRecord {
@@ -192,10 +190,16 @@ mod tests {
   async fn blog_post_to_records() -> Result<()> {
     let post_id: Uuid = Uuid::new_v4();
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
-    let mock_style_records: Vec<TextStyleRecord> = vec![TextStyleRecord {
+    let mock_style_records: Vec<TextStyleRecord> = vec![
+      TextStyleRecord {
       id: Uuid::new_v4(),
       style_type: "bold".to_string(),
-    }];
+      },
+      TextStyleRecord {
+        id: Uuid::new_v4(),
+        style_type: "inline-code".to_string(),
+      },
+    ];
     let mock_image_records: Vec<ImageRecord> = vec![
       ImageRecord {
         id: Uuid::new_v4(),
@@ -255,13 +259,17 @@ mod tests {
     assert_eq!(paragraph_block_records.len(), 1);
     assert_eq!(paragraph_block_records[0].id, post_content_records[0].id);
 
-    assert_eq!(rich_text_records.len(), 1);
+    assert_eq!(rich_text_records.len(), 2);
     assert_eq!(rich_text_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(rich_text_records[0].text_content, "これはテスト用の文字列です。");
+    assert_eq!(rich_text_records[1].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_records[1].text_content, "これはテスト用の文字列その2です。");
 
-    assert_eq!(rich_text_styles.len(), 1);
+    assert_eq!(rich_text_styles.len(), 2);
     assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
     assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id);
+    assert_eq!(rich_text_styles[1].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_styles[1].rich_text_id, rich_text_records[0].id); // bold も inline も同じ文字に紐づけられている
 
     assert_eq!(image_block_records.len(), 1);
     assert_eq!(image_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
@@ -294,10 +302,19 @@ mod tests {
         contents: vec![
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
-            text: vec![RichText {
-              text: "これはテスト用の文字列です。".to_string(),
-              styles: Style { bold: true, inline_code: false },
-            }],
+            text: vec![
+              RichText {
+                text: "これはテスト用の文字列です。".to_string(),
+                styles: Style { bold: true, inline_code: true },
+              },
+              RichText {
+                text: "これはテスト用の文字列その2です。".to_string(),
+                styles: Style {
+                  bold: false,
+                  inline_code: false,
+                },
+              },
+            ],
             type_field: "paragraph".to_string(),
           }),
           BlogPostContent::H2(H2Block {
