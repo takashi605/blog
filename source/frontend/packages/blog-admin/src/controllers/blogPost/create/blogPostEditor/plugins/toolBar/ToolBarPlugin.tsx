@@ -53,7 +53,7 @@ function ToolBarPlugin() {
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
 
-        console.log($isParagraphNodeInSelection());
+        // 選択中のノードが paragraph かどうかを取得して、isSelectedParagraphNode に保持
         setIsSelectedParagraphNode($isParagraphNodeInSelection());
 
         // 選択中のテキストスタイルを取得して isBoldSelected に保持
