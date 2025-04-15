@@ -3,8 +3,10 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useCallback, useEffect, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
+import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
+import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
-import ImageInsertModalWithOpenButton from './ImageInsertModal';
+import ImageInsertModal from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import {
   useCodeLanguage,
@@ -18,6 +20,8 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
+  const [isSelectedParagraphNode, setIsSelectedParagraphNode] =
+    useState<boolean>(false);
   const {
     isBoldSelected,
     isInlineCodeSelected,
@@ -34,8 +38,11 @@ function ToolBarPlugin() {
     $setCodeInSelection,
   } = useUpdateBlockType();
 
-  const { $getElementTypeOfSelected, $getSelectionTopLevelElement } =
-    useSelectedNode();
+  const {
+    $getElementTypeOfSelected,
+    $getSelectionTopLevelElement,
+    $isParagraphNodeInSelection,
+  } = useSelectedNode();
 
   // Lexical の Node を source of truth にするため、
   // エディタの状態が変化するタイミングで Node をチェックして各種ステートを更新する
@@ -45,6 +52,9 @@ function ToolBarPlugin() {
         // 選択中のノードの種類を取得して、selectedNodeType に保持
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
+
+        // 選択中のノードが paragraph かどうかを取得して、isSelectedParagraphNode に保持
+        setIsSelectedParagraphNode($isParagraphNodeInSelection());
 
         // 選択中のテキストスタイルを取得して isBoldSelected に保持
         $storeSelectedTextStyle();
@@ -62,6 +72,7 @@ function ToolBarPlugin() {
     $storeSelectedTextStyle,
     $getSelectionTopLevelElement,
     setCodeLanguage,
+    $isParagraphNodeInSelection,
   ]);
 
   const onClickH2Button = useCallback(() => {
@@ -174,7 +185,15 @@ function ToolBarPlugin() {
         <TbCode />
       </ToolBarButton>
       <br />
-      <ImageInsertModalWithOpenButton />
+      <CommonModalProvider>
+        <CommonModalOpenButton
+          isModalOpenable={isSelectedParagraphNode}
+          openFailMessage="画像を挿入できるノードを選択してください"
+        >
+          画像を挿入
+        </CommonModalOpenButton>
+        <ImageInsertModal />
+      </CommonModalProvider>
       <br />
       <p>選択中の要素：{selectedNodeType}</p>
       <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>

@@ -1,4 +1,5 @@
 export const supportedNodes = [
+  'root',
   'h1',
   'h2',
   'h3',

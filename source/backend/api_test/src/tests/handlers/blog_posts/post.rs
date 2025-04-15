@@ -43,13 +43,22 @@ mod helper {
       contents: vec![
         BlogPostContent::Paragraph(ParagraphBlock {
           id: Uuid::new_v4(),
-          text: vec![RichText {
-            text: "これはテスト用の文字列です。".to_string(),
-            styles: Style {
-              bold: true,
-              inline_code: true,
+          text: vec![
+            RichText {
+              text: "これはテスト用の文字列です。".to_string(),
+              styles: Style {
+                bold: true,
+                inline_code: true,
+              },
             },
-          }],
+            RichText {
+              text: "これはテスト用の文字列その2です。".to_string(),
+              styles: Style {
+                bold: false,
+                inline_code: false,
+              },
+            },
+          ],
           type_field: "paragraph".to_string(),
         }),
         BlogPostContent::H2(H2Block {

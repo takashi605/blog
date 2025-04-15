@@ -12,6 +12,7 @@ import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPlugin';
 import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
+import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);
@@ -36,6 +37,7 @@ function BlogPostEditor() {
       <HistoryPlugin />
       <ImageRegister />
       <CodeHighlightPlugin />
+      <TreeViewPlugin />
     </CustomizedLexicalComposer>
   );
 }
