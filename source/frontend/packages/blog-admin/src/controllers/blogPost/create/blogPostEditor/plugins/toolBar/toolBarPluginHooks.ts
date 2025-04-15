@@ -9,6 +9,7 @@ import type { LexicalNode } from 'lexical';
 import {
   $createParagraphNode,
   $getSelection,
+  $isParagraphNode,
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
@@ -63,8 +64,19 @@ export function useSelectedNode() {
 
     return targetNode;
   }
+  function $isParagraphNodeInSelection(): boolean {
+    const selectedNode = $getSelectedNode();
+    if ($isParagraphNode(selectedNode)) {
+      return true;
+    }
+    return false;
+  }
 
-  return { $getElementTypeOfSelected, $getSelectionTopLevelElement } as const;
+  return {
+    $getElementTypeOfSelected,
+    $getSelectionTopLevelElement,
+    $isParagraphNodeInSelection,
+  } as const;
 
   /* 以下ヘルパー関数 */
   function $getSelectedNode() {
