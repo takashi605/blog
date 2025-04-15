@@ -3,13 +3,11 @@ import { useCallback, useState } from 'react';
 import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import CommonModal from '../../../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../../../components/modal/CommonModalCloseButton';
-import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
-import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
 import ImageListProvider from '../../../../../images/list/ImageListProvider';
 import ImagePicker from '../../../../../images/pick/ImagePicker';
 import { INSERT_IMAGE_COMMAND } from '../customNodes/image/InsertImageCommand';
 
-function ImageInsertModalWithOpenButton() {
+function ImageInsertModal() {
   const [editor] = useLexicalComposerContext();
   const [selectedImage, setSelectedImage] = useState<ImageDTO | null>(null);
 
@@ -32,20 +30,17 @@ function ImageInsertModalWithOpenButton() {
 
   return (
     <>
-      <CommonModalProvider>
-        <CommonModalOpenButton>画像を挿入</CommonModalOpenButton>
-        <CommonModal>
-          <ImageListProvider>
-            <ImagePicker onChange={onChangePickerHandler} name="imageContent" />
-          </ImageListProvider>
-          <button type="button" onClick={onClickInsertImageButton}>
-            挿入
-          </button>
-          <CommonModalCloseButton>閉じる</CommonModalCloseButton>
-        </CommonModal>
-      </CommonModalProvider>
+      <CommonModal>
+        <ImageListProvider>
+          <ImagePicker onChange={onChangePickerHandler} name="imageContent" />
+        </ImageListProvider>
+        <button type="button" onClick={onClickInsertImageButton}>
+          挿入
+        </button>
+        <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+      </CommonModal>
     </>
   );
 }
 
-export default ImageInsertModalWithOpenButton;
+export default ImageInsertModal;
