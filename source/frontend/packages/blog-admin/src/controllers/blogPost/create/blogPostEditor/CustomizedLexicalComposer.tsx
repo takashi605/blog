@@ -5,20 +5,20 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ParagraphNode, TextNode } from 'lexical';
-import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
-import { ImageNode } from './plugins/customNodes/image/ImageNode';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-rust'
+import 'prism-themes/themes/prism-vsc-dark-plus.css';
 import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-css-extras';
-import 'prismjs/components/prism-scss';
-import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-markup';
 import 'prismjs/components/prism-markup-templating';
-import 'prism-themes/themes/prism-vsc-dark-plus.css';
+import 'prismjs/components/prism-rust';
+import 'prismjs/components/prism-scss';
+import 'prismjs/components/prism-typescript';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
+import { ImageNode } from './plugins/customNodes/image/ImageNode';
 
 const theme = {
   code: 'editor-code',
