@@ -29,7 +29,6 @@ function BlogPostEditor() {
     <CustomizedLexicalComposer>
       <RichTextPlugin
         contentEditable={<ContentEditable className={styles.contentEditable} />}
-        placeholder={<div>Enter some text...</div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
       <ToolBarPlugin />

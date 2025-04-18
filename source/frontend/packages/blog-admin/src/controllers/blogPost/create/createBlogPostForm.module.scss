@@ -1,7 +1,12 @@
+.form {
+  margin-bottom: 10px;
+}
+
 .buttons {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
   flex-direction: row-reverse;
+  margin-bottom: 10px;
 }
 
 .submitButton {
@@ -17,3 +22,18 @@
   border-radius: 4px;
   cursor: pointer;
 }
+.title {
+  display: flex;
+  flex-direction: column;
+}
+.titleInput {
+  width: 100%;
+  padding: 2px;
+  border-bottom: 1px solid #dcdcdc;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #333;
+  }
+}
+
