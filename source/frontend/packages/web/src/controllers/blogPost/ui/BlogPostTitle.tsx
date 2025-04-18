@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import styles from './blogPostTitle.module.scss';
+import styles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 
 type BlogPostTitleProps = {
   children: React.ReactNode;

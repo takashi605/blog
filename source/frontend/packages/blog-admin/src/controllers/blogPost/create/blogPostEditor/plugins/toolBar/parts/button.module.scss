@@ -1,10 +1,10 @@
 .button {
-  background-color: #f8f8f8;
+  background-color: #d3d3d3;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   padding: 4px 6px;
-  margin: 0 4px;
+  margin: 0;
 
   &[aria-checked="true"] {
     background-color: #ddd;

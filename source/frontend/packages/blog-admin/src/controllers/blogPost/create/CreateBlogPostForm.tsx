@@ -5,12 +5,14 @@ import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import {
   CreateBlogPostUseCase,
   type BlogPostDTOForCreate,
 } from '../../../usecases/create/createBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import styles from './createBlogPostForm.module.scss';
 import { formDataToDTO } from './helper/formDataToDTO';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
@@ -62,24 +64,39 @@ function CreateBlogPostForm() {
   return (
     <>
       <FormProvider {...form}>
-        <form role="form" onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="title">タイトル</label>
-          <input id="title" {...register('title')} />
-          <br />
+        <form
+          className={styles.form}
+          role="form"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className={styles.buttons}>
+            <button className={styles.submitButton} type="submit">
+              投稿
+            </button>
 
-          <CommonModalProvider>
-            <ThumbnailPickModalWithOpenButton />
-          </CommonModalProvider>
-          <br />
+            <CommonModalProvider>
+              <ThumbnailPickModalWithOpenButton />
+            </CommonModalProvider>
+          </div>
 
-          <button type="submit">投稿</button>
+          <div className={styles.title}>
+            <label htmlFor="title">タイトル</label>
+            <input
+              className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
+              id="title"
+              {...register('title')}
+            />
+          </div>
         </form>
 
         <ThumbnailPreview />
 
-        <ContentsDTOSetterContext.Provider value={setContentsDTO}>
-          <BlogPostEditor />
-        </ContentsDTOSetterContext.Provider>
+        <div>
+          <h2>内容</h2>
+          <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+            <BlogPostEditor />
+          </ContentsDTOSetterContext.Provider>
+        </div>
       </FormProvider>
     </>
   );
