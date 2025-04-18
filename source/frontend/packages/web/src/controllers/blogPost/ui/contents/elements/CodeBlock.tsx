@@ -5,6 +5,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type { CodeBlockDTO } from 'service/src/blogPostService/dto/contentDTO';
 import CopyButton from '../../../../../components/buttons/CopyButton';
 import styles from './codeBlock.module.scss';
+import viewerStyles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 type CodeBlockProps = {
   codeBlockData: CodeBlockDTO;
@@ -27,6 +28,7 @@ function CodeBlock({ codeBlockData }: CodeBlockProps) {
           useInlineStyles={false}
           language={codeBlockData.language}
           PreTag="div"
+          className={viewerStyles.codeBlock}
         >
           {codeBlockData.code}
         </SyntaxHighlighter>

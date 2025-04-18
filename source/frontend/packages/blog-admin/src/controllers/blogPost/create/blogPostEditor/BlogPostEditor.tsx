@@ -13,6 +13,7 @@ import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPl
 import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
+import styles from './blogPostEditor.module.scss';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);
@@ -28,7 +29,7 @@ function BlogPostEditor() {
     <CustomizedLexicalComposer>
       <ToolBarPlugin />
       <RichTextPlugin
-        contentEditable={<ContentEditable />}
+        contentEditable={<ContentEditable className={styles.contentEditable} />}
         placeholder={<div>Enter some text...</div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
