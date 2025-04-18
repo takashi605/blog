@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCommonModalContext } from './CommonModalProvider';
+import styles from './commonModalOpenButton.module.scss';
 
 type CommonModalOpenButtonProps = {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ function CommonModalOpenButton({
 
   return (
     <>
-      <button type="button" onClick={openModalHandler}>
+      <button className={styles.button} type="button" onClick={openModalHandler}>
         {children}
       </button>
       {failOpen && <p>{openFailMessage}</p>}

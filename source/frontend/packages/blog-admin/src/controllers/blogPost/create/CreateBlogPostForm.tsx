@@ -14,6 +14,7 @@ import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import { formDataToDTO } from './helper/formDataToDTO';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
+import styles from './createBlogPostForm.module.scss';
 
 export type CreateBlogPostFormData = {
   title: string;
@@ -63,17 +64,17 @@ function CreateBlogPostForm() {
     <>
       <FormProvider {...form}>
         <form role="form" onSubmit={handleSubmit(onSubmit)}>
-          <button type="submit">投稿</button>
-          <br />
+          <div className={styles.buttons}>
+            <button className={styles.submitButton} type="submit">投稿</button>
+
+            <CommonModalProvider>
+              <ThumbnailPickModalWithOpenButton />
+            </CommonModalProvider>
+            <br />
+          </div>
 
           <label htmlFor="title">タイトル</label>
           <input id="title" {...register('title')} />
-          <br />
-
-
-          <CommonModalProvider>
-            <ThumbnailPickModalWithOpenButton />
-          </CommonModalProvider>
         </form>
 
         <ThumbnailPreview />
