@@ -63,16 +63,17 @@ function CreateBlogPostForm() {
     <>
       <FormProvider {...form}>
         <form role="form" onSubmit={handleSubmit(onSubmit)}>
+          <button type="submit">投稿</button>
+          <br />
+
           <label htmlFor="title">タイトル</label>
           <input id="title" {...register('title')} />
           <br />
 
+
           <CommonModalProvider>
             <ThumbnailPickModalWithOpenButton />
           </CommonModalProvider>
-          <br />
-
-          <button type="submit">投稿</button>
         </form>
 
         <ThumbnailPreview />

@@ -194,10 +194,6 @@ function ToolBarPlugin() {
         </CommonModalOpenButton>
         <ImageInsertModal />
       </CommonModalProvider>
-      <br />
-      <p>選択中の要素：{selectedNodeType}</p>
-      <p>選択中のテキスト：{isBoldSelected ? '太字' : '太字ではない'}</p>
-      <br />
     </div>
   );
 }
