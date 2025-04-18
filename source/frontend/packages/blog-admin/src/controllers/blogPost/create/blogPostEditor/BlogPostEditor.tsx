@@ -27,12 +27,12 @@ function BlogPostEditor() {
 
   return (
     <CustomizedLexicalComposer>
-      <ToolBarPlugin />
       <RichTextPlugin
         contentEditable={<ContentEditable className={styles.contentEditable} />}
         placeholder={<div>Enter some text...</div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <ToolBarPlugin />
       <MarkdownShortcutPlugin />
       <OnChangePlugin onChange={onChange} />
       <HistoryPlugin />

@@ -15,6 +15,7 @@ import {
   useUpdateBlockType,
 } from './toolBarPluginHooks';
 import type { SupportedNodeType } from './types/supportedNodeType';
+import styles from './toolBarPlugin.module.scss';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -128,72 +129,76 @@ function ToolBarPlugin() {
   }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
   return (
-    <div>
-      <ToolBarButton
-        onClick={onClickH2Button}
-        checked={selectedNodeType === 'h2'}
-        ariaLabel="h2"
-      >
-        <TbH2 />
-      </ToolBarButton>
-      <ToolBarButton
-        onClick={onClickH3Button}
-        checked={selectedNodeType === 'h3'}
-        ariaLabel="h3"
-      >
-        <TbH3 />
-      </ToolBarButton>
-      <ToolBarButton
-        onClick={onClickCodeButton}
-        checked={selectedNodeType === 'code'}
-        ariaLabel="code"
-      >
-        <TbSourceCode />
-      </ToolBarButton>
-      {selectedNodeType === 'code' && (
-        <>
-          <select
-            aria-label="code languages"
-            value={codeLanguage}
-            onChange={(event) =>
-              editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
-            }
-          >
-            <option value="">select...</option>
-            {codeLanguagesOptions.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-          <MdExpandMore />
-        </>
-      )}
-      <br />
-      <ToolBarButton
-        onClick={onClickBoldButton}
-        checked={isBoldSelected}
-        ariaLabel="bold"
-      >
-        <TbBold />
-      </ToolBarButton>
-      <ToolBarButton
-        onClick={$toggleInlineCodeInSelection}
-        checked={isInlineCodeSelected}
-        ariaLabel="inline-code"
-      >
-        <TbCode />
-      </ToolBarButton>
-      <br />
-      <CommonModalProvider>
-        <CommonModalOpenButton
-          isModalOpenable={isSelectedParagraphNode}
-          openFailMessage="画像を挿入できるノードを選択してください"
+    <div className={styles.toolBar}>
+      <div className={styles.toolBarButtons}>
+        <ToolBarButton
+          onClick={onClickH2Button}
+          checked={selectedNodeType === 'h2'}
+          ariaLabel="h2"
         >
-          画像を挿入
-        </CommonModalOpenButton>
-        <ImageInsertModal />
-      </CommonModalProvider>
+          <TbH2 />
+        </ToolBarButton>
+        <ToolBarButton
+          onClick={onClickH3Button}
+          checked={selectedNodeType === 'h3'}
+          ariaLabel="h3"
+        >
+          <TbH3 />
+        </ToolBarButton>
+        <ToolBarButton
+          onClick={onClickCodeButton}
+          checked={selectedNodeType === 'code'}
+          ariaLabel="code"
+        >
+          <TbSourceCode />
+        </ToolBarButton>
+        {selectedNodeType === 'code' && (
+          <>
+            <select
+              aria-label="code languages"
+              value={codeLanguage}
+              onChange={(event) =>
+                editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
+              }
+            >
+              <option value="">select...</option>
+              {codeLanguagesOptions.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+            <MdExpandMore />
+          </>
+        )}
+      </div>
+      <div className={styles.toolBarButtons}>
+        <ToolBarButton
+          onClick={onClickBoldButton}
+          checked={isBoldSelected}
+          ariaLabel="bold"
+        >
+          <TbBold />
+        </ToolBarButton>
+        <ToolBarButton
+          onClick={$toggleInlineCodeInSelection}
+          checked={isInlineCodeSelected}
+          ariaLabel="inline-code"
+        >
+          <TbCode />
+        </ToolBarButton>
+      </div>
+      <div className={styles.toolBarButtons}>
+        <CommonModalProvider>
+          <CommonModalOpenButton
+            isModalOpenable={isSelectedParagraphNode}
+            openFailMessage="画像を挿入できるノードを選択してください"
+          >
+            画像を挿入
+          </CommonModalOpenButton>
+          <ImageInsertModal />
+        </CommonModalProvider>
+      </div>
     </div>
   );
 }
