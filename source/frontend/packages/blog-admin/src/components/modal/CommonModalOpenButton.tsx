@@ -29,7 +29,11 @@ function CommonModalOpenButton({
 
   return (
     <>
-      <button className={styles.button} type="button" onClick={openModalHandler}>
+      <button
+        className={styles.button}
+        type="button"
+        onClick={openModalHandler}
+      >
         {children}
       </button>
       {failOpen && <p>{openFailMessage}</p>}

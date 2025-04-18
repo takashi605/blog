@@ -8,12 +8,12 @@ import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
 import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
+import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPlugin';
 import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
-import styles from './blogPostEditor.module.scss';
 
 function BlogPostEditor() {
   const setContentsDTO = useContext(ContentsDTOSetterContext);

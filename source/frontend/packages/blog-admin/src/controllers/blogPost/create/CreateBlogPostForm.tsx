@@ -80,9 +80,7 @@ function CreateBlogPostForm() {
           </div>
 
           <div className={styles.title}>
-            <label htmlFor="title">
-              タイトル
-            </label>
+            <label htmlFor="title">タイトル</label>
             <input
               className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
               id="title"

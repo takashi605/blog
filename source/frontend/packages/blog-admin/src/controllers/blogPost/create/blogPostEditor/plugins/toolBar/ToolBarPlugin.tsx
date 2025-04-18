@@ -8,6 +8,7 @@ import CommonModalProvider from '../../../../../../components/modal/CommonModalP
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import ImageInsertModal from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
+import styles from './toolBarPlugin.module.scss';
 import {
   useCodeLanguage,
   useSelectedNode,
@@ -15,7 +16,6 @@ import {
   useUpdateBlockType,
 } from './toolBarPluginHooks';
 import type { SupportedNodeType } from './types/supportedNodeType';
-import styles from './toolBarPlugin.module.scss';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -158,7 +158,10 @@ function ToolBarPlugin() {
               aria-label="code languages"
               value={codeLanguage}
               onChange={(event) =>
-                editor.dispatchCommand(CODE_LANGUAGE_COMMAND, event.target.value)
+                editor.dispatchCommand(
+                  CODE_LANGUAGE_COMMAND,
+                  event.target.value,
+                )
               }
             >
               <option value="">select...</option>
