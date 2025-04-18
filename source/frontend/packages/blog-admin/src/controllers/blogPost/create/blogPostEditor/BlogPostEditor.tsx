@@ -11,6 +11,7 @@ import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPlugin';
+import CodeLanguageClassPlugin from './plugins/customNodes/codeBlock/CodeLanguageClassPlugin';
 import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
@@ -37,6 +38,7 @@ function BlogPostEditor() {
       <HistoryPlugin />
       <ImageRegister />
       <CodeHighlightPlugin />
+      <CodeLanguageClassPlugin />
       <TreeViewPlugin />
     </CustomizedLexicalComposer>
   );
