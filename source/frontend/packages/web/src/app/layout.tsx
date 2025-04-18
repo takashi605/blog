@@ -2,6 +2,7 @@ import Header from '@/components/topLayout/header/Header';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import styles from './layout.module.scss';
+import 'prism-themes/themes/prism-vsc-dark-plus.css';
 
 // フォントの定義
 const inter = Inter({ subsets: ['latin'] });

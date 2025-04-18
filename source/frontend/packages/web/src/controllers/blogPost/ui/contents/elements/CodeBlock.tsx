@@ -24,6 +24,7 @@ function CodeBlock({ codeBlockData }: CodeBlockProps) {
         </div>
         <SyntaxHighlighter
           style={vscDarkPlus}
+          useInlineStyles={false}
           language={codeBlockData.language}
           PreTag="div"
         >
