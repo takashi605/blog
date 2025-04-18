@@ -1,9 +1,10 @@
 import CreateBlogPostForm from '@/controllers/blogPost/create/CreateBlogPostForm';
+import styles from './page.module.scss';
 
 export default function CreateBlogPostPage() {
   return (
     <div>
-      <h2>記事投稿ページ</h2>
+      <h1 className={styles.pageTitle}>記事投稿ページ</h1>
       <CreateBlogPostForm />
     </div>
   );

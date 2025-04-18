@@ -21,7 +21,7 @@ import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import { ImageNode } from './plugins/customNodes/image/ImageNode';
 
 const theme = {
-  code: 'editor-code',
+  code: `language-js ${styles.codeBlock}`,
   heading: {
     h2: styles.h2,
     h3: styles.h3,

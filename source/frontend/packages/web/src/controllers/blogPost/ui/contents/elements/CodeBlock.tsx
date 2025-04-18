@@ -3,6 +3,7 @@ import { MdCopyAll } from 'react-icons/md';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type { CodeBlockDTO } from 'service/src/blogPostService/dto/contentDTO';
+import viewerStyles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import CopyButton from '../../../../../components/buttons/CopyButton';
 import styles from './codeBlock.module.scss';
 
@@ -24,8 +25,10 @@ function CodeBlock({ codeBlockData }: CodeBlockProps) {
         </div>
         <SyntaxHighlighter
           style={vscDarkPlus}
+          useInlineStyles={false}
           language={codeBlockData.language}
           PreTag="div"
+          className={viewerStyles.codeBlock}
         >
           {codeBlockData.code}
         </SyntaxHighlighter>
