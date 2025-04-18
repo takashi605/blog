@@ -231,8 +231,8 @@ Then('エディタ内にコードブロックが存在している', async funct
     hasText: 'const a = 1',
   });
 
-  // class 属性に language-javascript が含まれているかで判別
-  const codeBlock = richTextEditor.locator('.language-javascript');
+  // class 属性に language-js が含まれているかで判別
+  const codeBlock = richTextEditor.locator('.language-js');
   await expect(codeBlock).toBeVisible({ timeout: 10000 });
 });
 
@@ -249,7 +249,7 @@ Then('コードブロックの言語データ属性が「js」になっている
   const page = playwrightHelper.getPage();
 
   const richTextEditor = page.locator('[contenteditable="true"]');
-  const codeBlock = richTextEditor.locator('.language-javascript');
+  const codeBlock = richTextEditor.locator('.language-js');
   const languageDataAttribute = await codeBlock.getAttribute('data-language');
 
   expect(languageDataAttribute).toBe('js');
