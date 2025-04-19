@@ -114,8 +114,8 @@ When('【人気記事選択】トップページへ遷移する', async function
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
 
-  // 2秒の revalidate を待つ
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // 2秒の revalidate を待つために、念のため4秒待機
+  await new Promise((resolve) => setTimeout(resolve, 4000));
 
   // トップページに遷移
   const page = playwrightHelper.getPage();
