@@ -39,7 +39,7 @@ pub async fn fetch_blog_post_by_id(id: Uuid) -> Result<BlogPostRecord> {
 }
 
 pub async fn fetch_all_latest_blog_posts_records() -> Result<Vec<BlogPostRecord>> {
-  let posts = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts order by post_date asc")
+  let posts = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts order by post_date desc")
     .fetch_all(&*POOL)
     .await?;
   Ok(posts)

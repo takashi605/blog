@@ -71,7 +71,7 @@ mod tests {
     for i in 0..blog_post_resp.len() - 1 {
       let current_post = &blog_post_resp[i];
       let next_post = &blog_post_resp[i + 1];
-      assert!(current_post.post_date <= next_post.post_date);
+      assert!(current_post.post_date >= next_post.post_date);
     }
     Ok(())
   }
