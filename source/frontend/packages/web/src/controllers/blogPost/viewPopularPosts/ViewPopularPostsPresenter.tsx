@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPopularPostsPresenter.module.scss';
@@ -16,16 +17,20 @@ function ViewPopularPostsPresenter({
         <h2 className={styles.sectionTitle}>人気記事</h2>
         <div className={styles.sectionDescription}>
           <p>ここ最近で人気の記事です。</p>
-          <p>大体3ヶ月に1回くらい更新します。</p>
+          <p>大体3ヶ月に1回くらい更新されます。</p>
         </div>
       </div>
       {blogPostsDTO.map((blogPostDTO) => (
-        <div className={styles.flexItem} key={blogPostDTO.id}>
+        <Link
+          href={`posts/${blogPostDTO.id}`}
+          className={`${styles.linkToPost} ${styles.flexItem}`}
+          key={blogPostDTO.id}
+        >
           <div className={styles.thumbnail}>
             <Thumbnail path={blogPostDTO.thumbnail.path} />
           </div>
           <h3 className={styles.postTitle}>{blogPostDTO.title}</h3>
-        </div>
+        </Link>
       ))}
     </div>
   );
