@@ -125,7 +125,28 @@ When('【トップテックピック記事選択】トップページへ遷移�
 
   // トップページに遷移
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.TEST_TARGET_URL}`);
+
+  await page.goto(process.env.TEST_TARGET_URL!);
+  await expect
+    .poll(
+      async () => {
+        await page.reload();
+        const section = new HomePage().getTopTechPickSection();
+        return (
+          await section
+            .getByRole('heading', {
+              level: 1,
+              name: updatedTopTechPickPostTitle,
+            })
+            .innerText()
+        ).trim();
+      },
+      {
+        timeout: 15_000,
+        intervals: [1_000],
+      },
+    )
+    .toBe(updatedTopTechPickPostTitle);
 });
 Then(
   '【トップテックピック記事選択】トップテックピック記事のセクションに新規設定したトップテックピック記事が表示されている',
