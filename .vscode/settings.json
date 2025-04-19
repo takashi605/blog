@@ -29,6 +29,7 @@
     "funcs",
     "nonroot",
     "sqlx",
+    "Tecca",
     "Usecase",
     "usecases"
   ],

@@ -5,11 +5,11 @@ import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
 import { SelectPopularPostsUseCase } from '../../../../usecases/select/selectPopularPosts';
+import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
+import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
+import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
+import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
 import { usePopularPostListContext } from '../list/PopularPostListProvider';
-import PopularPostsForm from './form/PopularPostsForm';
-import type { PopularPostsFormValues } from './form/PopularPostsFormProvider';
-import PopularPostsFormProvider from './form/PopularPostsFormProvider';
-import { usePopularPostsCheckbox } from './form/usePopularPostsCheckbox';
 
 function PopularPostSelectModalWithOpenButton() {
   return (
@@ -25,9 +25,9 @@ function Modal() {
     usePopularPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
 
-  const { selectedBlogPosts } = usePopularPostsCheckbox();
+  const { selectedBlogPosts } = usePostsCheckboxes();
 
-  const onSubmit = async (data: PopularPostsFormValues) => {
+  const onSubmit = async (data: PostsCheckboxesFormValues) => {
     if (!process.env.NEXT_PUBLIC_API_URL) {
       throw new Error('API の URL が設定されていません');
     }
@@ -35,7 +35,7 @@ function Modal() {
       process.env.NEXT_PUBLIC_API_URL,
     );
     const selectPopularPostsUseCase = new SelectPopularPostsUseCase(
-      selectedBlogPosts(data.popularPosts),
+      selectedBlogPosts(data.checkedPosts),
       blogPostRepository,
     );
     try {
@@ -50,13 +50,19 @@ function Modal() {
 
   return (
     <CommonModal>
-      <PopularPostsFormProvider
+      <PostCheckboxesFormProvider
         defaultValues={{
-          popularPosts: getAllPopularPosts().map((post) => post.id),
+          checkedPosts: getAllPopularPosts().map((post) => post.id),
         }}
       >
-        <PopularPostsForm onSubmit={onSubmit} />
-      </PopularPostsFormProvider>
+        <h2>人気記事を選択</h2>
+        <PostCheckboxes
+          onSubmit={onSubmit}
+          validate={(value: string[]) =>
+            value.length === 3 || '人気記事は3件選択してください'
+          }
+        />
+      </PostCheckboxesFormProvider>
       {isUploadSuccess && <p>人気記事を更新しました。</p>}
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>

@@ -1,4 +1,5 @@
 import Header from '@/components/topLayout/header/Header';
+import 'destyle.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import 'prism-themes/themes/prism-vsc-dark-plus.css';
@@ -38,6 +39,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         <main className={styles.main}>{children}</main>
+        <footer>
+          <div className={styles.footer}>
+            <small>© 2025 TeccaBlog. All rights reserved.</small>
+          </div>
+        </footer>
       </body>
     </html>
   );

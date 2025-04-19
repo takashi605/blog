@@ -6,16 +6,17 @@
   position: absolute;
   right: 0;
   z-index: 1;
-  padding: 8px;
+  padding: 8px 0;
   cursor: pointer;
   color: white;
   width: 30px;
   height: 30px;
 }
 .codeTitle {
+  display: inline-block;
   background-color: #333;
   color: #fff;
-  padding: 8px;
+  padding: 6px 8px;
   font-size: 14px;
   font-weight: 500;
   border-radius: 4px 4px 0 0;

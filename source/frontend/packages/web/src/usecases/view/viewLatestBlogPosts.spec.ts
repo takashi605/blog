@@ -18,44 +18,44 @@ describe('viewLatestBlogPosts', () => {
     expect(fetchLatestsMock).toHaveBeenCalled();
 
     expect(blogPosts[0].id).toBeDefined();
-    expect(blogPosts[0].title).toBe('dto1記事タイトル');
-    expect(blogPosts[0].postDate).toBe('2021/01/01');
-    expect(blogPosts[0].lastUpdateDate).toBe('2021/01/02');
-    expect(blogPosts[0].thumbnail.path).toBe('path/to/thumbnail1');
+    expect(blogPosts[0].title).toBe('dto2記事タイトル');
+    expect(blogPosts[0].postDate).toBe('2021/02/01');
+    expect(blogPosts[0].lastUpdateDate).toBe('2021/02/02');
+    expect(blogPosts[0].thumbnail.path).toBe('path/to/thumbnail2');
 
     if (blogPosts[0].contents[0].type !== ContentType.H2) {
       throw new Error('ContentType が H2 ではありません');
     }
     expect(blogPosts[0].contents[0].id).toBeDefined();
     expect(blogPosts[0].contents[0].type).toBe('h2');
-    expect(blogPosts[0].contents[0].text).toBe('h2見出し1');
+    expect(blogPosts[0].contents[0].text).toBe('h2見出し2');
 
     if (blogPosts[0].contents[1].type !== ContentType.H3) {
       throw new Error('ContentType が H3 ではありません');
     }
     expect(blogPosts[0].contents[1].id).toBeDefined();
     expect(blogPosts[0].contents[1].type).toBe('h3');
-    expect(blogPosts[0].contents[1].text).toBe('h3見出し1');
+    expect(blogPosts[0].contents[1].text).toBe('h3見出し2');
 
     expect(blogPosts[1].id).toBeDefined();
-    expect(blogPosts[1].title).toBe('dto2記事タイトル');
-    expect(blogPosts[1].postDate).toBe('2021/02/01');
-    expect(blogPosts[1].lastUpdateDate).toBe('2021/02/02');
-    expect(blogPosts[1].thumbnail.path).toBe('path/to/thumbnail2');
+    expect(blogPosts[1].title).toBe('dto1記事タイトル');
+    expect(blogPosts[1].postDate).toBe('2021/01/01');
+    expect(blogPosts[1].lastUpdateDate).toBe('2021/01/02');
+    expect(blogPosts[1].thumbnail.path).toBe('path/to/thumbnail1');
 
     if (blogPosts[1].contents[0].type !== ContentType.H2) {
       throw new Error('ContentType が H2 ではありません');
     }
     expect(blogPosts[1].contents[0].id).toBeDefined();
     expect(blogPosts[1].contents[0].type).toBe('h2');
-    expect(blogPosts[1].contents[0].text).toBe('h2見出し2');
+    expect(blogPosts[1].contents[0].text).toBe('h2見出し1');
 
     if (blogPosts[1].contents[1].type !== ContentType.H3) {
       throw new Error('ContentType が H3 ではありません');
     }
     expect(blogPosts[1].contents[1].id).toBeDefined();
     expect(blogPosts[1].contents[1].type).toBe('h3');
-    expect(blogPosts[1].contents[1].text).toBe('h3見出し2');
+    expect(blogPosts[1].contents[1].text).toBe('h3見出し1');
   });
 });
 
@@ -90,5 +90,5 @@ function createFetchedDTOMock(): BlogPostDTO[] {
     ],
   };
 
-  return [dto1, dto2];
+  return [dto2, dto1];
 }

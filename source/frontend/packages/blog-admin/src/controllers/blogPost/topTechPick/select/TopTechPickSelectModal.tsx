@@ -5,11 +5,11 @@ import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
 import { SelectTopTechPickPostUseCase } from '../../../../usecases/select/selectTopTechPickPost';
+import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
+import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
+import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
+import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
 import { useTopTechPickPostViewContext } from '../view/TopTechPickViewProvider';
-import TopTechPickForm from './form/TopTechPickForm';
-import type { TopTechPickFormValues } from './form/TopTechPickFormProvider';
-import TopTechPickFormProvider from './form/TopTechPickFormProvider';
-import { useTopTechPickPostsCheckbox } from './form/useTopTechPickCheckbox';
 
 function TopTechPickSelectModalWithOpenButton() {
   return (
@@ -27,9 +27,9 @@ function Modal() {
     useTopTechPickPostViewContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
 
-  const { findSelectedBlogPosts } = useTopTechPickPostsCheckbox();
+  const { selectedBlogPosts } = usePostsCheckboxes();
 
-  const onSubmit = async (data: TopTechPickFormValues) => {
+  const onSubmit = async (data: PostsCheckboxesFormValues) => {
     if (!process.env.NEXT_PUBLIC_API_URL) {
       throw new Error('API の URL が設定されていません');
     }
@@ -37,14 +37,14 @@ function Modal() {
       process.env.NEXT_PUBLIC_API_URL,
     );
 
-    const selectedBlogPosts = findSelectedBlogPosts(data.topTechPickPosts);
-    if (selectedBlogPosts.length !== 1) {
+    const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
+    if (selectedTopTechPickBlogPosts.length !== 1) {
       alert('トップテックピック記事は1つだけ選択してください。');
       return;
     }
 
     const selectTopTechPickPostsUseCase = new SelectTopTechPickPostUseCase(
-      selectedBlogPosts[0],
+      selectedTopTechPickBlogPosts[0],
       blogPostRepository,
     );
 
@@ -63,13 +63,20 @@ function Modal() {
 
   return (
     <CommonModal>
-      <TopTechPickFormProvider
+      <PostCheckboxesFormProvider
         defaultValues={{
-          topTechPickPosts: [getTopTechPickPost()?.id ?? ''],
+          checkedPosts: [getTopTechPickPost()?.id ?? ''],
         }}
       >
-        <TopTechPickForm onSubmit={onSubmit} />
-      </TopTechPickFormProvider>
+        <h2>ピックアップ記事を選択</h2>
+        <PostCheckboxes
+          onSubmit={onSubmit}
+          validate={(value: string[]) =>
+            value.length === 1 ||
+            'トップテック記事は必ず1つのみ選択してください'
+          }
+        />
+      </PostCheckboxesFormProvider>
       {isUploadSuccess && <p>トップテックピック記事を更新しました。</p>}
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
