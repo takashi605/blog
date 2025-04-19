@@ -8,7 +8,7 @@ import { SelectPopularPostsUseCase } from '../../../../usecases/select/selectPop
 import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
 import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
-import { usePostsCheckboxesCheckbox } from '../../select/checkboxes/usePostCheckboxes';
+import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
 import { usePopularPostListContext } from '../list/PopularPostListProvider';
 
 function PopularPostSelectModalWithOpenButton() {
@@ -25,7 +25,7 @@ function Modal() {
     usePopularPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
 
-  const { selectedBlogPosts } = usePostsCheckboxesCheckbox();
+  const { selectedBlogPosts } = usePostsCheckboxes();
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
     if (!process.env.NEXT_PUBLIC_API_URL) {
