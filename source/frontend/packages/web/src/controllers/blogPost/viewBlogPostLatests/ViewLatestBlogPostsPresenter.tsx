@@ -10,7 +10,7 @@ function ViewLatestBlogPostsPresenter({
   blogPosts,
 }: ViewLatestBlogPostsPresenterProps) {
   return (
-    <div>
+    <>
       <h2 className={styles.pageTitle}>新着記事</h2>
       <ul className={styles.blogPostList}>
         {blogPosts.map((blogPost) => (
@@ -23,7 +23,7 @@ function ViewLatestBlogPostsPresenter({
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 export default ViewLatestBlogPostsPresenter;
