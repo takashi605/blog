@@ -45,9 +45,13 @@
   font-family: "source-code-pro", monospace;
   background: #f5f2f0;
   color: #b6261e;
-  padding: 0.2em 0.4em;
+  padding: 2px 4px;
   border-radius: 4px;
-  font-size: 0.95em;
+  font-size: 0.8em;
+}
+
+.codeBlockContent {
+  margin: 15px 0;
 }
 
 .codeBlock {

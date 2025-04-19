@@ -47,13 +47,11 @@ When('サムネイル画像選択モーダルを開き、サムネイル画像�
   const modal = page.getByRole('dialog');
   await expect(modal).toBeVisible({ timeout: 10000 });
 
-  const radioButtonsInModal = modal.getByRole('radio');
-  const firstRadioButton = radioButtonsInModal.first();
-  await firstRadioButton.click();
 
-  // 対応する画像の src 属性を取得して変数に保持
+  // 対応する画像をクリックし、src 属性を取得して変数に保持
   const labelsInModal = modal.locator('label');
   const firstLabelInModal = labelsInModal.first();
+  await firstLabelInModal.click();
   selectedThumbnailImageSrc = await firstLabelInModal
     .locator('img')
     .getAttribute('src');
@@ -271,14 +269,9 @@ When('画像選択モーダルを開き、画像を選択する', async function
   const modal = page.getByRole('dialog');
   await expect(modal).toBeVisible({ timeout: 10000 });
 
-  const radioButtonsInModal = modal.getByRole('radio');
-  const firstRadioButton = radioButtonsInModal.first();
-  await firstRadioButton.click();
-
-  const imageInsertButton = modal.getByRole('button', {
-    name: '挿入',
-  });
-  await imageInsertButton.click();
+  const labelInModal = modal.locator('label')
+  const firstLabel = labelInModal.first();
+  await firstLabel.click();
 
   // 対応する画像の src 属性を取得して変数に保持
   const labelsInModal = modal.locator('label');
@@ -289,15 +282,18 @@ When('画像選択モーダルを開き、画像を選択する', async function
 
   // 選択した画像の src を保持
   selectedThumbnailImageSrc = selectedImageContentSrc;
+
+  // 画像を選択し、選択モーダルを閉じる
+  const imageInsertButton = modal.getByRole('button', {
+    name: '挿入',
+  });
+  await imageInsertButton.click();
+  await expect(modal).not.toBeVisible({ timeout: 10000 });
 });
 Then(
   'モーダルを閉じると、リッチテキストエディタ内に画像が表示されている',
   async function () {
     const page = playwrightHelper.getPage();
-    const modal = page.getByRole('dialog');
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
-
     const richTextEditor = page.locator('[contenteditable="true"]');
     const imageContent = richTextEditor.locator('img');
     await expect(imageContent).toBeVisible({ timeout: 10000 });

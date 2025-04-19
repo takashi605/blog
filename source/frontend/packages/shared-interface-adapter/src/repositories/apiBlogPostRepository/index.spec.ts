@@ -54,7 +54,7 @@ describe('apiBlogPostRepository', () => {
 
     for (let i = 0; i < resp.length - 1; i++) {
       expect(
-        new Date(resp[i].postDate) <= new Date(resp[i + 1].postDate),
+        new Date(resp[i].postDate) >= new Date(resp[i + 1].postDate),
       ).toBeTruthy();
     }
   });
@@ -65,9 +65,10 @@ describe('apiBlogPostRepository', () => {
     const resp = await apiRepository.fetchLatests(3);
     expect(resp.length).toBe(3);
 
+    // 取得した記事の投稿日が新しい順にソートされていることを確認
     for (let i = 0; i < resp.length - 1; i++) {
       expect(
-        new Date(resp[i].postDate) <= new Date(resp[i + 1].postDate),
+        new Date(resp[i].postDate) >= new Date(resp[i + 1].postDate),
       ).toBeTruthy();
     }
   });
