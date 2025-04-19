@@ -39,6 +39,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         <main className={styles.main}>{children}</main>
+        <footer>
+          <div className={styles.footer}>
+            <small>© 2025 TeccaBlog. All rights reserved.</small>
+          </div>
+        </footer>
       </body>
     </html>
   );
