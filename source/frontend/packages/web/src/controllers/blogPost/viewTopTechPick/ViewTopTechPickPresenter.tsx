@@ -31,7 +31,7 @@ function ViewTopTechPickPresenter({
           <div className={styles.contentSummaryMeta}>
             <time className={styles.postDate}>{blogPostDTO.postDate}</time>
             <Link
-              className={styles.linkToTopPage}
+              className={styles.linkToPost}
               href={`/posts/${blogPostDTO.id}`}
             >
               <span className={styles.linkText}>記事を見る</span>
