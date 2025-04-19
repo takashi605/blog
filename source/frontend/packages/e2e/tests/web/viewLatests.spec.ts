@@ -20,8 +20,9 @@ Then('ページタイトルが表示される', async function () {
 
 Then('複数の記事が表示される', async function () {
   const page = playwrightHelper.getPage();
+  const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = page.getByRole('listitem');
+  const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
   expect(count).toBeGreaterThan(1);
 });
