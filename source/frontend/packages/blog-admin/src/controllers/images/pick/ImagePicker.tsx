@@ -2,6 +2,7 @@
 import { CldImage } from 'next-cloudinary';
 import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { useImageList } from '../list/useImageList';
+import styles from './imagePicker.module.scss';
 
 type ImagePickerProps = {
   onChange: (
@@ -19,7 +20,7 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
   return (
     <>
       <h2>画像を選択</h2>
-      <ul>
+      <ul className={styles.imageList}>
         {getAllImages().map((image) => (
           <li key={image.id}>
             <input
@@ -34,8 +35,8 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
             <label htmlFor={image.id}>
               <CldImage
                 src={image.path}
-                width={500}
-                height={500}
+                width={200}
+                height={200}
                 alt="画像コンテンツ"
               />
               <p>{image.path}</p>

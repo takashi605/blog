@@ -1,0 +1,31 @@
+$primary: #87ceeb;
+
+.imageList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  li {
+    input {
+      display: none;
+
+      &:checked + label {
+        background-color: $primary;
+      }
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: transparentize($primary, 0.7);
+      }
+    }
+  }
+}
