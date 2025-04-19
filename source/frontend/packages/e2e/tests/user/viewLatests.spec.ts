@@ -100,7 +100,7 @@ Then('各記事は新着順で並んでいる', async function () {
   const resolvedPostDates = await Promise.all(postDates);
 
   for (let i = 0; i < resolvedPostDates.length - 1; i++) {
-    expect(resolvedPostDates[i] <= resolvedPostDates[i + 1]).toBeTruthy();
+    expect(resolvedPostDates[i] >= resolvedPostDates[i + 1]).toBeTruthy();
   }
 });
 
@@ -163,7 +163,7 @@ Then('新着記事は新着順で並んでいる', async function () {
   const resolvedPostDates = await Promise.all(postDates);
 
   for (let i = 0; i < resolvedPostDates.length - 1; i++) {
-    expect(resolvedPostDates[i] <= resolvedPostDates[i + 1]).toBeTruthy();
+    expect(resolvedPostDates[i] >= resolvedPostDates[i + 1]).toBeTruthy();
   }
 });
 
