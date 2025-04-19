@@ -121,7 +121,7 @@ When('【トップテックピック記事選択】トップページへ遷移�
   }
 
   // 2秒の revalidate を待つ
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   // トップページに遷移
   const page = playwrightHelper.getPage();

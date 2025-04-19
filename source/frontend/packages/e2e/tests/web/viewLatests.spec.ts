@@ -28,8 +28,9 @@ Then('複数の記事が表示される', async function () {
 
 Then('各記事に記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
+  const latestsSection = getLatestsSectionInPage(page)
 
-  const posts = page.getByRole('listitem');
+  const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
 
   // 各記事に対して h2 要素が存在するかを確認
@@ -44,8 +45,9 @@ Then('各記事に記事タイトルが表示される', async function () {
 
 Then('各記事に記事サムネイルが表示される', async function () {
   const page = playwrightHelper.getPage();
+  const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = page.getByRole('listitem');
+  const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
 
   // 各記事に対して image 要素が存在するかを確認
@@ -58,8 +60,9 @@ Then('各記事に記事サムネイルが表示される', async function () {
 
 Then('各記事に投稿日が表示される', async function () {
   const page = playwrightHelper.getPage();
+  const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = page.getByRole('listitem');
+  const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
 
   // 各記事に対して image 要素が存在するかを確認
@@ -74,8 +77,9 @@ Then('各記事に投稿日が表示される', async function () {
 
 Then('各記事は新着順で並んでいる', async function () {
   const page = playwrightHelper.getPage();
+  const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = page.getByRole('listitem');
+  const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
 
   // 各記事に対して投稿日時を取得し、Date型に変換
@@ -115,28 +119,28 @@ Given('トップページにアクセスして新着記事を閲覧する', asyn
 Then('新着記事3件分以上の記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
 
-  const latestsSection = getLatestsSectionInTopPage(page);
+  const latestsSection = getLatestsSectionInPage(page);
   const titles = latestsSection.locator('h3');
   expect(await titles.count()).toBeGreaterThanOrEqual(3);
 });
 Then('新着記事3件分以上の記事サムネイルが表示される', async function () {
   const page = playwrightHelper.getPage();
 
-  const latestsSection = getLatestsSectionInTopPage(page);
+  const latestsSection = getLatestsSectionInPage(page);
   const thumbnailImages = latestsSection.locator('img');
   expect(await thumbnailImages.count()).toBeGreaterThanOrEqual(3);
 });
 Then('新着記事3件分以上の投稿日が表示される', async function () {
   const page = playwrightHelper.getPage();
 
-  const latestsSection = getLatestsSectionInTopPage(page);
+  const latestsSection = getLatestsSectionInPage(page);
   const postDates = latestsSection.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
   expect(await postDates.count()).toBeGreaterThanOrEqual(3);
 });
 Then('新着記事は新着順で並んでいる', async function () {
   const page = playwrightHelper.getPage();
 
-  const latestsSection = getLatestsSectionInTopPage(page);
+  const latestsSection = getLatestsSectionInPage(page);
 
   const posts = latestsSection.getByRole('listitem');
   const count = await posts.count();
@@ -167,7 +171,7 @@ Then('新着記事は新着順で並んでいる', async function () {
   }
 });
 
-function getLatestsSectionInTopPage(page: Page) {
+function getLatestsSectionInPage(page: Page) {
   const latestsSectionTitle = page.locator('h2', { hasText: '新着記事' });
   return page.locator('section', { has: latestsSectionTitle });
 }

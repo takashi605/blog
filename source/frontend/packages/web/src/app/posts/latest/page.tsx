@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic';
 
 async function ViewBlogPost() {
   return (
-    <div>
+    <section>
       <ViewLatestBlogPostsController />
-    </div>
+    </section>
   );
 }
 
