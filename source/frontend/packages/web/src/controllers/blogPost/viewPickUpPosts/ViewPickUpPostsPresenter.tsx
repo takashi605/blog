@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPickUpPostsPresenter.module.scss';
@@ -20,12 +21,16 @@ function ViewPickUpPostsPresenter({
         </div>
       </div>
       {blogPostsDTO.map((blogPostDTO) => (
-        <div className={styles.flexItem} key={blogPostDTO.id}>
+        <Link
+          href={`/posts/${blogPostDTO.id}`}
+          className={`${styles.linkToPost} ${styles.flexItem}`}
+          key={blogPostDTO.id}
+        >
           <div className={styles.thumbnail}>
             <Thumbnail path={blogPostDTO.thumbnail.path} />
           </div>
           <h3 className={styles.postTitle}>{blogPostDTO.title}</h3>
-        </div>
+        </Link>
       ))}
     </div>
   );

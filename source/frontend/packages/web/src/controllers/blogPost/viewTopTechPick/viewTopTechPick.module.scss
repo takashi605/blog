@@ -8,6 +8,7 @@
 
 .contentSummary {
   display: flex;
+  gap: 40px;
 }
 
 .thumbnail {
@@ -20,13 +21,63 @@
   flex-basis: 55%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 20px;
-  gap: 10px;
+  justify-content: end;
+  gap: 30px;
 }
 
-.postDate {
-  font-family: source-han-serif-japanese, serif;
-  font-size: 64px;
-  font-weight: bold;
+.contentSummaryMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: end;
+  gap: 20px;
+
+  .postDate {
+    font-family: source-han-serif-japanese, serif;
+    font-size: 64px;
+    font-weight: bold;
+  }
+
+  .linkToPost {
+    position: relative;
+    flex: 0 0 auto;
+    width: 160px;
+    height: 2px;
+    margin-top: 29px;
+    background-color: #000000;
+    transition:
+      opacity 0.3s,
+      padding-left 0.3s;
+
+    &:hover {
+      opacity: 0.6;
+      padding-left: 10px;
+    }
+
+    // 右矢印
+    &:before {
+      content: "";
+      position: absolute;
+      top: calc(50% - 2px);
+      right: 0;
+      width: 45px;
+      height: 1px;
+      border-radius: 9999px;
+      background-color: #000000;
+      transform: rotate(45deg);
+      transform-origin: calc(100% - 2px) 50%;
+    }
+
+    .linkText {
+      position: absolute;
+      top: -100%;
+      transform: translateY(-100%);
+      width: 100%;
+      font-family: source-han-serif-japanese, serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #000000;
+      text-decoration: none;
+    }
+  }
 }

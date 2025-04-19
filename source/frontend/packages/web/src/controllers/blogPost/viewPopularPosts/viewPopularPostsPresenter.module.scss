@@ -22,6 +22,19 @@
     order: 4;
   }
 }
+
+.linkToPost {
+  transform: translateY(-0px);
+  opacity: 1;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+
+  &:hover {
+    opacity: 0.8;
+    transform: translateY(-5px);
+  }
+}
 .sectionCatchPhrases {
   font-family: p22-basala, sans-serif;
   font-size: 72px;

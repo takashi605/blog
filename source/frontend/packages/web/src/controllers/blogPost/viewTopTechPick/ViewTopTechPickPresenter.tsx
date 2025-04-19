@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import { useExcerpted } from '../hooks/useExcerpted';
@@ -27,7 +28,15 @@ function ViewTopTechPickPresenter({
         </div>
         <div className={styles.contentSummaryTexts}>
           <Paragraph richText={excerpted} />
-          <time className={styles.postDate}>{blogPostDTO.postDate}</time>
+          <div className={styles.contentSummaryMeta}>
+            <time className={styles.postDate}>{blogPostDTO.postDate}</time>
+            <Link
+              className={styles.linkToPost}
+              href={`/posts/${blogPostDTO.id}`}
+            >
+              <span className={styles.linkText}>記事を見る</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
