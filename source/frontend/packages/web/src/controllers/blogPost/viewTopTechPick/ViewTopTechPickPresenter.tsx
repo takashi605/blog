@@ -30,7 +30,10 @@ function ViewTopTechPickPresenter({
           <Paragraph richText={excerpted} />
           <div className={styles.contentSummaryMeta}>
             <time className={styles.postDate}>{blogPostDTO.postDate}</time>
-            <Link className={styles.linkToTopPage} href={`/posts/${blogPostDTO.id}`}>
+            <Link
+              className={styles.linkToTopPage}
+              href={`/posts/${blogPostDTO.id}`}
+            >
               <span className={styles.linkText}>記事を見る</span>
             </Link>
           </div>
