@@ -5,11 +5,11 @@ import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
 import { SelectPickUpPostsUseCase } from '../../../../usecases/select/selectPickUpPosts';
+import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
+import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
+import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
+import { usePostsCheckboxesCheckbox } from '../../select/checkboxes/usePostCheckboxes';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
-import PickUpPostsForm from './form/PickUpPostsForm';
-import type { PickUpPostsFormValues } from './form/PickUpPostsFormProvider';
-import PickUpPostsFormProvider from './form/PickUpPostsFormProvider';
-import { usePickUpPostsCheckbox } from './form/usePickUpPostsCheckbox';
 
 function PickUpPostSelectModalWithOpenButton() {
   return (
@@ -24,9 +24,9 @@ function Modal() {
   const { getAllPickUpPosts, updatePickUpPosts } = usePickUpPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
 
-  const { selectedBlogPosts } = usePickUpPostsCheckbox();
+  const { selectedBlogPosts } = usePostsCheckboxesCheckbox();
 
-  const onSubmit = async (data: PickUpPostsFormValues) => {
+  const onSubmit = async (data: PostsCheckboxesFormValues) => {
     if (!process.env.NEXT_PUBLIC_API_URL) {
       throw new Error('API の URL が設定されていません');
     }
@@ -34,7 +34,7 @@ function Modal() {
       process.env.NEXT_PUBLIC_API_URL,
     );
     const selectPickUpPostsUseCase = new SelectPickUpPostsUseCase(
-      selectedBlogPosts(data.pickUpPosts),
+      selectedBlogPosts(data.checkedPosts),
       blogPostRepository,
     );
     try {
@@ -49,13 +49,19 @@ function Modal() {
 
   return (
     <CommonModal>
-      <PickUpPostsFormProvider
+      <PostCheckboxesFormProvider
         defaultValues={{
-          pickUpPosts: getAllPickUpPosts().map((post) => post.id),
+          checkedPosts: getAllPickUpPosts().map((post) => post.id),
         }}
       >
-        <PickUpPostsForm onSubmit={onSubmit} />
-      </PickUpPostsFormProvider>
+        <h2>ピックアップ記事を選択</h2>
+        <PostCheckboxes
+          onSubmit={onSubmit}
+          validate={(value: string[]) =>
+            value.length === 3 || 'ピックアップ記事は3件選択してください'
+          }
+        />
+      </PostCheckboxesFormProvider>
       {isUploadSuccess && <p>ピックアップ記事を更新しました。</p>}
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
     </CommonModal>
