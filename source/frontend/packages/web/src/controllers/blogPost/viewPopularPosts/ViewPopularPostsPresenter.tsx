@@ -22,7 +22,7 @@ function ViewPopularPostsPresenter({
       </div>
       {blogPostsDTO.map((blogPostDTO) => (
         <Link
-          href={`posts/${blogPostDTO.id}`}
+          href={`/posts/${blogPostDTO.id}`}
           className={`${styles.linkToPost} ${styles.flexItem}`}
           key={blogPostDTO.id}
         >
