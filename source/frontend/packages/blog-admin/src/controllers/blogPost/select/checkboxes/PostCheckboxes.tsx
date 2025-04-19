@@ -1,8 +1,8 @@
+import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useBlogPostList } from '../../list/useBlogPostList';
 import type { PostsCheckboxesFormValues } from './PostCheckboxesProvider';
 import styles from './postCheckboxes.module.scss';
-import React from 'react';
 
 type PostsCheckboxesProps = {
   onSubmit: (data: PostsCheckboxesFormValues) => void;

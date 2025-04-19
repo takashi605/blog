@@ -1,8 +1,8 @@
 import Header from '@/components/topLayout/header/Header';
+import 'destyle.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import 'prism-themes/themes/prism-vsc-dark-plus.css';
-import 'destyle.css';
 import styles from './layout.module.scss';
 
 // フォントの定義

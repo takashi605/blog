@@ -1,6 +1,6 @@
+import 'destyle.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import 'destyle.css';
 import './globals.css';
 import styles from './layout.module.scss';
 
