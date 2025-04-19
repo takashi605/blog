@@ -18,6 +18,19 @@
   margin-bottom: 20px;
 }
 
+.linkToPost {
+  transform: translateY(-0px);
+  opacity: 1;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+
+  &:hover {
+    opacity: 0.8;
+    transform: translateY(-5px);
+  }
+}
+
 .thumbnail {
   width: 100%;
   aspect-ratio: 5 / 3;
