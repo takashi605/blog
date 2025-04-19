@@ -2,6 +2,7 @@
 import { useFormContext } from 'react-hook-form';
 import { useBlogPostList } from '../../../list/useBlogPostList';
 import type { PickUpPostsFormValues } from './PickUpPostsFormProvider';
+import styles from './pickUpPostsForm.module.scss';
 
 type PickUpPostsFormProps = {
   onSubmit: (data: PickUpPostsFormValues) => void;
@@ -23,8 +24,9 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
         <ul>
           {getAllBlogPosts().map((blogPost) => (
             <li key={blogPost.id}>
-              <label>
+              <label className={styles.label}>
                 <input
+                  className={styles.checkbox}
                   type="checkbox"
                   value={blogPost.id}
                   {...register('pickUpPosts', {
@@ -34,7 +36,6 @@ function PickUpPostsForm({ onSubmit }: PickUpPostsFormProps) {
                   })}
                 />
                 <h3>{blogPost.title}</h3>
-                <br />
               </label>
             </li>
           ))}
