@@ -22,7 +22,7 @@ Then('複数の記事が表示される', async function () {
   const page = playwrightHelper.getPage();
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
   expect(count).toBeGreaterThan(1);
 });
@@ -31,7 +31,7 @@ Then('各記事に記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
   const latestsSection = getLatestsSectionInPage(page)
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
 
   // 各記事に対して h2 要素が存在するかを確認
@@ -48,7 +48,7 @@ Then('各記事に記事サムネイルが表示される', async function () {
   const page = playwrightHelper.getPage();
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
 
   // 各記事に対して image 要素が存在するかを確認
@@ -63,7 +63,7 @@ Then('各記事に投稿日が表示される', async function () {
   const page = playwrightHelper.getPage();
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
 
   // 各記事に対して image 要素が存在するかを確認
@@ -80,7 +80,7 @@ Then('各記事は新着順で並んでいる', async function () {
   const page = playwrightHelper.getPage();
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
 
   // 各記事に対して投稿日時を取得し、Date型に変換
@@ -143,7 +143,7 @@ Then('新着記事は新着順で並んでいる', async function () {
 
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('listitem');
+  const posts = latestsSection.getByRole('link');
   const count = await posts.count();
 
   // 各記事に対して投稿日時を取得し、Date型に変換
