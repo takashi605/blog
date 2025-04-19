@@ -30,6 +30,7 @@ tilt-up:
 tilt-down:
 	tilt down
 	$(MAKE) tilt-delete-image
+	$(MAKE) mk8s-prune
 	docker system prune -f
 	crictl rmi --prune
 
