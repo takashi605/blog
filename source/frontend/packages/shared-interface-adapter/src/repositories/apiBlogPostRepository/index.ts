@@ -64,8 +64,9 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       .array(blogPostResponseSchema)
       .parse(await response.json());
 
+    // 最新の投稿を取得するため、postDate の降順でソート
     const sortedResponse = validatedResponse.sort((a, b) => {
-      return new Date(a.postDate).getTime() - new Date(b.postDate).getTime();
+      return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
     });
 
     return sortedResponse;
