@@ -36,7 +36,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${styles.body}`}>
         <Header />
         <main className={styles.main}>{children}</main>
         <footer>
