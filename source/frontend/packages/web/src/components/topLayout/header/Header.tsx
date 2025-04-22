@@ -4,7 +4,7 @@ import styles from './header.module.scss';
 
 function Header() {
   return (
-    <div className={styles.headerWrapper}>
+    <>
       <header className={styles.header}>
         <div className={styles.blogTitle}>
           <Link href="/" className={`${styles.link} ${styles.blogTitle}`}>
@@ -20,8 +20,24 @@ function Header() {
             </li>
           </ul>
         </nav>
+
+        <input type="checkbox" className={styles.menuButton} id="menuButton" />
+        <label htmlFor="menuButton" className={styles.menuIcon}>
+          <span className={styles.menuIconParts} />
+        </label>
+
+        <nav className={styles.spNav}>
+          <ul>
+            <li className={styles.top}>
+              <Link href="/posts/latest" className={styles.link}>
+                新着記事
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </header>
-    </div>
+      <div className={styles.spHeaderSpacer} />
+    </>
   );
 }
 
