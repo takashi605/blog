@@ -1,4 +1,4 @@
-FROM rust:1.81-slim
+FROM rust:1.86-slim
 ARG APP_ROOT_DIR=source/backend
 
 RUN apt update && \

@@ -1,3 +1,5 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .headerWrapper {
   padding: 20px 0;
   border-bottom: 3px solid #ddd;
@@ -10,6 +12,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  // TODO テスト用の記述なのでけす
+  @include vars.breakPoint("sp") {
+    display:none;
+  }
 }
 
 .link {
