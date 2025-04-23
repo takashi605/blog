@@ -28,6 +28,10 @@
 }
 .viewLatestsSection {
   margin-bottom: 30px;
+
+  @include vars.breakPoint("tablet") {
+    margin-bottom: 0px;
+  }
 }
 .viewPickUpPostsSection {
   margin-bottom: 60px;
