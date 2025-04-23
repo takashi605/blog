@@ -29,6 +29,10 @@
     top: 0;
     width: 100%;
   }
+
+  @include vars.breakPoint("sp") {
+    padding: 5px 0;
+  }
 }
 
 .link {
@@ -53,6 +57,10 @@
 .blogTitle {
   font-family: toppan-bunkyu-midashi-min-st, serif;
   font-size: 38px;
+
+  @include vars.breakPoint("sp") {
+    font-size: 18px;
+  }
 }
 
 .nav {
