@@ -1,7 +1,9 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .viewTopTechPickSection {
   margin-bottom: 30px;
 }
-.summarySection {
+.blogSummarySection {
   font-family: source-han-serif-japanese, serif;
   font-size: 21px;
   line-height: 37.5px;
@@ -17,6 +19,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 30px 0;
+  }
 }
 .viewLatestsSection {
   margin-bottom: 30px;

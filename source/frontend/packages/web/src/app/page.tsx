@@ -16,7 +16,7 @@ export default async function Home() {
       <section className={styles.viewTopTechPickSection}>
         <ViewTopTechPickController />
       </section>
-      <section className={styles.summarySection}>
+      <section className={styles.blogSummarySection}>
         <p>日々の開発経験から得た知見を</p>
         <p>気ままに発信するブログです</p>
       </section>
