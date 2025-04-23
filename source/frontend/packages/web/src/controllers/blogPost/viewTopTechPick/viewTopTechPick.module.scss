@@ -1,28 +1,50 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .titleWrapper {
   margin-bottom: 10px;
 }
 .sectionTitle {
   font-size: 40px;
   font-family: "p22-basala", sans-serif;
+
+  @include vars.breakPoint("sp") {
+    font-size: 20px;
+  }
 }
 
 .contentSummary {
   display: flex;
   gap: 40px;
+
+  @include vars.breakPoint("sp") {
+    flex-direction: column;
+    gap: 5px;
+  }
 }
 
 .thumbnail {
-  flex-basis: 45%;
-  aspect-ratio: 5 / 3;
+  flex-basis: 50%;
   height: auto;
+
+  img {
+    aspect-ratio: 5 / 3;
+    @include vars.breakPoint("sp") {
+      aspect-ratio: 2/1;
+    }
+  }
 }
 
 .contentSummaryTexts {
-  flex-basis: 55%;
+  flex-basis: 50%;
   display: flex;
   flex-direction: column;
   justify-content: end;
   gap: 30px;
+
+  @include vars.breakPoint("sp") {
+    flex-basis: auto;
+    gap: 3px;
+  }
 }
 
 .contentSummaryMeta {
@@ -32,10 +54,18 @@
   justify-content: end;
   gap: 20px;
 
+  @include vars.breakPoint("sp") {
+    gap: 5px;
+  }
+
   .postDate {
     font-family: source-han-serif-japanese, serif;
     font-size: 64px;
     font-weight: bold;
+
+    @include vars.breakPoint("sp") {
+      font-size: 28px;
+    }
   }
 
   .linkToPost {
@@ -49,9 +79,19 @@
       opacity 0.3s,
       padding-left 0.3s;
 
+    @include vars.breakPoint("sp") {
+      width: 90px;
+      height: 2px;
+      margin-top: 20px;
+    }
+
     &:hover {
       opacity: 0.6;
       padding-left: 10px;
+
+      @include vars.breakPoint("sp") {
+        padding-left: 3px;
+      }
     }
 
     // 右矢印
@@ -66,6 +106,10 @@
       background-color: #000000;
       transform: rotate(45deg);
       transform-origin: calc(100% - 2px) 50%;
+
+      @include vars.breakPoint("sp") {
+        width: 26px;
+      }
     }
 
     .linkText {
@@ -74,10 +118,14 @@
       transform: translateY(-100%);
       width: 100%;
       font-family: source-han-serif-japanese, serif;
-      font-size: 1.5rem;
+      font-size: 24px;
       font-weight: bold;
       color: #000000;
       text-decoration: none;
+
+      @include vars.breakPoint("sp") {
+        font-size: 14px;
+      }
     }
   }
 }
