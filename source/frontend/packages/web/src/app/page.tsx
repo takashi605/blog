@@ -23,7 +23,9 @@ export default async function Home() {
       </section>
       <section className={styles.viewLatestsSection}>
         <ViewLatestBlogPostsController quantity={3} />
-        <Link href="/posts/latest" className={styles.linkButtonToLatests}>もっと見る</Link>
+        <Link href="/posts/latest" className={styles.linkButtonToLatests}>
+          もっと見る
+        </Link>
       </section>
       <section className={styles.viewPickUpPostsSection}>
         <ViewPickUpPostsController />
