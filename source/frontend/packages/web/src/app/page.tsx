@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import ViewLatestBlogPostsController from '../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
 import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
 import ViewPopularPostsController from '../controllers/blogPost/viewPopularPosts/ViewPopularPostsController';
@@ -22,6 +23,7 @@ export default async function Home() {
       </section>
       <section className={styles.viewLatestsSection}>
         <ViewLatestBlogPostsController quantity={3} />
+        <Link href="/posts/latest" className={styles.linkButtonToLatests}>もっと見る</Link>
       </section>
       <section className={styles.viewPickUpPostsSection}>
         <ViewPickUpPostsController />
