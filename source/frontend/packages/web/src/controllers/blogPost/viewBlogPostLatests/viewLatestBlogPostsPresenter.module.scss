@@ -1,10 +1,22 @@
-.pageTitle {
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
+.sectionTitle {
   font-family: ryo-gothic-plusn, sans-serif;
   font-weight: bold;
 
   font-size: 42px;
   margin-bottom: 20px;
   letter-spacing: 6px;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  @include vars.breakPoint("sp") {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 }
 
 .blogPostList {
@@ -16,6 +28,11 @@
 .blogPostItem {
   width: 32%;
   margin-bottom: 20px;
+
+  @include vars.breakPoint("tablet") {
+    width: 48%;
+    margin-bottom: 15px;
+  }
 }
 
 .linkToPost {
@@ -28,6 +45,10 @@
   &:hover {
     opacity: 0.8;
     transform: translateY(-5px);
+
+    @include vars.breakPoint("sp") {
+      transform: translateY(0);
+    }
   }
 }
 
@@ -46,10 +67,26 @@
   right: 0;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 5px;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 12px;
+  }
+
+  @include vars.breakPoint("sp") {
+    font-size: 10px;
+  }
 }
 
 .blogPostTitle {
   font-family: ryo-gothic-plusn, sans-serif;
   font-weight: bold;
   font-size: 20px;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 14px;
+  }
+
+  @include vars.breakPoint("sp") {
+    font-size: 11px;
+  }
 }

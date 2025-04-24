@@ -1,7 +1,9 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .viewTopTechPickSection {
   margin-bottom: 30px;
 }
-.summarySection {
+.blogSummarySection {
   font-family: source-han-serif-japanese, serif;
   font-size: 21px;
   line-height: 37.5px;
@@ -17,13 +19,64 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 30px 0;
+  }
 }
 .viewLatestsSection {
-  margin-bottom: 30px;
+  margin-bottom: 100px;
+
+  @include vars.breakPoint("tablet") {
+    margin-bottom: 50px;
+  }
+
+  @include vars.breakPoint("sp") {
+    margin-bottom: 0px;
+  }
+
+  .linkButtonToLatests {
+    margin: 20px auto 0;
+    display: block;
+    width: 100%;
+    max-width: 150px;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    border: solid 2px #333;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+
+    @include vars.breakPoint("sp") {
+      margin: 0 auto 0;
+      font-size: 14px;
+      padding: 5px 0;
+      max-width: 100px;
+    }
+
+    &:hover {
+      background-color: #333;
+      color: #fff;
+    }
+  }
 }
 .viewPickUpPostsSection {
   margin-bottom: 60px;
+
+  @include vars.breakPoint("sp") {
+    margin-bottom: 0px;
+  }
 }
 .viewPopularPostsSection {
   margin-bottom: 30px;
+
+  @include vars.breakPoint("tablet") {
+    margin-bottom: 0px;
+  }
 }

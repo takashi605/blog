@@ -12,7 +12,7 @@ function ViewLatestBlogPostsPresenter({
 }: ViewLatestBlogPostsPresenterProps) {
   return (
     <>
-      <h2 className={styles.pageTitle}>新着記事</h2>
+      <h2 className={styles.sectionTitle}>新着記事</h2>
       <div className={styles.blogPostList}>
         {blogPosts.map((blogPost) => (
           <Link
