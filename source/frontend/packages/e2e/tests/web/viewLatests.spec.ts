@@ -143,7 +143,11 @@ Then('新着記事は新着順で並んでいる', async function () {
 
   const latestsSection = getLatestsSectionInPage(page);
 
-  const posts = latestsSection.getByRole('link');
+  // 一覧ページへのリンクボタンもあるので、
+  // heading 要素を持つ a 要素を取得する
+  const posts = latestsSection.locator('a', {
+    has: page.getByRole('heading', { level: 3 }),
+  });
   const count = await posts.count();
 
   // 各記事に対して投稿日時を取得し、Date型に変換
