@@ -62,6 +62,10 @@
 }
 .viewPickUpPostsSection {
   margin-bottom: 60px;
+
+  @include vars.breakPoint("tablet") {
+    margin-bottom: 0px;
+  }
 }
 .viewPopularPostsSection {
   margin-bottom: 30px;
