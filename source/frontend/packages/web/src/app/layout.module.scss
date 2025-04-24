@@ -1,9 +1,19 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
+.body {
+  overflow-x: hidden;
+}
+
 .main {
-  width: 90%;
-  max-width: 1400px;
+  width: 100%;
+  max-width: 1540px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 35px 0;
+  padding: 50px;
+
+  @include vars.breakPoint("sp") {
+    padding: 10px;
+  }
 }
 
 .footer {
