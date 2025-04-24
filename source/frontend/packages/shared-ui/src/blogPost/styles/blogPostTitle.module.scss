@@ -9,6 +9,10 @@
   font-size: 48px;
 
   @include vars.breakPoint("tablet") {
+    font-size: 36px;
+  }
+
+  @include vars.breakPoint("sp") {
     font-size: 18px;
   }
 }

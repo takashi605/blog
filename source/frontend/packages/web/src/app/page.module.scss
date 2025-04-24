@@ -30,6 +30,10 @@
   margin-bottom: 100px;
 
   @include vars.breakPoint("tablet") {
+    margin-bottom: 50px;
+  }
+
+  @include vars.breakPoint("sp") {
     margin-bottom: 0px;
   }
 
@@ -48,7 +52,7 @@
     transition: background-color 0.3s, color 0.3s;
 
     @include vars.breakPoint("sp") {
-      margin : 20px auto 0;
+      margin : 0 auto 0;
       font-size: 14px;
       padding: 5px 0;
       max-width: 100px;
@@ -63,10 +67,14 @@
 .viewPickUpPostsSection {
   margin-bottom: 60px;
 
-  @include vars.breakPoint("tablet") {
+  @include vars.breakPoint("sp") {
     margin-bottom: 0px;
   }
 }
 .viewPopularPostsSection {
   margin-bottom: 30px;
+
+  @include vars.breakPoint("tablet") {
+    margin-bottom: 0px;
+  }
 }

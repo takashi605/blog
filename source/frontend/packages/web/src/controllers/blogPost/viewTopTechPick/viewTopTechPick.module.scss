@@ -41,6 +41,10 @@
   justify-content: end;
   gap: 30px;
 
+  @include vars.breakPoint("tablet") {
+    gap: 20px;
+  }
+
   @include vars.breakPoint("sp") {
     flex-basis: auto;
     gap: 3px;
@@ -63,6 +67,10 @@
     font-size: 64px;
     font-weight: bold;
 
+    @include vars.breakPoint("tablet") {
+      font-size: 40px;
+    }
+
     @include vars.breakPoint("sp") {
       font-size: 28px;
     }
@@ -78,6 +86,12 @@
     transition:
       opacity 0.3s,
       padding-left 0.3s;
+
+    @include vars.breakPoint("tablet") {
+      width: 130px;
+      height: 2px;
+      margin-top: 20px;
+    }
 
     @include vars.breakPoint("sp") {
       width: 90px;
@@ -107,6 +121,10 @@
       transform: rotate(45deg);
       transform-origin: calc(100% - 2px) 50%;
 
+      @include vars.breakPoint("tablet") {
+        width: 35px;
+      }
+
       @include vars.breakPoint("sp") {
         width: 26px;
       }
@@ -122,6 +140,10 @@
       font-weight: bold;
       color: #000000;
       text-decoration: none;
+
+      @include vars.breakPoint("tablet") {
+        font-size: 20px;
+      }
 
       @include vars.breakPoint("sp") {
         font-size: 14px;
