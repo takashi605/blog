@@ -4,6 +4,12 @@
   position: relative;
   background-color: #1e1e1e;
   margin: 0;
+
+  &:hover {
+    .copyIcon {
+      opacity: 1;
+    }
+  }
 }
 .copyIcon {
   position: absolute;
@@ -14,6 +20,9 @@
   color: white;
   width: 30px;
   height: 30px;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 .codeTitle {
   display: inline-block;
