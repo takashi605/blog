@@ -11,7 +11,7 @@ function ImageContent({ imageContent }: ImageContentProps) {
   return (
     <>
       <CldImage
-      className={styles.image}
+        className={styles.image}
         src={imageContent.path}
         width={500}
         height={500}
