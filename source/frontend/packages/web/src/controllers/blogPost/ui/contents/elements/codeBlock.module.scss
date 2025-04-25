@@ -1,5 +1,8 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .codeBlockWrapper {
   position: relative;
+  background-color: #1e1e1e;
   margin: 0;
 }
 .copyIcon {
@@ -14,10 +17,18 @@
 }
 .codeTitle {
   display: inline-block;
-  background-color: #333;
+  background-color: #1e1e1e;
   color: #fff;
   padding: 6px 8px;
   font-size: 14px;
   font-weight: 500;
   border-radius: 4px 4px 0 0;
+
+  @include vars.breakPoint("tablet") {
+    font-size: 12px;
+  }
+  @include vars.breakPoint("sp") {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
 }
