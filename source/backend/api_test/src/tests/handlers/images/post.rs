@@ -12,7 +12,7 @@ mod tests {
     let image_for_req: Image = helper::create_image_for_req();
     let blog_post_json_for_req: String = serde_json::to_string(&image_for_req).context("JSON データに変換できませんでした").unwrap();
 
-    let url = "http://localhost:8000/blog/images";
+    let url = "http://localhost:8000/admin/blog/images";
     let request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
     let resp = request.send().await.unwrap().text().await.unwrap();
 
