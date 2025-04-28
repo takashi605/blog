@@ -3,7 +3,11 @@ pub mod handlers;
 use actix_cors::Cors;
 use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
-use handlers::{blog_post_handlers::blog_scope, response::err::ApiCustomError, sample_handler::sample_scope};
+use handlers::{
+  blog_post_handlers::{admin_scope, blog_scope},
+  response::err::ApiCustomError,
+  sample_handler::sample_scope,
+};
 use std::env;
 
 pub async fn start_api_server() -> Result<()> {
@@ -14,7 +18,12 @@ pub async fn start_api_server() -> Result<()> {
   // 開発環境でのみ Cors を設定する
   // 本番環境では Nginx などで設定する
   HttpServer::new(move || {
-    App::new().wrap(Condition::new(is_dev, configure_cors())).service(blog_scope()).service(sample_scope()).default_service(web::route().to(route_unmatch))
+    App::new()
+      .wrap(Condition::new(is_dev, configure_cors()))
+      .service(admin_scope())
+      .service(blog_scope())
+      .service(sample_scope())
+      .default_service(web::route().to(route_unmatch))
   })
   .bind(("0.0.0.0", 8000))?
   .run()

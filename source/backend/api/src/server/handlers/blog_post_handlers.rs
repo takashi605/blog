@@ -1,6 +1,6 @@
 use actix_web::{web, Scope};
 
-use super::image_handlers::image_scope;
+use super::image_handlers::{admin_image_scope, image_scope};
 
 // TODO image_scope が同階層の別モジュールとなっており構造的に気持ち悪いので、上手く階層化する
 pub fn blog_scope() -> Scope {
@@ -11,10 +11,20 @@ fn posts_scope() -> Scope {
   web::scope("/posts")
     .route("/latest", web::get().to(handle_funcs::get_latest_blog_posts))
     .route("/top-tech-pick", web::get().to(handle_funcs::get_top_tech_pick_blog_post))
-    .route("/top-tech-pick", web::put().to(handle_funcs::put_top_tech_pick_blog_post))
     .route("/pickup", web::get().to(handle_funcs::get_pickup_blog_posts))
-    .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::get().to(handle_funcs::get_popular_blog_posts))
+    .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
+}
+
+pub fn admin_scope() -> Scope {
+  web::scope("/admin").service(admin_blog_posts_scope()).service(admin_image_scope())
+}
+
+// 管理者用のスコープ
+pub fn admin_blog_posts_scope() -> Scope {
+  web::scope("/blog/posts")
+    .route("/top-tech-pick", web::put().to(handle_funcs::put_top_tech_pick_blog_post))
+    .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::put().to(handle_funcs::put_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
     .route("", web::post().to(handle_funcs::create_blog_post))
