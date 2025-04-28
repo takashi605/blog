@@ -69,6 +69,7 @@ api:
     host: "api.blog.example"
     pathType: Prefix
     path: /
+    onAuth: false
   deployment:
     replicas: 1
   pod:

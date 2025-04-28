@@ -30,9 +30,11 @@ metadata:
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    {{- if .Values.api.ingress.onAuth }}
     nginx.ingress.kubernetes.io/auth-type: "basic"
     nginx.ingress.kubernetes.io/auth-secret: "api-admin-basic-auth"
     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+    {{- end }}
 spec:
   rules:
     - {{- if .Values.api.ingress.host }}
