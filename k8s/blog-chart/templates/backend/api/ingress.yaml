@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ include "api.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/mergeable-type: master
 spec:
   rules:
     - {{- if .Values.api.ingress.host }}
@@ -14,8 +14,8 @@ spec:
       {{- end }}
       http:
         paths:
-        - pathType: {{ .Values.api.ingress.pathType }}
-          path: {{ .Values.api.ingress.path }}
+        - pathType: Prefix
+          path: /
           backend:
             service:
               name: {{ include "api.appname" . }}
@@ -29,7 +29,7 @@ metadata:
   labels:
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/mergeable-type: minion
     {{- if .Values.api.ingress.onAuth }}
     nginx.ingress.kubernetes.io/auth-type: "basic"
     nginx.ingress.kubernetes.io/auth-secret: "api-admin-basic-auth"
@@ -43,7 +43,7 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: /admin(/|$)(.*) # /admin だけマッチ
+            path: /admin
             backend:
               service:
                 name: {{ include "api.appname" . }}
