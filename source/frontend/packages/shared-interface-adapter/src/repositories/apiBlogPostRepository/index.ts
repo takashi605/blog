@@ -86,11 +86,14 @@ export class ApiBlogPostRepository implements BlogPostRepository {
 
   async updateTopTechPickPost(topTechPickPost: BlogPost): Promise<BlogPostDTO> {
     const body = blogPostToJson(topTechPickPost);
-    const response = await fetch(`${this.baseUrl}/blog/posts/top-tech-pick`, {
-      method: 'PUT',
-      body,
-      ...this.baseFetchOptions,
-    });
+    const response = await fetch(
+      `${this.baseUrl}/admin/blog/posts/top-tech-pick`,
+      {
+        method: 'PUT',
+        body,
+        ...this.baseFetchOptions,
+      },
+    );
     if (!response.ok) {
       const message = await response.text();
       throw new Error(
@@ -120,7 +123,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       throw new Error('ピックアップ記事は3件指定してください');
     }
     const body = blogPostsToJson(pickupPosts);
-    const response = await fetch(`${this.baseUrl}/blog/posts/pickup`, {
+    const response = await fetch(`${this.baseUrl}/admin/blog/posts/pickup`, {
       method: 'PUT',
       body,
       ...this.baseFetchOptions,
@@ -157,7 +160,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
       throw new Error('人気記事は3件指定してください');
     }
     const body = blogPostsToJson(popularPosts);
-    const response = await fetch(`${this.baseUrl}/blog/posts/popular`, {
+    const response = await fetch(`${this.baseUrl}/admin/blog/posts/popular`, {
       method: 'PUT',
       body,
       ...this.baseFetchOptions,
@@ -176,7 +179,7 @@ export class ApiBlogPostRepository implements BlogPostRepository {
 
   // TODO 引数で url を受け取れるようにする
   private async post(blogPostJson: string): Promise<Response> {
-    const response = await fetch(`${this.baseUrl}/blog/posts`, {
+    const response = await fetch(`${this.baseUrl}/admin/blog/posts`, {
       method: 'POST',
       body: blogPostJson,
       ...this.baseFetchOptions,

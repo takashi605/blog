@@ -3,7 +3,11 @@ pub mod fetch_images;
 use actix_web::{web, Scope};
 
 pub fn image_scope() -> Scope {
-  web::scope("/images").route("", web::get().to(handle_funcs::get_images)).route("", web::post().to(handle_funcs::create_image))
+  web::scope("/images").route("", web::get().to(handle_funcs::get_images))
+}
+
+pub fn admin_image_scope() -> Scope {
+  web::scope("/images").route("", web::post().to(handle_funcs::create_image))
 }
 
 mod handle_funcs {

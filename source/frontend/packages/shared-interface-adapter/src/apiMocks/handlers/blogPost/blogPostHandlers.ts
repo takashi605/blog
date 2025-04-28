@@ -65,7 +65,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       }
       return HttpResponse.json(blogPost);
     }),
-    http.post(`${baseUrl}/blog/posts`, async ({ request }) => {
+    http.post(`${baseUrl}/admin/blog/posts`, async ({ request }) => {
       let newPost: DefaultBodyType;
       try {
         newPost = await request.json();
@@ -78,20 +78,23 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
       createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
       return HttpResponse.json(newPost, { status: 200 });
     }),
-    http.put(`${baseUrl}/blog/posts/top-tech-pick`, async ({ request }) => {
-      let updatedPost: DefaultBodyType;
-      try {
-        updatedPost = await request.json();
-      } catch {
-        return HttpResponse.json(
-          { message: 'リクエストを json に変換できませんでした。' },
-          { status: 400 },
-        );
-      }
+    http.put(
+      `${baseUrl}/admin/blog/posts/top-tech-pick`,
+      async ({ request }) => {
+        let updatedPost: DefaultBodyType;
+        try {
+          updatedPost = await request.json();
+        } catch {
+          return HttpResponse.json(
+            { message: 'リクエストを json に変換できませんでした。' },
+            { status: 400 },
+          );
+        }
 
-      return HttpResponse.json(updatedPost, { status: 200 });
-    }),
-    http.put(`${baseUrl}/blog/posts/pickup`, async ({ request }) => {
+        return HttpResponse.json(updatedPost, { status: 200 });
+      },
+    ),
+    http.put(`${baseUrl}/admin/blog/posts/pickup`, async ({ request }) => {
       let updatedPosts: DefaultBodyType;
       try {
         updatedPosts = await request.json();
@@ -107,7 +110,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
 
       return HttpResponse.json(updatedPosts, { status: 200 });
     }),
-    http.put(`${baseUrl}/blog/posts/popular`, async ({ request }) => {
+    http.put(`${baseUrl}/admin/blog/posts/popular`, async ({ request }) => {
       let updatedPosts: DefaultBodyType;
       try {
         updatedPosts = await request.json();

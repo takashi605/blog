@@ -54,7 +54,7 @@ export class ApiImageRepository implements ImageRepository {
 
   // TODO ヘッダー等の設定を blogpostRepository と共通化する
   private async post(image: string): Promise<Response> {
-    const response = await fetch(`${this.baseUrl}/blog/images`, {
+    const response = await fetch(`${this.baseUrl}/admin/blog/images`, {
       method: 'POST',
       body: image,
       ...this.baseFetchOptions,

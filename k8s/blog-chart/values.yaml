@@ -67,8 +67,7 @@ api:
   ingress:
     # host が空文字列の場合は rules に含まれない
     host: "api.blog.example"
-    pathType: Prefix
-    path: /
+    onAuth: false
   deployment:
     replicas: 1
   pod:

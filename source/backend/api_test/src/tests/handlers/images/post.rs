@@ -12,7 +12,7 @@ mod tests {
     let image_for_req: Image = helper::create_image_for_req();
     let blog_post_json_for_req: String = serde_json::to_string(&image_for_req).context("JSON データに変換できませんでした").unwrap();
 
-    let url = "http://localhost:8000/blog/images";
+    let url = "http://localhost:8000/admin/blog/images";
     let request = Request::new(Methods::POST { body: blog_post_json_for_req }, &url);
     let resp = request.send().await.unwrap().text().await.unwrap();
 
@@ -21,6 +21,7 @@ mod tests {
     assert_image(&image_by_resp, &image_for_req);
 
     // 全件取得して、insert した画像の uuid が含まれているか確認する
+    let url = "http://localhost:8000/blog/images";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
     let actual_all_images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
     helper::assert_any_image_has_uuid(&actual_all_images_resp, image_for_req.id);
