@@ -17,12 +17,12 @@ fn posts_scope() -> Scope {
 }
 
 pub fn admin_scope() -> Scope {
-  web::scope("/admin").service(admin_blog_posts_scope()).service(admin_image_scope())
+  web::scope("/admin/blog").service(admin_blog_posts_scope()).service(admin_image_scope())
 }
 
 // 管理者用のスコープ
 pub fn admin_blog_posts_scope() -> Scope {
-  web::scope("/blog/posts")
+  web::scope("/posts")
     .route("/top-tech-pick", web::put().to(handle_funcs::put_top_tech_pick_blog_post))
     .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::put().to(handle_funcs::put_popular_blog_posts))

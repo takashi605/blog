@@ -7,7 +7,7 @@ pub fn image_scope() -> Scope {
 }
 
 pub fn admin_image_scope() -> Scope {
-  web::scope("/admin/blog/images").route("", web::post().to(handle_funcs::create_image))
+  web::scope("/images").route("", web::post().to(handle_funcs::create_image))
 }
 
 mod handle_funcs {
