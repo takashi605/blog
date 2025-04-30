@@ -109,7 +109,8 @@ pub async fn insert_paragraph_block(paragraph_block: ParagraphBlockRecord) -> Re
 }
 
 pub async fn insert_rich_text(rich_text: RichTextRecord) -> Result<()> {
-  sqlx::query("insert into rich_texts (id, paragraph_block_id, text_content) values ($1, $2, $3)")
+  // TODO sort_order を割り振れるようにする
+  sqlx::query("insert into rich_texts (id, paragraph_block_id, text_content, sort_order) values ($1, $2, $3, 1)")
     .bind(rich_text.id)
     .bind(rich_text.paragraph_block_id)
     .bind(rich_text.text_content)
