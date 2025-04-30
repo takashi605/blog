@@ -18,7 +18,7 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
   // contents の要素数をチェック
   assert_eq!(actual.contents.len(), expected.contents.len());
 
-  // 各要素ごとに「id だけ無視して他は比較」
+  // 各要素ごとに「id」だけ無視して他は比較
   for (i, (actual_block, expected_block)) in actual.contents.iter().zip(&expected.contents).enumerate() {
     match actual_block {
       BlogPostContent::H2(a) => {

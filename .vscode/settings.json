@@ -27,6 +27,7 @@
     "chrono",
     "distroless",
     "funcs",
+    "nindent",
     "nonroot",
     "sqlx",
     "Tecca",

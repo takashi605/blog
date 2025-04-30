@@ -32,6 +32,7 @@ pub struct RichTextRecord {
   pub id: Uuid,
   pub paragraph_block_id: Uuid,
   pub text_content: String,
+  pub sort_order: i32,
 }
 
 #[derive(Debug, FromRow)]
@@ -81,7 +82,7 @@ pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<Par
 
 // rich_texts を取得
 pub async fn fetch_rich_texts_by_paragraph(paragraph_block_id: Uuid) -> Result<Vec<RichTextRecord>> {
-  let texts = sqlx::query_as::<_, RichTextRecord>("select id, paragraph_block_id, text_content from rich_texts where paragraph_block_id = $1")
+  let texts = sqlx::query_as::<_, RichTextRecord>("select id, paragraph_block_id, text_content, sort_order from rich_texts where paragraph_block_id = $1 order by sort_order asc")
     .bind(paragraph_block_id)
     .fetch_all(&*POOL)
     .await?;
@@ -109,10 +110,11 @@ pub async fn insert_paragraph_block(paragraph_block: ParagraphBlockRecord) -> Re
 }
 
 pub async fn insert_rich_text(rich_text: RichTextRecord) -> Result<()> {
-  sqlx::query("insert into rich_texts (id, paragraph_block_id, text_content) values ($1, $2, $3)")
+  sqlx::query("insert into rich_texts (id, paragraph_block_id, text_content, sort_order) values ($1, $2, $3, $4)")
     .bind(rich_text.id)
     .bind(rich_text.paragraph_block_id)
     .bind(rich_text.text_content)
+    .bind(rich_text.sort_order)
     .execute(&*POOL)
     .await?;
   Ok(())
