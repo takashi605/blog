@@ -20,7 +20,6 @@ use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyle
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
 
-// TODO 名前を変更する
 pub fn generate_blog_post_records_by(
   post: BlogPost,
   style_records: Vec<TextStyleRecord>,
