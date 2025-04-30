@@ -82,7 +82,7 @@ pub async fn fetch_paragraph_block_by_content_id(content_id: Uuid) -> Result<Par
 
 // rich_texts を取得
 pub async fn fetch_rich_texts_by_paragraph(paragraph_block_id: Uuid) -> Result<Vec<RichTextRecord>> {
-  let texts = sqlx::query_as::<_, RichTextRecord>("select id, paragraph_block_id, text_content, sort_order from rich_texts where paragraph_block_id = $1")
+  let texts = sqlx::query_as::<_, RichTextRecord>("select id, paragraph_block_id, text_content, sort_order from rich_texts where paragraph_block_id = $1 order by sort_order asc")
     .bind(paragraph_block_id)
     .fetch_all(&*POOL)
     .await?;
