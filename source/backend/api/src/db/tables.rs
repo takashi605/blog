@@ -54,13 +54,15 @@ pub fn generate_blog_post_records_by(
       BlogPostContent::Paragraph(paragraph) => {
         paragraph_block_records.push(ParagraphBlockRecord { id: paragraph.id });
 
-        paragraph.text.iter().for_each(|rt| {
+        paragraph.text.iter().enumerate().for_each(|iter| {
+          let (index, rt) = iter;
           let rich_text_id = Uuid::new_v4();
           // rich_text_records に追加
           rich_text_records.push(RichTextRecord {
             id: rich_text_id,
             paragraph_block_id: paragraph.id,
             text_content: rt.text.clone(),
+            sort_order: index as i32,
           });
           // paragraph.text に bold:true が含まれている場合、対応する style_id を取得する
           if rt.styles.bold {
@@ -192,8 +194,8 @@ mod tests {
     let mock_post: BlogPost = helper::create_blog_post_mock(post_id).unwrap();
     let mock_style_records: Vec<TextStyleRecord> = vec![
       TextStyleRecord {
-      id: Uuid::new_v4(),
-      style_type: "bold".to_string(),
+        id: Uuid::new_v4(),
+        style_type: "bold".to_string(),
       },
       TextStyleRecord {
         id: Uuid::new_v4(),
@@ -261,9 +263,13 @@ mod tests {
 
     assert_eq!(rich_text_records.len(), 2);
     assert_eq!(rich_text_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_records[0].paragraph_block_id, paragraph_block_records[0].id);
     assert_eq!(rich_text_records[0].text_content, "これはテスト用の文字列です。");
+    assert_eq!(rich_text_records[0].sort_order, 0); // sort_order は 0 から始まる
     assert_eq!(rich_text_records[1].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_records[1].paragraph_block_id, paragraph_block_records[0].id);
     assert_eq!(rich_text_records[1].text_content, "これはテスト用の文字列その2です。");
+    assert_eq!(rich_text_records[1].sort_order, 1);
 
     assert_eq!(rich_text_styles.len(), 2);
     assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認

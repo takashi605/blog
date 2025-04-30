@@ -75,7 +75,7 @@ VALUES (
 );
 
 -- rich_texts に1文だけ入れる
-INSERT INTO rich_texts (id, paragraph_block_id, text_content)
+INSERT INTO rich_texts (id, paragraph_block_id, text_content, sort_order)
 VALUES (
     gen_random_uuid(),
     (SELECT id FROM paragraph_blocks
@@ -84,7 +84,8 @@ VALUES (
                     AND content_type = 'paragraph'
                   LIMIT 1)
     ),
-    'これはミニマル記事1の段落です。'
+    'これはミニマル記事1の段落です。',
+    1
 );
 
 -- ■ ミニマル記事2 用
@@ -121,7 +122,7 @@ VALUES (
      LIMIT 1)
 );
 
-INSERT INTO rich_texts (id, paragraph_block_id, text_content)
+INSERT INTO rich_texts (id, paragraph_block_id, text_content, sort_order)
 VALUES (
     gen_random_uuid(),
     (SELECT id FROM paragraph_blocks
@@ -130,7 +131,8 @@ VALUES (
                     AND content_type = 'paragraph'
                   LIMIT 1)
     ),
-    'これはミニマル記事2の段落です。'
+    'これはミニマル記事2の段落です。',
+    1
 );
 
 -- ■ ミニマル記事3 用
@@ -167,7 +169,7 @@ VALUES (
      LIMIT 1)
 );
 
-INSERT INTO rich_texts (id, paragraph_block_id, text_content)
+INSERT INTO rich_texts (id, paragraph_block_id, text_content, sort_order)
 VALUES (
     gen_random_uuid(),
     (SELECT id FROM paragraph_blocks
@@ -176,7 +178,8 @@ VALUES (
                     AND content_type = 'paragraph'
                   LIMIT 1)
     ),
-    'これはミニマル記事3の段落です。'
+    'これはミニマル記事3の段落です。',
+    1
 );
 
 COMMIT;

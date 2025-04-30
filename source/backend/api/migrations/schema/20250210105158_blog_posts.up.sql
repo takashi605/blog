@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS rich_texts (
     id UUID PRIMARY KEY,
     paragraph_block_id UUID NOT NULL REFERENCES paragraph_blocks(id),
     text_content VARCHAR(1000) NOT NULL,
+    sort_order INT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
