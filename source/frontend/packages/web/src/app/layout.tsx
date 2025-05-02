@@ -9,8 +9,8 @@ import styles from './layout.module.scss';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ブログ',
-  description: 'ブログサイト',
+  title: '鉄火ブログ',
+  description: '個人的に学習・経験したことを垂れ流す技術ブログです。',
 };
 
 export default function RootLayout({

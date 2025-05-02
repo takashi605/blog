@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import { extractFirstParagraph } from 'service/src/blogPostService/dto/blogPostDTOProcessor/excerptedBlogPostDTO';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
-import { useExcerpted } from '../hooks/useExcerpted';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import { Paragraph } from '../ui/contents/elements/Paragraph';
 import styles from './viewTopTechPick.module.scss';
@@ -14,7 +14,7 @@ function ViewTopTechPickPresenter({
   blogPostDTO,
 }: ViewTopTechPickPresenterProps) {
   // TODO Presenter にロジックが混入しているため、フロントエンドの構造を変更する
-  const excerpted = useExcerpted(blogPostDTO.contents);
+  const excerpted = extractFirstParagraph(blogPostDTO);
 
   return (
     <div>
