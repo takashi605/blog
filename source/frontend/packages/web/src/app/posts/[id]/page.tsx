@@ -1,4 +1,5 @@
 import type { Metadata, ResolvingMetadata } from 'next';
+import { extractFirstParagraphText } from 'service/src/blogPostService/dto/blogPostDTOProcessor/excerptedBlogPostDTO';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
 import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
@@ -22,10 +23,11 @@ export async function generateMetadata(
   const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
     params.id,
   );
+  const excerptedText = extractFirstParagraphText(blogPostDTO);
 
   return {
     title: blogPostDTO.title,
-    description: '記事の説明文',
+    description: excerptedText,
   };
 }
 
