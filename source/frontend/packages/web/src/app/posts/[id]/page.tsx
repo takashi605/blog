@@ -1,5 +1,8 @@
 import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
+import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { extractFirstParagraphText } from 'service/src/blogPostService/dto/blogPostDTOProcessor/excerptedBlogPostDTO';
+import { HttpError } from 'shared-interface-adapter/src/error/httpError';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
 import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
@@ -20,9 +23,15 @@ export async function generateMetadata(
   const blogPostRepository = new ApiBlogPostRepository(
     process.env.NEXT_PUBLIC_API_URL,
   );
-  const blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
-    params.id,
-  );
+  let blogPostDTO: BlogPostDTO;
+  try {
+    blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
+      params.id,
+    );
+  } catch (e) {
+    if (e instanceof HttpError) notFound();
+    throw e;
+  }
   const excerptedText = extractFirstParagraphText(blogPostDTO);
 
   return {
