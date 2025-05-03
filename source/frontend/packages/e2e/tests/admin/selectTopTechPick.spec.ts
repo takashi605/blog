@@ -14,7 +14,11 @@ Given(
     const page = playwrightHelper.getPage();
 
     const [response] = await Promise.all([
-      page.waitForResponse('**/blog/posts/top-tech-pick*'),
+      page.waitForResponse(
+        (resp) =>
+          resp.url().includes('/api/blog/posts/top-tech-pick') &&
+          resp.status() === 200,
+      ),
       page.goto(`${process.env.ADMIN_URL}/posts/top-tech-pick`),
     ]);
 
@@ -43,7 +47,8 @@ When(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+          resp.url().includes('/api/blog/posts/latest') &&
+          resp.status() === 200,
       ),
       getOpenModalButton().click(),
     ]);
