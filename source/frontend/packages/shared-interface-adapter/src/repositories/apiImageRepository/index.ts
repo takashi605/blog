@@ -9,7 +9,6 @@ export class ApiImageRepository implements ImageRepository {
   private baseFetchOptions = {
     mode: 'cors' as const,
     headers: {
-      Authorization: `${process.env.NEXT_PUBLIC_BASIC_AUTHENTICATION}`,
       'Content-Type': 'application/json',
     },
   };
