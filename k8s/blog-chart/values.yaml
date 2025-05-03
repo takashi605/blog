@@ -3,6 +3,7 @@ web:
     # host が空文字列の場合は rules に含まれない
     host: "blog.example"
     onAuth: false
+    authSecret: ""
   deployment:
     replicas: 1
   pod:
@@ -33,6 +34,7 @@ admin:
     # host が空文字列の場合は rules に含まれない
     host: "admin.blog.example"
     onAuth: false
+    authSecret: ""
   deployment:
     replicas: 1
   pod:
