@@ -13,7 +13,7 @@ Given('【人気記事選択】人気記事選択ページにアクセスする'
   const [response] = await Promise.all([
     page.waitForResponse(
       (resp) =>
-        resp.url().includes('/blog/posts/popular') && resp.status() === 200,
+        resp.url().includes('/api/blog/posts/popular') && resp.status() === 200,
     ),
     page.goto(`${process.env.ADMIN_URL}/posts/popular`),
   ]);
@@ -39,7 +39,7 @@ When('【人気記事選択】「人気記事を選択」ボタンを押下す�
   const [response] = await Promise.all([
     page.waitForResponse(
       (resp) =>
-        resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+        resp.url().includes('/api/blog/posts/latest') && resp.status() === 200,
     ),
     getOpenModalButton().click(),
   ]);
