@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ include "web.appname" . }}
     {{- include "blog-chart.labels" . | nindent 4 }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.web.ingress.rewriteTarget }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - {{- if .Values.web.ingress.host }}
@@ -14,8 +14,8 @@ spec:
       {{- end }}
       http:
         paths:
-        - pathType: {{ .Values.web.ingress.pathType }}
-          path: {{ .Values.web.ingress.path }}
+        - pathType: Prefix
+          path: /
           backend:
             service:
               name: {{ include "web.appname" . }}
