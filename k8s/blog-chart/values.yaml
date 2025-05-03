@@ -125,6 +125,7 @@ e2e:
     env:
       TEST_TARGET_URL: "http://blog.example"
       ADMIN_URL: "http://admin.blog.example"
+      basicAuthSecretName: ""
     memoryLimit: "5000Mi"
     cpuLimit: "4000m"
     memoryRequest: "250Mi"

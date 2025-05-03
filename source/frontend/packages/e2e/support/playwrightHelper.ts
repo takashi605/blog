@@ -31,6 +31,10 @@ class PlaywrightHelper {
       permissions: [],
       javaScriptEnabled: true,
       ignoreHTTPSErrors: true,
+      httpCredentials: {
+        username: process.env.BASIC_AUTH_USER ?? '',
+        password: process.env.BASIC_AUTH_PASS ?? '',
+      },
     });
     this.page = await this.context.newPage();
 

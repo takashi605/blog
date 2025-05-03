@@ -39,6 +39,18 @@ spec:
               value: {{ .Values.e2e.pod.env.TEST_TARGET_URL }}
             - name: ADMIN_URL
               value: {{ .Values.e2e.pod.env.ADMIN_URL }}
+            {{- if .Values.e2e.pod.env.basicAuthSecretName }}
+            - name: BASIC_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.e2e.pod.env.basicAuthSecretName }}
+                  key: BASIC_AUTH_USER
+            - name: BASIC_AUTH_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.e2e.pod.env.basicAuthSecretName }}
+                  key: BASIC_AUTH_PASS
+            {{- end}}
             - name: DISPLAY
               value: :0
           volumeMounts:
