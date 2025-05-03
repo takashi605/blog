@@ -11,11 +11,13 @@ Given('【人気記事選択】人気記事選択ページにアクセスする'
   }
   const page = playwrightHelper.getPage();
   const [response] = await Promise.all([
-    page.waitForResponse('**/blog/posts/popular*'),
+    page.waitForResponse(
+      (resp) =>
+        resp.url().includes('/blog/posts/popular') && resp.status() === 200,
+    ),
     page.goto(`${process.env.ADMIN_URL}/posts/popular`),
   ]);
 
-  expect(response.status()).toBe(200);
   await response.json();
 });
 Then(

@@ -14,7 +14,9 @@ Given('【アップロード】画像管理ページにアクセスする', asyn
   const page = playwrightHelper.getPage();
 
   const [response] = await Promise.all([
-    page.waitForResponse('**/blog/images'),
+    page.waitForResponse(
+      (resp) => resp.url().includes('/blog/images') && resp.status() === 200,
+    ),
     page.goto(`${process.env.ADMIN_URL}/images`),
   ]);
 
