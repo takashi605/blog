@@ -14,11 +14,13 @@ Given(
     const page = playwrightHelper.getPage();
 
     const [response] = await Promise.all([
-      page.waitForResponse('**/blog/posts/pickup*'),
+      page.waitForResponse(
+        (resp) =>
+          resp.url().includes('/api/blog/posts/pickup') && resp.status() === 200,
+      ),
       page.goto(`${process.env.ADMIN_URL}/posts/pickup`),
     ]);
 
-    expect(response.status()).toBe(200);
     await response.json();
   },
 );
@@ -43,12 +45,11 @@ When(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/blog/posts/latest') && resp.status() === 200,
+          resp.url().includes('/api/blog/posts/latest') &&
+          resp.status() === 200,
       ),
       getOpenModalButton().click(),
     ]);
-
-    expect(response.status()).toBe(200);
 
     // これをしないとレスポンスが返るまで待てていない気がする
     // 単純に処理に時間をかけているからたまたま上手くいくだけかもしれない
