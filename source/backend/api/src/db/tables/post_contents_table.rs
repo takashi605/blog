@@ -82,7 +82,7 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
       AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
     }
     PostContentType::CodeBlock => {
-      let code_block_record: CodeBlockRecord = fetch_code_block_by_content_id(content_record.id).await.context("コードブロックの取得に失敗しました。")?;
+      let code_block_record: CodeBlockRecord = fetch_code_block_by_content_id(&*POOL, content_record.id).await.context("コードブロックの取得に失敗しました。")?;
       AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord {
         id: code_block_record.id,
         title: code_block_record.title,

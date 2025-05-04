@@ -94,7 +94,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_code_tasks = vec![];
   for code_block in code_block_records {
-    let task = tokio::spawn(insert_code_block(code_block));
+    let task = tokio::spawn(insert_code_block(&*POOL, code_block));
     insert_code_tasks.push(task);
   }
   let results = join_all(insert_code_tasks).await;

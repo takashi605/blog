@@ -1,8 +1,6 @@
 use anyhow::{Context, Result};
-use sqlx::FromRow;
+use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
-
-use crate::db::pool::POOL;
 
 /*
  * DB内の各テーブル構造に紐づく構造体正義
@@ -19,19 +17,25 @@ pub struct CodeBlockRecord {
 /*
  * データベース操作関数
  */
-pub async fn insert_code_block(code_block: CodeBlockRecord) -> Result<()> {
+pub async fn insert_code_block<'e, E>(pool: E, code_block: CodeBlockRecord) -> Result<()>
+where
+  E: Executor<'e, Database = Postgres>,
+{
   sqlx::query("insert into code_blocks (id, title, code, lang) values ($1, $2, $3, $4)")
     .bind(code_block.id)
     .bind(code_block.title)
     .bind(code_block.code)
     .bind(code_block.language)
-    .execute(&*POOL)
+    .execute(pool)
     .await
     .context("コードブロックの挿入に失敗しました。")?;
   Ok(())
 }
 
-pub async fn fetch_code_block_by_content_id(content_id: Uuid) -> Result<CodeBlockRecord> {
-  let block = sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1").bind(content_id).fetch_one(&*POOL).await?;
+pub async fn fetch_code_block_by_content_id<'e, E>(pool: E, content_id: Uuid) -> Result<CodeBlockRecord>
+where
+  E: Executor<'e, Database = Postgres>,
+{
+  let block = sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1").bind(content_id).fetch_one(pool).await?;
   Ok(block)
 }
