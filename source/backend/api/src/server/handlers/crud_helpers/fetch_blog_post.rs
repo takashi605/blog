@@ -1,3 +1,4 @@
+use crate::db::pool::POOL;
 use std::vec;
 
 use crate::{
@@ -37,7 +38,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
 pub async fn fetch_all_latest_blog_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
   let mut result: Vec<BlogPost> = vec![];
 
-  let blog_post_records: Vec<BlogPostRecord> = fetch_all_latest_blog_posts_records().await.map_err(|err| {
+  let blog_post_records: Vec<BlogPostRecord> = fetch_all_latest_blog_posts_records(&*POOL).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
@@ -71,7 +72,7 @@ async fn fetch_blog_post_relations(blog_post_record: BlogPostRecord) -> Result<B
 }
 
 async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, ApiCustomError> {
-  let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
+  let blog_post_record = fetch_blog_post_by_id(&*POOL, post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
@@ -83,7 +84,7 @@ async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, A
 }
 
 async fn fetch_thumbnail_record_with_api_err(image_id: Uuid) -> Result<ImageRecord, ApiCustomError> {
-  let thumbnail_record = fetch_image_by_id(image_id).await.map_err(|err| {
+  let thumbnail_record = fetch_image_by_id(&*POOL, image_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -97,7 +98,7 @@ async fn fetch_thumbnail_record_with_api_err(image_id: Uuid) -> Result<ImageReco
 }
 
 async fn fetch_content_records_with_api_err(post_id: Uuid) -> Result<Vec<PostContentRecord>, ApiCustomError> {
-  let content_records = fetch_post_contents_by_post_id(post_id).await.map_err(|err| {
+  let content_records = fetch_post_contents_by_post_id(&*POOL, post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -120,7 +121,7 @@ async fn fetch_content_blocks(content_records: Vec<PostContentRecord>) -> Result
 }
 
 async fn fetch_content_block_with_api_err(content_record: PostContentRecord) -> Result<AnyContentBlockRecord, ApiCustomError> {
-  let content_block = fetch_any_content_block(content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
+  let content_block = fetch_any_content_block(&*POOL, content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -156,7 +157,7 @@ fn sort_contents(content_records: Vec<PostContentRecord>) -> Vec<PostContentReco
 }
 
 pub async fn fetch_pickup_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
-  let pickup_posts = fetch_all_pickup_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+  let pickup_posts = fetch_all_pickup_blog_posts(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
   let mut blog_posts: Vec<BlogPost> = vec![];
   for pickup_blog_post in pickup_posts {
     let blog_post = fetch_single_blog_post(pickup_blog_post.post_id).await?;
@@ -165,7 +166,7 @@ pub async fn fetch_pickup_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
   Ok(blog_posts)
 }
 pub async fn fetch_popular_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
-  let popular_posts = fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
+  let popular_posts = fetch_all_popular_blog_posts(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
   let mut blog_posts: Vec<BlogPost> = vec![];
   for popular_blog_post in popular_posts {
     let blog_post = fetch_single_blog_post(popular_blog_post.post_id).await?;

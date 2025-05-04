@@ -3,15 +3,18 @@ use common::types::api::response::BlogPost;
 use futures::future::join_all;
 
 use crate::{
-  db::tables::{
-    blog_posts_table::insert_blog_post,
-    code_blocks_table::insert_code_block,
-    generate_blog_post_records_by,
-    heading_blocks_table::insert_heading_block,
-    image_blocks_table::insert_image_block,
-    images_table::{fetch_all_images, ImageRecord},
-    paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
-    post_contents_table::insert_blog_post_content,
+  db::{
+    pool::POOL,
+    tables::{
+      blog_posts_table::insert_blog_post,
+      code_blocks_table::insert_code_block,
+      generate_blog_post_records_by,
+      heading_blocks_table::insert_heading_block,
+      image_blocks_table::insert_image_block,
+      images_table::{fetch_all_images, ImageRecord},
+      paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
+      post_contents_table::insert_blog_post_content,
+    },
   },
   server::handlers::response::err::ApiCustomError,
 };
@@ -21,9 +24,9 @@ use super::fetch_blog_post::fetch_single_blog_post;
 pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, ApiCustomError> {
   let post_id = blog_post.id;
   let text_style_records: Vec<TextStyleRecord> =
-    fetch_text_styles_all().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+    fetch_text_styles_all(&*POOL).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   let image_records: Vec<ImageRecord> =
-    fetch_all_images().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+    fetch_all_images(&*POOL).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let (
     blog_post_record,
@@ -36,11 +39,11 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
     rich_text_styles,
   ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
-  insert_blog_post(blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  insert_blog_post(&*POOL, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let mut insert_content_tasks = vec![];
   for content in post_content_records {
-    let task = tokio::spawn(insert_blog_post_content(content));
+    let task = tokio::spawn(insert_blog_post_content(&*POOL, content));
     insert_content_tasks.push(task);
   }
   let results = join_all(insert_content_tasks).await;
@@ -49,7 +52,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_heading_tasks = vec![];
   for heading in heading_block_records {
-    let task = tokio::spawn(insert_heading_block(heading));
+    let task = tokio::spawn(insert_heading_block(&*POOL, heading));
     insert_heading_tasks.push(task);
   }
   let results = join_all(insert_heading_tasks).await;
@@ -58,7 +61,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_paragraph_tasks = vec![];
   for paragraph in paragraph_block_records {
-    let task = tokio::spawn(insert_paragraph_block(paragraph));
+    let task = tokio::spawn(insert_paragraph_block(&*POOL, paragraph));
     insert_paragraph_tasks.push(task);
   }
   let results = join_all(insert_paragraph_tasks).await;
@@ -67,7 +70,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_rich_text_tasks = vec![];
   for rich_text in rich_text_records {
-    let task = tokio::spawn(insert_rich_text(rich_text));
+    let task = tokio::spawn(insert_rich_text(&*POOL,rich_text));
     insert_rich_text_tasks.push(task);
   }
   let results = join_all(insert_rich_text_tasks).await;
@@ -76,7 +79,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_rich_text_style_tasks = vec![];
   for rich_text_style in rich_text_styles {
-    let task = tokio::spawn(insert_rich_text_style(rich_text_style));
+    let task = tokio::spawn(insert_rich_text_style(&*POOL,rich_text_style));
     insert_rich_text_style_tasks.push(task);
   }
   let results = join_all(insert_rich_text_style_tasks).await;
@@ -85,7 +88,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_image_tasks = vec![];
   for image_block in image_block_records {
-    let task = tokio::spawn(insert_image_block(image_block));
+    let task = tokio::spawn(insert_image_block(&*POOL, image_block));
     insert_image_tasks.push(task);
   }
   let results = join_all(insert_image_tasks).await;
@@ -94,7 +97,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_code_tasks = vec![];
   for code_block in code_block_records {
-    let task = tokio::spawn(insert_code_block(code_block));
+    let task = tokio::spawn(insert_code_block(&*POOL, code_block));
     insert_code_tasks.push(task);
   }
   let results = join_all(insert_code_tasks).await;
