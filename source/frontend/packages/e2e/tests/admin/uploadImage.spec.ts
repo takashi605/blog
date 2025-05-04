@@ -169,7 +169,9 @@ Then(
   '【重複パス画像アップロード】処理失敗のメッセージが表示される',
   async function () {
     const page = playwrightHelper.getPage();
-    const message = page.getByText('画像のアップロードに失敗しました');
+    const message = page.getByText(
+      'データベースへのアップロードに失敗しました。',
+    );
     await expect(message).toBeVisible({ timeout: 10000 });
   },
 );
