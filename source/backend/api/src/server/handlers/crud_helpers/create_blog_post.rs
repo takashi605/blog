@@ -49,7 +49,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_heading_tasks = vec![];
   for heading in heading_block_records {
-    let task = tokio::spawn(insert_heading_block(heading));
+    let task = tokio::spawn(insert_heading_block(&*POOL, heading));
     insert_heading_tasks.push(task);
   }
   let results = join_all(insert_heading_tasks).await;

@@ -68,7 +68,7 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
   let result = match content_type_enum {
     PostContentType::Heading => {
       let heading_block_record: HeadingBlockRecord =
-        fetch_heading_blocks_by_content_id(content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
+        fetch_heading_blocks_by_content_id(&*POOL,content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
       AnyContentBlockRecord::HeadingBlockRecord(heading_block_record)
     }
     PostContentType::Image => {
