@@ -47,7 +47,6 @@ When('サムネイル画像選択モーダルを開き、サムネイル画像�
   const modal = page.getByRole('dialog');
   await expect(modal).toBeVisible({ timeout: 10000 });
 
-
   // 対応する画像をクリックし、src 属性を取得して変数に保持
   const labelsInModal = modal.locator('label');
   const firstLabelInModal = labelsInModal.first();
@@ -269,7 +268,7 @@ When('画像選択モーダルを開き、画像を選択する', async function
   const modal = page.getByRole('dialog');
   await expect(modal).toBeVisible({ timeout: 10000 });
 
-  const labelInModal = modal.locator('label')
+  const labelInModal = modal.locator('label');
   const firstLabel = labelInModal.first();
   await firstLabel.click();
 
@@ -322,7 +321,7 @@ Then('投稿した記事へのリンクが表示されている', async function
   await expect(postedPageLink).toBeVisible();
 });
 
-Given('投稿した記事のページにアクセスする', async function () {
+When('投稿した記事のページにアクセスする', async function () {
   const page = playwrightHelper.getPage();
 
   const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
@@ -426,6 +425,33 @@ Then('更新日が今日の日付になっている', async function () {
   expect(await lastUpdateDate.textContent()).toContain(
     formatDate2DigitString(new Date()),
   );
+});
+
+When('新着記事一覧ページにアクセスする', async function () {
+  if (!process.env.TEST_TARGET_URL) {
+    throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
+  }
+  const page = playwrightHelper.getPage();
+
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`);
+});
+Then('投稿した記事が新着記事一覧に表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  await expect
+    .poll(
+      async () => {
+        // 新規追加された記事が反映されるまで再読み込みを繰り返す
+        await page.reload();
+        const postedPageTitle = page.getByText('テスト記事');
+        return postedPageTitle.innerText();
+      },
+      {
+        timeout: 15_000,
+        intervals: [1_000],
+      },
+    )
+    .toBe('テスト記事');
 });
 
 // 以下ヘルパ関数
