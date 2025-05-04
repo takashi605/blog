@@ -166,7 +166,7 @@ pub async fn fetch_pickup_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
   Ok(blog_posts)
 }
 pub async fn fetch_popular_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
-  let popular_posts = fetch_all_popular_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
+  let popular_posts = fetch_all_popular_blog_posts(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("人気記事の取得に失敗しました。")))?;
   let mut blog_posts: Vec<BlogPost> = vec![];
   for popular_blog_post in popular_posts {
     let blog_post = fetch_single_blog_post(popular_blog_post.post_id).await?;
