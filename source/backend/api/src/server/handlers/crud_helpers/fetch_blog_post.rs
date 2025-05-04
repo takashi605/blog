@@ -98,7 +98,7 @@ async fn fetch_thumbnail_record_with_api_err(image_id: Uuid) -> Result<ImageReco
 }
 
 async fn fetch_content_records_with_api_err(post_id: Uuid) -> Result<Vec<PostContentRecord>, ApiCustomError> {
-  let content_records = fetch_post_contents_by_post_id(post_id).await.map_err(|err| {
+  let content_records = fetch_post_contents_by_post_id(&*POOL, post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
@@ -121,7 +121,7 @@ async fn fetch_content_blocks(content_records: Vec<PostContentRecord>) -> Result
 }
 
 async fn fetch_content_block_with_api_err(content_record: PostContentRecord) -> Result<AnyContentBlockRecord, ApiCustomError> {
-  let content_block = fetch_any_content_block(content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
+  let content_block = fetch_any_content_block(&*POOL, content_record).await.context("コンテンツブロックの取得に失敗しました。").map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(
