@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ImageUploadForm from './ImageUploadForm';
@@ -9,14 +10,21 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-const renderComponent = () => {
-  return render(<ImageUploadFormWithProvider />);
+type OptionProps = {
+  errorMessage?: string;
 };
 
-function ImageUploadFormWithProvider() {
+const renderComponent = (optionProps?: OptionProps) => {
+  return render(<ImageUploadFormWithProvider {...optionProps} />);
+};
+
+function ImageUploadFormWithProvider(optionProps: OptionProps = {}) {
   return (
     <ImageUploadFormProvider>
-      <ImageUploadForm onSubmit={onSubmitMock} />
+      <ImageUploadForm
+        onSubmit={onSubmitMock}
+        errorMessage={optionProps.errorMessage}
+      />
     </ImageUploadFormProvider>
   );
 }
@@ -45,5 +53,19 @@ describe('ImageUploadForm', () => {
       },
       expect.any(Object),
     );
+  });
+
+  describe('エラーメッセージの表示・非表示', () => {
+    it('props でわたっていれば表示', () => {
+      renderComponent({ errorMessage: 'エラーメッセージ' });
+      const errorMessageElement = screen.getByRole('alert');
+      expect(errorMessageElement).toHaveTextContent('エラーメッセージ');
+    });
+
+    it('props でわたっていなければ非表示', () => {
+      renderComponent();
+      const errorMessageElement = screen.queryByRole('alert');
+      expect(errorMessageElement).not.toBeInTheDocument();
+    });
   });
 });

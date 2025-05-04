@@ -5,9 +5,10 @@ import type { ImageUploadFormValues } from './ImageUploadFormProvider';
 
 type ImageUploadFormProps = {
   onSubmit: (data: ImageUploadFormValues) => void;
+  errorMessage?: string;
 };
 
-function ImageUploadForm({ onSubmit }: ImageUploadFormProps) {
+function ImageUploadForm({ onSubmit, errorMessage }: ImageUploadFormProps) {
   const { register, handleSubmit } = useFormContext<ImageUploadFormValues>();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -15,6 +16,11 @@ function ImageUploadForm({ onSubmit }: ImageUploadFormProps) {
       <TextInput id="name" label="画像名" {...register('imageName')} />
       <TextInput id="path" label="パス" {...register('imagePath')} />
       <button type="submit">アップロード</button>
+      {errorMessage && (
+        <p role="alert" style={{ color: 'red' }}>
+          {errorMessage}
+        </p>
+      )}
     </form>
   );
 }

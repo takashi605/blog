@@ -27,6 +27,7 @@ function ImageUploadModalWithOpenButton() {
 function Modal() {
   const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = await uploadCloudinary(data);
@@ -34,7 +35,8 @@ function Modal() {
       throw new Error('API の URL が設定されていません');
     }
     if (!isSuccess) {
-      alert('画像のアップロードに失敗しました。ログを確認してください。');
+      setErrorMessage('画像ストレージへのアップロードに失敗しました。');
+      return;
     }
     const imageRepository = new ApiImageRepository(
       process.env.NEXT_PUBLIC_API_URL,
@@ -52,7 +54,8 @@ function Modal() {
     try {
       await createImageUsecase.execute();
     } catch {
-      alert('画像の保存に失敗しました。ログを確認してください。');
+      setErrorMessage('データベースへのアップロードに失敗しました。');
+      // ここで return すると画像の再取得が行われず、e2e テストが適切な結果を返さない
     }
 
     const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
@@ -65,7 +68,7 @@ function Modal() {
   return (
     <CommonModal>
       <ImageUploadFormProvider>
-        <ImageUploadForm onSubmit={onSubmit} />
+        <ImageUploadForm onSubmit={onSubmit} errorMessage={errorMessage} />
         {isUploadSuccess && <p>画像のアップロードに成功しました</p>}
       </ImageUploadFormProvider>
       <CommonModalCloseButton>閉じる</CommonModalCloseButton>
