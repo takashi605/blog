@@ -3,7 +3,7 @@ use common::types::api::response::BlogPost;
 use futures::future::join_all;
 
 use crate::{
-  db::tables::{
+  db::{pool::POOL, tables::{
     blog_posts_table::insert_blog_post,
     code_blocks_table::insert_code_block,
     generate_blog_post_records_by,
@@ -12,7 +12,7 @@ use crate::{
     images_table::{fetch_all_images, ImageRecord},
     paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
     post_contents_table::insert_blog_post_content,
-  },
+  }},
   server::handlers::response::err::ApiCustomError,
 };
 
@@ -36,7 +36,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
     rich_text_styles,
   ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
-  insert_blog_post(blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  insert_blog_post(&*POOL, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let mut insert_content_tasks = vec![];
   for content in post_content_records {

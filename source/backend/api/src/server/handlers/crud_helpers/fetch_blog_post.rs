@@ -38,7 +38,7 @@ pub async fn fetch_single_blog_post(post_id: Uuid) -> Result<BlogPost, ApiCustom
 pub async fn fetch_all_latest_blog_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
   let mut result: Vec<BlogPost> = vec![];
 
-  let blog_post_records: Vec<BlogPostRecord> = fetch_all_latest_blog_posts_records().await.map_err(|err| {
+  let blog_post_records: Vec<BlogPostRecord> = fetch_all_latest_blog_posts_records(&*POOL).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
