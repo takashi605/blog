@@ -157,7 +157,7 @@ fn sort_contents(content_records: Vec<PostContentRecord>) -> Vec<PostContentReco
 }
 
 pub async fn fetch_pickup_posts() -> Result<Vec<BlogPost>, ApiCustomError> {
-  let pickup_posts = fetch_all_pickup_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+  let pickup_posts = fetch_all_pickup_blog_posts(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
   let mut blog_posts: Vec<BlogPost> = vec![];
   for pickup_blog_post in pickup_posts {
     let blog_post = fetch_single_blog_post(pickup_blog_post.post_id).await?;
