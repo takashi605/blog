@@ -1,5 +1,5 @@
 use anyhow::Result;
-use sqlx::{Acquire, FromRow, PgPool, Postgres};
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
@@ -29,17 +29,19 @@ pub struct BlogPostRecord {
 /*
  * データベース操作関数
  */
-pub async fn fetch_blog_post_by_id(pool: &PgPool, id: Uuid) -> Result<BlogPostRecord> {
+pub async fn fetch_blog_post_by_id(executor: impl Acquire<'_, Database = Postgres>, id: Uuid) -> Result<BlogPostRecord> {
+  let mut conn = executor.acquire().await?;
   let post = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where id = $1")
     .bind(id)
-    .fetch_one(pool)
+    .fetch_one(&mut *conn)
     .await?;
   Ok(post)
 }
 
-pub async fn fetch_all_latest_blog_posts_records(pool: &PgPool) -> Result<Vec<BlogPostRecord>> {
+pub async fn fetch_all_latest_blog_posts_records(executor: impl Acquire<'_, Database = Postgres>) -> Result<Vec<BlogPostRecord>> {
+  let mut conn = executor.acquire().await?;
   let posts = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts order by post_date desc")
-    .fetch_all(pool)
+    .fetch_all(&mut *conn)
     .await?;
   Ok(posts)
 }

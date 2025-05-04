@@ -1,7 +1,6 @@
-use crate::db::pool::POOL;
 use anyhow::Result;
 use common::types::api::response::BlogPost;
-use sqlx::{FromRow, PgPool};
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
@@ -10,19 +9,21 @@ pub struct PopularPostRecord {
   pub post_id: Uuid,
 }
 
-pub async fn fetch_all_popular_blog_posts(pool: &PgPool) -> Result<Vec<PopularPostRecord>> {
+pub async fn fetch_all_popular_blog_posts(executor: impl Acquire<'_, Database = Postgres>) -> Result<Vec<PopularPostRecord>> {
+  let mut conn = executor.acquire().await?;
   // 古い順に3件取得
-  let post = sqlx::query_as::<_, PopularPostRecord>("select id, post_id from popular_posts order by updated_at asc limit 3").fetch_all(pool).await?;
+  let post = sqlx::query_as::<_, PopularPostRecord>("select id, post_id from popular_posts order by updated_at asc limit 3").fetch_all(&mut *conn).await?;
   Ok(post)
 }
 
-pub async fn update_popular_blog_posts(pool: &PgPool, popular_blog_posts: Vec<PopularPostRecord>) -> Result<()> {
+pub async fn update_popular_blog_posts(executor: impl Acquire<'_, Database = Postgres>, popular_blog_posts: Vec<PopularPostRecord>) -> Result<()> {
+  let mut conn = executor.acquire().await?;
   // 一旦全削除
-  sqlx::query("delete from popular_posts").execute(pool).await?;
+  sqlx::query("delete from popular_posts").execute(&mut *conn).await?;
 
   // 挿入
   for post in popular_blog_posts {
-    sqlx::query("insert into popular_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(pool).await?;
+    sqlx::query("insert into popular_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut *conn).await?;
   }
   println!("insert into popular_posts");
 
