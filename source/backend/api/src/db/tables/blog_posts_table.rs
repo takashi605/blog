@@ -1,5 +1,5 @@
 use anyhow::Result;
-use sqlx::{Executor, FromRow, Postgres};
+use sqlx::FromRow;
 use uuid::Uuid;
 
 use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
@@ -29,10 +29,7 @@ pub struct BlogPostRecord {
 /*
  * データベース操作関数
  */
-pub async fn fetch_blog_post_by_id<'e, E>(pool: E, id: Uuid) -> Result<BlogPostRecord>
-where
-  E: Executor<'e, Database = Postgres>,
-{
+pub async fn fetch_blog_post_by_id(pool: &sqlx::PgPool, id: Uuid) -> Result<BlogPostRecord> {
   let post = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where id = $1")
     .bind(id)
     .fetch_one(pool)
@@ -40,20 +37,14 @@ where
   Ok(post)
 }
 
-pub async fn fetch_all_latest_blog_posts_records<'e, E>(pool: E) -> Result<Vec<BlogPostRecord>>
-where
-  E: Executor<'e, Database = Postgres>,
-{
+pub async fn fetch_all_latest_blog_posts_records(pool: &sqlx::PgPool) -> Result<Vec<BlogPostRecord>> {
   let posts = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts order by post_date desc")
     .fetch_all(pool)
     .await?;
   Ok(posts)
 }
 
-pub async fn insert_blog_post<'e, E>(pool: E, post: BlogPostRecord) -> Result<()>
-where
-  E: Executor<'e, Database = Postgres>,
-{
+pub async fn insert_blog_post(pool: &sqlx::PgPool, post: BlogPostRecord) -> Result<()> {
   sqlx::query("insert into blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) values ($1, $2, $3, $4, $5, $6)")
     .bind(post.id)
     .bind(post.title)
