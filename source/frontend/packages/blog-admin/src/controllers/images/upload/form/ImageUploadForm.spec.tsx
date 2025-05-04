@@ -18,7 +18,7 @@ const renderComponent = (optionProps?: OptionProps) => {
   return render(<ImageUploadFormWithProvider {...optionProps} />);
 };
 
-function ImageUploadFormWithProvider(optionProps: OptionProps) {
+function ImageUploadFormWithProvider(optionProps: OptionProps = {}) {
   return (
     <ImageUploadFormProvider>
       <ImageUploadForm
