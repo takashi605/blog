@@ -55,7 +55,7 @@ function Modal() {
       await createImageUsecase.execute();
     } catch {
       setErrorMessage('データベースへのアップロードに失敗しました。');
-      return;
+      // ここで return すると画像の再取得が行われず、e2e テストが適切な結果を返さない
     }
 
     const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
