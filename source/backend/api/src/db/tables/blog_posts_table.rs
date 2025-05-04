@@ -1,6 +1,6 @@
 use crate::db::pool::POOL;
 use anyhow::Result;
-use sqlx::FromRow;
+use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
@@ -30,10 +30,13 @@ pub struct BlogPostRecord {
 /*
  * データベース操作関数
  */
-pub async fn fetch_blog_post_by_id(id: Uuid) -> Result<BlogPostRecord> {
+pub async fn fetch_blog_post_by_id<'e, E>(pool: E, id: Uuid) -> Result<BlogPostRecord>
+where
+  E: Executor<'e, Database = Postgres>,
+{
   let post = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where id = $1")
     .bind(id)
-    .fetch_one(&*POOL)
+    .fetch_one(pool)
     .await?;
   Ok(post)
 }

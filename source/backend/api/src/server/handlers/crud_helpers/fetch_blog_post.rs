@@ -1,3 +1,4 @@
+use crate::db::pool::POOL;
 use std::vec;
 
 use crate::{
@@ -71,7 +72,7 @@ async fn fetch_blog_post_relations(blog_post_record: BlogPostRecord) -> Result<B
 }
 
 async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, ApiCustomError> {
-  let blog_post_record = fetch_blog_post_by_id(post_id).await.map_err(|err| {
+  let blog_post_record = fetch_blog_post_by_id(&*POOL, post_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorNotFound("ブログ記事が見つかりませんでした。"))
