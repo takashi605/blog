@@ -1,5 +1,5 @@
 use anyhow::Result;
-use sqlx::FromRow;
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
@@ -44,7 +44,8 @@ pub async fn fetch_all_latest_blog_posts_records(pool: &sqlx::PgPool) -> Result<
   Ok(posts)
 }
 
-pub async fn insert_blog_post(pool: &sqlx::PgPool, post: BlogPostRecord) -> Result<()> {
+pub async fn insert_blog_post(executor: impl Acquire<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
+  let mut conn = executor.acquire().await?;
   sqlx::query("insert into blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) values ($1, $2, $3, $4, $5, $6)")
     .bind(post.id)
     .bind(post.title)
@@ -52,7 +53,7 @@ pub async fn insert_blog_post(pool: &sqlx::PgPool, post: BlogPostRecord) -> Resu
     .bind(post.post_date)
     .bind(post.last_update_date)
     .bind(chrono::Utc::now())
-    .execute(pool)
+    .execute(&mut *conn)
     .await?;
   Ok(())
 }

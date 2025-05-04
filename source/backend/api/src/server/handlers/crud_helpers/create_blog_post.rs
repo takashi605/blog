@@ -22,6 +22,8 @@ use crate::{
 use super::fetch_blog_post::fetch_single_blog_post;
 
 pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, ApiCustomError> {
+  let mut tx = POOL.begin().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+
   let post_id = blog_post.id;
   let text_style_records: Vec<TextStyleRecord> =
     fetch_text_styles_all(&*POOL).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
@@ -39,7 +41,10 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
     rich_text_styles,
   ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
-  insert_blog_post(&*POOL, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  insert_blog_post(&mut tx, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  tx.commit()
+    .await
+    .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let mut insert_content_tasks = vec![];
   for content in post_content_records {
