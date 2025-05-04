@@ -36,12 +36,12 @@ pub async fn fetch_image_block_record_with_relations(pool: &PgPool, content_reco
   Ok(result)
 }
 
-pub async fn fetch_image_blocks_by_content_id(pool: &sqlx::PgPool, content_id: Uuid) -> Result<ImageBlockRecord> {
+pub async fn fetch_image_blocks_by_content_id(pool: &PgPool, content_id: Uuid) -> Result<ImageBlockRecord> {
   let block = sqlx::query_as::<_, ImageBlockRecord>("select id, image_id from image_blocks where id = $1").bind(content_id).fetch_one(pool).await?;
   Ok(block)
 }
 
-pub async fn insert_image_block(pool: &sqlx::PgPool, image_block: ImageBlockRecord) -> Result<()> {
+pub async fn insert_image_block(pool: &PgPool, image_block: ImageBlockRecord) -> Result<()> {
   sqlx::query("insert into image_blocks (id, image_id) values ($1, $2)")
     .bind(image_block.id)
     .bind(image_block.image_id)

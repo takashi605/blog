@@ -1,6 +1,6 @@
 use anyhow::Result;
 use common::types::api::response::Image;
-use sqlx::FromRow;
+use sqlx::{FromRow, PgPool};
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
@@ -9,17 +9,17 @@ pub struct ImageRecord {
   pub file_path: String,
 }
 
-pub async fn fetch_image_by_id(pool: &sqlx::PgPool,id: Uuid) -> Result<ImageRecord> {
+pub async fn fetch_image_by_id(pool: &PgPool,id: Uuid) -> Result<ImageRecord> {
   let image = sqlx::query_as::<_, ImageRecord>("select id,file_path from images where id = $1").bind(id).fetch_one(pool).await?;
   Ok(image)
 }
 
-pub async fn fetch_all_images(pool: &sqlx::PgPool) -> Result<Vec<ImageRecord>> {
+pub async fn fetch_all_images(pool: &PgPool) -> Result<Vec<ImageRecord>> {
   let images = sqlx::query_as::<_, ImageRecord>("select id, file_path from images").fetch_all(pool).await?;
   Ok(images)
 }
 
-pub async fn insert_image(pool: &sqlx::PgPool, image: Image) -> Result<ImageRecord> {
+pub async fn insert_image(pool: &PgPool, image: Image) -> Result<ImageRecord> {
   let image = sqlx::query_as::<_, ImageRecord>("insert into images (id, file_path) values ($1, $2) returning id, file_path")
     .bind(image.id)
     .bind(image.path)
