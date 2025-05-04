@@ -73,7 +73,7 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
     }
     PostContentType::Image => {
       let image_block_record_with_relations: ImageBlockRecordWithRelations =
-        fetch_image_block_record_with_relations(content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
+        fetch_image_block_record_with_relations(&*POOL, content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
       AnyContentBlockRecord::ImageBlockRecord(image_block_record_with_relations)
     }
     PostContentType::Paragraph => {

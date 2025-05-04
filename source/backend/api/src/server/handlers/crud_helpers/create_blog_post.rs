@@ -85,7 +85,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   let mut insert_image_tasks = vec![];
   for image_block in image_block_records {
-    let task = tokio::spawn(insert_image_block(image_block));
+    let task = tokio::spawn(insert_image_block(&*POOL, image_block));
     insert_image_tasks.push(task);
   }
   let results = join_all(insert_image_tasks).await;
