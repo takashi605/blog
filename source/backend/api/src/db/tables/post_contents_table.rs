@@ -78,7 +78,7 @@ pub async fn fetch_any_content_block(content_record: PostContentRecord) -> Resul
     }
     PostContentType::Paragraph => {
       let paragraph_block_record: ParagraphBlockRecordWithRelations =
-        fetch_paragraph_block_record_with_relations(content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
+        fetch_paragraph_block_record_with_relations(&*POOL, content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
       AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
     }
     PostContentType::CodeBlock => {
