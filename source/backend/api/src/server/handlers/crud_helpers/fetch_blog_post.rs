@@ -84,7 +84,7 @@ async fn fetch_blog_post_with_api_err(post_id: Uuid) -> Result<BlogPostRecord, A
 }
 
 async fn fetch_thumbnail_record_with_api_err(image_id: Uuid) -> Result<ImageRecord, ApiCustomError> {
-  let thumbnail_record = fetch_image_by_id(image_id).await.map_err(|err| {
+  let thumbnail_record = fetch_image_by_id(&*POOL, image_id).await.map_err(|err| {
     // RowNotFound なら 404、それ以外は 500
     if is_row_not_found(&err) {
       ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(

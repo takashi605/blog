@@ -27,7 +27,7 @@ pub struct ImageBlockRecord {
  */
 pub async fn fetch_image_block_record_with_relations(pool: &PgPool, content_record_id: Uuid) -> Result<ImageBlockRecordWithRelations> {
   let image_block_record: ImageBlockRecord = fetch_image_blocks_by_content_id(pool, content_record_id).await.context("画像ブロックの取得に失敗しました。")?;
-  let image_record = fetch_image_by_id(image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
+  let image_record = fetch_image_by_id(pool, image_block_record.image_id).await.context("画像の取得に失敗しました。")?;
 
   let result = ImageBlockRecordWithRelations {
     image_block_record,

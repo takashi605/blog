@@ -23,7 +23,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
   let text_style_records: Vec<TextStyleRecord> =
     fetch_text_styles_all().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   let image_records: Vec<ImageRecord> =
-    fetch_all_images().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+    fetch_all_images(&*POOL).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
 
   let (
     blog_post_record,
