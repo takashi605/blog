@@ -1,4 +1,5 @@
--- Add migration script here
+BEGIN;
+
 INSERT INTO post_contents (id, post_id, content_type, sort_order)
 VALUES
   (
@@ -13,3 +14,5 @@ VALUES (
     'console.log("Hello, World!");',
     'javascript'
 );
+
+COMMIT;

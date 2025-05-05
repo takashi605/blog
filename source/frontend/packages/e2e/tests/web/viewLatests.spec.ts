@@ -29,7 +29,7 @@ Then('複数の記事が表示される', async function () {
 
 Then('各記事に記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
-  const latestsSection = getLatestsSectionInPage(page)
+  const latestsSection = getLatestsSectionInPage(page);
 
   const posts = latestsSection.getByRole('link');
   const count = await posts.count();
@@ -174,6 +174,19 @@ Then('新着記事は新着順で並んでいる', async function () {
   for (let i = 0; i < resolvedPostDates.length - 1; i++) {
     expect(resolvedPostDates[i] >= resolvedPostDates[i + 1]).toBeTruthy();
   }
+});
+Then('非公開記事が表示されていない', async function () {
+  const page = playwrightHelper.getPage();
+
+  const latestsSection = getLatestsSectionInPage(page);
+  const titles = latestsSection.locator('h3');
+
+  // 「50年後記事1」が非公開記事なので、titles の中に存在しないことを確認
+  const isVisible = await titles
+    .filter({ hasText: '50年後記事1' })
+    .first()
+    .isVisible();
+  expect(isVisible).toBeFalsy();
 });
 
 function getLatestsSectionInPage(page: Page) {
