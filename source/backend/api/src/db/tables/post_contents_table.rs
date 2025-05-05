@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sqlx::{FromRow, PgPool};
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{
@@ -61,26 +61,29 @@ impl TryFrom<String> for PostContentType {
 /*
  * データベース操作関数
  */
-pub async fn fetch_any_content_block(pool: &PgPool, content_record: PostContentRecord) -> Result<AnyContentBlockRecord> {
+pub async fn fetch_any_content_block(executor: impl Acquire<'_, Database = Postgres>, content_record: PostContentRecord) -> Result<AnyContentBlockRecord> {
+  let mut conn = executor.acquire().await?;
   let content_type_enum = PostContentType::try_from(content_record.content_type.clone()).context("コンテントタイプの変換に失敗しました。")?;
   let result = match content_type_enum {
     PostContentType::Heading => {
       let heading_block_record: HeadingBlockRecord =
-        fetch_heading_blocks_by_content_id(pool,content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
+        fetch_heading_blocks_by_content_id(&mut *conn, content_record.id).await.context("見出しブロックの取得に失敗しました。")?;
       AnyContentBlockRecord::HeadingBlockRecord(heading_block_record)
     }
     PostContentType::Image => {
       let image_block_record_with_relations: ImageBlockRecordWithRelations =
-        fetch_image_block_record_with_relations(pool, content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
+        fetch_image_block_record_with_relations(&mut *conn, content_record.id).await.context("関連を含む画像レコードの取得に失敗しました。")?;
       AnyContentBlockRecord::ImageBlockRecord(image_block_record_with_relations)
     }
     PostContentType::Paragraph => {
-      let paragraph_block_record: ParagraphBlockRecordWithRelations =
-        fetch_paragraph_block_record_with_relations(pool, content_record.id).await.context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
+      let paragraph_block_record: ParagraphBlockRecordWithRelations = fetch_paragraph_block_record_with_relations(&mut *conn, content_record.id)
+        .await
+        .context("関連レコードを含む段落ブロックレコードの取得に失敗しました。")?;
       AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record)
     }
     PostContentType::CodeBlock => {
-      let code_block_record: CodeBlockRecord = fetch_code_block_by_content_id(pool, content_record.id).await.context("コードブロックの取得に失敗しました。")?;
+      let code_block_record: CodeBlockRecord =
+        fetch_code_block_by_content_id(&mut *conn, content_record.id).await.context("コードブロックの取得に失敗しました。")?;
       AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord {
         id: code_block_record.id,
         title: code_block_record.title,
@@ -91,21 +94,23 @@ pub async fn fetch_any_content_block(pool: &PgPool, content_record: PostContentR
   };
   Ok(result)
 }
-pub async fn fetch_post_contents_by_post_id(pool: &PgPool, post_id: Uuid) -> Result<Vec<PostContentRecord>> {
+pub async fn fetch_post_contents_by_post_id(executor: impl Acquire<'_, Database = Postgres>, post_id: Uuid) -> Result<Vec<PostContentRecord>> {
+  let mut conn = executor.acquire().await?;
   let contents = sqlx::query_as::<_, PostContentRecord>("select id, post_id, content_type, sort_order from post_contents where post_id = $1")
     .bind(post_id)
-    .fetch_all(pool)
+    .fetch_all(&mut *conn)
     .await?;
   Ok(contents)
 }
 
-pub async fn insert_blog_post_content(pool: &PgPool, content: PostContentRecord) -> Result<()> {
+pub async fn insert_blog_post_content(executor: impl Acquire<'_, Database = Postgres>, content: PostContentRecord) -> Result<()> {
+  let mut conn = executor.acquire().await?;
   sqlx::query("insert into post_contents (id, post_id, content_type, sort_order) values ($1, $2, $3, $4)")
     .bind(content.id)
     .bind(content.post_id)
     .bind(content.content_type)
     .bind(content.sort_order)
-    .execute(pool)
+    .execute(&mut *conn)
     .await?;
   Ok(())
 }

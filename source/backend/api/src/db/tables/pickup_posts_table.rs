@@ -1,6 +1,6 @@
 use anyhow::Result;
 use common::types::api::response::BlogPost;
-use sqlx::{FromRow, PgPool};
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
@@ -9,20 +9,22 @@ pub struct PickUpPostRecord {
   pub post_id: Uuid,
 }
 
-pub async fn fetch_all_pickup_blog_posts(pool: &PgPool) -> Result<Vec<PickUpPostRecord>> {
+pub async fn fetch_all_pickup_blog_posts(executor: impl Acquire<'_, Database = Postgres>) -> Result<Vec<PickUpPostRecord>> {
+  let mut conn = executor.acquire().await?;
   // 古い順に3件取得
-  let post = sqlx::query_as::<_, PickUpPostRecord>("select id, post_id from pickup_posts order by updated_at asc limit 3").fetch_all(pool).await?;
+  let post = sqlx::query_as::<_, PickUpPostRecord>("select id, post_id from pickup_posts order by updated_at asc limit 3").fetch_all(&mut *conn).await?;
   Ok(post)
 }
 
 // TODO トランザクションを貼る
-pub async fn update_pickup_blog_posts(pool: &PgPool, pickup_blog_posts: Vec<PickUpPostRecord>) -> Result<()> {
+pub async fn update_pickup_blog_posts(executor: impl Acquire<'_, Database = Postgres>, pickup_blog_posts: Vec<PickUpPostRecord>) -> Result<()> {
+  let mut conn = executor.acquire().await?;
   // 一旦全削除
-  sqlx::query("delete from pickup_posts").execute(pool).await?;
+  sqlx::query("delete from pickup_posts").execute(&mut *conn).await?;
 
   // 挿入
   for post in pickup_blog_posts {
-    sqlx::query("insert into pickup_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(pool).await?;
+    sqlx::query("insert into pickup_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut *conn).await?;
   }
   println!("insert into pickup_posts");
 
