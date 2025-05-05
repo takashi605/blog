@@ -14,12 +14,15 @@ Given('【正常系 記事投稿】記事投稿ページにアクセスする', 
   await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 10000 });
 });
 
-Then('【正常系 記事投稿】リッチテキストエディタが表示されていることを確認する', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】リッチテキストエディタが表示されていることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toBeVisible({ timeout: 10000 });
-});
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+  },
+);
 
 When(
   '【正常系 記事投稿】タイトルに「テスト記事」と入力する',
@@ -31,12 +34,15 @@ When(
   },
 );
 
-Then('【正常系 記事投稿】タイトルに「テスト記事」と表示される', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】タイトルに「テスト記事」と表示される',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const titleInput = page.getByRole('textbox', { name: 'タイトル' });
-  await expect(titleInput).toHaveValue('テスト記事');
-});
+    const titleInput = page.getByRole('textbox', { name: 'タイトル' });
+    await expect(titleInput).toHaveValue('テスト記事');
+  },
+);
 
 When(
   '【正常系 記事投稿】サムネイル画像選択モーダルを開き、サムネイル画像を選択する',
@@ -247,17 +253,20 @@ When(
     await codeButton.click();
   },
 );
-Then('【正常系 記事投稿】エディタ内にコードブロックが存在している', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】エディタ内にコードブロックが存在している',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]').filter({
-    hasText: 'const a = 1',
-  });
+    const richTextEditor = page.locator('[contenteditable="true"]').filter({
+      hasText: 'const a = 1',
+    });
 
-  // class 属性に language-js が含まれているかで判別
-  const codeBlock = richTextEditor.locator('.language-js');
-  await expect(codeBlock).toBeVisible({ timeout: 10000 });
-});
+    // class 属性に language-js が含まれているかで判別
+    const codeBlock = richTextEditor.locator('.language-js');
+    await expect(codeBlock).toBeVisible({ timeout: 10000 });
+  },
+);
 
 When(
   '【正常系 記事投稿】言語選択セレクトボックスから、「js」を選択',
@@ -271,15 +280,18 @@ When(
     await languageSelect.selectOption('js');
   },
 );
-Then('【正常系 記事投稿】コードブロックの言語データ属性が「js」になっている', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】コードブロックの言語データ属性が「js」になっている',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const codeBlock = richTextEditor.locator('.language-js');
-  const languageDataAttribute = await codeBlock.getAttribute('data-language');
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    const codeBlock = richTextEditor.locator('.language-js');
+    const languageDataAttribute = await codeBlock.getAttribute('data-language');
 
-  expect(languageDataAttribute).toBe('js');
-});
+    expect(languageDataAttribute).toBe('js');
+  },
+);
 
 When(
   '【正常系 記事投稿】画像選択モーダルを開き、画像を選択する',
@@ -339,19 +351,25 @@ When('【正常系 記事投稿】「投稿」ボタンを押す', async functio
   const publishButton = page.getByRole('button', { name: '投稿' });
   await publishButton.click();
 });
-Then('【正常系 記事投稿】記事が投稿され、投稿完了ページに遷移する', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】記事が投稿され、投稿完了ページに遷移する',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  await expect(page.getByText('記事を公開しました')).toBeVisible({
-    timeout: 10000,
-  });
-});
-Then('【正常系 記事投稿】投稿した記事へのリンクが表示されている', async function () {
-  const page = playwrightHelper.getPage();
+    await expect(page.getByText('記事を公開しました')).toBeVisible({
+      timeout: 10000,
+    });
+  },
+);
+Then(
+  '【正常系 記事投稿】投稿した記事へのリンクが表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
-  await expect(postedPageLink).toBeVisible();
-});
+    const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
+    await expect(postedPageLink).toBeVisible();
+  },
+);
 
 When(
   '【正常系 記事投稿】投稿した記事のページにアクセスする',
@@ -519,94 +537,138 @@ Then(
   },
 );
 
-Given ("【異常系 記事投稿】記事投稿ページにアクセスする", async function () {
+Given('【異常系 記事投稿】記事投稿ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
   await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 10000 });
-})
-Then ("【異常系 記事投稿】リッチテキストエディタが表示されていることを確認する", async function () {
-  const page = playwrightHelper.getPage();
+});
+Then(
+  '【異常系 記事投稿】リッチテキストエディタが表示されていることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  await expect(richTextEditor).toBeVisible({ timeout: 10000 });
-})
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+  },
+);
 
-When ("【異常系 記事投稿】タイトルに「テスト記事2」と入力する", async function () {
-  const page = playwrightHelper.getPage();
+When(
+  '【異常系 記事投稿】タイトルに「テスト記事2」と入力する',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const titleInput = page.getByRole('textbox', { name: 'タイトル' });
-  await titleInput.fill('テスト記事2');
-})
+    const titleInput = page.getByRole('textbox', { name: 'タイトル' });
+    await titleInput.fill('テスト記事2');
+  },
+);
+When(
+  '【異常系 記事投稿】サムネイル画像選択モーダルを開き、サムネイル画像を選択する',
+  async () => {
+    // 参考：https://playwright.dev/docs/api/class-filechooser
+    const page = playwrightHelper.getPage();
 
-When ("【異常系 記事投稿】リッチテキストエディタに101文字以上入力し、その文字を選択して「h2」ボタンを押す", async function () {
-  const page = playwrightHelper.getPage();
+    const openModalButton = page.getByRole('button', {
+      name: 'サムネイル画像を選択',
+    });
+    await openModalButton.click();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  // テキストをセット
-  await richTextEditor.pressSequentially('あ'.repeat(101), { timeout: 10000 });
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible({ timeout: 10000 });
 
-  await selectByArrowLeft(page, richTextEditor, 101);
+    // 対応する画像をクリックし、src 属性を取得して変数に保持
+    const labelsInModal = modal.locator('label');
+    const firstLabelInModal = labelsInModal.first();
+    await firstLabelInModal.click();
+    selectedThumbnailImageSrc = await firstLabelInModal
+      .locator('img')
+      .getAttribute('src');
 
-  // h2ボタンを押す
-  const h2Button = page.getByRole('checkbox', { name: 'h2' });
-  await h2Button.click();
+    const closeButton = modal.getByRole('button', { name: '閉じる' });
+    await closeButton.click();
+  },
+);
 
-  // 選択の解除
-  await clearSelectionByArrow(page, richTextEditor);
-})
-Then ("【異常系 記事投稿】リッチテキストエディタにレベル2見出しが表示されている", async function () {
-  const page = playwrightHelper.getPage();
+When(
+  '【異常系 記事投稿】リッチテキストエディタに101文字以上入力し、その文字を選択して「h2」ボタンを押す',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  const h2Text = richTextEditor.locator('h2');
-  await expect(h2Text).toHaveText('あ'.repeat(101), { timeout: 10000 });
-})
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    // テキストをセット
+    await richTextEditor.pressSequentially('あ'.repeat(101), {
+      timeout: 10000,
+    });
 
-When ("【異常系 記事投稿】「投稿」ボタンを押す", async function () {
+    await selectByArrowLeft(page, richTextEditor, 101);
+
+    // h2ボタンを押す
+    const h2Button = page.getByRole('checkbox', { name: 'h2' });
+    await h2Button.click();
+
+    // 選択の解除
+    await clearSelectionByArrow(page, richTextEditor);
+  },
+);
+Then(
+  '【異常系 記事投稿】リッチテキストエディタにレベル2見出しが表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    const h2Text = richTextEditor.locator('h2');
+    await expect(h2Text).toHaveText('あ'.repeat(101), { timeout: 10000 });
+  },
+);
+
+When('【異常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
   const publishButton = page.getByRole('button', { name: '投稿' });
   await publishButton.click();
-})
-Then ("【異常系 記事投稿】エラーメッセージが表示される", async function () {
+});
+Then('【異常系 記事投稿】エラーメッセージが表示される', async function () {
   const page = playwrightHelper.getPage();
 
   const errorMessage = page.getByRole('alert');
   await expect(errorMessage).toBeVisible({ timeout: 10000 });
-})
+});
 
-When ("【異常系 記事投稿】新着記事一覧ページにアクセスする", async function () {
+When('【異常系 記事投稿】新着記事一覧ページにアクセスする', async function () {
   if (!process.env.TEST_TARGET_URL) {
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
 
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`);
-})
-Then ("【異常系 記事投稿】投稿した記事が新着記事一覧ページに表示されていない", async function () {
-  const page = playwrightHelper.getPage();
+});
+Then(
+  '【異常系 記事投稿】投稿した記事が新着記事一覧ページに表示されていない',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  // api リクエストで失敗していないことを確定させるために、新着記事一覧ページが表示されていることを確認
-  const latestPageTitle = page.getByText('新着記事');
-  await expect(latestPageTitle).toBeVisible({ timeout: 5000 });
+    // api リクエストで失敗していないことを確定させるために、新着記事一覧ページが表示されていることを確認
+    const latestPageTitle = page.getByRole('heading', { name: '新着記事' });
+    await expect(latestPageTitle).toBeVisible({ timeout: 5000 });
 
-  await expect
-    .poll(
-      async () => {
-        // 新規追加された記事が反映されるまで再読み込みを繰り返す
-        await page.reload();
-        const postedPageTitle = page.getByText('テスト記事2');
-        return postedPageTitle.innerText();
-      },
-      {
-        timeout: 5_000,
-        intervals: [1_000],
-      },
-    )
-    .toThrow(); // 記事が見つからないことを確認
-})
+    // 1秒ごとに5回リロードして、記事が表示されていないことを確認
+    for (let i = 0; i < 5; i++) {
+      // キャッシュ削除＋再取得
+      await page.reload();
+      // 必要に応じて API リクエスト完了を待つ
+      await page.waitForLoadState('networkidle');
+      // 1秒待機（ポーリング間隔）
+      await page.waitForTimeout(1000);
+
+      // もしも記事が表示されていたらエラーを投げる
+      const count = await page.locator('text=テスト記事2').count();
+      if (count > 0) {
+        throw new Error(`記事が検出されました（${i + 1}回目のリロード時）`);
+      }
+    }
+  },
+);
 
 // 以下ヘルパ関数
 async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
