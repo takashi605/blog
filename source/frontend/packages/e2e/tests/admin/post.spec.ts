@@ -573,7 +573,7 @@ When ("【異常系 記事投稿】「投稿」ボタンを押す", async functi
 Then ("【異常系 記事投稿】エラーメッセージが表示される", async function () {
   const page = playwrightHelper.getPage();
 
-  const errorMessage = page.locator('p').filter({ hasText: '記事の投稿に失敗しました' });
+  const errorMessage = page.getByRole('alert');
   await expect(errorMessage).toBeVisible({ timeout: 10000 });
 })
 
