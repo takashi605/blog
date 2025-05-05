@@ -1,9 +1,7 @@
 use anyhow::Result;
 use common::types::api::response::Image;
-use sqlx::FromRow;
+use sqlx::{Acquire, FromRow, Postgres};
 use uuid::Uuid;
-
-use crate::db::pool::POOL;
 
 #[derive(Debug, FromRow)]
 pub struct ImageRecord {
@@ -11,21 +9,24 @@ pub struct ImageRecord {
   pub file_path: String,
 }
 
-pub async fn fetch_image_by_id(id: Uuid) -> Result<ImageRecord> {
-  let image = sqlx::query_as::<_, ImageRecord>("select id,file_path from images where id = $1").bind(id).fetch_one(&*POOL).await?;
+pub async fn fetch_image_by_id(executor: impl Acquire<'_, Database = Postgres>, id: Uuid) -> Result<ImageRecord> {
+  let mut conn = executor.acquire().await?;
+  let image = sqlx::query_as::<_, ImageRecord>("select id,file_path from images where id = $1").bind(id).fetch_one(&mut *conn).await?;
   Ok(image)
 }
 
-pub async fn fetch_all_images() -> Result<Vec<ImageRecord>> {
-  let images = sqlx::query_as::<_, ImageRecord>("select id, file_path from images").fetch_all(&*POOL).await?;
+pub async fn fetch_all_images(executor: impl Acquire<'_, Database = Postgres>) -> Result<Vec<ImageRecord>> {
+  let mut conn = executor.acquire().await?;
+  let images = sqlx::query_as::<_, ImageRecord>("select id, file_path from images").fetch_all(&mut *conn).await?;
   Ok(images)
 }
 
-pub async fn insert_image(image: Image) -> Result<ImageRecord> {
+pub async fn insert_image(executor: impl Acquire<'_, Database = Postgres>, image: Image) -> Result<ImageRecord> {
+  let mut conn = executor.acquire().await?;
   let image = sqlx::query_as::<_, ImageRecord>("insert into images (id, file_path) values ($1, $2) returning id, file_path")
     .bind(image.id)
     .bind(image.path)
-    .fetch_one(&*POOL)
+    .fetch_one(&mut *conn)
     .await?;
   Ok(image)
 }

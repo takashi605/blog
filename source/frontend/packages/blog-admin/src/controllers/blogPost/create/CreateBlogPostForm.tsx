@@ -36,6 +36,7 @@ function CreateBlogPostForm() {
     },
   });
   const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { register, handleSubmit } = form;
 
@@ -57,8 +58,14 @@ function CreateBlogPostForm() {
       blogPostDTO,
       repository,
     );
-    const createdBlogPost = await createBlogPostUseCase.execute();
-    router.push(`/posts/create/success?id=${createdBlogPost.id}`);
+    try {
+      const createdBlogPost = await createBlogPostUseCase.execute();
+      router.push(`/posts/create/success?id=${createdBlogPost.id}`);
+    } catch (e) {
+      if (e instanceof Error) {
+        setErrorMessage(`記事の投稿に失敗しました。${e.message}`);
+      }
+    }
   };
 
   return (
@@ -78,6 +85,7 @@ function CreateBlogPostForm() {
               <ThumbnailPickModalWithOpenButton />
             </CommonModalProvider>
           </div>
+          {errorMessage && <p role="alert">{errorMessage}</p>}
 
           <div className={styles.title}>
             <label htmlFor="title">タイトル</label>

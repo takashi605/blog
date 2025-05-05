@@ -32,7 +32,7 @@ pub fn admin_blog_posts_scope() -> Scope {
 
 mod handle_funcs {
   use crate::{
-    db::tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
+    db::{pool::POOL, tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post}},
     server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
@@ -65,7 +65,7 @@ mod handle_funcs {
   pub async fn get_top_tech_pick_blog_post() -> Result<impl Responder, ApiCustomError> {
     println!("get_top_tech_pick_blog_post");
     let top_tech_pick_blog_post =
-      fetch_top_tech_pick_blog_post().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+      fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
 
     // top_tech_pick_blog_post.post_id を元に実際のブログ記事を fetch する
     let blog_post = fetch_single_blog_post(top_tech_pick_blog_post.post_id).await?;
@@ -76,9 +76,9 @@ mod handle_funcs {
     println!("put_top_tech_pick_blog_post");
 
     let requested_post: BlogPost = top_tech_pick_posts_req.into_inner();
-    update_top_tech_pick_post(requested_post.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
+    update_top_tech_pick_post(&*POOL, requested_post.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
 
-    let updated_post = fetch_top_tech_pick_blog_post().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+    let updated_post = fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
     let updated_post_id = updated_post.post_id;
     let result = fetch_single_blog_post(updated_post_id).await?;
 
