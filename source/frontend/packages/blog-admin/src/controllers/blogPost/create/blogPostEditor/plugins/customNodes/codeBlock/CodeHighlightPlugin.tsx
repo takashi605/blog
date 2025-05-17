@@ -4,7 +4,7 @@ import { mergeRegister } from '@lexical/utils';
 import { useEffect } from 'react';
 import { registerCodeLanguageSelecting } from './codeLanguageSelectionCommand';
 import { registerCodeTitleSelecting } from './codeTitleSelectionCommand';
-import { TitledCodeNode } from './TitledCodeNode';
+import { CustomCodeNode } from './CustomCodeNode';
 
 const CodeHighlightPlugin = () => {
   const [editor] = useLexicalComposerContext();

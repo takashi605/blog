@@ -16,6 +16,7 @@ import {
 import { useState } from 'react';
 import type { SupportedNodeType } from './types/supportedNodeType';
 import { isSupportedNode } from './types/supportedNodeType';
+import { $createCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 
 export function useUpdateBlockType() {
   const $setHeadingInSelection = (headingType: 'h2' | 'h3') => {
@@ -35,7 +36,7 @@ export function useUpdateBlockType() {
   const $setCodeInSelection = () => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      $setBlocksType(selection, () => $createCodeNode());
+      $setBlocksType(selection, () => $createCustomCodeNode());
     }
   };
   return {

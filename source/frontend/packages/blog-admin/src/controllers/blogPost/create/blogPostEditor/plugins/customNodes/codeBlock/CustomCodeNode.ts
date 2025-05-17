@@ -12,26 +12,26 @@ import {
   LexicalNode,
 } from 'lexical';
 
-type SerializedTitledCodeNode = Spread<
+type SerializedCustomCodeNode = Spread<
   {
     title: string;
-    type: 'titled-code';
+    type: 'custom-code';
     version: 1;
   },
   SerializedCodeNode
 >;
 
-export class TitledCodeNode extends CodeNode {
+export class CustomCodeNode extends CodeNode {
   __title: string;
 
   // CodeNode の要件を満たすために必須
   static getType(): string {
-    return 'titled-code';
+    return 'custom-code';
   }
 
   // CodeNode の要件を満たすために必須
-  static clone(node: TitledCodeNode): TitledCodeNode {
-    return new TitledCodeNode(
+  static clone(node: CustomCodeNode): CustomCodeNode {
+    return new CustomCodeNode(
       node.getLanguage() || '',
       node.__title,
       node.getKey()
@@ -65,7 +65,7 @@ export class TitledCodeNode extends CodeNode {
     const isUpdated = super.updateDOM(prevNode, dom, config);
     
     // タイトルが変更された場合にのみDOM更新
-    if (prevNode instanceof TitledCodeNode && prevNode.__title !== this.__title) {
+    if (prevNode instanceof CustomCodeNode && prevNode.__title !== this.__title) {
       if (this.__title) {
         dom.setAttribute('data-title', this.__title);
       } else {
@@ -79,8 +79,8 @@ export class TitledCodeNode extends CodeNode {
 
   // ほぼ必須。内部で様々な使い方がされており、
   // 不具合の一例として、undo/redo が適切に動作しなかったりする。
-  static importJSON(serializedNode: SerializedTitledCodeNode): TitledCodeNode {
-    const node = $createTitledCodeNode(
+  static importJSON(serializedNode: SerializedCustomCodeNode): CustomCodeNode {
+    const node = $createCustomCodeNode(
       serializedNode.language || '',
       serializedNode.title
     );
@@ -94,11 +94,11 @@ export class TitledCodeNode extends CodeNode {
 
   // ほぼ必須。内部で様々な使い方がされており、
   // 不具合の一例として、undo/redo が適切に動作しなかったりする。
-  exportJSON(): SerializedTitledCodeNode {
+  exportJSON(): SerializedCustomCodeNode {
     return {
       ...super.exportJSON(),
       title: this.__title,
-      type: 'titled-code',
+      type: 'custom-code',
       version: 1,
     };
   }
@@ -116,15 +116,15 @@ export class TitledCodeNode extends CodeNode {
   }
 }
 
-export function $createTitledCodeNode(
+export function $createCustomCodeNode(
   language: string = '',
   title: string = '',
-): TitledCodeNode {
-  return $applyNodeReplacement(new TitledCodeNode(language, title)) as TitledCodeNode;
+): CustomCodeNode {
+  return $applyNodeReplacement(new CustomCodeNode(language, title)) as CustomCodeNode;
 }
 
-export function $isTitledCodeNode(
+export function $isCustomCodeNode(
   node: LexicalNode | null | undefined,
-): node is TitledCodeNode {
-  return node instanceof TitledCodeNode;
+): node is CustomCodeNode {
+  return node instanceof CustomCodeNode;
 }

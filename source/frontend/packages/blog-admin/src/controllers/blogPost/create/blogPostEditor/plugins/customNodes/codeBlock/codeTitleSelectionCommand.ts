@@ -6,7 +6,7 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   createCommand,
 } from 'lexical';
-import { TitledCodeNode, $isTitledCodeNode } from './TitledCodeNode';
+import { CustomCodeNode, $isCustomCodeNode } from './CustomCodeNode';
 
 export const CODE_TITLE_COMMAND = createCommand<string>();
 
@@ -20,14 +20,14 @@ export function registerCodeTitleSelecting(
       if (!$isRangeSelection(selection)) return false;
 
       // 選択中のノード、もしくは親ノードを targetNode として取得
-      // TitledCodeNode が見つからなければ、早期リターン
+      // CustomCodeNode が見つからなければ、早期リターン
       const anchorNode = selection.anchor.getNode();
-      const targetNode = $isTitledCodeNode(anchorNode)
+      const targetNode = $isCustomCodeNode(anchorNode)
         ? anchorNode
-        : $getNearestNodeOfType(anchorNode, TitledCodeNode) as TitledCodeNode | null;
+        : $getNearestNodeOfType(anchorNode, CustomCodeNode) as CustomCodeNode | null;
       if (!targetNode) return false;
 
-      // TitledCodeNode の title を更新
+      // CustomCodeNode の title を更新
       editor.update(() => {
         targetNode.setTitle(title);
       });

@@ -1,7 +1,7 @@
 import { CodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect } from 'react';
-import { TitledCodeNode } from './TitledCodeNode';
+import { CustomCodeNode } from './CustomCodeNode';
 
 export default function CodeLanguageClassPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -22,8 +22,8 @@ export default function CodeLanguageClassPlugin() {
       codeElem.classList.add(`language-${lang}`);
     });
 
-    // TitledCodeNode が作られた／更新されたタイミングで DOM に触る
-    const titledCodeNodeTransform = editor.registerNodeTransform(TitledCodeNode, (node: TitledCodeNode) => {
+    // CustomCodeNode が作られた／更新されたタイミングで DOM に触る
+    const customCodeNodeTransform = editor.registerNodeTransform(CustomCodeNode, (node: CustomCodeNode) => {
       const codeElem = editor.getElementByKey(node.getKey());
       if (!codeElem) return;
 
@@ -50,7 +50,7 @@ export default function CodeLanguageClassPlugin() {
 
     return () => {
       codeNodeTransform();
-      titledCodeNodeTransform();
+      customCodeNodeTransform();
     };
   }, [editor]);
 

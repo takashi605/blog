@@ -7,7 +7,7 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   createCommand,
 } from 'lexical';
-import { TitledCodeNode, $isTitledCodeNode } from './TitledCodeNode';
+import { CustomCodeNode, $isCustomCodeNode } from './CustomCodeNode';
 
 export const CODE_LANGUAGE_COMMAND = createCommand<string>();
 
@@ -23,8 +23,8 @@ export function registerCodeLanguageSelecting(
       // 選択中のノード、もしくは親ノードを targetNode として取得
       const anchorNode = selection.anchor.getNode();
       
-      // TitledCodeNodeを優先的に検索
-      if ($isTitledCodeNode(anchorNode)) {
+      // CustomCodeNodeを優先的に検索
+      if ($isCustomCodeNode(anchorNode)) {
         editor.update(() => {
           anchorNode.setLanguage(language);
         });
@@ -32,10 +32,10 @@ export function registerCodeLanguageSelecting(
       }
       
       // ElementNodesを取得して型キャストを行う
-      const titledNode = $getNearestNodeOfType(anchorNode, TitledCodeNode) as TitledCodeNode | null;
-      if (titledNode) {
+      const customNode = $getNearestNodeOfType(anchorNode, CustomCodeNode) as CustomCodeNode | null;
+      if (customNode) {
         editor.update(() => {
-          titledNode.setLanguage(language);
+          customNode.setLanguage(language);
         });
         return true;
       }
