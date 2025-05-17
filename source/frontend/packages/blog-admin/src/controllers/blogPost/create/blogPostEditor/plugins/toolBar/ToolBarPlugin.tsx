@@ -1,4 +1,3 @@
-import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
@@ -73,7 +72,7 @@ function ToolBarPlugin() {
           if (currentLanguage !== codeLanguage) {
             setCodeLanguage(currentLanguage);
           }
-          
+
           if (currentTitle !== codeTitle) {
             setCodeTitle(currentTitle);
           }
@@ -87,6 +86,9 @@ function ToolBarPlugin() {
     $getSelectionTopLevelElement,
     setCodeLanguage,
     $isParagraphNodeInSelection,
+    codeLanguage,
+    codeTitle,
+    setCodeTitle,
   ]);
 
   const onClickH2Button = useCallback(() => {
@@ -143,21 +145,24 @@ function ToolBarPlugin() {
 
   // タイトル変更ハンドラー
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const value = e.target.value;
-    editor.dispatchCommand(CODE_TITLE_COMMAND, value);
-    
-    // dispatchCommand によりフォーカスがエディタに移ってしまうので、
-    // タイトル入力欄にフォーカスを戻す
-    setTimeout(() => {
-      if (titleInputRef.current) {
-        titleInputRef.current.focus();
-      }
-    }, 0);
-  }, [editor]);
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const value = e.target.value;
+      editor.dispatchCommand(CODE_TITLE_COMMAND, value);
+
+      // dispatchCommand によりフォーカスがエディタに移ってしまうので、
+      // タイトル入力欄にフォーカスを戻す
+      setTimeout(() => {
+        if (titleInputRef.current) {
+          titleInputRef.current.focus();
+        }
+      }, 0);
+    },
+    [editor],
+  );
 
   return (
     <div className={styles.toolBar}>

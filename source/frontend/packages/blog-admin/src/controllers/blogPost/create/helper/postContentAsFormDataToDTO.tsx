@@ -41,7 +41,7 @@ export function postContentAsFormDataToDTO(
       case 'code':
         const codeNode = content as CustomCodeNode;
         const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
-        const title = codeNode.getTitle()
+        const title = codeNode.getTitle();
         contentsDTO.push({
           id: createUUIDv4(),
           type: ContentType.CodeBlock,

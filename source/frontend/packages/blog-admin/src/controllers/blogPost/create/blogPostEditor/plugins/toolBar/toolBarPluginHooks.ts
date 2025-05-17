@@ -10,7 +10,7 @@ import {
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { $createCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
 import type { SupportedNodeType } from './types/supportedNodeType';
@@ -163,14 +163,17 @@ export function useCodeLanguage() {
 export function useCodeTitle() {
   const [editor] = useLexicalComposerContext();
   const [codeTitle, setCodeTitle] = useState<string>('');
-  
-  const updateCodeTitle = useCallback((title: string) => {
-    setCodeTitle(title);
-    
-    // エディタにコマンドを送信してノードを更新する
-    editor.dispatchCommand(CODE_TITLE_COMMAND, title);
-  }, [editor]);
-  
+
+  const updateCodeTitle = useCallback(
+    (title: string) => {
+      setCodeTitle(title);
+
+      // エディタにコマンドを送信してノードを更新する
+      editor.dispatchCommand(CODE_TITLE_COMMAND, title);
+    },
+    [editor],
+  );
+
   return {
     codeTitle,
     setCodeTitle: updateCodeTitle,
