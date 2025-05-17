@@ -4,9 +4,7 @@ import {
 } from '@lexical/code';
 import {
   $applyNodeReplacement,
-  DOMExportOutput,
   EditorConfig,
-  LexicalEditor,
   NodeKey,
   Spread,
   LexicalNode,
@@ -15,7 +13,7 @@ import {
 type SerializedCustomCodeNode = Spread<
   {
     title: string;
-    type: 'custom-code';
+    type: 'code';
     version: 1;
   },
   SerializedCodeNode
@@ -26,7 +24,7 @@ export class CustomCodeNode extends CodeNode {
 
   // CodeNode の要件を満たすために必須
   static getType(): string {
-    return 'custom-code';
+    return 'code';
   }
 
   // CodeNode の要件を満たすために必須
@@ -98,7 +96,7 @@ export class CustomCodeNode extends CodeNode {
     return {
       ...super.exportJSON(),
       title: this.__title,
-      type: 'custom-code',
+      type: 'code',
       version: 1,
     };
   }

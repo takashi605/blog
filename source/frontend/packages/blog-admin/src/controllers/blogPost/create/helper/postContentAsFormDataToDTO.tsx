@@ -1,4 +1,3 @@
-import type { CodeNode } from '@lexical/code';
 import type { HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
@@ -12,6 +11,7 @@ import type {
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
 import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
+import { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 
@@ -39,7 +39,7 @@ export function postContentAsFormDataToDTO(
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
         break;
       case 'code':
-        const codeNode = content as CodeNode;
+        const codeNode = content as CustomCodeNode;
         const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
         contentsDTO.push({
           id: createUUIDv4(),

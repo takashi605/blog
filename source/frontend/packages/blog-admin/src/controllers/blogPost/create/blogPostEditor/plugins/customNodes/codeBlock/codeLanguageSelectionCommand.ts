@@ -23,7 +23,7 @@ export function registerCodeLanguageSelecting(
       // 選択中のノード、もしくは親ノードを targetNode として取得
       const anchorNode = selection.anchor.getNode();
       
-      // CustomCodeNodeを優先的に検索
+      // anchorNode が CodeNode の場合、直接的に言語を設定
       if ($isCustomCodeNode(anchorNode)) {
         editor.update(() => {
           anchorNode.setLanguage(language);
@@ -31,27 +31,11 @@ export function registerCodeLanguageSelecting(
         return true;
       }
       
-      // ElementNodesを取得して型キャストを行う
+      // 祖先の CustomCodeNode を探し、言語を設定
       const customNode = $getNearestNodeOfType(anchorNode, CustomCodeNode) as CustomCodeNode | null;
       if (customNode) {
         editor.update(() => {
           customNode.setLanguage(language);
-        });
-        return true;
-      }
-      
-      // 通常のCodeNodeを検索
-      if ($isCodeNode(anchorNode)) {
-        editor.update(() => {
-          anchorNode.setLanguage(language);
-        });
-        return true;
-      }
-      
-      const codeNode = $getNearestNodeOfType(anchorNode, CodeNode);
-      if (codeNode) {
-        editor.update(() => {
-          codeNode.setLanguage(language);
         });
         return true;
       }
