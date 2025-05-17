@@ -1,14 +1,7 @@
-import {
-  CodeNode,
-  SerializedCodeNode,
-} from '@lexical/code';
-import {
-  $applyNodeReplacement,
-  EditorConfig,
-  NodeKey,
-  Spread,
-  LexicalNode,
-} from 'lexical';
+import type { SerializedCodeNode } from '@lexical/code';
+import { CodeNode } from '@lexical/code';
+import type { EditorConfig, LexicalNode, NodeKey, Spread } from 'lexical';
+import { $applyNodeReplacement } from 'lexical';
 
 type SerializedCustomCodeNode = Spread<
   {
@@ -32,7 +25,7 @@ export class CustomCodeNode extends CodeNode {
     return new CustomCodeNode(
       node.getLanguage() || '',
       node.__title,
-      node.getKey()
+      node.getKey(),
     );
   }
 
@@ -45,12 +38,12 @@ export class CustomCodeNode extends CodeNode {
   // CodeNode の要件を満たすために必須
   createDOM(config: EditorConfig): HTMLElement {
     const dom = super.createDOM(config);
-    
+
     // title属性を追加
     if (this.__title) {
       dom.setAttribute('data-title', this.__title);
     }
-    
+
     return dom;
   }
 
@@ -61,9 +54,12 @@ export class CustomCodeNode extends CodeNode {
     config: EditorConfig,
   ): boolean {
     const isUpdated = super.updateDOM(prevNode, dom, config);
-    
+
     // タイトルが変更された場合にのみDOM更新
-    if (prevNode instanceof CustomCodeNode && prevNode.__title !== this.__title) {
+    if (
+      prevNode instanceof CustomCodeNode &&
+      prevNode.__title !== this.__title
+    ) {
       if (this.__title) {
         dom.setAttribute('data-title', this.__title);
       } else {
@@ -80,13 +76,13 @@ export class CustomCodeNode extends CodeNode {
   static importJSON(serializedNode: SerializedCustomCodeNode): CustomCodeNode {
     const node = $createCustomCodeNode(
       serializedNode.language || '',
-      serializedNode.title
+      serializedNode.title,
     );
-    
+
     if (serializedNode.direction) {
       node.setDirection(serializedNode.direction);
     }
-    
+
     return node;
   }
 
@@ -101,9 +97,9 @@ export class CustomCodeNode extends CodeNode {
     };
   }
 
-  /* 
-  * 以下、CodeNode の要件を満たすために必須ではないが、必要に応じて実装するメソッド
-  */
+  /*
+   * 以下、CodeNode の要件を満たすために必須ではないが、必要に応じて実装するメソッド
+   */
   getTitle(): string {
     return this.__title;
   }
@@ -118,7 +114,9 @@ export function $createCustomCodeNode(
   language: string = '',
   title: string = '',
 ): CustomCodeNode {
-  return $applyNodeReplacement(new CustomCodeNode(language, title)) as CustomCodeNode;
+  return $applyNodeReplacement(
+    new CustomCodeNode(language, title),
+  ) as CustomCodeNode;
 }
 
 export function $isCustomCodeNode(

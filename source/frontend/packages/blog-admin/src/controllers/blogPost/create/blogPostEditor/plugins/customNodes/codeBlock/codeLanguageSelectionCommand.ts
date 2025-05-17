@@ -1,4 +1,3 @@
-import { $isCodeNode, CodeNode } from '@lexical/code';
 import { $getNearestNodeOfType } from '@lexical/utils';
 import type { LexicalEditor } from 'lexical';
 import {
@@ -7,7 +6,7 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   createCommand,
 } from 'lexical';
-import { CustomCodeNode, $isCustomCodeNode } from './CustomCodeNode';
+import { $isCustomCodeNode, CustomCodeNode } from './CustomCodeNode';
 
 export const CODE_LANGUAGE_COMMAND = createCommand<string>();
 
@@ -22,7 +21,7 @@ export function registerCodeLanguageSelecting(
 
       // 選択中のノード、もしくは親ノードを targetNode として取得
       const anchorNode = selection.anchor.getNode();
-      
+
       // anchorNode が CodeNode の場合、直接的に言語を設定
       if ($isCustomCodeNode(anchorNode)) {
         editor.update(() => {
@@ -30,9 +29,12 @@ export function registerCodeLanguageSelecting(
         });
         return true;
       }
-      
+
       // 祖先の CustomCodeNode を探し、言語を設定
-      const customNode = $getNearestNodeOfType(anchorNode, CustomCodeNode) as CustomCodeNode | null;
+      const customNode = $getNearestNodeOfType(
+        anchorNode,
+        CustomCodeNode,
+      ) as CustomCodeNode | null;
       if (customNode) {
         editor.update(() => {
           customNode.setLanguage(language);

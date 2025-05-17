@@ -106,7 +106,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       height: this.__height,
     };
   }
-  
+
   // DecoratorNode の要件を満たすためにほぼ必須
   // これが無いと、例えば undo/redo が適切に動かない(拡張した部分を無視してしまう)
   static importJSON(serializedNode: SerializedImageNode): ImageNode {

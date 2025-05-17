@@ -1,4 +1,3 @@
-
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { LexicalEditor, LexicalNode } from 'lexical';
@@ -7,6 +6,10 @@ import type {
   ImageContentDTO,
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
+import {
+  $createCustomCodeNode,
+  CustomCodeNode,
+} from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 import {
   $createImageNode,
   ImageNode,
@@ -18,7 +21,6 @@ import {
   postContentAsFormDataToDTO,
   textNodeToRichTextDTO,
 } from './postContentAsFormDataToDTO';
-import { $createCustomCodeNode, CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 
 describe('typedBlogPostToDTO', () => {
   it('入力されたブログ記事コンテンツデータを DTO に変換する', () => {

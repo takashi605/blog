@@ -10,8 +10,8 @@ import type {
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import type { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
-import { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
 

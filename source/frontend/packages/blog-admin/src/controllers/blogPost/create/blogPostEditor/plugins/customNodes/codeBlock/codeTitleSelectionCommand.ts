@@ -6,13 +6,11 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   createCommand,
 } from 'lexical';
-import { CustomCodeNode, $isCustomCodeNode } from './CustomCodeNode';
+import { $isCustomCodeNode, CustomCodeNode } from './CustomCodeNode';
 
 export const CODE_TITLE_COMMAND = createCommand<string>();
 
-export function registerCodeTitleSelecting(
-  editor: LexicalEditor,
-): () => void {
+export function registerCodeTitleSelecting(editor: LexicalEditor): () => void {
   return editor.registerCommand(
     CODE_TITLE_COMMAND,
     (title, editor) => {
@@ -24,7 +22,10 @@ export function registerCodeTitleSelecting(
       const anchorNode = selection.anchor.getNode();
       const targetNode = $isCustomCodeNode(anchorNode)
         ? anchorNode
-        : $getNearestNodeOfType(anchorNode, CustomCodeNode) as CustomCodeNode | null;
+        : ($getNearestNodeOfType(
+            anchorNode,
+            CustomCodeNode,
+          ) as CustomCodeNode | null);
       if (!targetNode) return false;
 
       // CustomCodeNode の title を更新

@@ -1,7 +1,4 @@
-import {
-  $createCodeNode,
-  CODE_LANGUAGE_FRIENDLY_NAME_MAP,
-} from '@lexical/code';
+import { CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -14,9 +11,9 @@ import {
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
 import { useState } from 'react';
+import { $createCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import type { SupportedNodeType } from './types/supportedNodeType';
 import { isSupportedNode } from './types/supportedNodeType';
-import { $createCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 
 export function useUpdateBlockType() {
   const $setHeadingInSelection = (headingType: 'h2' | 'h3') => {
