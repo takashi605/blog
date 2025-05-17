@@ -94,6 +94,31 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return 'image';
   }
 
+  // DecoratorNode の要件を満たすためにほぼ必須
+  // これが無いと、例えば undo/redo が適切に動かない(拡張した部分を無視してしまう)
+  exportJSON(): SerializedImageNode {
+    return {
+      type: 'image',
+      version: 1,
+      src: this.__src,
+      altText: this.__altText,
+      width: this.__width,
+      height: this.__height,
+    };
+  }
+
+  // DecoratorNode の要件を満たすためにほぼ必須
+  // これが無いと、例えば undo/redo が適切に動かない(拡張した部分を無視してしまう)
+  static importJSON(serializedNode: SerializedImageNode): ImageNode {
+    const node = $createImageNode({
+      src: serializedNode.src,
+      altText: serializedNode.altText,
+      width: serializedNode.width,
+      height: serializedNode.height,
+    });
+    return node;
+  }
+
   getSrc(): string {
     return this.__src;
   }

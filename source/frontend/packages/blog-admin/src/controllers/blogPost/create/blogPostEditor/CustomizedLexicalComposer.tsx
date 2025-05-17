@@ -1,4 +1,4 @@
-import { CodeHighlightNode, CodeNode } from '@lexical/code';
+import { CodeHighlightNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -18,6 +18,7 @@ import 'prismjs/components/prism-rust';
 import 'prismjs/components/prism-scss';
 import 'prismjs/components/prism-typescript';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
+import { CustomCodeNode } from './plugins/customNodes/codeBlock/CustomCodeNode';
 import { ImageNode } from './plugins/customNodes/image/ImageNode';
 
 const theme = {
@@ -85,7 +86,6 @@ function CustomizedLexicalComposer({
       ListNode,
       ListItemNode,
       HorizontalRuleNode,
-      CodeNode,
       CodeHighlightNode,
       HeadingNode,
       LinkNode,
@@ -95,6 +95,7 @@ function CustomizedLexicalComposer({
       ParagraphNode,
       TextNode,
       ImageNode,
+      CustomCodeNode,
     ],
     theme,
   };

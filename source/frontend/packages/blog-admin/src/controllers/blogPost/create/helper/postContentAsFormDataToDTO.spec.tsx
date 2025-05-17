@@ -1,4 +1,3 @@
-import { $createCodeNode, CodeNode } from '@lexical/code';
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { LexicalEditor, LexicalNode } from 'lexical';
@@ -7,6 +6,10 @@ import type {
   ImageContentDTO,
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
+import {
+  $createCustomCodeNode,
+  CustomCodeNode,
+} from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 import {
   $createImageNode,
   ImageNode,
@@ -80,7 +83,7 @@ describe('typedBlogPostToDTO', () => {
         $createTextNode('Hello'),
         $createTextNode('World').setFormat('bold'),
       );
-      const codeNode = $createCodeNode('javascript');
+      const codeNode = $createCustomCodeNode('javascript');
       const textNode = $createTextNode('console.log("Hello World")');
       codeNode.append(textNode);
 
@@ -189,7 +192,7 @@ function createTextEditor(): LexicalEditor {
     onError: (e: Error) => {
       throw e;
     },
-    nodes: [HeadingNode, ImageNode, CodeNode],
+    nodes: [HeadingNode, ImageNode, CustomCodeNode],
   };
 
   return createEditor(config);
