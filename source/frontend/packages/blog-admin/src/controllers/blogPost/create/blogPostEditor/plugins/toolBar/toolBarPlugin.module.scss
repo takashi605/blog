@@ -12,10 +12,41 @@
   display: flex;
   gap: 6px;
   flex-direction: row;
+  align-items: center;
 }
 
 .toolBarTitle {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.codeSelect {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+.titleInputContainer {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.titleInput {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 14px;
+  width: 200px;
+  transition: border-color 0.2s ease;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: #aaa;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.1);
 }
