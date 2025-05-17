@@ -41,11 +41,11 @@ export function postContentAsFormDataToDTO(
       case 'code':
         const codeNode = content as CustomCodeNode;
         const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
+        const title = codeNode.getTitle()
         contentsDTO.push({
           id: createUUIDv4(),
           type: ContentType.CodeBlock,
-          // TODO CodeBlock をカスタムノードにして、title を設定可能にする
-          title: 'サンプルコード',
+          title,
           code: codeNode.getTextContent(),
           language: lang as string,
         });
