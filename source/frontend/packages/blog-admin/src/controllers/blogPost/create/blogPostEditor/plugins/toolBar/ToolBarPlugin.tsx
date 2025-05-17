@@ -1,6 +1,6 @@
 import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
@@ -141,6 +141,24 @@ function ToolBarPlugin() {
     });
   }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
+  // タイトル変更ハンドラー
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const value = e.target.value;
+    editor.dispatchCommand(CODE_TITLE_COMMAND, value);
+    
+    // dispatchCommand によりフォーカスがエディタに移ってしまうので、
+    // タイトル入力欄にフォーカスを戻す
+    setTimeout(() => {
+      if (titleInputRef.current) {
+        titleInputRef.current.focus();
+      }
+    }, 0);
+  }, [editor]);
+
   return (
     <div className={styles.toolBar}>
       <div className={styles.toolBarButtons}>
@@ -188,19 +206,11 @@ function ToolBarPlugin() {
             <MdExpandMore />
             <div className={styles.titleInputContainer}>
               <input
+                ref={titleInputRef}
                 type="text"
                 placeholder="コードブロックのタイトル"
                 value={codeTitle}
-                onChange={(e) => 
-                  editor.dispatchCommand(
-                    CODE_TITLE_COMMAND,
-                    e.target.value,
-                  )
-                }
-                // onClickでもイベント伝播を止める
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
+                onChange={handleTitleChange}
                 className={styles.titleInput}
                 aria-label="code block title"
               />
