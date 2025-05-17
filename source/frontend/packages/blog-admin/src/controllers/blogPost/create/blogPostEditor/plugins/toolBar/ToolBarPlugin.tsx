@@ -1,16 +1,18 @@
-import { $isCodeNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
 import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
+import { $isCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
+import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
 import ImageInsertModal from './ImageInsertModal';
 import { ToolBarButton } from './parts/Button';
 import styles from './toolBarPlugin.module.scss';
 import {
   useCodeLanguage,
+  useCodeTitle,
   useSelectedNode,
   useSelectedTextStyle,
   useUpdateBlockType,
@@ -23,6 +25,7 @@ function ToolBarPlugin() {
     useState<SupportedNodeType | null>(null);
   const [isSelectedParagraphNode, setIsSelectedParagraphNode] =
     useState<boolean>(false);
+  const { codeTitle, setCodeTitle } = useCodeTitle();
   const {
     isBoldSelected,
     isInlineCodeSelected,
@@ -62,8 +65,17 @@ function ToolBarPlugin() {
 
         // 選択中のコードノードの言語を取得して、codeLanguage に保持
         const targetNode = $getSelectionTopLevelElement();
-        if ($isCodeNode(targetNode)) {
-          setCodeLanguage(targetNode.getLanguage() || '');
+        if ($isCustomCodeNode(targetNode)) {
+          const currentLanguage = targetNode.getLanguage() || '';
+          const currentTitle = targetNode.getTitle();
+
+          if (currentLanguage !== codeLanguage) {
+            setCodeLanguage(currentLanguage);
+          }
+
+          if (currentTitle !== codeTitle) {
+            setCodeTitle(currentTitle);
+          }
         }
       });
     });
@@ -74,6 +86,9 @@ function ToolBarPlugin() {
     $getSelectionTopLevelElement,
     setCodeLanguage,
     $isParagraphNodeInSelection,
+    codeLanguage,
+    codeTitle,
+    setCodeTitle,
   ]);
 
   const onClickH2Button = useCallback(() => {
@@ -128,6 +143,27 @@ function ToolBarPlugin() {
     });
   }, [$setCodeInSelection, $setParagraphInSelection, editor, selectedNodeType]);
 
+  // タイトル変更ハンドラー
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const value = e.target.value;
+      editor.dispatchCommand(CODE_TITLE_COMMAND, value);
+
+      // dispatchCommand によりフォーカスがエディタに移ってしまうので、
+      // タイトル入力欄にフォーカスを戻す
+      setTimeout(() => {
+        if (titleInputRef.current) {
+          titleInputRef.current.focus();
+        }
+      }, 0);
+    },
+    [editor],
+  );
+
   return (
     <div className={styles.toolBar}>
       <div className={styles.toolBarButtons}>
@@ -163,6 +199,7 @@ function ToolBarPlugin() {
                   event.target.value,
                 )
               }
+              className={styles.codeSelect}
             >
               <option value="">select...</option>
               {codeLanguagesOptions.map((item) => (
@@ -172,6 +209,17 @@ function ToolBarPlugin() {
               ))}
             </select>
             <MdExpandMore />
+            <div className={styles.titleInputContainer}>
+              <input
+                ref={titleInputRef}
+                type="text"
+                placeholder="コードブロックのタイトル"
+                value={codeTitle}
+                onChange={handleTitleChange}
+                className={styles.titleInput}
+                aria-label="code block title"
+              />
+            </div>
           </>
         )}
       </div>

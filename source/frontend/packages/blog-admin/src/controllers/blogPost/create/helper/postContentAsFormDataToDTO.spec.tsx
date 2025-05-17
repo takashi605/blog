@@ -84,6 +84,7 @@ describe('typedBlogPostToDTO', () => {
         $createTextNode('World').setFormat('bold'),
       );
       const codeNode = $createCustomCodeNode('javascript');
+      codeNode.setTitle('サンプルコード');
       const textNode = $createTextNode('console.log("Hello World")');
       codeNode.append(textNode);
 
