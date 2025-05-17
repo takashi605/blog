@@ -1,4 +1,3 @@
-import type { CodeNode } from '@lexical/code';
 import type { HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
@@ -11,6 +10,7 @@ import type {
   RichTextDTO,
 } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
+import type { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
 
 // TODO 各関数で ID を生成しているが、これはドメイン層で行うべきかもしれない
@@ -39,13 +39,13 @@ export function postContentAsFormDataToDTO(
         contentsDTO.push(paragraphNodeToDTO(content as ElementNode));
         break;
       case 'code':
-        const codeNode = content as CodeNode;
+        const codeNode = content as CustomCodeNode;
         const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
+        const title = codeNode.getTitle();
         contentsDTO.push({
           id: createUUIDv4(),
           type: ContentType.CodeBlock,
-          // TODO CodeBlock をカスタムノードにして、title を設定可能にする
-          title: 'サンプルコード',
+          title,
           code: codeNode.getTextContent(),
           language: lang as string,
         });

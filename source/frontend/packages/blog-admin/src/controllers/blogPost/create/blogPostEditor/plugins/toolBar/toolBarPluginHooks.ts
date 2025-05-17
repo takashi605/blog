@@ -1,7 +1,4 @@
-import {
-  $createCodeNode,
-  CODE_LANGUAGE_FRIENDLY_NAME_MAP,
-} from '@lexical/code';
+import { CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -13,7 +10,9 @@ import {
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { $createCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
+import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
 import type { SupportedNodeType } from './types/supportedNodeType';
 import { isSupportedNode } from './types/supportedNodeType';
 
@@ -35,7 +34,7 @@ export function useUpdateBlockType() {
   const $setCodeInSelection = () => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      $setBlocksType(selection, () => $createCodeNode());
+      $setBlocksType(selection, () => $createCustomCodeNode());
     }
   };
   return {
@@ -158,4 +157,25 @@ export function useCodeLanguage() {
     setCodeLanguage,
     codeLanguagesOptions,
   };
+}
+
+// コードブロックのタイトル操作用のフック
+export function useCodeTitle() {
+  const [editor] = useLexicalComposerContext();
+  const [codeTitle, setCodeTitle] = useState<string>('');
+
+  const updateCodeTitle = useCallback(
+    (title: string) => {
+      setCodeTitle(title);
+
+      // エディタにコマンドを送信してノードを更新する
+      editor.dispatchCommand(CODE_TITLE_COMMAND, title);
+    },
+    [editor],
+  );
+
+  return {
+    codeTitle,
+    setCodeTitle: updateCodeTitle,
+  } as const;
 }
