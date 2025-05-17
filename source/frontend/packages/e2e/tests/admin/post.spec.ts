@@ -294,6 +294,31 @@ Then(
 );
 
 When(
+  '【正常系 記事投稿】コードブロックのタイトルを「サンプル： 定数定義」に変更する',
+  async function () {
+    const page = playwrightHelper.getPage();
+    
+    // コードブロックのタイトル入力欄を探す
+    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
+    await expect(codeTitleInput).toBeVisible({ timeout: 10000 });
+    
+    // タイトルを入力
+    await codeTitleInput.fill('サンプル： 定数定義');
+  },
+);
+
+Then(
+  '【正常系 記事投稿】コードブロックのタイトルが「サンプル： 定数定義」になっている',
+  async function () {
+    const page = playwrightHelper.getPage();
+    
+    // コードブロックのタイトル入力欄の値を確認
+    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
+    await expect(codeTitleInput).toHaveValue('サンプル： 定数定義', { timeout: 10000 });
+  },
+);
+
+When(
   '【正常系 記事投稿】画像選択モーダルを開き、画像を選択する',
   async function () {
     const page = playwrightHelper.getPage();
@@ -463,6 +488,17 @@ Then(
     expect(languageDataAttribute).toBe('language-js');
   },
 );
+
+Then(
+  '【正常系 記事投稿】コードブロックのタイトル「サンプル： 定数定義」が存在する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const codeBlockTitle = page.getByText('サンプル： 定数定義');
+    await expect(codeBlockTitle).toBeVisible({ timeout: 10000 });
+  },
+);
+
 Then(
   '【正常系 記事投稿】コードブロック内に「const a = 1」が表示されている',
   async function () {
