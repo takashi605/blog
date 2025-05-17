@@ -19,6 +19,7 @@ import 'prismjs/components/prism-scss';
 import 'prismjs/components/prism-typescript';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import { ImageNode } from './plugins/customNodes/image/ImageNode';
+import { TitledCodeNode } from './plugins/customNodes/codeBlock/TitledCodeNode';
 
 const theme = {
   code: `language-js ${styles.codeBlock}`,
@@ -95,6 +96,7 @@ function CustomizedLexicalComposer({
       ParagraphNode,
       TextNode,
       ImageNode,
+      TitledCodeNode,
     ],
     theme,
   };
