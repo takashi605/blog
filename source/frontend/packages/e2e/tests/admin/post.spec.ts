@@ -299,7 +299,7 @@ When(
     const page = playwrightHelper.getPage();
     
     // コードブロックのタイトル入力欄を探す
-    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
+    const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル');
     await expect(codeTitleInput).toBeVisible({ timeout: 10000 });
     
     // タイトルを入力
@@ -313,7 +313,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // コードブロックのタイトル入力欄の値を確認
-    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
+    const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル');
     await expect(codeTitleInput).toHaveValue('サンプル： 定数定義', { timeout: 10000 });
   },
 );
@@ -326,9 +326,10 @@ When(
     // 改行を入れて、画像を挿入する位置を確保
     // コードブロックから抜けるには、3回 Enter を押す
     const richTextEditor = page.locator('[contenteditable="true"]');
-    richTextEditor.press('Enter');
-    richTextEditor.press('Enter');
-    richTextEditor.press('Enter');
+    await richTextEditor.press('Control+End');// ctrl+end で一番下に移動
+    await richTextEditor.press('Enter');
+    await richTextEditor.press('Enter');
+    await richTextEditor.press('Enter');
 
     const openModalButton = page.getByRole('button', { name: '画像を挿入' });
     await openModalButton.click();
