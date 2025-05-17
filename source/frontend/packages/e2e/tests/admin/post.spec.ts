@@ -299,7 +299,7 @@ When(
     const page = playwrightHelper.getPage();
     
     // コードブロックのタイトル入力欄を探す
-    const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル（任意）');
+    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
     await expect(codeTitleInput).toBeVisible({ timeout: 10000 });
     
     // タイトルを入力
@@ -313,7 +313,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // コードブロックのタイトル入力欄の値を確認
-    const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル（任意）');
+    const codeTitleInput = page.getByRole('textbox', {name: 'コードの説明(任意)'});
     await expect(codeTitleInput).toHaveValue('サンプル： 定数定義', { timeout: 10000 });
   },
 );
@@ -490,7 +490,7 @@ Then(
 );
 
 Then(
-  '【正常系 記事投稿】コードブロックのタイトルが「サンプル： 定数定義」になっている',
+  '【正常系 記事投稿】コードブロックのタイトル「サンプル： 定数定義」が存在する',
   async function () {
     const page = playwrightHelper.getPage();
 
