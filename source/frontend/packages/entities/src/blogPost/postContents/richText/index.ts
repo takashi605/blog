@@ -47,5 +47,5 @@ type RichTextStyles = {
 };
 
 type Link = {
-  href: string;
+  url: string;
 };

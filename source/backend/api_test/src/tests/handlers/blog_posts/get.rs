@@ -10,7 +10,8 @@ mod tests {
   async fn get_single_blog_post() -> Result<()> {
     let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
-
+    println!("レスポンス: {:?}", resp);
+    
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
     let expected_blog_post: BlogPost = helper::expected_regular_blog_post().unwrap();
 

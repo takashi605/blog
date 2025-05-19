@@ -46,7 +46,7 @@ describe('richText', () => {
       new RichTextPart(
         'テストテキスト2',
         { bold: false, inlineCode: false },
-        { href: 'https://example.com' },
+        { url: 'https://example.com' },
       ),
       new RichTextPart('テストテキスト3'),
     ]);
@@ -55,7 +55,7 @@ describe('richText', () => {
       new RichTextPart(
         'テストテキスト2',
         { bold: false, inlineCode: false },
-        { href: 'https://example.com' },
+        { url: 'https://example.com' },
       ),
       new RichTextPart('テストテキスト3'),
     ]);
