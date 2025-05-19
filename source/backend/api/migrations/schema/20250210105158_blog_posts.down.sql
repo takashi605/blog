@@ -3,6 +3,8 @@ BEGIN;
 -- rich_text_styles は rich_texts と text_styles に依存するため最初に削除
 DROP TABLE IF EXISTS rich_text_styles;
 
+DROP TABLE IF EXISTS rich_text_links;
+
 -- rich_texts は paragraph_blocks に依存するため次に削除
 DROP TABLE IF EXISTS rich_texts;
 

@@ -74,4 +74,12 @@ CREATE TABLE IF NOT EXISTS rich_text_styles (
     PRIMARY KEY (style_id, rich_text_id)
 );
 
+CREATE TABLE IF NOT EXISTS rich_text_links (
+  id            UUID PRIMARY KEY,
+  rich_text_id  UUID NOT NULL UNIQUE REFERENCES rich_texts(id),
+  url           TEXT NOT NULL,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 COMMIT;
