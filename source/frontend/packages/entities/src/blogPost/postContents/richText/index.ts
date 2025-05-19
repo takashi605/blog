@@ -16,11 +16,15 @@ export class RichTextPart {
     bold: false,
     inlineCode: false,
   };
+  private link?: Link;
 
-  constructor(text: string, styles?: RichTextStyles) {
+  constructor(text: string, styles?: RichTextStyles, link?: Link) {
     this.text = text;
     if (styles) {
       this.styles = styles;
+    }
+    if (link) {
+      this.link = link;
     }
   }
 
@@ -31,9 +35,17 @@ export class RichTextPart {
   getStyles(): RichTextStyles {
     return this.styles;
   }
+
+  getLink(): Link | undefined {
+    return this.link;
+  }
 }
 
 type RichTextStyles = {
   bold: boolean;
   inlineCode: boolean;
+};
+
+type Link = {
+  href: string;
 };

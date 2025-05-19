@@ -34,6 +34,7 @@ export class ParagraphToDTOStrategy extends ContentToDTOStrategy<
       return {
         text: richTextPart.getText(),
         styles: richTextPart.getStyles(),
+        link: richTextPart.getLink(),
       };
     });
     return {
