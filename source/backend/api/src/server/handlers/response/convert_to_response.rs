@@ -102,5 +102,8 @@ fn rich_text_to_response(rich_text_record_with_styles: RichTextRecordWithStyles)
   RichText {
     text: rich_text_record_with_styles.text_record.text_content,
     styles,
+
+    // TODO: link の情報を取得する
+    link: Option::None,
   }
 }

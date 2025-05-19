@@ -312,6 +312,7 @@ mod tests {
               RichText {
                 text: "これはテスト用の文字列です。".to_string(),
                 styles: Style { bold: true, inline_code: true },
+                link: Option::None,
               },
               RichText {
                 text: "これはテスト用の文字列その2です。".to_string(),
@@ -319,6 +320,7 @@ mod tests {
                   bold: false,
                   inline_code: false,
                 },
+                link: Option::None,
               },
             ],
             type_field: "paragraph".to_string(),

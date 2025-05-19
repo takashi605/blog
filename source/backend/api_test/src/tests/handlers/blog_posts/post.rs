@@ -50,6 +50,7 @@ mod helper {
                 bold: true,
                 inline_code: true,
               },
+              link: Option::None,
             },
             RichText {
               text: "これはテスト用の文字列その2です。".to_string(),
@@ -57,6 +58,7 @@ mod helper {
                 bold: false,
                 inline_code: false,
               },
+              link: Option::None,
             },
           ],
           type_field: "paragraph".to_string(),
