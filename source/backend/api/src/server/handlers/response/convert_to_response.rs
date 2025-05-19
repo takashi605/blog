@@ -5,11 +5,11 @@ use crate::db::tables::{
   blog_posts_table::BlogPostRecordWithRelations,
   heading_blocks_table::HeadingBlockRecord,
   image_blocks_table::ImageBlockRecordWithRelations,
-  paragraph_blocks_table::{ParagraphBlockRecordWithRelations, RichTextRecordWithStyles},
+  paragraph_blocks_table::{ParagraphBlockRecordWithRelations, RichTextRecordWithRelations},
   post_contents_table::AnyContentBlockRecord,
 };
 use anyhow::Result;
-use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 
 pub async fn generate_blog_post_response(blog_post_record_with_relations: BlogPostRecordWithRelations) -> Result<BlogPost> {
   let blog_post_record = blog_post_record_with_relations.blog_post_record;
@@ -85,7 +85,7 @@ fn image_to_response(image_block_record: ImageBlockRecordWithRelations) -> BlogP
 
 fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelations) -> BlogPostContent {
   let rich_text_response: Vec<RichText> =
-    paragraph_block_record.rich_text_records_with_styles.into_iter().map(|record| rich_text_to_response(record)).collect();
+    paragraph_block_record.rich_text_records_with_relations.into_iter().map(|record| rich_text_to_response(record)).collect();
 
   BlogPostContent::Paragraph(ParagraphBlock {
     id: paragraph_block_record.paragraph_block.id,
@@ -94,16 +94,19 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelatio
   })
 }
 
-fn rich_text_to_response(rich_text_record_with_styles: RichTextRecordWithStyles) -> RichText {
+fn rich_text_to_response(rich_text_record_with_relations: RichTextRecordWithRelations) -> RichText {
   let styles = Style {
-    bold: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "bold"),
-    inline_code: rich_text_record_with_styles.style_records.iter().any(|record| record.style_type == "inline-code"),
+    bold: rich_text_record_with_relations.style_records.iter().any(|record| record.style_type == "bold"),
+    inline_code: rich_text_record_with_relations.style_records.iter().any(|record| record.style_type == "inline-code"),
+  };
+  let link: Option<Link> = match rich_text_record_with_relations.link_record {
+    Some(link_record) => Option::Some(Link { url: link_record.url }),
+    None => Option::None,
   };
   RichText {
-    text: rich_text_record_with_styles.text_record.text_content,
+    text: rich_text_record_with_relations.text_record.text_content,
     styles,
 
-    // TODO: link の情報を取得する
-    link: Option::None,
+    link,
   }
 }
