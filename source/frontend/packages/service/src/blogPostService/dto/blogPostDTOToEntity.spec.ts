@@ -32,7 +32,11 @@ describe('blogPostDTOToEntity', () => {
           text: [
             { text: 'Hello', styles: { bold: false, inlineCode: false } },
             { text: 'World', styles: { bold: true, inlineCode: false } },
-            { text: '!', styles: { bold: false, inlineCode: false }, link: { href: 'https://example.com' } },
+            {
+              text: '!',
+              styles: { bold: false, inlineCode: false },
+              link: { href: 'https://example.com' },
+            },
           ],
         },
       ],

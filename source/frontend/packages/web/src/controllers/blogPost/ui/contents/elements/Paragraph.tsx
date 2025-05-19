@@ -32,11 +32,7 @@ function StyledText({ richText }: { richText: RichTextDTO[number] }) {
     text = <code className={styles.inlineCodeText}>{text}</code>;
   }
   if (richText.link) {
-    text = (
-      <Link href={richText.link.href}>
-        {text}
-      </Link>
-    );
+    text = <Link href={richText.link.href}>{text}</Link>;
   }
   return <span key={createUUIDv4()}>{text}</span>;
 }

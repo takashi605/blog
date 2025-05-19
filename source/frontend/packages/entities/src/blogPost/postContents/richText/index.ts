@@ -48,4 +48,4 @@ type RichTextStyles = {
 
 type Link = {
   href: string;
-}
+};

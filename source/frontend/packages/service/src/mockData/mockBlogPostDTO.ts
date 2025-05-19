@@ -43,7 +43,7 @@ export function mockRichTextDTO(): RichTextDTO {
       styles: { bold: false, inlineCode: false },
       link: {
         href: 'https://example.com',
-      }
+      },
     },
     {
       text: 'テストテキスト',
