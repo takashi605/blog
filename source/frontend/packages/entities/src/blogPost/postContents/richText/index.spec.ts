@@ -39,4 +39,17 @@ describe('richText', () => {
       new RichTextPart('テストテキスト3'),
     ]);
   });
+
+  it('リンクが含まれるテキスト構造を返却する', () => {
+    const richText = new RichText([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { bold: false, inlineCode: false }, { href: 'https://example.com' }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+    expect(richText.getText()).toEqual([
+      new RichTextPart('テストテキスト1'),
+      new RichTextPart('テストテキスト2', { bold: false, inlineCode: false }, { href: 'https://example.com' }),
+      new RichTextPart('テストテキスト3'),
+    ]);
+  });
 });
