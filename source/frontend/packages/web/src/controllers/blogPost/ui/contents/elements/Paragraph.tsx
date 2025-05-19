@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { memo } from 'react';
 import type { RichTextDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
@@ -29,6 +30,13 @@ function StyledText({ richText }: { richText: RichTextDTO[number] }) {
   }
   if (richText.styles?.inlineCode) {
     text = <code className={styles.inlineCodeText}>{text}</code>;
+  }
+  if (richText.link) {
+    text = (
+      <Link href={richText.link.href}>
+        {text}
+      </Link>
+    );
   }
   return <span key={createUUIDv4()}>{text}</span>;
 }
