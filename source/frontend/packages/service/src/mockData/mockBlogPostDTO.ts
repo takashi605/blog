@@ -41,6 +41,9 @@ export function mockRichTextDTO(): RichTextDTO {
     {
       text: 'これは',
       styles: { bold: false, inlineCode: false },
+      link: {
+        href: 'https://example.com',
+      }
     },
     {
       text: 'テストテキスト',

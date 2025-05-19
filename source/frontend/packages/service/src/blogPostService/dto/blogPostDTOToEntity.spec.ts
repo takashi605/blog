@@ -26,6 +26,15 @@ describe('blogPostDTOToEntity', () => {
           code: 'console.log("Hello World")',
           language: 'javascript',
         },
+        {
+          id: createUUIDv4(),
+          type: ContentType.Paragraph,
+          text: [
+            { text: 'Hello', styles: { bold: false, inlineCode: false } },
+            { text: 'World', styles: { bold: true, inlineCode: false } },
+            { text: '!', styles: { bold: false, inlineCode: false }, link: { href: 'https://example.com' } },
+          ],
+        },
       ],
     };
     const entity = blogPostDTOToEntity(dto);

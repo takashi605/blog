@@ -35,6 +35,10 @@ export class RichTextPart {
   getStyles(): RichTextStyles {
     return this.styles;
   }
+
+  getLink(): Link | undefined {
+    return this.link;
+  }
 }
 
 type RichTextStyles = {
