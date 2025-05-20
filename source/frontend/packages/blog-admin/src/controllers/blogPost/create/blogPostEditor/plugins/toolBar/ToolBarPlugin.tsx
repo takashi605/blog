@@ -8,7 +8,7 @@ import CommonModalProvider from '../../../../../../components/modal/CommonModalP
 import { $isCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
-import ImageInsertModal from './ImageInsertModal';
+import ImageInsertModal from './modal/ImageInsertModal';
 import LinkInsertModal from './modal/LinkInsertModal';
 import { ToolBarButton } from './parts/Button';
 import styles from './toolBarPlugin.module.scss';
