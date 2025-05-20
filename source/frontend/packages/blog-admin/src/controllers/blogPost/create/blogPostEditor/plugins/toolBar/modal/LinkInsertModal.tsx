@@ -34,7 +34,7 @@ function LinkInsertModal() {
             }}
           />
           <div>
-            <button onClick={onClickHandler}>挿入</button>
+            <button onClick={onClickHandler}>リンクを挿入</button>
           </div>
         </div>
         <CommonModalCloseButton>閉じる</CommonModalCloseButton>
