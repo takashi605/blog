@@ -28,7 +28,7 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, ParagraphBlock, RichText, Style};
+  use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {
@@ -58,7 +58,9 @@ mod helper {
                 bold: false,
                 inline_code: false,
               },
-              link: Option::None,
+              link: Option::Some(Link {
+                url: "https://example.com".to_string()
+              }),
             },
           ],
           type_field: "paragraph".to_string(),
