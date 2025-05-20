@@ -134,7 +134,9 @@ export function imageNodeToImageDTO(imageNode: ImageNode): ImageContentDTO {
 function extractTextNode(elementNode: ElementNode): (TextNode | LinkNode)[] {
   return elementNode.getChildren().map((child) => {
     if (!(child.getType() === 'text' || child.getType() === 'link')) {
-      throw new Error('TextNode || LinkNode ではないデータを抽出しようとしました');
+      throw new Error(
+        'TextNode || LinkNode ではないデータを抽出しようとしました',
+      );
     }
     return child as TextNode;
   });

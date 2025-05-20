@@ -63,7 +63,9 @@ describe('commonModalOpenButton', () => {
               {children}
             </ToolBarButton>
           )}
-        >モーダルを開く</CommonModalOpenButton>,
+        >
+          モーダルを開く
+        </CommonModalOpenButton>,
       );
 
       // ToolBarButtonは role="checkbox" と aria-label="モーダルを開く" 属性を持つ
