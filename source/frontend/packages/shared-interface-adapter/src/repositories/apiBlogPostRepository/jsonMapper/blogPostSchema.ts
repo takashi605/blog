@@ -38,6 +38,11 @@ function blogPostContentSchema() {
               inlineCode: z.boolean(),
             }),
           ),
+          link: z
+            .object({
+              url: z.string(),
+            })
+            .nullish(),
         }),
       ),
     }),

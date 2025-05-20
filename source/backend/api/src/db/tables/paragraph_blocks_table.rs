@@ -8,13 +8,14 @@ use uuid::Uuid;
 #[derive(Debug, FromRow)]
 pub struct ParagraphBlockRecordWithRelations {
   pub paragraph_block: ParagraphBlockRecord,
-  pub rich_text_records_with_styles: Vec<RichTextRecordWithStyles>,
+  pub rich_text_records_with_relations: Vec<RichTextRecordWithRelations>,
 }
 
 #[derive(Debug, FromRow)]
-pub struct RichTextRecordWithStyles {
+pub struct RichTextRecordWithRelations {
   pub text_record: RichTextRecord,
   pub style_records: Vec<TextStyleRecord>,
+  pub link_record: Option<RichTextLinkRecord>,
 }
 
 /*
@@ -45,6 +46,11 @@ pub struct TextStyleRecord {
   pub style_type: String,
 }
 
+#[derive(Debug, FromRow)]
+pub struct RichTextLinkRecord {
+  pub url: String,
+}
+
 /*
  * データベース操作関数
  */
@@ -55,31 +61,33 @@ pub async fn fetch_paragraph_block_record_with_relations(
   let mut conn = executor.acquire().await?;
   let paragraph_block_record: ParagraphBlockRecord =
     fetch_paragraph_block_by_content_id(&mut *conn, content_record_id).await.map_err(|_| anyhow::anyhow!("段落ブロックの取得に失敗しました。"))?;
-  let rich_text_records_with_styles: Vec<RichTextRecordWithStyles> = fetch_rich_texts_with_styles_by_paragraph(&mut *conn, paragraph_block_record.id)
+  let rich_text_records_with_relations: Vec<RichTextRecordWithRelations> = fetch_rich_text_relations_by_paragraph(&mut *conn, paragraph_block_record.id)
     .await
     .map_err(|_| anyhow::anyhow!("リッチテキストの取得に失敗しました。"))?;
   let result = ParagraphBlockRecordWithRelations {
     paragraph_block: paragraph_block_record,
-    rich_text_records_with_styles,
+    rich_text_records_with_relations,
   };
   Ok(result)
 }
 
-pub async fn fetch_rich_texts_with_styles_by_paragraph(
+pub async fn fetch_rich_text_relations_by_paragraph(
   executor: impl Acquire<'_, Database = Postgres>,
   paragraph_block_id: Uuid,
-) -> Result<Vec<RichTextRecordWithStyles>> {
+) -> Result<Vec<RichTextRecordWithRelations>> {
   let mut conn = executor.acquire().await?;
   let rich_texts = fetch_rich_texts_by_paragraph(&mut *conn, paragraph_block_id).await?;
-  let mut rich_text_with_styles = vec![];
+  let mut rich_text_with_relations = vec![];
   for rich_text in rich_texts {
     let styles = fetch_styles_by_rich_text_id(&mut *conn, rich_text.id).await?;
-    rich_text_with_styles.push(RichTextRecordWithStyles {
+    let link = fetch_link_by_rich_text_id(&mut *conn, rich_text.id).await?;
+    rich_text_with_relations.push(RichTextRecordWithRelations {
       text_record: rich_text,
       style_records: styles,
+      link_record: link,
     });
   }
-  Ok(rich_text_with_styles)
+  Ok(rich_text_with_relations)
 }
 
 pub async fn fetch_paragraph_block_by_content_id(executor: impl Acquire<'_, Database = Postgres>, content_id: Uuid) -> Result<ParagraphBlockRecord> {
@@ -115,6 +123,12 @@ pub async fn fetch_text_styles_all(executor: impl Acquire<'_, Database = Postgre
   let mut conn = executor.acquire().await?;
   let styles = sqlx::query_as::<_, TextStyleRecord>("select id, style_type from text_styles").fetch_all(&mut *conn).await?;
   Ok(styles)
+}
+
+pub async fn fetch_link_by_rich_text_id(executor: impl Acquire<'_, Database = Postgres>, rich_text_id: Uuid) -> Result<Option<RichTextLinkRecord>> {
+  let mut conn = executor.acquire().await?;
+  let link = sqlx::query_as::<_, RichTextLinkRecord>("select url from rich_text_links where rich_text_id = $1").bind(rich_text_id).fetch_optional(&mut *conn).await?;
+  Ok(link)
 }
 
 pub async fn insert_paragraph_block(executor: impl Acquire<'_, Database = Postgres>, paragraph_block: ParagraphBlockRecord) -> Result<()> {

@@ -35,7 +35,7 @@ describe('blogPostDTOToEntity', () => {
             {
               text: '!',
               styles: { bold: false, inlineCode: false },
-              link: { href: 'https://example.com' },
+              link: { url: 'https://example.com' },
             },
           ],
         },
