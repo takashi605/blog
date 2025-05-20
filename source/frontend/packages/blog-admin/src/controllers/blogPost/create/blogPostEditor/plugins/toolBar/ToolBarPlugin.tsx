@@ -1,5 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { CiLink } from 'react-icons/ci';
 import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
@@ -7,7 +8,8 @@ import CommonModalProvider from '../../../../../../components/modal/CommonModalP
 import { $isCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
-import ImageInsertModal from './ImageInsertModal';
+import ImageInsertModal from './modal/ImageInsertModal';
+import LinkInsertModal from './modal/LinkInsertModal';
 import { ToolBarButton } from './parts/Button';
 import styles from './toolBarPlugin.module.scss';
 import {
@@ -238,6 +240,21 @@ function ToolBarPlugin() {
         >
           <TbCode />
         </ToolBarButton>
+        <CommonModalProvider>
+          <CommonModalOpenButton
+            isModalOpenable={true} // TODO テキストノードが選択されているときのみに変更
+            openFailMessage="リンクを挿入できるノードを選択してください"
+            renderButton={({ onClick, children }) => (
+              <ToolBarButton onClick={onClick} checked={false} ariaLabel="link">
+                {children}
+              </ToolBarButton>
+            )}
+          >
+            <CiLink />
+          </CommonModalOpenButton>
+
+          <LinkInsertModal />
+        </CommonModalProvider>
       </div>
       <div className={styles.toolBarButtons}>
         <CommonModalProvider>

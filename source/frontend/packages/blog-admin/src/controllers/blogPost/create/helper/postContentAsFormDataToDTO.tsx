@@ -1,3 +1,4 @@
+import type { LinkNode } from '@lexical/link';
 import type { HeadingNode } from '@lexical/rich-text';
 import { ContentType } from 'entities/src/blogPost/postContents/content';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
@@ -62,7 +63,7 @@ export function headingNodeToDTO(headingNode: HeadingNode): H2DTO | H3DTO {
   if (headingNode.getType() !== 'heading') {
     throw new Error('headingNode ではありません');
   }
-  const textNodes: TextNode[] = extractTextNode(headingNode);
+  const textNodes = extractTextNode(headingNode);
   const text = textNodes.map((node) => node.getTextContent()).join('');
 
   switch (headingNode.getTag()) {
@@ -87,7 +88,7 @@ export function paragraphNodeToDTO(paragraphNode: ElementNode): ParagraphDTO {
   if (paragraphNode.getType() !== 'paragraph') {
     throw new Error('paragraphNode ではありません');
   }
-  const textNodes: TextNode[] = extractTextNode(paragraphNode);
+  const textNodes: (TextNode | LinkNode)[] = extractTextNode(paragraphNode);
   return {
     id: createUUIDv4(),
     type: ContentType.Paragraph,
@@ -95,14 +96,30 @@ export function paragraphNodeToDTO(paragraphNode: ElementNode): ParagraphDTO {
   };
 }
 
-export function textNodeToRichTextDTO(textNodes: TextNode[]): RichTextDTO {
-  return textNodes.map((node) => ({
-    text: node.getTextContent(),
-    styles: {
-      bold: node.hasFormat('bold'),
-      inlineCode: node.hasFormat('code'),
-    },
-  }));
+export function textNodeToRichTextDTO(
+  textNodes: (TextNode | LinkNode)[],
+): RichTextDTO {
+  return textNodes.map((node) => {
+    if (node.getType() === 'text') {
+      const textNode = node as TextNode;
+      return {
+        text: textNode.getTextContent(),
+        styles: {
+          bold: textNode.hasFormat('bold'),
+          inlineCode: textNode.hasFormat('code'),
+        },
+      };
+    } else if (node.getType() === 'link') {
+      const linkNode = node as LinkNode;
+      return {
+        text: linkNode.getTextContent(),
+        link: {
+          url: linkNode.getURL(),
+        },
+      };
+    }
+    throw new Error('不正なノードタイプです');
+  });
 }
 
 export function imageNodeToImageDTO(imageNode: ImageNode): ImageContentDTO {
@@ -114,10 +131,12 @@ export function imageNodeToImageDTO(imageNode: ImageNode): ImageContentDTO {
 }
 
 // 以下ヘルパ関数
-function extractTextNode(elementNode: ElementNode): TextNode[] {
+function extractTextNode(elementNode: ElementNode): (TextNode | LinkNode)[] {
   return elementNode.getChildren().map((child) => {
-    if (child.getType() !== 'text') {
-      throw new Error('textNode ではありません');
+    if (!(child.getType() === 'text' || child.getType() === 'link')) {
+      throw new Error(
+        'TextNode || LinkNode ではないデータを抽出しようとしました',
+      );
     }
     return child as TextNode;
   });

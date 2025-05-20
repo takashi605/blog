@@ -207,7 +207,7 @@ When(
     await selectByArrowLeft(page, richTextEditor, 6);
 
     // リンクボタンを押す
-    const linkButton = page.getByRole('button', { name: 'リンク' });
+    const linkButton = page.getByRole('checkbox', { name: 'link' });
     await linkButton.click();
   },
 );
@@ -216,7 +216,9 @@ Then('【正常系 記事投稿】リンク設定 input が出現する', async 
   const page = playwrightHelper.getPage();
 
   // リンク設定入力フィールドを確認
-  const linkInput = page.getByPlaceholder('URLを入力');
+  const linkInput = page.getByRole('textbox', {
+    name: 'URL(https:// から始まるもの)を入力してください。',
+  });
   await expect(linkInput).toBeVisible({ timeout: 10000 });
 });
 
@@ -226,12 +228,14 @@ When(
     const page = playwrightHelper.getPage();
 
     // リンク設定入力フィールドにURLを入力
-    const linkInput = page.getByPlaceholder('URLを入力');
-    await linkInput.fill('example.com');
+    const linkInput = page.getByRole('textbox', {
+      name: 'URL(https:// から始まるもの)を入力してください。',
+    });
+    await linkInput.fill('https://example.com');
 
     // 適用ボタンをクリック
-    const applyButton = page.getByRole('button', { name: '適用' });
-    await applyButton.click();
+    const insertButton = page.getByRole('button', { name: 'リンクを挿入' });
+    await insertButton.click();
 
     // フォーカスをリセット
     await clearSelectionByArrow(page, page.locator('[contenteditable="true"]'));
@@ -479,8 +483,8 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    const content = page.locator('p');
-    await expect(content).toHaveText('こんにちは！世界');
+    const content = page.getByText('こんにちは！世界');
+    await expect(content).toBeVisible({ timeout: 10000 });
   },
 );
 Then('【正常系 記事投稿】世界が太字になっていない', async function () {
