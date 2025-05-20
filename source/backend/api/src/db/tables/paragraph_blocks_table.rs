@@ -48,6 +48,8 @@ pub struct TextStyleRecord {
 
 #[derive(Debug, FromRow)]
 pub struct RichTextLinkRecord {
+  pub id: Uuid,
+  pub rich_text_id: Uuid,
   pub url: String,
 }
 
@@ -127,7 +129,7 @@ pub async fn fetch_text_styles_all(executor: impl Acquire<'_, Database = Postgre
 
 pub async fn fetch_link_by_rich_text_id(executor: impl Acquire<'_, Database = Postgres>, rich_text_id: Uuid) -> Result<Option<RichTextLinkRecord>> {
   let mut conn = executor.acquire().await?;
-  let link = sqlx::query_as::<_, RichTextLinkRecord>("select url from rich_text_links where rich_text_id = $1").bind(rich_text_id).fetch_optional(&mut *conn).await?;
+  let link = sqlx::query_as::<_, RichTextLinkRecord>("select id, rich_text_id, url from rich_text_links where rich_text_id = $1").bind(rich_text_id).fetch_optional(&mut *conn).await?;
   Ok(link)
 }
 

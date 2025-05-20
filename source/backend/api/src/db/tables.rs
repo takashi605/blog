@@ -80,7 +80,11 @@ pub fn generate_blog_post_records_by(
 
           // link が含まれている場合、対応する linkRecord を取得する
           if let Some(link) = &rt.link {
-            rich_text_link_records.push(RichTextLinkRecord { url: link.url.clone() });
+            rich_text_link_records.push(RichTextLinkRecord { 
+              id: Uuid::new_v4(), // TODO 本来はエンティティで生成するべき
+              rich_text_id: rich_text_id,
+              url: link.url.clone()
+            });
           }
         });
         PostContentRecord {
@@ -274,6 +278,8 @@ mod tests {
     assert_eq!(rich_text_style_records[1].rich_text_id, rich_text_records[0].id); // bold も inline も同じ文字に紐づけられている
 
     assert_eq!(rich_text_link_records.len(), 1);
+    assert_eq!(rich_text_link_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_link_records[0].rich_text_id, rich_text_records[1].id);
     assert_eq!(rich_text_link_records[0].url, "https://example.com".to_string());
 
     assert_eq!(image_block_records.len(), 1);
