@@ -1,14 +1,15 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MdExpandMore } from 'react-icons/md';
 import { CiLink } from 'react-icons/ci';
+import { MdExpandMore } from 'react-icons/md';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
-import CommonModalProvider, { useCommonModalContext } from '../../../../../../components/modal/CommonModalProvider';
+import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
 import { $isCustomCodeNode } from '../customNodes/codeBlock/CustomCodeNode';
 import { CODE_LANGUAGE_COMMAND } from '../customNodes/codeBlock/codeLanguageSelectionCommand';
 import { CODE_TITLE_COMMAND } from '../customNodes/codeBlock/codeTitleSelectionCommand';
 import ImageInsertModal from './ImageInsertModal';
+import LinkInsertModal from './modal/LinkInsertModal';
 import { ToolBarButton } from './parts/Button';
 import styles from './toolBarPlugin.module.scss';
 import {
@@ -19,10 +20,6 @@ import {
   useUpdateBlockType,
 } from './toolBarPluginHooks';
 import type { SupportedNodeType } from './types/supportedNodeType';
-import CommonModal from '../../../../../../components/modal/CommonModal';
-import { validateUrl } from '../../BlogPostEditor';
-import CommonModalCloseButton from '../../../../../../components/modal/CommonModalCloseButton';
-import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 
 function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -275,42 +272,3 @@ function ToolBarPlugin() {
 }
 
 export default ToolBarPlugin;
-
-function LinkInsertModal() {
-  const [url, setUrl] = useState('');
-  const [editor] = useLexicalComposerContext();
-  const { closeModal } = useCommonModalContext();
-
-  return (
-    <>
-      <CommonModal>
-        <div>
-          <label htmlFor="url">
-            URL(https:// から始まるもの)を入力してください。
-          </label>
-          <input
-            id="url"
-            onChange={(e) => {
-              setUrl(e.target.value);
-            }}
-          />
-          <div >
-            <button
-              onClick={() => {
-                if (validateUrl(url)) {
-                  editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
-                } else {
-                  console.error('invalid url');
-                }
-                closeModal();
-              }}
-            >
-              挿入
-            </button>
-          </div>
-        </div>
-        <CommonModalCloseButton>閉じる</CommonModalCloseButton>
-      </CommonModal>
-    </>
-  );
-}
