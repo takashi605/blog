@@ -2,17 +2,24 @@ import { useState } from 'react';
 import { useCommonModalContext } from './CommonModalProvider';
 import styles from './commonModalOpenButton.module.scss';
 
+type RenderButtonProps = {
+  onClick: () => void;
+};
+
 type CommonModalOpenButtonProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   isModalOpenable?: boolean;
   // モーダルを開けなかった時のメッセージ
   openFailMessage?: string;
+  // render props でボタンをカスタマイズする関数
+  renderButton?: (props: RenderButtonProps) => React.ReactNode;
 };
 
 function CommonModalOpenButton({
   isModalOpenable = true,
   openFailMessage = 'モーダルを開けませんでした',
   children,
+  renderButton,
 }: CommonModalOpenButtonProps) {
   const [failOpen, setFailOpen] = useState(false);
   const { openModal } = useCommonModalContext();
@@ -29,13 +36,17 @@ function CommonModalOpenButton({
 
   return (
     <>
-      <button
-        className={styles.button}
-        type="button"
-        onClick={openModalHandler}
-      >
-        {children}
-      </button>
+      {renderButton ? (
+        renderButton({ onClick: openModalHandler })
+      ) : (
+        <button
+          className={styles.button}
+          type="button"
+          onClick={openModalHandler}
+        >
+          {children}
+        </button>
+      )}
       {failOpen && <p>{openFailMessage}</p>}
     </>
   );
