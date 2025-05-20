@@ -31,9 +31,13 @@ function StyledText({ richText }: { richText: RichTextDTO[number] }) {
   if (richText.styles?.inlineCode) {
     text = <code className={styles.inlineCodeText}>{text}</code>;
   }
+
   if (richText.link) {
-    // TODO スタイリングする
-    text = <Link href={richText.link.url}>{text}</Link>;
+    text = (
+      <Link href={richText.link.url} className={styles.linkText}>
+        {text}
+      </Link>
+    );
   }
   return <span key={createUUIDv4()}>{text}</span>;
 }

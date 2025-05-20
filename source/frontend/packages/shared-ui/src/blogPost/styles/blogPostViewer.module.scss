@@ -104,3 +104,17 @@
   background-color: #1e1e1e;
   overflow: auto;
 }
+
+.linkText {
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    color 0.2s ease,
+    text-decoration 0.2s ease;
+
+  &:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+}
