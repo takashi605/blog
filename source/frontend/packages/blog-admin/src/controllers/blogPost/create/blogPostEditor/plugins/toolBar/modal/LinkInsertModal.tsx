@@ -11,6 +11,15 @@ function LinkInsertModal() {
   const [editor] = useLexicalComposerContext();
   const { closeModal } = useCommonModalContext();
 
+  const onClickHandler = () => {
+    if (validateUrl(url)) {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+    } else {
+      console.error('invalid url');
+    }
+    closeModal();
+  };
+
   return (
     <>
       <CommonModal>
@@ -25,18 +34,7 @@ function LinkInsertModal() {
             }}
           />
           <div>
-            <button
-              onClick={() => {
-                if (validateUrl(url)) {
-                  editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
-                } else {
-                  console.error('invalid url');
-                }
-                closeModal();
-              }}
-            >
-              挿入
-            </button>
+            <button onClick={onClickHandler}>挿入</button>
           </div>
         </div>
         <CommonModalCloseButton>閉じる</CommonModalCloseButton>
