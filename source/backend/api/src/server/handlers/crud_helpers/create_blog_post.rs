@@ -38,6 +38,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
     code_block_records,
     rich_text_records,
     rich_text_styles,
+    rich_text_link_records,
   ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   insert_blog_post(&mut tx, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;

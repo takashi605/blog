@@ -16,7 +16,7 @@ use common::types::api::response::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
 use image_blocks_table::ImageBlockRecord;
 use images_table::ImageRecord;
-use paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
+use paragraph_blocks_table::{ParagraphBlockRecord, RichTextLinkRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord};
 use post_contents_table::PostContentRecord;
 use uuid::Uuid;
 
@@ -33,6 +33,7 @@ pub fn generate_blog_post_records_by(
   Vec<CodeBlockRecord>,
   Vec<RichTextRecord>,
   Vec<RichTextStyleRecord>,
+  Vec<RichTextLinkRecord>,
 )> {
   let blog_post_record = BlogPostRecord {
     id: post.id,
@@ -45,7 +46,8 @@ pub fn generate_blog_post_records_by(
   let mut heading_block_records: Vec<HeadingBlockRecord> = vec![];
   let mut paragraph_block_records: Vec<ParagraphBlockRecord> = vec![];
   let mut rich_text_records: Vec<RichTextRecord> = vec![];
-  let mut rich_text_styles: Vec<RichTextStyleRecord> = vec![];
+  let mut rich_text_style_records: Vec<RichTextStyleRecord> = vec![];
+  let mut rich_text_link_records: Vec<RichTextLinkRecord> = vec![];
   let mut image_block_records: Vec<ImageBlockRecord> = vec![];
   let mut code_block_records: Vec<CodeBlockRecord> = vec![];
 
@@ -67,13 +69,18 @@ pub fn generate_blog_post_records_by(
           // paragraph.text に bold:true が含まれている場合、対応する style_id を取得する
           if rt.styles.bold {
             let style_id = style_records.iter().find(|style| style.style_type == "bold").unwrap().id;
-            rich_text_styles.push(RichTextStyleRecord { style_id, rich_text_id });
+            rich_text_style_records.push(RichTextStyleRecord { style_id, rich_text_id });
           }
 
           // inline_code:true が含まれている場合、対応する style_id を取得する
           if rt.styles.inline_code {
             let style_id = style_records.iter().find(|style| style.style_type == "inline-code").unwrap().id;
-            rich_text_styles.push(RichTextStyleRecord { style_id, rich_text_id });
+            rich_text_style_records.push(RichTextStyleRecord { style_id, rich_text_id });
+          }
+
+          // link が含まれている場合、対応する linkRecord を取得する
+          if let Some(link) = &rt.link {
+            rich_text_link_records.push(RichTextLinkRecord { url: link.url.clone() });
           }
         });
         PostContentRecord {
@@ -172,17 +179,14 @@ pub fn generate_blog_post_records_by(
     image_block_records,
     code_block_records,
     rich_text_records,
-    rich_text_styles,
+    rich_text_style_records,
+    rich_text_link_records,
   ))
 }
 
 #[cfg(test)]
 mod tests {
-  use crate::db::tables::{
-    image_blocks_table::ImageBlockRecord,
-    images_table::ImageRecord,
-    paragraph_blocks_table::{ParagraphBlockRecord, RichTextRecord, RichTextStyleRecord, TextStyleRecord},
-  };
+  use crate::db::tables::{images_table::ImageRecord, paragraph_blocks_table::TextStyleRecord};
 
   use super::*;
   use anyhow::Result;
@@ -222,16 +226,8 @@ mod tests {
       image_block_records,
       code_block_records,
       rich_text_records,
-      rich_text_styles,
-    ): (
-      BlogPostRecord,
-      Vec<PostContentRecord>,
-      Vec<HeadingBlockRecord>,
-      Vec<ParagraphBlockRecord>,
-      Vec<ImageBlockRecord>,
-      Vec<CodeBlockRecord>,
-      Vec<RichTextRecord>,
-      Vec<RichTextStyleRecord>,
+      rich_text_style_records,
+      rich_text_link_records,
     ) = generate_blog_post_records_by(mock_post, mock_style_records, mock_image_records).unwrap();
     assert_eq!(blog_post_record.id, post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
@@ -271,11 +267,14 @@ mod tests {
     assert_eq!(rich_text_records[1].text_content, "これはテスト用の文字列その2です。");
     assert_eq!(rich_text_records[1].sort_order, 1);
 
-    assert_eq!(rich_text_styles.len(), 2);
-    assert_eq!(rich_text_styles[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
-    assert_eq!(rich_text_styles[0].rich_text_id, rich_text_records[0].id);
-    assert_eq!(rich_text_styles[1].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
-    assert_eq!(rich_text_styles[1].rich_text_id, rich_text_records[0].id); // bold も inline も同じ文字に紐づけられている
+    assert_eq!(rich_text_style_records.len(), 2);
+    assert_eq!(rich_text_style_records[0].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_style_records[0].rich_text_id, rich_text_records[0].id);
+    assert_eq!(rich_text_style_records[1].style_id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
+    assert_eq!(rich_text_style_records[1].rich_text_id, rich_text_records[0].id); // bold も inline も同じ文字に紐づけられている
+
+    assert_eq!(rich_text_link_records.len(), 1);
+    assert_eq!(rich_text_link_records[0].url, "https://example.com".to_string());
 
     assert_eq!(image_block_records.len(), 1);
     assert_eq!(image_block_records[0].id.get_version(), Some(Version::Random)); // UUIDv4 が生成されていることを確認
@@ -292,7 +291,7 @@ mod tests {
 
   mod helper {
     use super::*;
-    use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+    use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
     use uuid::Uuid;
 
     pub fn create_blog_post_mock(post_id: Uuid) -> Result<BlogPost> {
@@ -320,7 +319,9 @@ mod tests {
                   bold: false,
                   inline_code: false,
                 },
-                link: Option::None,
+                link: Option::Some(Link {
+                  url: "https://example.com".to_string(),
+                }),
               },
             ],
             type_field: "paragraph".to_string(),
