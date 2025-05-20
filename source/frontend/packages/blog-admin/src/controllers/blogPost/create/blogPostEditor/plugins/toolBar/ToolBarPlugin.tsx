@@ -1,6 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
+import { CiLink } from 'react-icons/ci';
 import { TbBold, TbCode, TbH2, TbH3, TbSourceCode } from 'react-icons/tb';
 import CommonModalOpenButton from '../../../../../../components/modal/CommonModalOpenButton';
 import CommonModalProvider from '../../../../../../components/modal/CommonModalProvider';
@@ -237,6 +238,13 @@ function ToolBarPlugin() {
           ariaLabel="inline-code"
         >
           <TbCode />
+        </ToolBarButton>
+        <ToolBarButton
+          onClick={() => console.log('TODO: implement link')}
+          checked={false}
+          ariaLabel="link"
+        >
+          <CiLink />
         </ToolBarButton>
       </div>
       <div className={styles.toolBarButtons}>
