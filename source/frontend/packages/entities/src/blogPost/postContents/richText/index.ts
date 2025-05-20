@@ -16,9 +16,9 @@ export class RichTextPart {
     bold: false,
     inlineCode: false,
   };
-  private link?: Link;
+  private link?: Link | null;
 
-  constructor(text: string, styles?: RichTextStyles, link?: Link) {
+  constructor(text: string, styles?: RichTextStyles, link?: Link | null) {
     this.text = text;
     if (styles) {
       this.styles = styles;
@@ -36,7 +36,7 @@ export class RichTextPart {
     return this.styles;
   }
 
-  getLink(): Link | undefined {
+  getLink(): Link | undefined | null {
     return this.link;
   }
 }
