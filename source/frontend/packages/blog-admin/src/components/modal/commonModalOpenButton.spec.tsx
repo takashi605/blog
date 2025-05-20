@@ -54,16 +54,16 @@ describe('commonModalOpenButton', () => {
         <CommonModalOpenButton
           isModalOpenable={true}
           openFailMessage="モーダルを開けませんでした"
-          renderButton={({ onClick }) => (
+          renderButton={({ onClick, children }) => (
             <ToolBarButton
               onClick={onClick}
               ariaLabel="モーダルを開く"
               checked={false}
             >
-              モーダルを開く
+              {children}
             </ToolBarButton>
           )}
-        />,
+        >モーダルを開く</CommonModalOpenButton>,
       );
 
       // ToolBarButtonは role="checkbox" と aria-label="モーダルを開く" 属性を持つ

@@ -239,13 +239,22 @@ function ToolBarPlugin() {
         >
           <TbCode />
         </ToolBarButton>
-        <ToolBarButton
-          onClick={() => console.log('TODO: implement link')}
-          checked={false}
-          ariaLabel="link"
-        >
-          <CiLink />
-        </ToolBarButton>
+        <CommonModalProvider>
+          <CommonModalOpenButton
+            isModalOpenable={true} // TODO テキストノードが選択されているときのみに変更
+            openFailMessage="リンクを挿入できるノードを選択してください"
+            renderButton={({ onClick, children }) => (
+              <ToolBarButton onClick={onClick} checked={false} ariaLabel="link">
+                {children}
+              </ToolBarButton>
+            )}
+          >
+            <CiLink />
+          </CommonModalOpenButton>
+
+          {/* TODO リンクの挿入モーダルに変更 */}
+          <ImageInsertModal />
+        </CommonModalProvider>
       </div>
       <div className={styles.toolBarButtons}>
         <CommonModalProvider>

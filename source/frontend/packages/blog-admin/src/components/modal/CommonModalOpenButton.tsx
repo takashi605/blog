@@ -4,6 +4,7 @@ import styles from './commonModalOpenButton.module.scss';
 
 type RenderButtonProps = {
   onClick: () => void;
+  children: React.ReactNode;
 };
 
 type CommonModalOpenButtonProps = {
@@ -37,7 +38,7 @@ function CommonModalOpenButton({
   return (
     <>
       {renderButton ? (
-        renderButton({ onClick: openModalHandler })
+        renderButton({ onClick: openModalHandler, children })
       ) : (
         <button
           className={styles.button}
