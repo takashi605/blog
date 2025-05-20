@@ -150,6 +150,11 @@ describe('ApiBlogPostRepository と BlogPostCreator の結合テスト', () => {
       paragraphContent.text.find((text) => text.styles?.bold),
     ).toBeDefined();
 
+    // リンクテキストが含まれているか
+    expect(
+      paragraphContent.text.find((text) => text.link),
+    ).toBeDefined();
+
     // 画像コンテンツが含まれているか
     const imageContent = createdBlogPost.contents.find(
       (content) => content.type === 'image',
