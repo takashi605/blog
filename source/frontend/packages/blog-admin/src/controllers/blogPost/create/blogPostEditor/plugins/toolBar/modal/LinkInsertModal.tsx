@@ -4,7 +4,7 @@ import { useState } from 'react';
 import CommonModal from '../../../../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../../../../components/modal/CommonModalCloseButton';
 import { useCommonModalContext } from '../../../../../../../components/modal/CommonModalProvider';
-import { validateUrl } from '../../../BlogPostEditor';
+import { validateUrl } from '../../../helper/url';
 
 function LinkInsertModal() {
   const [url, setUrl] = useState('');
