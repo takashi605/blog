@@ -1,6 +1,7 @@
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { LinkPlugin as LexicalLinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -10,6 +11,7 @@ import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
 import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
+import { validateUrl } from './helper/url';
 import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPlugin';
 import CodeLanguageClassPlugin from './plugins/customNodes/codeBlock/CodeLanguageClassPlugin';
 import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
@@ -40,6 +42,7 @@ function BlogPostEditor() {
       <CodeHighlightPlugin />
       <CodeLanguageClassPlugin />
       <TreeViewPlugin />
+      <LexicalLinkPlugin validateUrl={validateUrl} />
     </CustomizedLexicalComposer>
   );
 }

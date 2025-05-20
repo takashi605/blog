@@ -29,6 +29,12 @@ pub struct Style {
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Link {
+  pub url: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 #[serde(untagged, rename_all = "camelCase")]
 pub enum BlogPostContent {
   H2(H2Block),
@@ -70,6 +76,7 @@ pub struct ParagraphBlock {
 pub struct RichText {
   pub text: String,
   pub styles: Style,
+  pub link: Option<Link>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]

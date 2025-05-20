@@ -194,6 +194,55 @@ Then(
 );
 
 When(
+  '【正常系 記事投稿】「リンクテスト」という文字を入力・選択し、リンクボタンを押す',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    // 新しい段落を作成
+    richTextEditor.press('Enter');
+    // テキストをセット
+    await richTextEditor.pressSequentially('リンクテスト', { timeout: 10000 });
+    // 全選択
+    await selectByArrowLeft(page, richTextEditor, 6);
+
+    // リンクボタンを押す
+    const linkButton = page.getByRole('checkbox', { name: 'link' });
+    await linkButton.click();
+  },
+);
+
+Then('【正常系 記事投稿】リンク設定 input が出現する', async function () {
+  const page = playwrightHelper.getPage();
+
+  // リンク設定入力フィールドを確認
+  const linkInput = page.getByRole('textbox', {
+    name: 'URL(https:// から始まるもの)を入力してください。',
+  });
+  await expect(linkInput).toBeVisible({ timeout: 10000 });
+});
+
+When(
+  '【正常系 記事投稿】リンク設定 input に「example.com」と入力する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    // リンク設定入力フィールドにURLを入力
+    const linkInput = page.getByRole('textbox', {
+      name: 'URL(https:// から始まるもの)を入力してください。',
+    });
+    await linkInput.fill('https://example.com');
+
+    // 適用ボタンをクリック
+    const insertButton = page.getByRole('button', { name: 'リンクを挿入' });
+    await insertButton.click();
+
+    // フォーカスをリセット
+    await clearSelectionByArrow(page, page.locator('[contenteditable="true"]'));
+  },
+);
+
+When(
   '【正常系 記事投稿】「見出し2」と入力し、その文字を選択して「h2」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
@@ -297,11 +346,11 @@ When(
   '【正常系 記事投稿】コードブロックのタイトルを「サンプル： 定数定義」に変更する',
   async function () {
     const page = playwrightHelper.getPage();
-    
+
     // コードブロックのタイトル入力欄を探す
     const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル');
     await expect(codeTitleInput).toBeVisible({ timeout: 10000 });
-    
+
     // タイトルを入力
     await codeTitleInput.fill('サンプル： 定数定義');
   },
@@ -311,10 +360,12 @@ Then(
   '【正常系 記事投稿】コードブロックのタイトルが「サンプル： 定数定義」になっている',
   async function () {
     const page = playwrightHelper.getPage();
-    
+
     // コードブロックのタイトル入力欄の値を確認
     const codeTitleInput = page.getByPlaceholder('コードブロックのタイトル');
-    await expect(codeTitleInput).toHaveValue('サンプル： 定数定義', { timeout: 10000 });
+    await expect(codeTitleInput).toHaveValue('サンプル： 定数定義', {
+      timeout: 10000,
+    });
   },
 );
 
@@ -326,7 +377,7 @@ When(
     // 改行を入れて、画像を挿入する位置を確保
     // コードブロックから抜けるには、3回 Enter を押す
     const richTextEditor = page.locator('[contenteditable="true"]');
-    await richTextEditor.press('Control+End');// ctrl+end で一番下に移動
+    await richTextEditor.press('Control+End'); // ctrl+end で一番下に移動
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
@@ -371,6 +422,7 @@ Then(
     expectMatchImageResourceByCloudinary(src);
   },
 );
+
 When('【正常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
 
@@ -431,8 +483,8 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    const content = page.locator('p');
-    await expect(content).toHaveText('こんにちは！世界');
+    const content = page.getByText('こんにちは！世界');
+    await expect(content).toBeVisible({ timeout: 10000 });
   },
 );
 Then('【正常系 記事投稿】世界が太字になっていない', async function () {
@@ -543,6 +595,33 @@ Then('【正常系 記事投稿】更新日が今日の日付になっている'
     formatDate2DigitString(new Date()),
   );
 });
+
+Then(
+  '【正常系 記事投稿】「リンクテスト」という文字のリンクが存在する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const linkText = page.locator('a', { hasText: 'リンクテスト' });
+    await expect(linkText).toBeVisible({ timeout: 10000 });
+  },
+);
+
+Then(
+  '【正常系 記事投稿】「リンクテスト」の href が「example.com」になっている',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const linkElement = page.locator('a', { hasText: 'リンクテスト' });
+    const href = await linkElement.getAttribute('href');
+
+    // プロトコルが付与されている場合と付与されていない場合の両方を考慮
+    expect(
+      href === 'example.com' ||
+        href === 'https://example.com' ||
+        href === 'http://example.com',
+    ).toBeTruthy();
+  },
+);
 
 When('【正常系 記事投稿】新着記事一覧ページにアクセスする', async function () {
   if (!process.env.TEST_TARGET_URL) {

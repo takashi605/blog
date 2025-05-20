@@ -39,6 +39,9 @@ export type RichTextDTO = ReadonlyArray<{
     bold: boolean;
     inlineCode: boolean;
   };
+  link?: {
+    url: string;
+  } | null;
 }>;
 
 export type CodeBlockDTO = Readonly<{

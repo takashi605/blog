@@ -50,7 +50,7 @@ export class ParagraphBuildStrategy implements ContentBuildStrategy<Paragraph> {
 
   build(): Paragraph {
     const richTextParts = this.input.text.map(
-      (part) => new RichTextPart(part.text, part.styles),
+      (part) => new RichTextPart(part.text, part.styles, part.link),
     );
     return new Paragraph(this.input.id, new RichText(richTextParts));
   }
