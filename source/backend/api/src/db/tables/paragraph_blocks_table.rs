@@ -61,7 +61,7 @@ pub async fn fetch_paragraph_block_record_with_relations(
   let mut conn = executor.acquire().await?;
   let paragraph_block_record: ParagraphBlockRecord =
     fetch_paragraph_block_by_content_id(&mut *conn, content_record_id).await.map_err(|_| anyhow::anyhow!("段落ブロックの取得に失敗しました。"))?;
-  let rich_text_records_with_relations: Vec<RichTextRecordWithRelations> = fetch_rich_text_relations_styles_by_paragraph(&mut *conn, paragraph_block_record.id)
+  let rich_text_records_with_relations: Vec<RichTextRecordWithRelations> = fetch_rich_text_relations_by_paragraph(&mut *conn, paragraph_block_record.id)
     .await
     .map_err(|_| anyhow::anyhow!("リッチテキストの取得に失敗しました。"))?;
   let result = ParagraphBlockRecordWithRelations {
@@ -71,7 +71,7 @@ pub async fn fetch_paragraph_block_record_with_relations(
   Ok(result)
 }
 
-pub async fn fetch_rich_text_relations_styles_by_paragraph(
+pub async fn fetch_rich_text_relations_by_paragraph(
   executor: impl Acquire<'_, Database = Postgres>,
   paragraph_block_id: Uuid,
 ) -> Result<Vec<RichTextRecordWithRelations>> {
