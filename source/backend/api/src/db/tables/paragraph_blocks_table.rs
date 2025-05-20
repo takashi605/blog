@@ -48,6 +48,8 @@ pub struct TextStyleRecord {
 
 #[derive(Debug, FromRow)]
 pub struct RichTextLinkRecord {
+  pub id: Uuid,
+  pub rich_text_id: Uuid,
   pub url: String,
 }
 
@@ -61,9 +63,8 @@ pub async fn fetch_paragraph_block_record_with_relations(
   let mut conn = executor.acquire().await?;
   let paragraph_block_record: ParagraphBlockRecord =
     fetch_paragraph_block_by_content_id(&mut *conn, content_record_id).await.map_err(|_| anyhow::anyhow!("段落ブロックの取得に失敗しました。"))?;
-  let rich_text_records_with_relations: Vec<RichTextRecordWithRelations> = fetch_rich_text_relations_by_paragraph(&mut *conn, paragraph_block_record.id)
-    .await
-    .map_err(|_| anyhow::anyhow!("リッチテキストの取得に失敗しました。"))?;
+  let rich_text_records_with_relations: Vec<RichTextRecordWithRelations> =
+    fetch_rich_text_relations_by_paragraph(&mut *conn, paragraph_block_record.id).await.map_err(|_| anyhow::anyhow!("リッチテキストの取得に失敗しました。"))?;
   let result = ParagraphBlockRecordWithRelations {
     paragraph_block: paragraph_block_record,
     rich_text_records_with_relations,
@@ -127,7 +128,10 @@ pub async fn fetch_text_styles_all(executor: impl Acquire<'_, Database = Postgre
 
 pub async fn fetch_link_by_rich_text_id(executor: impl Acquire<'_, Database = Postgres>, rich_text_id: Uuid) -> Result<Option<RichTextLinkRecord>> {
   let mut conn = executor.acquire().await?;
-  let link = sqlx::query_as::<_, RichTextLinkRecord>("select url from rich_text_links where rich_text_id = $1").bind(rich_text_id).fetch_optional(&mut *conn).await?;
+  let link = sqlx::query_as::<_, RichTextLinkRecord>("select id, rich_text_id, url from rich_text_links where rich_text_id = $1")
+    .bind(rich_text_id)
+    .fetch_optional(&mut *conn)
+    .await?;
   Ok(link)
 }
 
@@ -154,6 +158,17 @@ pub async fn insert_rich_text_style(executor: impl Acquire<'_, Database = Postgr
   sqlx::query("insert into rich_text_styles (style_id, rich_text_id) values ($1, $2)")
     .bind(style.style_id)
     .bind(style.rich_text_id)
+    .execute(&mut *conn)
+    .await?;
+  Ok(())
+}
+
+pub async fn insert_rich_text_link(executor: impl Acquire<'_, Database = Postgres>, link: RichTextLinkRecord) -> Result<()> {
+  let mut conn = executor.acquire().await?;
+  sqlx::query("insert into rich_text_links (id, rich_text_id, url) values ($1, $2, $3)")
+    .bind(link.id)
+    .bind(link.rich_text_id)
+    .bind(link.url)
     .execute(&mut *conn)
     .await?;
   Ok(())

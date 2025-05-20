@@ -11,7 +11,7 @@ use crate::{
       heading_blocks_table::insert_heading_block,
       image_blocks_table::insert_image_block,
       images_table::{fetch_all_images, ImageRecord},
-      paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_style, TextStyleRecord},
+      paragraph_blocks_table::{fetch_text_styles_all, insert_paragraph_block, insert_rich_text, insert_rich_text_link, insert_rich_text_style, TextStyleRecord},
       post_contents_table::insert_blog_post_content,
     },
   },
@@ -38,6 +38,7 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
     code_block_records,
     rich_text_records,
     rich_text_styles,
+    rich_text_link_records,
   ) = generate_blog_post_records_by(blog_post.clone(), text_style_records, image_records)
     .map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   insert_blog_post(&mut tx, blog_post_record).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
@@ -68,6 +69,10 @@ pub async fn create_single_blog_post(blog_post: BlogPost) -> Result<BlogPost, Ap
 
   for code_block in code_block_records {
     insert_code_block(&mut tx, code_block).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
+  }
+
+  for rich_text_link in rich_text_link_records {
+    insert_rich_text_link(&mut tx, rich_text_link).await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
   }
 
   tx.commit().await.map_err(|err| ApiCustomError::ActixWebError(actix_web::error::ErrorInternalServerError(err)))?;
