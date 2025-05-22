@@ -6,7 +6,7 @@ use reqwest::header::CONTENT_TYPE;
 
 pub struct Request {
   pub request_builder: reqwest::RequestBuilder,
-  pub method: Methods,
+  pub _method: Methods,
   _headers: Option<Vec<(String, String)>>,
   _url_params: Option<Vec<(String, String)>>,
 }
@@ -21,7 +21,7 @@ impl Request {
     };
     Request {
       request_builder,
-      method,
+      _method: method,
       _headers: None,
       _url_params: None,
     }
