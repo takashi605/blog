@@ -88,7 +88,7 @@
 }
 
 /* Hamburger menu button */
-.menuButton:checked ~ .spNav {
+.openedSpNav {
   transform: scale(1, 1) translateX(-50%);
   transform-origin: top;
   transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
@@ -115,8 +115,8 @@
   transition: 0.5s;
 }
 
-.menuButton:checked ~ .spNav a,
-.menuButton:checked ~ .spNav li {
+.openedSpNav a,
+.openedSpNav li {
   opacity: 1;
   transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.2s;
 }
@@ -167,7 +167,7 @@
 }
 
 /* Hamburger Menu Animation Start */
-.menuButton:checked ~ .menuIcon {
+.header:has(.openedSpNav) .menuIcon {
   .menuIconParts {
     background: rgba(0, 0, 0, 0);
     transition: 0.2192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
@@ -175,19 +175,11 @@
 
   .menuIconParts:before {
     transform: rotate(-45deg);
-  }
-
-  .menuIconParts:after {
-    transform: rotate(45deg);
-  }
-}
-
-.menuButton:checked ~ .menuIcon:not(.steps) {
-  .menuIconParts:before {
     top: 0;
   }
 
   .menuIconParts:after {
+    transform: rotate(45deg);
     bottom: 0;
   }
 }
