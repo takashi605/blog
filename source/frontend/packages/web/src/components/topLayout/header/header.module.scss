@@ -2,13 +2,14 @@
 
 .header {
   position: relative;
+  width: 100%;
+  max-width: 1540px;
   margin: 0 auto;
-  width: 90%;
-  max-width: 1400px;
+  padding: 25px 50px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
   background-color: #fff;
 
   &:after {
@@ -31,7 +32,7 @@
   }
 
   @include vars.breakPoint("sp") {
-    padding: 5px 0;
+    padding: 5px 10px;
   }
 }
 
@@ -41,8 +42,6 @@
   font-weight: 600;
   color: #000;
   text-decoration: none;
-  margin-right: 20px;
-  padding: 5px 10px;
   opacity: 1;
   transition:
     color 0.3s,

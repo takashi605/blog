@@ -1,4 +1,5 @@
 import ViewLatestBlogPostsController from '../../../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
+import styles from './page.module.scss';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う
 // こうしないと MSW によるモックサーバーが機能しない
@@ -8,7 +9,7 @@ export const revalidate = 2;
 
 async function ViewBlogPost() {
   return (
-    <section>
+    <section className={styles.viewLatestsSection}>
       <ViewLatestBlogPostsController />
     </section>
   );
