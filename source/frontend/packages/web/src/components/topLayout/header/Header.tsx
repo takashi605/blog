@@ -1,6 +1,8 @@
+'use client';
 import Link from 'next/link';
 import { memo } from 'react';
 import styles from './header.module.scss';
+import SpNav from './SpNav';
 
 function Header() {
   return (
@@ -21,22 +23,8 @@ function Header() {
           </ul>
         </nav>
 
-        <input type="checkbox" className={styles.menuButton} id="menuButton" />
-        <label htmlFor="menuButton" className={styles.menuIcon}>
-          <span className={styles.menuIconParts} />
-        </label>
-
-        <nav className={styles.spNav}>
-          <ul>
-            <li className={styles.top}>
-              <Link href="/posts/latest" className={styles.link}>
-                新着記事
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <SpNav />
       </header>
-      <div className={styles.spHeaderSpacer} />
     </>
   );
 }
