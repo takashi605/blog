@@ -6,7 +6,6 @@ use anyhow::{Context, Result};
 use handlers::{
   blog_post_handlers::{admin_scope, blog_scope},
   response::err::ApiCustomError,
-  sample_handler::sample_scope,
 };
 use std::env;
 
@@ -22,7 +21,6 @@ pub async fn start_api_server() -> Result<()> {
       .wrap(Condition::new(is_dev, configure_cors()))
       .service(admin_scope())
       .service(blog_scope())
-      .service(sample_scope())
       .default_service(web::route().to(route_unmatch))
   })
   .bind(("0.0.0.0", 8000))?
