@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import spNavStyles from './spNav.module.scss';
 import headerStyles from './header.module.scss';
+import spNavStyles from './spNav.module.scss';
 
 function SpNav() {
   const [isOpenSpNav, setIsOpenSpNav] = useState(false);
@@ -25,7 +25,9 @@ function SpNav() {
         <span className={spNavStyles.menuIconParts} />
       </label>
 
-      <nav className={`${spNavStyles.spNav} ${isOpenSpNav && spNavStyles.openedSpNav}`}>
+      <nav
+        className={`${spNavStyles.spNav} ${isOpenSpNav && spNavStyles.openedSpNav}`}
+      >
         <ul>
           <li>
             <Link
