@@ -1,4 +1,4 @@
-import { Given, Then } from '@cucumber/cucumber';
+import { Given, Then, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { UUIDList } from 'shared-test-data';
 import playwrightHelper from '../../support/playwrightHelper.ts';
@@ -125,3 +125,12 @@ Then(
     });
   },
 );
+When('トップページに遷移するリンクをクリックする', async function () {
+  const page = playwrightHelper.getPage();
+  const link = page.getByRole('link', { name: 'トップページへ戻る' });
+  await link.click();
+});
+Then('トップページに遷移する', async function () {
+  const page = playwrightHelper.getPage();
+  await expect(page).toHaveURL(`${process.env.TEST_TARGET_URL}/`);
+});
