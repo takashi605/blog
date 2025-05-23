@@ -20,17 +20,20 @@
 }
 
 .blogPostList {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @include vars.breakPoint("tablet") {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
 }
 
 .blogPostItem {
-  width: 32%;
   margin-bottom: 20px;
 
   @include vars.breakPoint("tablet") {
-    width: 48%;
     margin-bottom: 15px;
   }
 }
