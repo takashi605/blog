@@ -4,6 +4,7 @@ import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { extractFirstParagraphText } from 'service/src/blogPostService/dto/blogPostDTOProcessor/excerptedBlogPostDTO';
 import { HttpError } from 'shared-interface-adapter/src/error/httpError';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { z } from 'zod';
 import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
 import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
 
@@ -29,7 +30,7 @@ export async function generateMetadata(
       params.id,
     );
   } catch (e) {
-    if (e instanceof HttpError) notFound();
+    if (e instanceof HttpError || e instanceof z.ZodError) notFound();
     throw e;
   }
   const excerptedText = extractFirstParagraphText(blogPostDTO);
