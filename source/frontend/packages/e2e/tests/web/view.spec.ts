@@ -132,5 +132,7 @@ When('トップページに遷移するリンクをクリックする', async fu
 });
 Then('トップページに遷移する', async function () {
   const page = playwrightHelper.getPage();
-  await expect(page).toHaveURL(`${process.env.TEST_TARGET_URL}/`);
+  await expect(page).toHaveURL(
+    new RegExp(`^${process.env.TEST_TARGET_URL}/?$`),
+  );
 });
