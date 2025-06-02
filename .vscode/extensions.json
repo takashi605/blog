@@ -1,0 +1,25 @@
+{
+  "recommendations": [
+    "dsznajder.es7-react-js-snippets",
+    "ms-ceintl.vscode-language-pack-ja",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-ssh-edit",
+    "ms-vscode.remote-explorer",
+    "dustypomerleau.rust-syntax",
+    "streetsidesoftware.code-spell-checker",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-containers",
+    "alexkrechik.cucumberautocomplete",
+    "fill-labs.dependi",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "tamasfe.even-better-toml",
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "ms-vscode.makefile-tools",
+    "1yib.rust-bundle",
+    "rust-lang.rust-analyzer",
+    "redhat.vscode-yaml"
+  ]
+}
