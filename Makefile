@@ -7,8 +7,6 @@ CLUSTER_NAME = blog
 ## 上から順次実行で可能なことはテスト済みだが、make コマンド単体での実行は未検証
 ## リソースの構築完了前に次のコマンドを実行して停止するといったことがあり得るので、
 ## 途中で止まったら止まった地点から再実行する
-## また、postgres 関連リソースの起動後に ls -l /var/snap/microk8s/common/default-storage でボリュームの場所を確認し、
-## sudo chown -R 999:999 /var/snap/microk8s/common/default-storage/volumeファイル名 でボリュームの所有者を変更する
 ###
 up-all-env:
 	$(MAKE) mk8s-setup
@@ -52,14 +50,8 @@ mk8s-make-local-cluster:
 	kubectl config use-context microk8s
 
 mk8s-import-image:
-	docker save $(image_name) | sudo microk8s.ctr image import -
-
-# TODO 以下2つのコマンドを使わない形でイメージが整理できるか試している。使わなくてもよさそうなら削除する
-mk8s-get-tilt-images:
-	@sudo microk8s.ctr image list | grep $(image_name):tilt- | awk '{print $$1}'
-mk8s-delete-tilt-images:
-	$(MAKE) mk8s-get-tilt-images image_name=$(image_name) --no-print-directory | xargs -r sudo microk8s.ctr images remove || true
-	docker images --format '{{.Repository}}:{{ .Tag }}' | grep web:tilt-build | xargs -I {} docker images --format '{{.ID}}' --filter "reference={}" | xargs -r -I {} docker rmi -f {} || true
+	docker tag $(image_name) $(image_name)
+	docker push $(image_name)
 
 # 参考：https://discuss.kubernetes.io/t/microk8s-images-prune-utility-for-production-servers/15874/2
 mk8s-prune:
@@ -101,7 +93,7 @@ ingress-controller-install:
 
 ingress-controller-set-metallb:
 	kubectl -n ingress patch service custom-ingress-nginx-controller \
-		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "192.168.1.1"}}}'
+		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "127.0.0.1"}}}'
 
 ingress-controller-default-set:
 	kubectl patch ingressclass custom-nginx \
@@ -111,7 +103,7 @@ ingress-controller-default-set:
 ## Kubernetes 系
 ###
 kube-switch-working-namespace:
-	kubectl create namespace blog
+	kubectl create namespace blog --dry-run=client -o yaml | kubectl apply -f -
 	kubectl config set-context --current --namespace=blog
 kube-switch-default-namespace:
 	kubectl config set-context --current --namespace=default
