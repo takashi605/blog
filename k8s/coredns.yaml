@@ -17,7 +17,7 @@ data:
           class error
         }
         hosts {
-           192.168.1.1 blog.example api.blog.example admin.blog.example
+           127.0.0.1 blog.example api.blog.example admin.blog.example
            fallthrough
         }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
