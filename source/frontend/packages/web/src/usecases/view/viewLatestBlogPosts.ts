@@ -15,6 +15,8 @@ export class ViewLatestBlogPostsUseCase {
     const fetchedData = await this.blogPostRepository.fetchLatests(
       this.quantity,
     );
+    console.log('fetchedData:', fetchedData);
+
     const blogPosts = fetchedData.map((dto) => {
       return blogPostDTOToEntity(dto);
     });

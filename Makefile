@@ -93,7 +93,7 @@ ingress-controller-install:
 
 ingress-controller-set-metallb:
 	kubectl -n ingress patch service custom-ingress-nginx-controller \
-		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "127.0.0.1"}}}'
+		-p '{"metadata":{"annotations":{"metallb.universe.tf/address-pool": "addresspool", "metallb.universe.tf/ip-address": "192.168.0.1"}}}'
 
 ingress-controller-default-set:
 	kubectl patch ingressclass custom-nginx \

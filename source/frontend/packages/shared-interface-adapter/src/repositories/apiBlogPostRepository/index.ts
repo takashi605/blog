@@ -55,6 +55,8 @@ export class ApiBlogPostRepository implements BlogPostRepository {
 
   async fetchLatests(quantity?: number | undefined): Promise<BlogPostDTO[]> {
     const queryParam = quantity ? `?quantity=${quantity}` : '';
+    console.log(`url: ${this.baseUrl}/blog/posts/latest${queryParam}`);
+
     const response = await fetch(
       `${this.baseUrl}/blog/posts/latest${queryParam}`,
       this.baseFetchOptions,
