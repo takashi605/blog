@@ -19,7 +19,7 @@ spec:
       {{- end }}
       http:
         paths:
-        - pathType: Prefix
+        - pathType: ImplementationSpecific
           path: /
           backend:
             service:
@@ -45,7 +45,7 @@ spec:
     {{- end }}
     http:
       paths:
-      - pathType: Prefix
+      - pathType: ImplementationSpecific
         path: /api(/|$)(.*)
         backend:
           service:
@@ -74,7 +74,7 @@ spec:
     {{- end }}
     http:
       paths:
-      - pathType: Prefix
+      - pathType: ImplementationSpecific
         path: /api/admin/(/|$)(.*)
         backend:
           service:
