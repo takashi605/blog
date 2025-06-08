@@ -1,13 +1,40 @@
 pub mod handlers;
 
 use actix_cors::Cors;
-use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer};
+use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::{Context, Result};
 use handlers::{
   blog_post_handlers::{admin_scope, blog_scope},
   response::err::ApiCustomError,
 };
 use std::env;
+use utoipa::OpenApi;
+use common::types::api::response::{BlogPost, Image, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, ImageBlock, CodeBlock, Style, Link};
+
+#[derive(OpenApi)]
+#[openapi(
+  paths(
+    handlers::blog_post_handlers::handle_funcs::get_blog_post,
+    handlers::blog_post_handlers::handle_funcs::get_latest_blog_posts,
+    handlers::blog_post_handlers::handle_funcs::get_top_tech_pick_blog_post,
+    handlers::blog_post_handlers::handle_funcs::put_top_tech_pick_blog_post,
+    handlers::blog_post_handlers::handle_funcs::get_pickup_blog_posts,
+    handlers::blog_post_handlers::handle_funcs::put_pickup_blog_posts,
+    handlers::blog_post_handlers::handle_funcs::get_popular_blog_posts,
+    handlers::blog_post_handlers::handle_funcs::put_popular_blog_posts,
+    handlers::blog_post_handlers::handle_funcs::create_blog_post,
+    handlers::image_handlers::handle_funcs::get_images,
+    handlers::image_handlers::handle_funcs::create_image,
+  ),
+  components(
+    schemas(BlogPost, Image, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, ImageBlock, CodeBlock, Style, Link)
+  ),
+  tags(
+    (name = "blog", description = "Blog API"),
+    (name = "admin", description = "Admin API")
+  )
+)]
+pub struct ApiDoc;
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
@@ -19,6 +46,7 @@ pub async fn start_api_server() -> Result<()> {
   HttpServer::new(move || {
     App::new()
       .wrap(Condition::new(is_dev, configure_cors()))
+      .route("/api/openapi.json", web::get().to(openapi_handler))
       .service(admin_scope())
       .service(blog_scope())
       .default_service(web::route().to(route_unmatch))
@@ -35,6 +63,10 @@ fn configure_cors() -> Cors {
     .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
     .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT, http::header::CONTENT_TYPE])
     .max_age(3600)
+}
+
+async fn openapi_handler() -> impl Responder {
+  HttpResponse::Ok().json(ApiDoc::openapi())
 }
 
 async fn route_unmatch() -> Result<HttpResponse, ApiCustomError> {
