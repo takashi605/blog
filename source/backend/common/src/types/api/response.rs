@@ -1,9 +1,10 @@
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
 
 // TODO 各 Clone を削除する
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct BlogPost {
   pub id: Uuid,
@@ -14,27 +15,27 @@ pub struct BlogPost {
   pub contents: Vec<BlogPostContent>,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Image {
   pub id: Uuid,
   pub path: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Style {
   pub bold: bool,
   pub inline_code: bool,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Link {
   pub url: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(untagged, rename_all = "camelCase")]
 pub enum BlogPostContent {
   H2(H2Block),
@@ -44,7 +45,7 @@ pub enum BlogPostContent {
   Code(CodeBlock),
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct H2Block {
   pub id: Uuid,
@@ -53,7 +54,7 @@ pub struct H2Block {
   pub type_field: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct H3Block {
   pub id: Uuid,
@@ -62,7 +63,7 @@ pub struct H3Block {
   pub type_field: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ParagraphBlock {
   pub id: Uuid,
@@ -71,7 +72,7 @@ pub struct ParagraphBlock {
   pub type_field: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RichText {
   pub text: String,
@@ -79,7 +80,7 @@ pub struct RichText {
   pub link: Option<Link>,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ImageBlock {
   pub id: Uuid,
@@ -88,7 +89,7 @@ pub struct ImageBlock {
   pub type_field: String,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CodeBlock {
   pub id: Uuid,

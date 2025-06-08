@@ -17,3 +17,5 @@ chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0.87"
 thiserror = "2.0.9"
 futures = "0.3.31"
+utoipa = "5.0.0"
+utoipa-actix-web = "0.1.2"
