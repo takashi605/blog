@@ -10,7 +10,7 @@ pub fn admin_image_scope() -> Scope {
   web::scope("/images").route("", web::post().to(handle_funcs::create_image))
 }
 
-mod handle_funcs {
+pub mod handle_funcs {
   use super::fetch_images::fetch_images;
   use crate::{
     db::{pool::POOL, tables::images_table::{insert_image, ImageRecord}},

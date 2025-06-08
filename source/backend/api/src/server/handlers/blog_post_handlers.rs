@@ -31,7 +31,7 @@ pub fn admin_blog_posts_scope() -> Scope {
     .route("", web::post().to(handle_funcs::create_blog_post))
 }
 
-mod handle_funcs {
+pub mod handle_funcs {
   use crate::{
     db::{pool::POOL, tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post}},
     server::handlers::{

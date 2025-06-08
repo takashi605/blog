@@ -46,7 +46,7 @@ pub async fn start_api_server() -> Result<()> {
   HttpServer::new(move || {
     App::new()
       .wrap(Condition::new(is_dev, configure_cors()))
-      .route("/api/openapi.json", web::get().to(openapi_handler))
+      .route("/openapi.json", web::get().to(openapi_handler))
       .service(admin_scope())
       .service(blog_scope())
       .default_service(web::route().to(route_unmatch))
