@@ -31,13 +31,19 @@ make tilt-down
 
 ### バックエンド開発
 ```bash
-# APIテスト実行（単体 + 統合）
-make api-test-run
+# v1 API（レガシー）
+make api-test-run      # v1 APIテスト実行（単体 + 統合）
+make api-test-unit     # v1 単体テストのみ実行
+make api-sh            # v1 APIコンテナシェル
+make api-test-sh       # v1 APIテストコンテナシェル
 
-# 単体テストのみ実行
-make api-test-unit
+# v2 API（新アーキテクチャ）
+make api-v2-test-run   # v2 APIテスト実行（単体 + 統合）
+make api-v2-test-unit  # v2 単体テストのみ実行
+make api-v2-sh         # v2 APIコンテナシェル
+make api-v2-test-sh    # v2 APIテストコンテナシェル
 
-# データベース操作
+# データベース操作（v1/v2共通）
 make api-migrate-run           # マイグレーション実行
 make api-migrate-revert        # 最新マイグレーションの取り消し
 make postgres-recreate-schema  # データベーススキーマのリセット
@@ -45,10 +51,6 @@ make postgres-recreate-schema  # データベーススキーマのリセット
 # 新しいマイグレーション追加
 make api-migrate-add-schema name=migration_name
 make api-migrate-add-seeds name=seed_name
-
-# バックエンドコンテナアクセス
-make api-sh        # APIコンテナシェル
-make api-test-sh   # APIテストコンテナシェル
 ```
 
 ### フロントエンド開発
@@ -78,9 +80,10 @@ make e2e-run-ui     # E2EテストUI付き実行
 make e2e-sh         # E2Eコンテナシェル
 
 # 全テストスイート
-make frontend-test  # フロントエンドテスト
-make api-test-run   # バックエンドテスト + APIテスト
-make e2e-run        # E2Eテスト
+make frontend-test    # フロントエンドテスト
+make api-test-run     # v1 バックエンドテスト + APIテスト
+make api-v2-test-run  # v2 バックエンドテスト + APIテスト
+make e2e-run          # E2Eテスト
 ```
 
 ### コード品質
@@ -91,9 +94,12 @@ make e2e-run        # E2Eテスト
 ## プロジェクト構造
 
 ### バックエンド (`source/backend/`)
-- **`api/`** - Actix-webハンドラーを持つメインAPIサービス
-- **`api_test/`** - APIエンドポイントの統合テスト
+- **`api/`** - v1 APIサービス（Actix-web、レガシー）
+- **`api_v2/`** - v2 APIサービス（Actix-web + OpenAPI + ドメインモデル）
+- **`api_test/`** - v1 API統合テスト
+- **`api_v2_test/`** - v2 API統合テスト
 - **`common/`** - 共有型とユーティリティ
+- **`domain/`** - ドメインモデルとビジネスロジック（v2用）
 - **データベースマイグレーション:** `api/migrations/schema/`（構造）と `api/migrations/seeds/`（データ）
 
 ### フロントエンド (`source/frontend/`)
@@ -190,3 +196,69 @@ PNPMワークスペース構成のパッケージ:
 - 各段階でテストファーストの原則を遵守
 - リファクタリング時は既存テストの通過を維持
 - E2Eテストが開発の完了基準となる
+
+## アーキテクチャ変更計画
+
+現在進行中のアーキテクチャ改善により、以下の変更を実施中です：
+
+### 1. エンティティ層のバックエンド移行
+- **現状の問題**: フロントエンドにドメインロジックが配置され、データ変換が最大6回発生
+- **対応策**: Rust側にドメインモデルを集約し、データ変換回数を削減
+- **実装方針**:
+  - バックエンドに`domain/`モジュールを新設
+  - エンティティとビジネスルールをRustで実装
+  - フロントエンドは軽量なViewModelのみ保持
+
+### 2. 画像アップロードのProxy化
+- **現状の問題**: フロントエンドから直接Cloudinaryに接続、セキュリティリスク
+- **対応策**: バックエンド経由での署名付きアップロード実装
+- **実装方針**:
+  - `/api/images/upload-signature` エンドポイントで署名生成
+  - バックエンドでCloudinary署名付きアップロード制御
+  - フロントエンドからの直接アクセス廃止
+
+### 3. 型安全性の向上
+- **現状の問題**: バックエンドとフロントエンドで型定義が重複・不整合
+- **対応策**: スキーマ共有による型整合性確保
+- **実装方針**:
+  - OpenAPI仕様書からTypeScript型を自動生成
+  - Rustの構造体とTypeScript型の一元管理
+  - ランタイム型検証の簡素化
+
+これらの変更により、セキュリティ向上、パフォーマンス改善、保守性向上を実現します。
+
+## v2 API開発戦略
+
+アーキテクチャ再設計では、既存v1 APIを維持しながら新規v2 APIを並行開発します。
+
+### v2 API設計方針
+
+#### 1. 別コンテナ戦略
+- **`source/backend/api_v2/`** - v1をコピーして新アーキテクチャで再実装
+- **Kubernetes ingress** - パスベースルーティングで`/api/v2/*`をv2コンテナに転送
+- **段階的移行** - v2完成後、v1削除してv2を統合
+
+#### 2. 技術スタック
+- **OpenAPI 3.0** - `utoipa`クレートでRustコードから自動生成
+- **ドメインモデル** - `source/backend/domain/`にビジネスロジック集約
+- **型安全性** - OpenAPIスキーマからTypeScript型自動生成
+
+#### 3. エンドポイント設計
+```rust
+// v2エンドポイント例
+/api/v2/blog/posts          # ブログ記事CRUD
+/api/v2/images/upload       # 画像プロキシアップロード  
+/api/v2/images/signature    # Cloudinary署名生成
+```
+
+#### 4. 移行計画
+- **Phase 1**: v2基盤構築・インフラ設定
+- **Phase 2**: v2 APIエンドポイント実装・フロントエンド v2対応
+- **Phase 3**: v1削除・統合
+
+#### 5. 品質保証
+- **並行テスト** - E2Eテスト実行
+- **API契約テスト** - OpenAPIスキーマとの整合性検証
+- **段階的リリース** - 更新されたエンドポイントから段階的に接続先変更
+
+この戦略により、リスクを最小化しながら確実にアーキテクチャ改善を実現します。
