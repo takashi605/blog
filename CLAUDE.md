@@ -237,6 +237,8 @@ PNPMワークスペース構成のパッケージ:
 
 これらの変更により、セキュリティ向上、パフォーマンス改善、保守性向上を実現します。
 
+**注意：** この作業はv2エンドポイントを切る前に完了させます。
+
 ## v2 API開発戦略
 
 アーキテクチャ再設計では、既存v1 APIを維持しながら新規v2 APIを並行開発します。
@@ -272,3 +274,50 @@ PNPMワークスペース構成のパッケージ:
 - **段階的リリース** - 更新されたエンドポイントから段階的に接続先変更
 
 この戦略により、リスクを最小化しながら確実にアーキテクチャ改善を実現します。
+
+## 現在の作業
+
+### バックエンドとフロントエンド間の型安全性向上
+
+**目標**: OpenAPI仕様書ベースの型自動生成システム構築により、Rust構造体とTypeScript型の手動同期を廃止し、型安全性を向上させる。
+
+**作業計画**:
+
+#### フェーズ1: バックエンドOpenAPI基盤構築
+1. **utoipa関連クレート追加** (進行中)
+   - `utoipa`, `utoipa-actix-web`をCargo.tomlに追加
+   - Rust構造体にOpenAPIアノテーション適用
+
+2. **OpenAPIアノテーション実装**
+   - ブログ記事関連エンドポイント（GET, POST, PUT）へのアノテーション追加
+   - 画像関連エンドポイント（GET, POST）へのアノテーション追加
+
+3. **OpenAPI仕様書出力エンドポイント追加**
+   - `/api/openapi.json`エンドポイント実装
+   - JSON形式でのスキーマ出力機能
+
+#### フェーズ2: フロントエンド型生成システム構築
+4. **TypeScript型生成ツール導入**
+   - `openapi-typescript`パッケージ追加
+   - 生成設定ファイル作成
+
+5. **型配置と使用方法整備**
+   - 生成先: `source/frontend/packages/shared-interface-adapter/src/generated/`
+   - 既存のDTO型からの移行方法策定
+
+#### フェーズ3: 統合・自動化
+6. **Makefileコマンド追加**
+   - `make api-generate-openapi`: OpenAPI仕様書生成
+   - `make frontend-generate-types`: TypeScript型生成
+   - `make generate-types`: 一括型生成
+
+7. **検証・ドキュメント化**
+   - 一部APIでの型生成検証
+   - 開発者向け使用方法をCLAUDE.mdに追記
+
+**受け入れ基準**:
+- ✅ OpenAPI仕様書が自動生成される
+- ✅ Rust構造体→OpenAPI→TypeScript型の自動変換が動作する  
+- ✅ `make generate-types`でワンコマンド型生成が可能
+
+**現在の進行状況**: フェーズ1実行中（utoipaクレート追加作業中）
