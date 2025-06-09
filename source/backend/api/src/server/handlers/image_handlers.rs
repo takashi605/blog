@@ -18,7 +18,6 @@ pub mod handle_funcs {
   };
   use actix_web::{web, HttpResponse, Responder};
   use common::types::api::response::Image;
-  use utoipa::path;
 
   #[utoipa::path(
     get,
