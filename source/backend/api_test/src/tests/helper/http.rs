@@ -1,3 +1,3 @@
 pub mod methods;
 pub mod request;
-mod response;
+pub mod response;
