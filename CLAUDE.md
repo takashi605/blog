@@ -320,12 +320,12 @@ PNPM ワークスペース構成のパッケージ:
 
 #### フェーズ 1: バックエンド OpenAPI 基盤構築
 
-1. **utoipa 関連クレート追加** (進行中)
+1. **utoipa 関連クレート追加**
 
    - `utoipa`, `utoipa-actix-web`を Cargo.toml に追加
    - Rust 構造体に OpenAPI アノテーション適用
 
-2. **OpenAPI アノテーション実装**
+2. **OpenAPI アノテーション実装** (進行中)
 
    - ブログ記事関連エンドポイント（GET, POST, PUT）へのアノテーション追加
    - 画像関連エンドポイント（GET, POST）へのアノテーション追加
