@@ -5,7 +5,7 @@ use serde_json::Value;
 #[tokio::test]
 async fn test_get_openapi_spec() -> Result<()> {
     // OpenAPI仕様書のエンドポイントをテスト
-    let request = Request::new(Methods::GET, "http://api/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
     let response = request.send().await?;
 
     // レスポンスステータスの確認
