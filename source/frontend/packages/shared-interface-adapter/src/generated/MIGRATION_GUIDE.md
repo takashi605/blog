@@ -11,6 +11,7 @@
 ### 移行対象の型
 
 #### 現在の構造
+
 ```
 service/src/
 ├── blogPostService/dto/
@@ -21,6 +22,7 @@ service/src/
 ```
 
 #### 移行後の構造
+
 ```
 shared-interface-adapter/src/generated/
 ├── api-types.ts             # OpenAPI自動生成ファイル
@@ -35,6 +37,7 @@ shared-interface-adapter/src/generated/
 ### 1. API型の置き換え
 
 **移行前:**
+
 ```typescript
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 
@@ -42,6 +45,7 @@ const blogPost: BlogPostDTO = response.data;
 ```
 
 **移行後:**
+
 ```typescript
 import type { components } from '@/generated';
 
@@ -52,37 +56,43 @@ const blogPost: BlogPost = response.data;
 ### 2. APIエンドポイント型の利用
 
 **移行前:**
+
 ```typescript
 // APIレスポンス型を手動定義
 type GetBlogPostsResponse = {
   data: BlogPostDTO[];
   meta: { total: number };
-}
+};
 ```
 
 **移行後:**
+
 ```typescript
 import type { paths } from '@/generated';
 
 // OpenAPIから自動生成された型を使用
-type GetBlogPostsResponse = paths['/api/blog/posts']['get']['responses']['200']['content']['application/json'];
+type GetBlogPostsResponse =
+  paths['/api/blog/posts']['get']['responses']['200']['content']['application/json'];
 ```
 
 ### 3. リクエスト型の利用
 
 **移行前:**
+
 ```typescript
 type CreateBlogPostRequest = {
   title: string;
   contents: ContentDTO[];
-}
+};
 ```
 
 **移行後:**
+
 ```typescript
 import type { paths } from '@/generated';
 
-type CreateBlogPostRequest = paths['/api/blog/posts']['post']['requestBody']['content']['application/json'];
+type CreateBlogPostRequest =
+  paths['/api/blog/posts']['post']['requestBody']['content']['application/json'];
 ```
 
 ## 型アダプターパターン
@@ -111,7 +121,7 @@ export const blogPostAdapter = {
 ### エンドポイント別移行状況
 
 - [ ] **GET /api/blog/posts** - ブログ記事一覧取得
-- [ ] **GET /api/blog/posts/:id** - ブログ記事詳細取得  
+- [ ] **GET /api/blog/posts/:id** - ブログ記事詳細取得
 - [ ] **POST /api/blog/posts** - ブログ記事作成
 - [ ] **PUT /api/blog/posts/:id** - ブログ記事更新
 - [ ] **GET /api/images** - 画像一覧取得
@@ -120,18 +130,21 @@ export const blogPostAdapter = {
 ### ファイル別移行状況
 
 #### shared-interface-adapter
+
 - [ ] `repositories/apiBlogPostRepository/index.ts`
 - [ ] `repositories/apiBlogPostRepository/jsonMapper/blogPostSchema.ts`
 - [ ] `repositories/apiImageRepository/index.ts`
 - [ ] `repositories/apiImageRepository/jsonMapper/imageSchema.ts`
 
 #### APIモック
+
 - [ ] `apiMocks/handlers/blogPost/blogPostHandlers.ts`
 - [ ] `apiMocks/handlers/image/imageHandler.ts`
 
 ## 削除予定ファイル
 
 移行完了後に削除する手動定義型：
+
 - `service/src/blogPostService/dto/`
 - `service/src/imageService/dto/`
 - `shared-interface-adapter/src/repositories/*/jsonMapper/*Schema.ts`
