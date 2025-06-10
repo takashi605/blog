@@ -97,6 +97,44 @@ make e2e-run          # E2Eテスト
 - **フロントエンド:** リンティングに `make frontend-check`、自動修正に `make frontend-fix` を実行
 - **TypeScript:** ワークスペース全体の型チェックに `make frontend-tsc` を実行
 
+### 型生成システム
+
+OpenAPI 仕様書ベースの型自動生成により、バックエンド・フロントエンド間の型安全性を確保：
+
+```bash
+# 型生成（一括実行）
+make generate-types
+
+# 個別実行
+make api-generate-openapi    # OpenAPI仕様書生成
+make frontend-generate-types # TypeScript型生成
+```
+
+#### 使用方法
+
+```typescript
+// 生成された型のインポート
+import type { components, paths } from '@/generated';
+
+// スキーマ型の使用
+type BlogPost = components['schemas']['BlogPost'];
+type Image = components['schemas']['Image'];
+
+// APIエンドポイント型の使用
+type GetBlogPostsResponse = 
+  paths['/api/blog/posts/latest']['get']['responses']['200']['content']['application/json'];
+
+type CreateBlogPostRequest = 
+  paths['/api/admin/blog/posts']['post']['requestBody']['content']['application/json'];
+```
+
+#### 重要事項
+
+- **自動生成ファイル:** `source/frontend/packages/shared-interface-adapter/src/generated/api-types.ts` は手動編集禁止
+- **Git管理:** 生成ファイルはGit管理対象です。バックエンドAPI変更時は `make generate-types` 実行後にコミット
+- **型更新:** バックエンド API 変更後は必ず `make generate-types` を実行してから変更をコミット
+- **統一エクスポート:** `@/generated` からのインポートを使用し、直接 `api-types.ts` をインポートしない
+
 ## プロジェクト構造
 
 ### バックエンド (`source/backend/`)
@@ -132,6 +170,7 @@ PNPM ワークスペース構成のパッケージ:
 - **Kubernetes:** サービスは `blog` 名前空間で動作。Pod アクセスやポートフォワーディングには `make` コマンドを使用
 - **ライブリロード:** Tilt が開発中のフロントエンドとバックエンドの両方でライブリロードを提供
 - **テスト戦略:** 単体テスト、API 統合テスト、E2E テストすべてが完了の条件
+- **型安全性:** OpenAPI 仕様書から TypeScript 型を自動生成。手動型定義は非推奨
 
 ## サービスアクセス情報
 

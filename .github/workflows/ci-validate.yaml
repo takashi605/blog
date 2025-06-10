@@ -32,6 +32,7 @@ jobs:
       - name: "モジュールの install"
         run: make frontend-install
 
+
       - name: "一部パッケージのトランスパイル"
         run: make frontend-tsc
 
@@ -55,6 +56,7 @@ jobs:
 
       - name: "モジュールの install"
         run: make frontend-install
+
 
       - name: "一部パッケージのトランスパイル"
         run: make frontend-tsc
