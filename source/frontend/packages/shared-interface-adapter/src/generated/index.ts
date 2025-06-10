@@ -8,12 +8,6 @@
 // OpenAPI生成型をre-export
 export type * from './api-types';
 
-// 型生成前の一時的なプレースホルダー型
-export type GeneratedApiTypes = {
-  // OpenAPI型生成後にここから削除予定
-  placeholder: 'Types will be generated from OpenAPI schema';
-};
-
 /**
  * 生成型の使用方法:
  *
