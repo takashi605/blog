@@ -25,7 +25,13 @@
     "jsx": "preserve",
     // tsconfig.tsbuildinfo　を生成し、バージョン管理を行う
     // コンパイル時には差分のみをコンパイルしなおす
-    "incremental": true
+    "incremental": true,
+    // パスマッピング設定
+    "baseUrl": ".",
+    "paths": {
+      "@/generated": ["./packages/shared-interface-adapter/src/generated"],
+      "@/generated/*": ["./packages/shared-interface-adapter/src/generated/*"]
+    }
   },
   // プログラムに含めるファイル
   "include": ["**/*.ts", "**/*.tsx"],
