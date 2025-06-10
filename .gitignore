@@ -45,7 +45,3 @@ next-env.d.ts
 
 # シークレットファイル
 *secret.yaml
-
-# OpenAPI 生成ファイル（各開発者が個別に生成）
-source/frontend/openapi.json
-source/frontend/packages/shared-interface-adapter/src/generated/api-types.ts

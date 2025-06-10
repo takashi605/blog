@@ -27,9 +27,6 @@ make up-all-env
 # Tiltによる開発環境の開始
 make tilt-up
 
-# 初回セットアップ後、TypeScript型を生成
-make generate-types
-
 # 開発環境の停止
 make tilt-down
 ```
@@ -134,9 +131,8 @@ type CreateBlogPostRequest =
 #### 重要事項
 
 - **自動生成ファイル:** `source/frontend/packages/shared-interface-adapter/src/generated/api-types.ts` は手動編集禁止
-- **Git管理:** 生成ファイルは `.gitignore` に含まれており、各開発者が個別に生成する
-- **初回セットアップ:** プロジェクトクローン後、初回は `make generate-types` を実行
-- **ブランチ切り替え後:** バックエンド変更があるブランチに切り替えた際は `make generate-types` を実行
+- **Git管理:** 生成ファイルはGit管理対象です。バックエンドAPI変更時は `make generate-types` 実行後にコミット
+- **型更新:** バックエンド API 変更後は必ず `make generate-types` を実行してから変更をコミット
 - **統一エクスポート:** `@/generated` からのインポートを使用し、直接 `api-types.ts` をインポートしない
 
 ## プロジェクト構造
