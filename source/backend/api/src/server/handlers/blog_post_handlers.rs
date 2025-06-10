@@ -1,5 +1,4 @@
 use actix_web::{web, Scope};
-use utoipa::OpenApi;
 
 use super::image_handlers::{admin_image_scope, image_scope};
 
@@ -33,7 +32,10 @@ pub fn admin_blog_posts_scope() -> Scope {
 
 pub mod handle_funcs {
   use crate::{
-    db::{pool::POOL, tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post}},
+    db::{
+      pool::POOL,
+      tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
+    },
     server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
@@ -46,7 +48,6 @@ pub mod handle_funcs {
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
-  use utoipa::path;
   use uuid::Uuid;
 
   #[utoipa::path(
@@ -113,7 +114,8 @@ pub mod handle_funcs {
     let requested_post: BlogPost = top_tech_pick_posts_req.into_inner();
     update_top_tech_pick_post(&*POOL, requested_post.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
 
-    let updated_post = fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
+    let updated_post =
+      fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
     let updated_post_id = updated_post.post_id;
     let result = fetch_single_blog_post(updated_post_id).await?;
 
