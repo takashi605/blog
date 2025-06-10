@@ -5,8 +5,8 @@
  * 直接api-types.tsをインポートせず、このファイル経由でアクセスしてください。
  */
 
-// OpenAPI生成型をre-export（ファイル生成後に有効化）
-// export type * from './api-types';
+// OpenAPI生成型をre-export
+export type * from './api-types';
 
 // 型生成前の一時的なプレースホルダー型
 export type GeneratedApiTypes = {

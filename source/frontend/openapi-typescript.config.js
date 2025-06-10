@@ -1,21 +1,14 @@
 import { defineConfig } from "openapi-typescript";
+import { existsSync } from "fs";
+
+// OpenAPI仕様書のソース（ローカルファイル優先、なければAPI）
+const openapiSource = existsSync("./openapi.json") 
+  ? "./openapi.json" 
+  : "http://localhost:8000/openapi.json";
 
 export default defineConfig({
-  // OpenAPI仕様書のURL（ローカル開発環境）
-  openapi: "http://localhost:8080/openapi.json",
+  // OpenAPI仕様書のソース
+  input: openapiSource,
   // 型生成先ディレクトリ
   output: "./packages/shared-interface-adapter/src/generated/api-types.ts",
-  // 生成オプション
-  options: {
-    // オブジェクトキーにアクセスしやすくする
-    pathParamsAsTypes: false,
-    // 型名を読みやすくする
-    transform: {
-      // 型名変換（必要に応じて）
-    },
-    // 追加ヘッダー
-    additionalProperties: true,
-    // デフォルト値を含める
-    defaultNonNullable: true,
-  },
 });

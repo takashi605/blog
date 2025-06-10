@@ -173,6 +173,10 @@ frontend-test-unit-serialize:
 frontend-tsc:
 	cd source/frontend/ && pnpm tsc
 
+# TypeScript型生成
+frontend-generate-types:
+	cd source/frontend/ && pnpm generate-types
+
 ###
 ## e2e 系
 ###
@@ -229,6 +233,10 @@ api-migrate-add-schema:
 api-migrate-add-seeds:
 	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/seeds
 
+# OpenAPI仕様書生成
+api-generate-openapi:
+	kubectl exec $(shell $(MAKE) api-pod-name) -c api -- curl -s http://localhost:8000/openapi.json > source/frontend/openapi.json
+
 ###
 ## api テスト系
 ## Pod「api」内に api テスト用コンテナがある
@@ -266,6 +274,15 @@ postgres-sh:
 postgres-recreate-schema:
 	kubectl exec -it $(shell $(MAKE) postgres-pod-name) -c postgres -- \
 		psql -d blog -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+
+###
+## 型生成系
+###
+
+# OpenAPI仕様書からTypeScript型を一括生成
+generate-types:
+	$(MAKE) api-generate-openapi
+	$(MAKE) frontend-generate-types
 
 ###
 ## デバッグ用
