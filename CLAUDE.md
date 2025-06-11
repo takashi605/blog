@@ -312,7 +312,7 @@ PNPM ワークスペース構成のパッケージ:
 
 ## アーキテクチャ変更計画
 
-現在進行中のアーキテクチャ改善により、以下の変更を実施中です：
+現在進行中のアーキテクチャ改善により、以下の変更を実施します：
 
 ### 1. エンティティ層のバックエンド移行
 
@@ -332,18 +332,17 @@ PNPM ワークスペース構成のパッケージ:
   - バックエンドで Cloudinary 署名付きアップロード制御
   - フロントエンドからの直接アクセス廃止
 
-### 3. 型安全性の向上
+### 3. 型安全性の向上 (✅ 完了)
 
-- **現状の問題**: バックエンドとフロントエンドで型定義が重複・不整合
-- **対応策**: スキーマ共有による型整合性確保
-- **実装方針**:
+- **対応済み**: OpenAPI 仕様書ベースの型自動生成システム構築
+- **実装済み**:
   - OpenAPI 仕様書から TypeScript 型を自動生成
   - Rust の構造体と TypeScript 型の一元管理
-  - ランタイム型検証の簡素化
+  - `make generate-types` でワンコマンド型生成
+  - 既存 DTO と生成型の完全互換性確保
+  - Discriminated Union の正常動作確認
 
 これらの変更により、セキュリティ向上、パフォーマンス改善、保守性向上を実現します。
-
-**注意：** この作業は v2 エンドポイントを切る前に完了させます。
 
 ## v2 API 開発戦略
 
@@ -389,78 +388,79 @@ PNPM ワークスペース構成のパッケージ:
 ## 現在の作業
 
 - 各フェーズごとにブランチを切ること
-- 最低限、フェーズ内の各項番ごとにコミットすること
+- 最低限、フェーズ内の各項番ごとにテスト・コミットすること
+  - 例：フェーズ1-1 が完了したらテスト・コミット
 
-### バックエンドとフロントエンド間の型安全性向上
+### v2 API エンドポイントの構築
 
-**目標**: OpenAPI 仕様書ベースの型自動生成システム構築により、Rust 構造体と TypeScript 型の手動同期を廃止し、型安全性を向上させる。
+**ユーザーストーリー**: アプリケーション開発者として、v2 エンドポイントを用意したい。これは、再設計を安全に進めるためである。
+
+**目標**: 既存 v1 API の機能を維持しながら、新しいアーキテクチャ基盤となる v2 API を構築し、段階的な移行を可能にする。
 
 **作業計画**:
 
-#### フェーズ 1: バックエンド OpenAPI 基盤構築
+#### フェーズ 1: v2 API ベースコピーと設定
 
-1. **utoipa 関連クレート追加**
+1. **v2 API ディレクトリの作成**
+   - `source/backend/api/` を `source/backend/api_v2/` にコピー
+   - Cargo.toml のパッケージ名を `blog-api-v2` に変更
+   - バイナリ名を `blog-api-v2` に変更
+   - サーバー起動ポートを 8001 に変更（ポート競合回避）
 
-   - `utoipa`, `utoipa-actix-web`を Cargo.toml に追加
-   - Rust 構造体に OpenAPI アノテーション適用
+2. **v2 API テストディレクトリの作成**
+   - `source/backend/api_test/` を `source/backend/api_v2_test/` にコピー
+   - Cargo.toml のパッケージ名を `blog-api-v2-test` に変更
+   - バイナリ名を `blog-api-v2-test` に変更
+   - テスト接続先を `localhost:8001` に変更（v2 API ポート）
 
-2. **OpenAPI アノテーション実装**
+3. **v2 API 用 Dockerfile の作成**
+   - `containers/backend/api/Dockerfile` をコピーして `containers/backend/api_v2/Dockerfile` を作成
+   - ビルド対象パッケージを `blog-api-v2` に変更
 
-   - ブログ記事関連エンドポイント（GET, POST, PUT）へのアノテーション追加
-   - 画像関連エンドポイント（GET, POST）へのアノテーション追加
+#### フェーズ 2: インフラストラクチャ対応
 
-3. **OpenAPI 仕様書出力エンドポイント追加**
-   - `/openapi.json`エンドポイント実装
-   - JSON 形式でのスキーマ出力機能
+4. **Kubernetes 設定の追加**
+   - `k8s/blog-chart/templates/backend/api_v2/` ディレクトリを作成
+   - deployment.yaml: v1 ベースで作成、v2 コンテナとv2-testコンテナを同一Pod内に配置
+   - service.yaml: ポート 8001 で v2 API にアクセス可能にする
+   - values.yaml に v2 API 用の設定を追加
 
-#### フェーズ 2: フロントエンド型生成システム構築
+5. **Ingress 設定の更新**
+   - `/api/v2/*` パスを v2 API サービス（ポート8001）に転送するルールを追加
+   - rewrite-target で `/api/v2/xxx` → `/xxx` に URL 変換
+   - 既存の `/api/*` ルール（v1）は維持
 
-4. **TypeScript 型生成ツール導入**
+6. **Tilt と Makefile の更新**
+   - Tiltfile に v2 API コンテナビルド設定を追加
+   - Makefile に v2 API 関連コマンド追加：`make api-v2-sh`, `make api-v2-test-run` 等
 
-   - `openapi-typescript`パッケージ追加
-   - 生成設定ファイル作成
+#### フェーズ 3: v2 エンドポイント修正
 
-5. **型配置と使用方法整備**
-   - 生成先: `source/frontend/packages/shared-interface-adapter/src/generated/`
-   - 既存の DTO 型からの移行方法策定
+7. **v2 API エンドポイントパスの修正**
+   - エンドポイントパスは v1 と同じ（`/blog/*`, `/admin/*`, `/images/*`）を維持
+   - `/openapi.json` エンドポイントを追加
+   - Ingress の rewrite-target で `/api/v2/*` → `/*` に変換されるため
 
-#### フェーズ 3: 統合・自動化
+8. **v2 テストエンドポイントの修正**
+   - テストコード内の接続先を `localhost:8001` に変更
+   - エンドポイントパス自体は v1 と同じ（`/admin/blog/posts` 等）
 
-6. **Makefile コマンド追加**
+#### フェーズ 4: フロントエンドの v2 移行
 
-   - `make api-generate-openapi`: OpenAPI 仕様書生成
-   - `make frontend-generate-types`: TypeScript 型生成
-   - `make generate-types`: 一括型生成
+9. **記事単一取得の v2 移行**
+   - 公開サイト（`web/`）の記事詳細取得を `/api/v2/blog/posts/{slug}` に変更
+   - 管理画面（`blog-admin/`）の記事編集取得を `/api/v2/blog/posts/{slug}` に変更
+   - 型生成の更新（v2 エンドポイント対応）
 
-7. **検証・ドキュメント化**
-   - 一部 API での型生成検証
-   - 開発者向け使用方法を CLAUDE.md に追記
-
-#### フェーズ 4: 型互換性の改善と完全移行
-
-8. **バックエンド側型定義の改善**
-
-   - OpenAPI アノテーションで `type` フィールドをリテラル型として定義
-   - Discriminated Union の正常動作を確保
-   - 例: `#[schema(example = "h2")]` → `#[serde(rename = "h2")]` + enum 定義
-
-9. **フロントエンド DTO 型の調整**
-
-   - `Readonly<>` 修飾子の削除（mutable 型への変更）
-   - `ReturnType<>` 推論を直接型定義に変更
-   - オプショナルプロパティの調整（`styles?` → `styles`）
-   - 配列型の変更（`ReadonlyArray<>` → 通常配列）
-
-10. **互換性検証とテスト**
-    - 既存 DTO と生成型の完全互換性確認
-    - 型安全性のランタイム検証
-    - 全レイヤーでの動作確認
+10. **動作確認とテスト**
+    - `make api-v2-test-run` で v2 API テストが通過することを確認
+    - `make e2e-run` で E2E テストが通過することを確認
+    - v1 API が引き続き動作することを確認
 
 **受け入れ基準**:
 
-- ✅ OpenAPI 仕様書が自動生成される
-- ✅ Rust 構造体 →OpenAPI→TypeScript 型の自動変換が動作する
-- ✅ `make generate-types`でワンコマンド型生成が可能
-- ✅ 本番環境では API 仕様書エンドポイントにアクセスできない
-- ✅ 既存 DTO と生成型が完全に互換性を持つ
-- ✅ Discriminated Union が正常に動作する
+- ✅ 既存の api の全エンドポイントが v2 として存在すること
+- ✅ v2 用の api テストが既存のものと同じで、v2 に対して実行されていること
+- ✅ 記事の単一取得エンドポイントを v2 のものに置き換えていること
+- ✅ 全ての E2E テストが通過すること
+- ✅ v1 API の機能が引き続き動作すること
