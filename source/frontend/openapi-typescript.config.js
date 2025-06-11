@@ -4,7 +4,7 @@ import { existsSync } from "fs";
 // OpenAPI仕様書のソース（ローカルファイル優先、なければAPI）
 const openapiSource = existsSync("./openapi.json") 
   ? "./openapi.json" 
-  : "http://localhost:8000/openapi.json";
+  : "http://localhost:8001/openapi.json";
 
 export default defineConfig({
   // OpenAPI仕様書のソース

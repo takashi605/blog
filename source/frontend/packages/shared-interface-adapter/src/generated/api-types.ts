@@ -196,30 +196,42 @@ export interface components {
       title: string;
     };
     BlogPostContent:
-      | components['schemas']['H2Block']
-      | components['schemas']['H3Block']
-      | components['schemas']['ParagraphBlock']
-      | components['schemas']['ImageBlock']
-      | components['schemas']['CodeBlock'];
+      | (components['schemas']['H2Block'] & {
+          /** @enum {string} */
+          type: 'h2';
+        })
+      | (components['schemas']['H3Block'] & {
+          /** @enum {string} */
+          type: 'h3';
+        })
+      | (components['schemas']['ParagraphBlock'] & {
+          /** @enum {string} */
+          type: 'paragraph';
+        })
+      | (components['schemas']['ImageBlock'] & {
+          /** @enum {string} */
+          type: 'image';
+        })
+      | (components['schemas']['CodeBlock'] & {
+          /** @enum {string} */
+          type: 'codeBlock';
+        });
     CodeBlock: {
       code: string;
       /** Format: uuid */
       id: string;
       language: string;
       title: string;
-      type: string;
     };
     H2Block: {
       /** Format: uuid */
       id: string;
       text: string;
-      type: string;
     };
     H3Block: {
       /** Format: uuid */
       id: string;
       text: string;
-      type: string;
     };
     Image: {
       /** Format: uuid */
@@ -230,7 +242,6 @@ export interface components {
       /** Format: uuid */
       id: string;
       path: string;
-      type: string;
     };
     Link: {
       url: string;
@@ -239,7 +250,6 @@ export interface components {
       /** Format: uuid */
       id: string;
       text: components['schemas']['RichText'][];
-      type: string;
     };
     RichText: {
       link?: null | components['schemas']['Link'];
