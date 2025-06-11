@@ -1,0 +1,53 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select article_id, title, thumbnail_path, created_post_date, updated_post_date, published_at, created_at, updated_at from blog_posts",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "article_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "thumbnail_path",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "created_post_date",
+        "type_info": "Date"
+      },
+      {
+        "ordinal": 4,
+        "name": "updated_post_date",
+        "type_info": "Date"
+      },
+      {
+        "ordinal": 5,
+        "name": "published_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [false, false, false, false, false, false, false, false]
+  },
+  "hash": "c408bd4573f88e00a148e6263658b5b6cc0b512d18532e796763fee8e4ac4de8"
+}

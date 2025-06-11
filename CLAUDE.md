@@ -399,60 +399,64 @@ PNPM ワークスペース構成のパッケージ:
 
 **作業計画**:
 
-#### フェーズ 1: v2 API ベースコピーと設定
+#### フェーズ 1: backend_v2 ディレクトリ全体の作成
 
-1. **v2 API ディレクトリの作成**
-   - `source/backend/api/` を `source/backend/api_v2/` にコピー
-   - Cargo.toml のパッケージ名を `blog-api-v2` に変更
-   - バイナリ名を `blog-api-v2` に変更
+1. **backend_v2 ディレクトリ全体のコピー**
+   - `source/backend/` を `source/backend_v2/` にコピー
+   - v1とv2の完全分離によるクリーンなアーキテクチャ実現
+
+2. **backend_v2 ワークスペース設定**
+   - `source/backend_v2/Cargo.toml` のメンバーを `["api_v2", "api_v2_test", "common"]` に変更
+   - v2専用の独立したワークスペースを構築
+
+3. **ディレクトリ名変更とパッケージ設定**
+   - `backend_v2/api/` → `backend_v2/api_v2/` にリネーム
+   - `backend_v2/api_test/` → `backend_v2/api_v2_test/` にリネーム
+   - 各 Cargo.toml でパッケージ名を `blog-api-v2`, `blog-api-v2-test` に変更
    - サーバー起動ポートを 8001 に変更（ポート競合回避）
+   - テスト接続先を `localhost:8001` に変更
 
-2. **v2 API テストディレクトリの作成**
-   - `source/backend/api_test/` を `source/backend/api_v2_test/` にコピー
-   - Cargo.toml のパッケージ名を `blog-api-v2-test` に変更
-   - バイナリ名を `blog-api-v2-test` に変更
-   - テスト接続先を `localhost:8001` に変更（v2 API ポート）
-
-3. **v2 API 用 Dockerfile の作成**
-   - `containers/backend/api/Dockerfile` をコピーして `containers/backend/api_v2/Dockerfile` を作成
-   - ビルド対象パッケージを `blog-api-v2` に変更
+4. **v2 専用 Dockerfile の作成**
+   - `containers/backend/api_v2/Dockerfile` を作成
+   - `ARG APP_ROOT_DIR=source/backend_v2` で v2 ディレクトリのみ参照
+   - v1 との依存関係を完全に排除
 
 #### フェーズ 2: インフラストラクチャ対応
 
-4. **Kubernetes 設定の追加**
+5. **Kubernetes 設定の追加**
    - `k8s/blog-chart/templates/backend/api_v2/` ディレクトリを作成
-   - deployment.yaml: v1 ベースで作成、v2 コンテナとv2-testコンテナを同一Pod内に配置
+   - deployment.yaml: v2専用設定で作成、backend_v2ディレクトリを参照
    - service.yaml: ポート 8001 で v2 API にアクセス可能にする
    - values.yaml に v2 API 用の設定を追加
 
-5. **Ingress 設定の更新**
+6. **Ingress 設定の更新**
    - `/api/v2/*` パスを v2 API サービス（ポート8001）に転送するルールを追加
    - rewrite-target で `/api/v2/xxx` → `/xxx` に URL 変換
    - 既存の `/api/*` ルール（v1）は維持
 
-6. **Tilt と Makefile の更新**
-   - Tiltfile に v2 API コンテナビルド設定を追加
+7. **Tilt と Makefile の更新**
+   - Tiltfile に v2 API コンテナビルド設定を追加（backend_v2ディレクトリ使用）
    - Makefile に v2 API 関連コマンド追加：`make api-v2-sh`, `make api-v2-test-run` 等
 
 #### フェーズ 3: v2 エンドポイント修正
 
-7. **v2 API エンドポイントパスの修正**
+8. **v2 API エンドポイントパスの修正**
    - エンドポイントパスは v1 と同じ（`/blog/*`, `/admin/*`, `/images/*`）を維持
    - `/openapi.json` エンドポイントを追加
    - Ingress の rewrite-target で `/api/v2/*` → `/*` に変換されるため
 
-8. **v2 テストエンドポイントの修正**
+9. **v2 テストエンドポイントの修正**
    - テストコード内の接続先を `localhost:8001` に変更
    - エンドポイントパス自体は v1 と同じ（`/admin/blog/posts` 等）
 
 #### フェーズ 4: フロントエンドの v2 移行
 
-9. **記事単一取得の v2 移行**
-   - 公開サイト（`web/`）の記事詳細取得を `/api/v2/blog/posts/{slug}` に変更
-   - 管理画面（`blog-admin/`）の記事編集取得を `/api/v2/blog/posts/{slug}` に変更
-   - 型生成の更新（v2 エンドポイント対応）
+10. **記事単一取得の v2 移行**
+    - 公開サイト（`web/`）の記事詳細取得を `/api/v2/blog/posts/{slug}` に変更
+    - 管理画面（`blog-admin/`）の記事編集取得を `/api/v2/blog/posts/{slug}` に変更
+    - 型生成の更新（v2 エンドポイント対応）
 
-10. **動作確認とテスト**
+11. **動作確認とテスト**
     - `make api-v2-test-run` で v2 API テストが通過することを確認
     - `make e2e-run` で E2E テストが通過することを確認
     - v1 API が引き続き動作することを確認
