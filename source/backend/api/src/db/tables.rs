@@ -94,36 +94,18 @@ pub fn generate_blog_post_records_by(
           sort_order: index as i32,
         }
       }
-      // 現状は json へのシリアライズ時に h2 と h3 の区別がつかないため、type_field で区別する
-      // TODO 適切な方法で区別できるように修正する
       BlogPostContent::H2(h2) => {
-        let content_record: PostContentRecord;
-        if h2.type_field == "h3" {
-          heading_block_records.push(HeadingBlockRecord {
-            id: h2.id,
-            heading_level: 3,
-            text_content: h2.text,
-          });
-          content_record = PostContentRecord {
-            id: h2.id,
-            post_id: post.id,
-            content_type: "heading".to_string(),
-            sort_order: index as i32,
-          }
-        } else {
-          heading_block_records.push(HeadingBlockRecord {
-            id: h2.id,
-            heading_level: 2,
-            text_content: h2.text,
-          });
-          content_record = PostContentRecord {
-            id: h2.id,
-            post_id: post.id,
-            content_type: "heading".to_string(),
-            sort_order: index as i32,
-          };
+        heading_block_records.push(HeadingBlockRecord {
+          id: h2.id,
+          heading_level: 2,
+          text_content: h2.text,
+        });
+        PostContentRecord {
+          id: h2.id,
+          post_id: post.id,
+          content_type: "heading".to_string(),
+          sort_order: index as i32,
         }
-        content_record
       }
       BlogPostContent::H3(h3) => {
         heading_block_records.push(HeadingBlockRecord {
@@ -330,26 +312,21 @@ mod tests {
                 }),
               },
             ],
-            type_field: "paragraph".to_string(),
           }),
           BlogPostContent::H2(H2Block {
             id: Uuid::new_v4(),
             text: "見出しレベル2".to_string(),
-            type_field: "h2".to_string(),
           }),
           BlogPostContent::H3(H3Block {
             id: Uuid::new_v4(),
             text: "見出しレベル3".to_string(),
-            type_field: "h3".to_string(),
           }),
           BlogPostContent::Image(ImageBlock {
             id: Uuid::new_v4(),
             path: "test-book".to_string(),
-            type_field: "image".to_string(),
           }),
           BlogPostContent::Code(CodeBlock {
             id: Uuid::new_v4(),
-            type_field: "code_block".to_string(),
             title: "サンプルコード".to_string(),
             code: "console.log(Hello, World!)".to_string(),
             language: "javascript".to_string(),

@@ -1,4 +1,5 @@
 pub mod handlers;
+pub mod openapi;
 
 use actix_cors::Cors;
 use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer};
@@ -7,21 +8,30 @@ use handlers::{
   blog_post_handlers::{admin_scope, blog_scope},
   response::err::ApiCustomError,
 };
+use openapi::openapi_handler;
 use std::env;
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
-  let env = env::var("RUST_ENV").expect("RUST_ENV must be set");
-  let is_dev = env == "development";
-
+  
   // 開発環境でのみ Cors を設定する
   // 本番環境では Nginx などで設定する
   HttpServer::new(move || {
-    App::new()
+    let env = env::var("RUST_ENV").expect("RUST_ENV must be set");
+    let is_dev = env == "development";
+
+    let mut app = App::new()
       .wrap(Condition::new(is_dev, configure_cors()))
       .service(admin_scope())
       .service(blog_scope())
-      .default_service(web::route().to(route_unmatch))
+      .default_service(web::route().to(route_unmatch));
+    
+    // 開発環境でのみOpenAPI仕様書エンドポイントを有効化
+    if is_dev {
+      app = app.route("/openapi.json", web::get().to(openapi_handler));
+    }
+    
+    app
   })
   .bind(("0.0.0.0", 8000))?
   .run()

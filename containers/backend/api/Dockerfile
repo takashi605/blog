@@ -38,6 +38,11 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 FROM base AS dev
 ENV RUST_ENV=development
 
+# 開発環境用にcurlをインストール（rootユーザーで実行）
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+USER rust:rust
+
 RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
