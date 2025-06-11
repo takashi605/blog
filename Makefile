@@ -149,7 +149,7 @@ frontend-install-with-container:
 
 frontend-test:
 	$(MAKE) frontend-tsc
-	$(MAKE) frontend-test-unit
+	$(MAKE) frontend-test-unit-serialize
 	$(MAKE) frontend-check
 frontend-check:
 	cd source/frontend/ && \
@@ -160,11 +160,13 @@ frontend-fix:
 	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
 	xargs -n 1 -P 5 -I {} pnpm {} run fix
 
+# 結果が見づらいけど並列実行するのでめちゃくちゃはやい
 frontend-test-unit:
 	cd source/frontend/ && \
 	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
 	xargs -n 1 -P 5 -I {} pnpm {} run test
 
+# 直接実行するので見やすい
 frontend-test-unit-serialize:
 	cd source/frontend/ && \
 	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
