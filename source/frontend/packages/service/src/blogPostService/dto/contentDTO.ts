@@ -10,23 +10,23 @@ export type ContentDTO =
 export type H2DTO = {
   id: string;
   text: string;
-  type: string;
+  type: 'h2';
 };
 export type H3DTO = {
   id: string;
   text: string;
-  type: string;
+  type: 'h3';
 };
 
 export type ParagraphDTO = {
   id: string;
   text: RichTextDTO;
-  type: string;
+  type: 'paragraph';
 };
 
 export type ImageContentDTO = {
   id: string;
-  type: string;
+  type: 'image';
   path: string;
 };
 
@@ -43,7 +43,7 @@ export type RichTextDTO = {
 
 export type CodeBlockDTO = {
   id: string;
-  type: string;
+  type: 'codeBlock';
   title: string;
   code: string;
   language: string;
