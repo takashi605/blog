@@ -10,7 +10,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_all_images() -> Result<()> {
-    let url = "http://localhost:8000/blog/images";
+    let url = "http://localhost:8001/blog/images";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();

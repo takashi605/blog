@@ -9,7 +9,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_blog_post() -> Result<()> {
-    let url = "http://localhost:8000/admin/blog/posts";
+    let url = "http://localhost:8001/admin/blog/posts";
 
     // テスト用のブログ記事 json を作成
     let blog_post_for_req: BlogPost = helper::create_blog_post_for_req(Uuid::new_v4(), "テスト記事").await.unwrap();

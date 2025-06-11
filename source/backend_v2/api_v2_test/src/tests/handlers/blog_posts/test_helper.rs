@@ -72,7 +72,7 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
 }
 
 pub async fn fetch_any_image() -> Result<Image> {
-  let url = "http://localhost:8000/blog/images";
+  let url = "http://localhost:8001/blog/images";
   let resp = Request::new(Methods::GET, &url).send().await?.text().await?;
 
   let images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;

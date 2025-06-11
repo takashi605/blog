@@ -8,7 +8,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_single_blog_post() -> Result<()> {
-    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
+    let url = format!("http://localhost:8001/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
     
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
@@ -20,7 +20,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_top_tech_pick_blog_post() -> Result<()> {
-    let url = "http://localhost:8000/blog/posts/top-tech-pick";
+    let url = "http://localhost:8001/blog/posts/top-tech-pick";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
@@ -33,7 +33,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_pickup_blog_posts() -> Result<()> {
-    let url = "http://localhost:8000/blog/posts/pickup";
+    let url = "http://localhost:8001/blog/posts/pickup";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
@@ -48,7 +48,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_popular_blog_posts() -> Result<()> {
-    let url = "http://localhost:8000/blog/posts/popular";
+    let url = "http://localhost:8001/blog/posts/popular";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
@@ -63,7 +63,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn get_latest_blog_posts() -> Result<()> {
-    let url = "http://localhost:8000/blog/posts/latest";
+    let url = "http://localhost:8001/blog/posts/latest";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let blog_post_resp: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
@@ -79,7 +79,7 @@ mod tests {
   // 存在しないブログ記事を取得すると 404 エラーとエラーメッセージが返る
   #[tokio::test(flavor = "current_thread")]
   async fn get_not_exist_blog_post() -> Result<()> {
-    let url = format!("http://localhost:8000/blog/posts/{uuid}", uuid = Uuid::new_v4());
+    let url = format!("http://localhost:8001/blog/posts/{uuid}", uuid = Uuid::new_v4());
     let resp = Request::new(Methods::GET, &url).send().await.unwrap();
     let resp_status = resp.status();
     let resp_body = resp.text().await.unwrap();

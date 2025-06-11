@@ -33,7 +33,7 @@ pub async fn start_api_server() -> Result<()> {
     
     app
   })
-  .bind(("0.0.0.0", 8000))?
+  .bind(("0.0.0.0", 8001))?
   .run()
   .await
   .context("api サーバーの起動に失敗しました")
