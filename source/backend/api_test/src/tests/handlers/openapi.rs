@@ -56,7 +56,7 @@ async fn test_get_openapi_spec() -> Result<()> {
 #[tokio::test]
 async fn test_openapi_spec_blog_post_schema() -> Result<()> {
     // BlogPostスキーマの詳細をテスト
-    let request = Request::new(Methods::GET, "http://api/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
     let response = request.send().await?;
 
     let body_text = response.text().await?;
@@ -86,7 +86,7 @@ async fn test_openapi_spec_blog_post_schema() -> Result<()> {
 #[tokio::test]
 async fn test_openapi_spec_endpoints_methods() -> Result<()> {
     // エンドポイントのHTTPメソッドが正しく定義されていることをテスト
-    let request = Request::new(Methods::GET, "http://api/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
     let response = request.send().await?;
 
     let body_text = response.text().await?;
