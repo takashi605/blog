@@ -89,6 +89,34 @@ api:
     nodePort: 30080
     loadBalancerIP: "127.0.0.100"
     externalTrafficPolicy: Local
+api_v2:
+  deployment:
+    replicas: 1
+  pod:
+    imageRepository: "api-v2"
+    imageTag: "v0.0.0"
+    imagePullSecret: ""
+    # Always だとリモートから pull してしまう
+    # 今回はローカルのイメージを使うために Never にしている
+    imagePullPolicy: Never
+    memoryLimit: "1500Mi"
+    cpuLimit: "750m"
+    memoryRequest: "250Mi"
+    cpuRequest: "100m"
+    containerPort: 8001
+    apiTest:
+      imageRepository: "api-v2-test"
+      imageTag: "v0.0.0"
+      imagePullPolicy: Never
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8001
+    # ここから下の設定は type:ClusterIP の場合は関係ないが、
+    # 一応デフォルト値は入れておく
+    nodePort: 30081
+    loadBalancerIP: "127.0.0.100"
+    externalTrafficPolicy: Local
 postgres:
   statefulSet:
     replicas: 1
