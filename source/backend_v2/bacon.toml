@@ -1,0 +1,14 @@
+# これは bacon ツール用の設定ファイルです
+#
+# 設定に関する詳細なヘルプ:
+#   https://dystroy.org/bacon/config/
+#
+# 現在のデフォルトは以下で確認できます
+#   https://github.com/Canop/bacon/blob/main/defaults/default-bacon.toml
+
+
+[jobs.run-api]
+command = ["cargo", "run", "-p", "api"]
+watch = ["api", "common"]
+need_stdout = true
+on_change_strategy = "kill_then_restart"
