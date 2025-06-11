@@ -36,12 +36,17 @@ pub struct Link {
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
-#[serde(untagged, rename_all = "camelCase")]
+#[serde(tag = "type", rename_all = "camelCase")]
 pub enum BlogPostContent {
+  #[serde(rename = "h2")]
   H2(H2Block),
+  #[serde(rename = "h3")]
   H3(H3Block),
+  #[serde(rename = "paragraph")]
   Paragraph(ParagraphBlock),
+  #[serde(rename = "image")]
   Image(ImageBlock),
+  #[serde(rename = "codeBlock")]
   Code(CodeBlock),
 }
 
@@ -50,8 +55,6 @@ pub enum BlogPostContent {
 pub struct H2Block {
   pub id: Uuid,
   pub text: String,
-  #[serde(rename = "type")]
-  pub type_field: String,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
@@ -59,8 +62,6 @@ pub struct H2Block {
 pub struct H3Block {
   pub id: Uuid,
   pub text: String,
-  #[serde(rename = "type")]
-  pub type_field: String,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
@@ -68,8 +69,6 @@ pub struct H3Block {
 pub struct ParagraphBlock {
   pub id: Uuid,
   pub text: Vec<RichText>,
-  #[serde(rename = "type")]
-  pub type_field: String,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
@@ -85,8 +84,6 @@ pub struct RichText {
 pub struct ImageBlock {
   pub id: Uuid,
   pub path: String,
-  #[serde(rename = "type")]
-  pub type_field: String,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
@@ -96,6 +93,4 @@ pub struct CodeBlock {
   pub title: String,
   pub code: String,
   pub language: String,
-  #[serde(rename = "type")]
-  pub type_field: String,
 }
