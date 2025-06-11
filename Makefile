@@ -257,6 +257,26 @@ api-test-unit:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- cargo test
 
 ###
+## api v2 系
+###
+api-v2-sh:
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) /bin/bash
+api-v2-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep api-v2
+api-v2-test-sh:
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2-test -- bash
+api-v2-test-run:
+	$(MAKE) api-create-db
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- cargo test
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2-test -- cargo test
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
+api-v2-test-unit:
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- cargo test
+
+###
 ## blog-admin 系
 ###
 blog-admin-pod-name:
