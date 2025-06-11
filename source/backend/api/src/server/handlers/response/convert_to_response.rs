@@ -47,7 +47,6 @@ async fn content_to_response(content_block_record: AnyContentBlockRecord) -> Res
     AnyContentBlockRecord::ParagraphBlockRecord(paragraph_block_record_with_relations) => paragraph_to_response(paragraph_block_record_with_relations),
     AnyContentBlockRecord::CodeBlockRecord(code_block_record) => BlogPostContent::Code(CodeBlock {
       id: code_block_record.id,
-      type_field: "codeBlock".to_string(),
       title: code_block_record.title,
       code: code_block_record.code,
       language: code_block_record.language,
@@ -61,12 +60,10 @@ fn heading_to_response(heading_block_record: HeadingBlockRecord) -> BlogPostCont
     2 => BlogPostContent::H2(H2Block {
       id: heading_block_record.id,
       text: heading_block_record.text_content,
-      type_field: "h2".to_string(),
     }),
     3 => BlogPostContent::H3(H3Block {
       id: heading_block_record.id,
       text: heading_block_record.text_content,
-      type_field: "h3".to_string(),
     }),
     _ => {
       panic!("見出しレベルが不正です。")
@@ -79,7 +76,6 @@ fn image_to_response(image_block_record: ImageBlockRecordWithRelations) -> BlogP
   BlogPostContent::Image(ImageBlock {
     id: image_block_record.image_block_record.id,
     path: image_block_record.image_record.file_path,
-    type_field: "image".to_string(),
   })
 }
 
@@ -90,7 +86,6 @@ fn paragraph_to_response(paragraph_block_record: ParagraphBlockRecordWithRelatio
   BlogPostContent::Paragraph(ParagraphBlock {
     id: paragraph_block_record.paragraph_block.id,
     text: rich_text_response,
-    type_field: "paragraph".to_string(),
   })
 }
 

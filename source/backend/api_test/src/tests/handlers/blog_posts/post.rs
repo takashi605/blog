@@ -63,26 +63,21 @@ mod helper {
               }),
             },
           ],
-          type_field: "paragraph".to_string(),
         }),
         BlogPostContent::H2(H2Block {
           id: Uuid::new_v4(),
           text: "見出しレベル2".to_string(),
-          type_field: "h2".to_string(),
         }),
         BlogPostContent::H3(H3Block {
           id: Uuid::new_v4(),
           text: "見出しレベル3".to_string(),
-          type_field: "h3".to_string(),
         }),
         BlogPostContent::Image(ImageBlock {
           id: any_image.id,
           path: any_image.path,
-          type_field: "image".to_string(),
         }),
         BlogPostContent::Code(CodeBlock {
           id: Uuid::new_v4(),
-          type_field: "codeBlock".to_string(),
           title: "サンプルコード".to_string(),
           code: "console.log('Hello, World!')".to_string(),
           language: "javascript".to_string(),

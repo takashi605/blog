@@ -114,17 +114,14 @@ mod tests {
               styles: Style { bold: false, inline_code: false },
               link: Option::None,
             }],
-            type_field: "paragraph".to_string(),
           }),
           BlogPostContent::H2(H2Block {
             id: Uuid::new_v4(),
             text: "最初のステップ".to_string(),
-            type_field: "h2".to_string(),
           }),
           BlogPostContent::H3(H3Block {
             id: Uuid::new_v4(),
             text: "学習環境の準備".to_string(),
-            type_field: "h3".to_string(),
           }),
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
@@ -133,17 +130,14 @@ mod tests {
               styles: Style { bold: false, inline_code: false },
               link: Option::None,
             }],
-            type_field: "paragraph".to_string(),
           }),
           BlogPostContent::H2(H2Block {
             id: Uuid::new_v4(),
             text: "学びの中での気づき".to_string(),
-            type_field: "h2".to_string(),
           }),
           BlogPostContent::H3(H3Block {
             id: Uuid::new_v4(),
             text: "試行錯誤の重要性".to_string(),
-            type_field: "h3".to_string(),
           }),
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
@@ -166,17 +160,14 @@ mod tests {
                 link: Option::None,
               },
             ],
-            type_field: "paragraph".to_string(),
           }),
           BlogPostContent::H3(H3Block {
             id: Uuid::new_v4(),
             text: "課題に対処するプロセス".to_string(),
-            type_field: "h3".to_string(),
           }),
           BlogPostContent::Image(ImageBlock {
             id: Uuid::new_v4(),
             path: "test-book".to_string(),
-            type_field: "image".to_string(),
           }),
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
@@ -185,11 +176,9 @@ mod tests {
               styles: Style { bold: false, inline_code: false },
               link: Option::None,
             }],
-            type_field: "paragraph".to_string(),
           }),
           BlogPostContent::Code(CodeBlock {
             id: Uuid::new_v4(),
-            type_field: "codeBlock".to_string(),
             title: "サンプルコード".to_string(),
             code: "console.log(\"Hello, World!\");".to_string(),
             language: "javascript".to_string(),
