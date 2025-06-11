@@ -21,7 +21,7 @@ Given(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/blog/images') && resp.status() === 200,
+          resp.url().includes('/api/v2/blog/images') && resp.status() === 200,
       ),
       page.goto(`${process.env.ADMIN_URL}/images`),
     ]);
@@ -110,7 +110,7 @@ Given(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/blog/images') && resp.status() === 200,
+          resp.url().includes('/api/v2/blog/images') && resp.status() === 200,
       ),
       page.goto(`${process.env.ADMIN_URL}/images`),
     ]);

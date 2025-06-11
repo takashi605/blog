@@ -49,6 +49,13 @@ spec:
     http:
       paths:
       - pathType: ImplementationSpecific
+        path: /api/v2(/|$)(.*)
+        backend:
+          service:
+            name: {{ include "api_v2.appname" . }}
+            port:
+              number: {{ .Values.api_v2.service.port }}
+      - pathType: ImplementationSpecific
         path: /api(/|$)(.*)
         backend:
           service:
