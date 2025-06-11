@@ -113,6 +113,10 @@ export function textNodeToRichTextDTO(
       const linkNode = node as LinkNode;
       return {
         text: linkNode.getTextContent(),
+        styles: {
+          bold: false,
+          inlineCode: false,
+        },
         link: {
           url: linkNode.getURL(),
         },
