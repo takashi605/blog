@@ -219,25 +219,25 @@ api-sh:
 api-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep api
 api-create-db:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database create"
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx database create"
 api-drop-db:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop -y"
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx database drop -y"
 api-migrate-run:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run --source ./migrations/schema"
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run --source ./migrations/seeds --ignore-missing"
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate run --source ./migrations/schema"
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate run --source ./migrations/seeds --ignore-missing"
 api-migrate-revert:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert --source ./migrations/schema"
+	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate revert --source ./migrations/schema"
 
 # usage:
 #   make api-migrate-add name=xxxxx
 api-migrate-add-schema:
-	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/schema
+	cd source/backend_v2/api_v2 && sqlx migrate add $(name) --source ./migrations/schema
 api-migrate-add-seeds:
-	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/seeds
+	cd source/backend_v2/api_v2 && sqlx migrate add $(name) --source ./migrations/seeds
 
 # OpenAPI仕様書生成
 api-generate-openapi:
-	kubectl exec $(shell $(MAKE) api-pod-name) -c api -- curl -s http://localhost:8000/openapi.json > source/frontend/openapi.json
+	kubectl exec $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- curl -s http://localhost:8001/openapi.json > source/frontend/openapi.json
 
 ###
 ## api テスト系
