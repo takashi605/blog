@@ -32,17 +32,16 @@ function blogPostContentSchema() {
       text: z.array(
         z.object({
           text: z.string(),
-          styles: z.optional(
-            z.object({
-              bold: z.boolean(),
-              inlineCode: z.boolean(),
-            }),
-          ),
+          styles: z.object({
+            bold: z.boolean(),
+            inlineCode: z.boolean(),
+          }),
           link: z
             .object({
               url: z.string(),
             })
-            .nullish(),
+            .nullable()
+            .optional(),
         }),
       ),
     }),

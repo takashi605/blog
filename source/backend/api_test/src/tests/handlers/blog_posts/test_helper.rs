@@ -28,12 +28,10 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
           BlogPostContent::H3(e) => &H2Block {
             id: e.id,
             text: e.text.clone(),
-            type_field: e.type_field.clone(),
           },
           _ => panic!("H2 以外の要素が入っています"),
         };
         assert_eq!(a.text, e.text, "H2のテキスト不一致: contents[{}]", i);
-        assert_eq!(a.type_field, e.type_field, "H2のtype_field不一致: contents[{}]", i);
       }
       BlogPostContent::H3(a) => {
         let e = match expected_block {
@@ -41,7 +39,6 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
           _ => panic!("H3 以外の要素が入っています"),
         };
         assert_eq!(a.text, e.text, "H3のテキスト不一致: contents[{}]", i);
-        assert_eq!(a.type_field, e.type_field, "H3のtype_field不一致: contents[{}]", i);
       }
       BlogPostContent::Paragraph(a) => {
         let e = match expected_block {
@@ -56,18 +53,12 @@ pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
           _ => panic!("Image 以外の要素が入っています"),
         };
         assert_eq!(a.path, e.path, "Imageのpath不一致: contents[{}]", i);
-        assert_eq!(a.type_field, e.type_field, "Imageのtype_field不一致: contents[{}]", i);
       }
       BlogPostContent::Code(actual_code_block) => {
         let expected_code_block = match expected_block {
           BlogPostContent::Code(e) => e,
           _ => panic!("CodeBlock 以外の要素が入っています"),
         };
-        assert_eq!(
-          actual_code_block.type_field, expected_code_block.type_field,
-          "CodeBlock の type_field 不一致: contents[{}]",
-          i
-        );
         assert_eq!(actual_code_block.title, expected_code_block.title, "CodeBlock の title 不一致: contents[{}]", i);
         assert_eq!(actual_code_block.code, expected_code_block.code, "CodeBlock の code 不一致: contents[{}]", i);
         assert_eq!(
@@ -107,7 +98,6 @@ pub fn minimal_blog_post1() -> Result<BlogPost> {
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),
         text: "ミニマル記事1の見出し".to_string(),
-        type_field: "h2".to_string(),
       }),
       BlogPostContent::Paragraph(ParagraphBlock {
         id: Uuid::new_v4(),
@@ -119,7 +109,6 @@ pub fn minimal_blog_post1() -> Result<BlogPost> {
           },
           link: Option::None,
         }],
-        type_field: "paragraph".to_string(),
       }),
     ],
   };
@@ -140,7 +129,6 @@ pub fn minimal_blog_post2() -> Result<BlogPost> {
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),
         text: "ミニマル記事2の見出し".to_string(),
-        type_field: "h2".to_string(),
       }),
       BlogPostContent::Paragraph(ParagraphBlock {
         id: Uuid::new_v4(),
@@ -152,7 +140,6 @@ pub fn minimal_blog_post2() -> Result<BlogPost> {
           },
           link: Option::None,
         }],
-        type_field: "paragraph".to_string(),
       }),
     ],
   };
@@ -173,7 +160,6 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),
         text: "ミニマル記事3の見出し".to_string(),
-        type_field: "h2".to_string(),
       }),
       BlogPostContent::Paragraph(ParagraphBlock {
         id: Uuid::new_v4(),
@@ -185,7 +171,6 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
           },
           link: Option::None,
         }],
-        type_field: "paragraph".to_string(),
       }),
     ],
   };

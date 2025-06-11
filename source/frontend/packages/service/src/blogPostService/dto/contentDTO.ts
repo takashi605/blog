@@ -1,7 +1,4 @@
-import type { CodeBlock } from 'entities/src/blogPost/postContents/code';
-import type { H2, H3 } from 'entities/src/blogPost/postContents/heading';
-import type { ImageContent } from 'entities/src/blogPost/postContents/image';
-import type { Paragraph } from 'entities/src/blogPost/postContents/paragraph';
+// 既存のエンティティインポートを削除し、直接型定義を使用
 
 export type ContentDTO =
   | H2DTO
@@ -10,44 +7,44 @@ export type ContentDTO =
   | ImageContentDTO
   | CodeBlockDTO;
 
-export type H2DTO = Readonly<{
-  id: ReturnType<H2['getId']>;
-  text: ReturnType<H2['getValue']>;
-  type: ReturnType<H2['getType']>;
-}>;
-export type H3DTO = Readonly<{
-  id: ReturnType<H3['getId']>;
-  text: ReturnType<H3['getValue']>;
-  type: ReturnType<H3['getType']>;
-}>;
-
-export type ParagraphDTO = Readonly<{
-  id: ReturnType<Paragraph['getId']>;
-  text: RichTextDTO;
-  type: ReturnType<Paragraph['getType']>;
-}>;
-
-export type ImageContentDTO = Readonly<{
-  id: ReturnType<ImageContent['getId']>;
-  type: ReturnType<ImageContent['getType']>;
-  path: ReturnType<ImageContent['getPath']>;
-}>;
-
-export type RichTextDTO = ReadonlyArray<{
+export type H2DTO = {
+  id: string;
   text: string;
-  styles?: {
+  type: string;
+};
+export type H3DTO = {
+  id: string;
+  text: string;
+  type: string;
+};
+
+export type ParagraphDTO = {
+  id: string;
+  text: RichTextDTO;
+  type: string;
+};
+
+export type ImageContentDTO = {
+  id: string;
+  type: string;
+  path: string;
+};
+
+export type RichTextDTO = {
+  text: string;
+  styles: {
     bold: boolean;
     inlineCode: boolean;
   };
   link?: {
     url: string;
   } | null;
-}>;
+}[];
 
-export type CodeBlockDTO = Readonly<{
-  id: ReturnType<CodeBlock['getId']>;
-  type: ReturnType<CodeBlock['getType']>;
-  title: ReturnType<CodeBlock['getTitle']>;
-  code: ReturnType<CodeBlock['getCode']>;
-  language: ReturnType<CodeBlock['getLanguage']>;
-}>;
+export type CodeBlockDTO = {
+  id: string;
+  type: string;
+  title: string;
+  code: string;
+  language: string;
+};
