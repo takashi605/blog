@@ -320,7 +320,7 @@ PNPM ワークスペース構成のパッケージ:
 
 1. **記事閲覧ユースケース（ViewBlogPost）**
    - [x] BlogPostEntity（ID、Title、Content等）の実装（命名規則: XxxEntity）
-   - [ ] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
+   - [x] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
    - [ ] SQLxリポジトリ実装（単一記事取得）
    - [ ] ViewBlogPostユースケース実装
    - [ ] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
@@ -328,7 +328,7 @@ PNPM ワークスペース構成のパッケージ:
 
 2. **新着記事一覧取得ユースケース（ViewLatestBlogPosts）**
    - [ ] BlogPostコレクション型の実装
-   - [ ] リポジトリインターフェースにfetchLatests(limit)メソッド追加
+   - [x] リポジトリインターフェースにfetchLatests(limit)メソッド追加
    - [ ] SQLxリポジトリ実装（複数記事取得、ソート対応）
    - [ ] ViewLatestBlogPostsユースケース実装
    - [ ] GET /api/v2/blog/posts/latest ハンドラーの新アーキテクチャ移行
@@ -336,7 +336,7 @@ PNPM ワークスペース構成のパッケージ:
 
 3. **記事投稿ユースケース（CreateBlogPost）**
    - [ ] BlogPost生成ロジック（ID生成、日付設定）の実装
-   - [ ] リポジトリインターフェースにsave(post)メソッド追加
+   - [x] リポジトリインターフェースにsave(post)メソッド追加
    - [ ] SQLxリポジトリ実装（記事保存）
    - [ ] CreateBlogPostユースケース実装
    - [ ] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
@@ -358,7 +358,7 @@ PNPM ワークスペース構成のパッケージ:
 
 6. **人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）**
    - [ ] 人気記事選択ロジックの実装
-   - [ ] リポジトリインターフェースに人気記事関連メソッド追加
+   - [x] リポジトリインターフェースに人気記事関連メソッド追加
    - [ ] SQLxリポジトリ実装（人気記事の取得・更新）
    - [ ] ViewPopularBlogPostsとSelectPopularPostsユースケース実装
    - [ ] 関連エンドポイントの新アーキテクチャ移行
@@ -366,7 +366,7 @@ PNPM ワークスペース構成のパッケージ:
 
 7. **ピックアップ記事ユースケース（ViewPickUpPost）**
    - [ ] ピックアップ記事取得ロジックの実装
-   - [ ] リポジトリインターフェースにfetchPickUpPosts(limit)メソッド追加
+   - [x] リポジトリインターフェースにfetchPickUpPosts(limit)メソッド追加
    - [ ] SQLxリポジトリ実装
    - [ ] ViewPickUpPostユースケース実装
    - [ ] GET /api/v2/blog/posts/pick-up ハンドラーの新アーキテクチャ移行
@@ -374,7 +374,7 @@ PNPM ワークスペース構成のパッケージ:
 
 8. **トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）**
    - [ ] TopTechPickSelectorビジネスロジックの実装
-   - [ ] リポジトリインターフェースにトップテック記事関連メソッド追加
+   - [x] リポジトリインターフェースにトップテック記事関連メソッド追加
    - [ ] SQLxリポジトリ実装
    - [ ] ViewTopTechPickとSelectTopTechPickPostユースケース実装
    - [ ] 関連エンドポイントの新アーキテクチャ移行
@@ -436,7 +436,7 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 2-1 完了（ドメインエンティティ基盤構築） → Phase 2-2 - リポジトリインターフェースとユースケース実装開始準備
+**現在作業中**: Phase 2-2 - BlogPostリポジトリインターフェース完了 → SQLxリポジトリ実装開始
 
 **Phase 2-1 完了事項**:
 - DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
@@ -445,6 +445,12 @@ PNPM ワークスペース構成のパッケージ:
 - BlogPostEntityとImageEntityの完全実装
 - RichTextVOとその関連値オブジェクトの実装
 - 包括的なテストスイート（12テスト）の成功
+
+**Phase 2-2 完了事項**:
+- BlogPostRepositoryトレイト定義（全9メソッド実装）
+- async-trait依存関係追加
+- フロントエンドApiBlogPostRepositoryとの完全対応
+- 全APIテスト（25+24件）通過確認
 
 ### 進捗追跡
 
