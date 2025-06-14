@@ -141,19 +141,21 @@ impl BlogPostHandler {
 ```
 source/backend_v2/
 ├── common/                  # 共有型定義
-│   └── src/types/api/response.rs  # APIレスポンス型（テスト共有）
+│   └── src/types/api/response.rs  # APIレスポンス型（テスト共有・APIインターフェース維持）
 ├── api_v2/
 │   └── src/
-│       ├── domain/          # エンティティ層
+│       ├── domain/          # エンティティ層（最内層）
 │       │   ├── entities/    # ドメインエンティティ
 │       │   ├── value_objects/ # 値オブジェクト
 │       │   ├── repositories/ # リポジトリインターフェース
 │       │   └── errors.rs    # ドメインエラー
-│       ├── application/     # ユースケース層
+│       ├── application/     # ユースケース層（中間層）
+│       │   ├── dto/         # 内部DTO（ドメイン↔アプリケーション間）
+│       │   ├── service/     # アプリケーションサービス
 │       │   └── use_cases/   # アプリケーションユースケース
-│       └── infrastructure/  # インフラ層
+│       └── infrastructure/  # インフラ層（最外層）
 │           ├── repositories/ # リポジトリ実装
-│           ├── web/         # Webインターフェース
+│           ├── web/         # Webインターフェース（common::typesを使用）
 │           └── database/    # DBモデル・マイグレーション
 └── api_v2_test/            # APIテスト（commonレスポンス型使用）
 ```
@@ -161,10 +163,15 @@ source/backend_v2/
 ### データフロー
 
 ```
-[Database] → Repository Impl → Domain Entity → Use Case → Handler → Response DTO → JSON
+[Database] → Repository Impl → Domain Entity → Use Case → Handler → common::types::response → JSON
 ```
 
-**変換回数**: 3回（DB→Entity、Entity→Response、Response→JSON）
+**変換回数**: 3回（DB→Entity、Entity→common::response、Response→JSON）
+
+**依存関係**:
+- Infrastructure層 → common::types（APIインターフェース維持）
+- Application層 → Domain層（内部DTO使用）
+- Domain層は他層に依存しない（最内層の純粋性保持）
 
 ### 主な改善点
 
