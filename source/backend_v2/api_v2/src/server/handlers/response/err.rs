@@ -1,5 +1,5 @@
 use actix_web::{body::BoxBody, http::StatusCode, HttpResponse, ResponseError};
-use serde::Serialize;
+use common::types::api::response::ErrResponse;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ApiCustomError {
@@ -41,9 +41,4 @@ impl ResponseError for ApiCustomError {
       }),
     }
   }
-}
-
-#[derive(Serialize)]
-struct ErrResponse {
-  message: String,
 }

@@ -139,11 +139,8 @@ type CreateBlogPostRequest =
 
 ## プロジェクト構造
 
-### バックエンド (`source/backend/`)
-
-- **`api/`** - v1 API サービス（Actix-web、レガシー）
+### バックエンド (`source/backend_v2/`)
 - **`api_v2/`** - v2 API サービス（Actix-web + OpenAPI + ドメインモデル）
-- **`api_test/`** - v1 API 統合テスト
 - **`api_v2_test/`** - v2 API 統合テスト
 - **`common/`** - 共有型とユーティリティ
 - **`domain/`** - ドメインモデルとビジネスロジック（v2 用）
@@ -243,9 +240,9 @@ PNPM ワークスペース構成のパッケージ:
 
 2. **API 統合テスト実装**
 
-   - **配置場所:** `source/backend/api_test/src/tests/handlers/[リソース名]/[操作名].rs`
-   - 例: `source/backend/api_test/src/tests/handlers/blog_posts/get.rs`
-   - `make api-test-run` でテスト実行し、失敗確認（Red 状態）
+   - **配置場所:** `source/backend_v2/api_v2_test/src/tests/handlers/[リソース名]/[操作名].rs`
+   - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
+   - `make api-v2-test-run` でテスト実行し、失敗確認（Red 状態）
 
 3. **TDD サイクル実行**
    - 各モジュールで以下を繰り返し:
@@ -1071,14 +1068,14 @@ async fn test_get_blog_post_success() {
 
 #### 1. 別コンテナ戦略
 
-- **`source/backend/api_v2/`** - v1 をコピーして新アーキテクチャで再実装
+- **`source/backend_v2/api_v2/`** - v1 をコピーして新アーキテクチャで再実装
 - **Kubernetes ingress** - パスベースルーティングで`/api/v2/*`を v2 コンテナに転送
 - **段階的移行** - v2 完成後、v1 削除して v2 を統合
 
 #### 2. 技術スタック
 
 - **OpenAPI 3.0** - `utoipa`クレートで Rust コードから自動生成
-- **ドメインモデル** - `source/backend/domain/`にビジネスロジック集約
+- **ドメインモデル** - `source/backend_v2/domain/`にビジネスロジック集約
 - **型安全性** - OpenAPI スキーマから TypeScript 型自動生成
 
 #### 3. エンドポイント設計
