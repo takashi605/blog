@@ -50,13 +50,6 @@ make api-migrate-add-seeds name=seed_name
 - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
 - `make api-v2-test-run` でテスト実行し、失敗確認（Red 状態）
 
-## TDD サイクル実行
-
-各モジュールで以下を繰り返し:
-1. **Red**: 単体テスト作成・実行（失敗確認）
-2. **Green**: 最小限の実装でテスト通過
-3. **Refactor**: コード品質向上とリファクタリング
-
 ## バックエンド API アクセス
 
 - **公開サイト用 API:** `blog.example/api`

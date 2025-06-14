@@ -33,51 +33,6 @@ make tilt-up
 make tilt-down
 ```
 
-### バックエンド開発
-
-```bash
-# v1 API（レガシー）
-make api-test-run      # v1 APIテスト実行（単体 + 統合）
-make api-test-unit     # v1 単体テストのみ実行
-make api-sh            # v1 APIコンテナシェル
-make api-test-sh       # v1 APIテストコンテナシェル
-
-# v2 API（新アーキテクチャ）
-make api-v2-test-run   # v2 APIテスト実行（単体 + 統合）
-make api-v2-test-unit  # v2 単体テストのみ実行
-make api-v2-sh         # v2 APIコンテナシェル
-make api-v2-test-sh    # v2 APIテストコンテナシェル
-
-# データベース操作（v1/v2共通）
-make api-migrate-run           # マイグレーション実行
-make api-migrate-revert        # 最新マイグレーションの取り消し
-make postgres-recreate-schema  # データベーススキーマのリセット
-
-# 新しいマイグレーション追加
-make api-migrate-add-schema name=migration_name
-make api-migrate-add-seeds name=seed_name
-```
-
-### フロントエンド開発
-
-```bash
-# 依存関係インストール
-make frontend-install
-
-# フロントエンド全体チェック（TypeScript、テスト、リンティング）
-make frontend-test
-
-# 個別フロントエンドコマンド
-make frontend-tsc          # TypeScriptチェック
-make frontend-test-unit    # 単体テスト
-make frontend-check        # 全パッケージのリンティング
-make frontend-fix          # リンティング問題の自動修正
-
-# PNPM経由のパッケージ固有コマンド
-cd source/frontend && pnpm web run dev         # Web開発サーバー
-cd source/frontend && pnpm blog-admin run dev  # 管理画面開発サーバー
-```
-
 ### テスト
 
 ```bash
@@ -271,44 +226,6 @@ PNPM ワークスペース構成のパッケージ:
 - 各段階でテストファーストの原則を遵守
 - リファクタリング時は既存テストの通過を維持
 - E2E テストが開発の完了基準となる
-
-### 作業単位でのコミット手順
-
-大きな機能実装や修正作業は、小さな作業単位に分割して以下の手順を繰り返します：
-
-1. **作業単位の実装完了**
-   - フェーズではなくタスク単位での実装を完了
-
-2. **テスト実行**
-   ```bash
-   # E2Eテスト実行
-   make e2e-run
-   
-   # APIテスト実行
-   make api-test-run
-   
-   # フロントエンドテスト実行
-   make frontend-test
-   ```
-
-3. **テスト通過確認**
-   - 全テストが通過することを確認
-   - 失敗した場合は問題を修正してから次のステップに進む
-
-4. **変更をコミット**
-   ```bash
-   git add [変更したファイル]
-   git commit -m "作業内容の説明 SCRUM-XXX"
-   ```
-
-5. **次の作業単位に進む**
-   - 上記手順を繰り返し、段階的に機能を完成させる
-
-**メリット:**
-- 問題の早期発見・修正
-- コミット履歴の粒度適正化
-- レビュー時の変更内容理解の向上
-- ロールバック時の影響範囲の最小化
 
 ## アーキテクチャ変更計画
 
