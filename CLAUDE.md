@@ -297,9 +297,9 @@ PNPM ワークスペース構成のパッケージ:
 
 **実装計画**:
 1. **APIレスポンス型の分離と共有化**
-   - [ ] 現在のBlogPostResponse等の型定義をcommonクレートに移動
-   - [ ] api_v2とapi_v2_testで同じ型を共有
-   - [ ] 型の互換性テストの作成
+   - [x] 現在のBlogPostResponse等の型定義をcommonクレートに移動
+   - [x] api_v2とapi_v2_testで同じ型を共有
+   - [x] 型の互換性テストの作成
 
 2. **3層アーキテクチャのディレクトリ構造作成**
    - [ ] domain/、application/、infrastructure/ディレクトリの作成
