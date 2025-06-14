@@ -13,7 +13,9 @@
   "eslint.useESLintClass": true,
   "rust-analyzer.linkedProjects": [
     "source/backend/api/Cargo.toml",
-    "source/backend/api_test/Cargo.toml"
+    "source/backend/api_test/Cargo.toml",
+    "source/backend_v2/api_v2/Cargo.toml",
+    "source/backend_v2/api_v2_test/Cargo.toml"
   ],
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer",

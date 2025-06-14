@@ -1,0 +1,4 @@
+# Claude Code ignore file
+
+# Ignore legacy backend directory
+source/backend/

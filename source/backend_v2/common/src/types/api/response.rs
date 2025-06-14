@@ -94,3 +94,8 @@ pub struct CodeBlock {
   pub code: String,
   pub language: String,
 }
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+pub struct ErrResponse {
+  pub message: String,
+}
