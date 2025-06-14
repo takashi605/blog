@@ -319,7 +319,7 @@ PNPM ワークスペース構成のパッケージ:
 **実装計画（ユースケースベース）**:
 
 1. **記事閲覧ユースケース（ViewBlogPost）**
-   - [ ] BlogPostエンティティ（ID、Title、Content等）の実装
+   - [x] BlogPostEntity（ID、Title、Content等）の実装（命名規則: XxxEntity）
    - [ ] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
    - [ ] SQLxリポジトリ実装（単一記事取得）
    - [ ] ViewBlogPostユースケース実装
@@ -343,7 +343,7 @@ PNPM ワークスペース構成のパッケージ:
    - [ ] api_v2_testの該当テスト通過確認
 
 4. **画像登録ユースケース（CreateImage）**
-   - [ ] Imageエンティティ（ID、Path）の実装
+   - [x] ImageEntity（ID、Path）の実装（命名規則: XxxEntity）
    - [ ] ImageリポジトリインターフェースとSQLx実装
    - [ ] CreateImageユースケース実装
    - [ ] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
@@ -382,7 +382,8 @@ PNPM ワークスペース構成のパッケージ:
 
 9. **共通基盤の整備**
    - [ ] DIコンテナ（依存性注入）の実装
-   - [ ] ドメインエラー定義とエラーハンドリング
+   - [x] ドメインエラー定義とエラーハンドリング（命名規則に従った実装）
+   - [x] ドメインエンティティとVO構造の基盤作成（blog_domain.rs, image_domain.rs）
    - [ ] ドメインエンティティ ⇔ DBレコード変換ロジック
    - [ ] 全api_v2_testの通過確認
 
@@ -435,7 +436,15 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 1 完了 → Phase 2 - バックエンド内部再設計（ユースケースベース）開始準備
+**現在作業中**: Phase 2-1 完了（ドメインエンティティ基盤構築） → Phase 2-2 - リポジトリインターフェースとユースケース実装開始準備
+
+**Phase 2-1 完了事項**:
+- DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
+- 命名規則適用（XxxEntity, XxxVO）
+- mod.rs廃止とmodule_name.rs採用
+- BlogPostEntityとImageEntityの完全実装
+- RichTextVOとその関連値オブジェクトの実装
+- 包括的なテストスイート（12テスト）の成功
 
 ### 進捗追跡
 

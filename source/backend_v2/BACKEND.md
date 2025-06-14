@@ -144,11 +144,10 @@ source/backend_v2/
 │   └── src/types/api/response.rs  # APIレスポンス型（テスト共有・APIインターフェース維持）
 ├── api_v2/
 │   └── src/
-│       ├── domain/          # エンティティ層（最内層）
-│       │   ├── entities/    # ドメインエンティティ
-│       │   ├── value_objects/ # 値オブジェクト
-│       │   ├── repositories/ # リポジトリインターフェース
-│       │   └── errors.rs    # ドメインエラー
+│       ├── domain/          # ドメイン層（最内層）
+│       │   ├── blog_domain.rs    # ブログ記事関連ドメイン
+│       │   ├── image_domain.rs   # 画像管理関連ドメイン
+│       │   └── errors.rs         # ドメインエラー
 │       ├── application/     # ユースケース層（中間層）
 │       │   ├── dto/         # 内部DTO（ドメイン↔アプリケーション間）
 │       │   ├── service/     # アプリケーションサービス
@@ -159,6 +158,38 @@ source/backend_v2/
 │           └── database/    # DBモデル・マイグレーション
 └── api_v2_test/            # APIテスト（commonレスポンス型使用）
 ```
+
+## モジュール構造の規則
+
+### 命名規則
+
+- **エンティティ**: `XxxEntity` （例: `BlogPostEntity`, `ImageEntity`）
+- **値オブジェクト**: `XxxVO` （例: `RichTextVO`, `TitleVO`）
+- **ドメインファイル**: `xxx_domain.rs` （例: `blog_domain.rs`, `image_domain.rs`）
+
+### モジュールファイルの規則
+
+- **`mod.rs`の使用禁止**: `mod.rs`ファイルは使用せず、`module_name.rs`でモジュールルートを定義する
+- **ドメイン分離**: 各ドメインは独立したファイルとして管理し、ドメイン内でエンティティと値オブジェクトを一元管理する
+
+### 例
+
+```rust
+// ✅ 正しい例
+// src/domain/blog_domain.rs - ブログドメインの全要素を一つのファイルで管理
+pub struct BlogPostEntity { /* ... */ }
+pub struct RichTextVO { /* ... */ }
+
+// src/domain/image_domain.rs - 画像ドメインの全要素を一つのファイルで管理  
+pub struct ImageEntity { /* ... */ }
+
+// ❌ 避けるべき例
+// src/domain/blog/mod.rs
+// src/domain/blog/entities/blog_post.rs
+// src/domain/blog/value_objects/rich_text.rs
+```
+
+このアプローチにより、ドメインの境界が明確になり、ファイル管理が簡潔になります。
 
 ### データフロー
 
