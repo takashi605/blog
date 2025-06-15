@@ -1,14 +1,15 @@
-mod content_type;
-mod content_entity;
-mod h2_entity;
-mod h3_entity;
-mod paragraph_entity;
-mod image_content_entity;
-mod code_block_entity;
-mod rich_text_vo;
+pub mod content_type;
+pub mod content_entity;
+pub mod h2_entity;
+pub mod h3_entity;
+pub mod paragraph_entity;
+pub mod image_content_entity;
+pub mod code_block_entity;
+pub mod rich_text_vo;
 
 use uuid::Uuid;
 use crate::domain::{blog_domain::blog_post_entity::content_entity::ContentEntity, image_domain::ImageEntity};
+
 
 // BlogPost aggregate root
 #[derive(Debug)]
