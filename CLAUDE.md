@@ -322,7 +322,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] BlogPostEntity（ID、Title、Content等）の実装（命名規則: XxxEntity）
    - [x] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
    - [x] SQLxリポジトリ実装（単一記事取得）
-   - [ ] ViewBlogPostユースケース実装
+   - [x] ViewBlogPostユースケース実装
    - [ ] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
 
@@ -436,7 +436,7 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 2-3 - findメソッド完了 → find_latestsメソッド実装開始
+**現在作業中**: Phase 2-4 - ViewBlogPostユースケース完了 → GET /api/v2/blog/posts/{id} ハンドラー移行開始
 
 **Phase 2-1 完了事項**:
 - DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
@@ -460,6 +460,14 @@ PNPM ワークスペース構成のパッケージ:
 - リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
 - 不要なClone deriveを削除してRustのmove semanticsを適切に活用
 - 包括的なテストスイートとエラーハンドリングの実装
+
+**Phase 2-4 完了事項**:
+- ViewBlogPostDTOの完全実装（記事閲覧用データ転送オブジェクト）
+- ViewBlogPostUseCaseのTDD実装完了（Red-Green-Refactorサイクル）
+- アプリケーション層の再構成（application.rs採用、mod.rs廃止徹底）
+- BlogPostEntityからViewBlogPostDTOへの変換ロジック実装
+- モックリポジトリを使用した包括的な単体テスト
+- 変換ロジックの分離とコード品質向上（リファクタリング完了）
 
 ### 進捗追跡
 
