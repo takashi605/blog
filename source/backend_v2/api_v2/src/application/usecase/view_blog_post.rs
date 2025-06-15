@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::application::dto::ViewBlogPostDTO;
+use crate::application::dto::{ViewBlogPostDTO, ViewBlogPostContentDTO};
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 
@@ -14,7 +14,25 @@ impl ViewBlogPostUseCase {
   }
 
   pub async fn execute(&self, id: &str) -> anyhow::Result<ViewBlogPostDTO> {
-    todo!("実装予定")
+    // リポジトリから記事を取得
+    let blog_post = self.repository.find(id).await?;
+    
+    // BlogPostEntityからViewBlogPostDTOに変換
+    let dto = self.convert_to_dto(blog_post);
+    
+    Ok(dto)
+  }
+
+  fn convert_to_dto(&self, blog_post: BlogPostEntity) -> ViewBlogPostDTO {
+    ViewBlogPostDTO {
+      id: blog_post.get_id().to_string(),
+      title: blog_post.get_title_text().to_string(),
+      content: ViewBlogPostContentDTO {
+        paragraphs: vec![], // TODO: コンテンツ変換は将来実装
+      },
+      published_date: chrono::Utc::now(), // TODO: 実際の投稿日時を使用
+      is_public: true, // TODO: 実際の公開状態を使用
+    }
   }
 }
 
