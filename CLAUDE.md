@@ -321,7 +321,7 @@ PNPM ワークスペース構成のパッケージ:
 1. **記事閲覧ユースケース（ViewBlogPost）**
    - [x] BlogPostEntity（ID、Title、Content等）の実装（命名規則: XxxEntity）
    - [x] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
-   - [ ] SQLxリポジトリ実装（単一記事取得）
+   - [x] SQLxリポジトリ実装（単一記事取得）
    - [ ] ViewBlogPostユースケース実装
    - [ ] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
@@ -384,7 +384,7 @@ PNPM ワークスペース構成のパッケージ:
    - [ ] DIコンテナ（依存性注入）の実装
    - [x] ドメインエラー定義とエラーハンドリング（命名規則に従った実装）
    - [x] ドメインエンティティとVO構造の基盤作成（blog_domain.rs, image_domain.rs）
-   - [ ] ドメインエンティティ ⇔ DBレコード変換ロジック
+   - [x] ドメインエンティティ ⇔ DBレコード変換ロジック
    - [ ] 全api_v2_testの通過確認
 
 #### Phase 3: フロントエンド内部再設計
@@ -436,7 +436,7 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 2-2 - BlogPostリポジトリインターフェース完了 → SQLxリポジトリ実装開始
+**現在作業中**: Phase 2-3 - findメソッド完了 → find_latestsメソッド実装開始
 
 **Phase 2-1 完了事項**:
 - DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
@@ -451,6 +451,15 @@ PNPM ワークスペース構成のパッケージ:
 - async-trait依存関係追加
 - フロントエンドApiBlogPostRepositoryとの完全対応
 - 全APIテスト（25+24件）通過確認
+
+**Phase 2-3 完了事項**:
+- infrastructure/blog_post_sqlx_repository/tables/ にテーブルマッピング型をモジュール化
+- infrastructure/blog_post_sqlx_repository/converter.rs で型安全なDBレコード⇔ドメインエンティティ変換システム実装
+- infrastructure/db_pool.rs でDI対応のDB接続プール管理追加
+- BlogPostSqlxRepository::find() メソッドの完全実装（単一記事取得）
+- リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
+- 不要なClone deriveを削除してRustのmove semanticsを適切に活用
+- 包括的なテストスイートとエラーハンドリングの実装
 
 ### 進捗追跡
 
