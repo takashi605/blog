@@ -1,9 +1,9 @@
-//! アプリケーション層
-//! 
-//! ドメインオブジェクトを統合するユースケースとアプリケーションサービスを含む。
-//! この層はドメイン層とインフラ層の間を調整する。
+pub mod dto {
+  pub mod view_blog_post_dto;
+  pub use view_blog_post_dto::*;
+}
 
-pub mod service;
-pub mod dto;
-
-// 将来のアプリケーションモジュールはここに追加される
+pub mod usecase {
+  pub mod view_blog_post;
+  pub use view_blog_post::*;
+}
