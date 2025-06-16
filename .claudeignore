@@ -2,4 +2,5 @@
 
 # Ignore legacy backend directory
 source/backend/
-crud_helpers/
+handlers/crud_helpers/
+handlers/response
