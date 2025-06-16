@@ -1,5 +1,6 @@
 pub mod handlers;
 pub mod openapi;
+pub mod response_mapper;
 
 use actix_cors::Cors;
 use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer};
