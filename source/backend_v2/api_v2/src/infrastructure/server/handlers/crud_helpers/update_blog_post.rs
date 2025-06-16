@@ -3,7 +3,7 @@ use crate::{
     pickup_posts_table::{update_pickup_blog_posts, PickUpPostRecord},
     popular_posts_table::{update_popular_blog_posts, PopularPostRecord},
   }},
-  server::handlers::response::err::ApiCustomError,
+  infrastructure::server::handlers::response::err::ApiCustomError,
 };
 use anyhow::Result;
 use common::types::api::response::BlogPost;

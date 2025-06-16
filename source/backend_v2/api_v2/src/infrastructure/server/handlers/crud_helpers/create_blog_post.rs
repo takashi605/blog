@@ -15,7 +15,7 @@ use crate::{
       post_contents_table::insert_blog_post_content,
     },
   },
-  server::handlers::response::err::ApiCustomError,
+  infrastructure::server::handlers::response::err::ApiCustomError,
 };
 
 use super::fetch_blog_post::fetch_single_blog_post;

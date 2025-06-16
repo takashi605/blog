@@ -36,7 +36,7 @@ pub mod handle_funcs {
       pool::POOL,
       tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
     },
-    server::handlers::{
+    infrastructure::server::handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
         fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},

@@ -3,7 +3,7 @@ use crate::{
     pool::POOL,
     tables::images_table::{fetch_all_images, ImageRecord},
   },
-  server::handlers::response::err::ApiCustomError,
+  infrastructure::server::handlers::response::err::ApiCustomError,
 };
 use anyhow::Result;
 use common::types::api::response::Image;

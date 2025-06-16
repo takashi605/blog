@@ -4,3 +4,4 @@
 //! この層は永続化、外部API、その他のI/O処理を担当する。
 
 pub mod repositories;
+pub mod server;

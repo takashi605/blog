@@ -14,7 +14,7 @@ pub mod handle_funcs {
   use super::fetch_images::fetch_images;
   use crate::{
     db::{pool::POOL, tables::images_table::{insert_image, ImageRecord}},
-    server::handlers::response::err::ApiCustomError,
+    infrastructure::server::handlers::response::err::ApiCustomError,
   };
   use actix_web::{web, HttpResponse, Responder};
   use common::types::api::response::Image;

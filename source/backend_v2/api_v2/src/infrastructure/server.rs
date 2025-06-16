@@ -13,24 +13,21 @@ use std::env;
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
-  
+
   // 開発環境でのみ Cors を設定する
   // 本番環境では Nginx などで設定する
   HttpServer::new(move || {
     let env = env::var("RUST_ENV").expect("RUST_ENV must be set");
     let is_dev = env == "development";
 
-    let mut app = App::new()
-      .wrap(Condition::new(is_dev, configure_cors()))
-      .service(admin_scope())
-      .service(blog_scope())
-      .default_service(web::route().to(route_unmatch));
-    
+    let mut app =
+      App::new().wrap(Condition::new(is_dev, configure_cors())).service(admin_scope()).service(blog_scope()).default_service(web::route().to(route_unmatch));
+
     // 開発環境でのみOpenAPI仕様書エンドポイントを有効化
     if is_dev {
       app = app.route("/openapi.json", web::get().to(openapi_handler));
     }
-    
+
     app
   })
   .bind(("0.0.0.0", 8001))?

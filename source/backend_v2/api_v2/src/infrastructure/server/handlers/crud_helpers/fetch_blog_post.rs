@@ -9,7 +9,7 @@ use crate::{
     popular_posts_table::fetch_all_popular_blog_posts,
     post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, AnyContentBlockRecord, PostContentRecord},
   },
-  server::handlers::response::{convert_to_response::generate_blog_post_response, err::ApiCustomError},
+  infrastructure::server::handlers::response::{convert_to_response::generate_blog_post_response, err::ApiCustomError},
 };
 use anyhow::{Context, Result};
 use common::types::api::response::BlogPost;
