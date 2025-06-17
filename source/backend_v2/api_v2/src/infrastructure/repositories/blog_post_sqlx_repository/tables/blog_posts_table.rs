@@ -1,5 +1,5 @@
 use anyhow::Result;
-use sqlx::{Acquire, FromRow, Postgres};
+use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
@@ -29,25 +29,22 @@ pub struct BlogPostRecord {
 /*
  * データベース操作関数
  */
-pub async fn fetch_blog_post_by_id(executor: impl Acquire<'_, Database = Postgres>, id: Uuid) -> Result<BlogPostRecord> {
-  let mut conn = executor.acquire().await?;
+pub async fn fetch_blog_post_by_id(executor: impl Executor<'_, Database = Postgres>, id: Uuid) -> Result<BlogPostRecord> {
   let post = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where id = $1 and published_at < CURRENT_TIMESTAMP")
     .bind(id)
-    .fetch_one(&mut *conn)
+    .fetch_one(executor)
     .await?;
   Ok(post)
 }
 
-pub async fn fetch_all_latest_blog_posts_records(executor: impl Acquire<'_, Database = Postgres>) -> Result<Vec<BlogPostRecord>> {
-  let mut conn = executor.acquire().await?;
+pub async fn fetch_all_latest_blog_posts_records(executor: impl Executor<'_, Database = Postgres>) -> Result<Vec<BlogPostRecord>> {
   let posts = sqlx::query_as::<_, BlogPostRecord>("select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where published_at < CURRENT_TIMESTAMP order by post_date desc")
-    .fetch_all(&mut *conn)
+    .fetch_all(executor)
     .await?;
   Ok(posts)
 }
 
-pub async fn insert_blog_post(executor: impl Acquire<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
-  let mut conn = executor.acquire().await?;
+pub async fn insert_blog_post(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
   sqlx::query("insert into blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) values ($1, $2, $3, $4, $5, $6)")
     .bind(post.id)
     .bind(post.title)
@@ -55,7 +52,7 @@ pub async fn insert_blog_post(executor: impl Acquire<'_, Database = Postgres>, p
     .bind(post.post_date)
     .bind(post.last_update_date)
     .bind(chrono::Utc::now())
-    .execute(&mut *conn)
+    .execute(executor)
     .await?;
   Ok(())
 }

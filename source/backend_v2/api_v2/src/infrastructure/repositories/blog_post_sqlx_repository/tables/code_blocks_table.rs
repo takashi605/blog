@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sqlx::{Acquire, FromRow, Postgres};
+use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
 /*
@@ -17,22 +17,19 @@ pub struct CodeBlockRecord {
 /*
  * データベース操作関数
  */
-pub async fn insert_code_block(executor: impl Acquire<'_, Database = Postgres>, code_block: CodeBlockRecord) -> Result<()> {
-  let mut conn = executor.acquire().await?;
+pub async fn insert_code_block(executor: impl Executor<'_, Database = Postgres>, code_block: CodeBlockRecord) -> Result<()> {
   sqlx::query("insert into code_blocks (id, title, code, lang) values ($1, $2, $3, $4)")
     .bind(code_block.id)
     .bind(code_block.title)
     .bind(code_block.code)
     .bind(code_block.language)
-    .execute(&mut *conn)
+    .execute(executor)
     .await
     .context("コードブロックの挿入に失敗しました。")?;
   Ok(())
 }
 
-pub async fn fetch_code_block_by_content_id(executor: impl Acquire<'_, Database = Postgres>, content_id: Uuid) -> Result<CodeBlockRecord> {
-  let mut conn = executor.acquire().await?;
-  let block =
-    sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1").bind(content_id).fetch_one(&mut *conn).await?;
+pub async fn fetch_code_block_by_content_id(executor: impl Executor<'_, Database = Postgres>, content_id: Uuid) -> Result<CodeBlockRecord> {
+  let block = sqlx::query_as::<_, CodeBlockRecord>("select id, title, code, lang from code_blocks where id = $1").bind(content_id).fetch_one(executor).await?;
   Ok(block)
 }
