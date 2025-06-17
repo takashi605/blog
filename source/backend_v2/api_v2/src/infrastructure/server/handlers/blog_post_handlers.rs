@@ -38,16 +38,14 @@ pub mod handle_funcs {
     },
     infrastructure::{
       di_container::DiContainer,
-      server::{
-        handlers::{
-          crud_helpers::{
-            create_blog_post::create_single_blog_post,
-            fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
-            update_blog_post::{update_pickup_posts, update_popular_posts},
-          },
-          response::err::ApiCustomError,
+      server::handlers::{
+        crud_helpers::{
+          create_blog_post::create_single_blog_post,
+          fetch_blog_post::{fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
+          update_blog_post::{update_pickup_posts, update_popular_posts},
         },
-        response_mapper::view_blog_post_dto_to_response,
+        response::err::ApiCustomError,
+        response_mapper::{view_blog_post_dto_to_response, view_latest_blog_posts_dto_to_response},
       },
     },
   };
@@ -68,6 +66,7 @@ pub mod handle_funcs {
   )]
   pub async fn get_blog_post(path: web::Path<String>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_blog_post");
+    println!("path: {:?}", path);
     let post_id = path.into_inner();
 
     // DIコンテナからユースケースを取得
@@ -95,10 +94,17 @@ pub mod handle_funcs {
       (status = 200, description = "Latest blog posts", body = Vec<BlogPost>)
     )
   )]
-  pub async fn get_latest_blog_posts() -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_latest_blog_posts(di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_latest_blog_posts");
-    let latest_blog_posts = fetch_all_latest_blog_posts().await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("最新記事の取得に失敗しました。")))?;
-    Ok(HttpResponse::Ok().json(latest_blog_posts))
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_latest_blog_posts_usecase();
+    let dto = usecase.execute(None).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_posts = view_latest_blog_posts_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_posts))
   }
 
   #[utoipa::path(

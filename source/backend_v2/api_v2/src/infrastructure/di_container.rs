@@ -2,7 +2,7 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::{
-  application::usecase::view_blog_post::ViewBlogPostUseCase,
+  application::usecase::{view_blog_post::ViewBlogPostUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase},
   domain::blog_domain::blog_post_repository::BlogPostRepository,
   infrastructure::repositories::blog_post_sqlx_repository::{db_pool::create_db_pool, BlogPostSqlxRepository},
 };
@@ -29,5 +29,10 @@ impl DiContainer {
   /// ViewBlogPostUseCaseを作成する
   pub fn view_blog_post_usecase(&self) -> ViewBlogPostUseCase {
     ViewBlogPostUseCase::new(self.blog_post_repository.clone())
+  }
+
+  /// ViewLatestBlogPostsUseCaseを作成する
+  pub fn view_latest_blog_posts_usecase(&self) -> ViewLatestBlogPostsUseCase {
+    ViewLatestBlogPostsUseCase::new(self.blog_post_repository.clone())
   }
 }

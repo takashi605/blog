@@ -1,7 +1,11 @@
+pub mod dto;
+pub mod dto_mapper;
+
 use std::sync::Arc;
 
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+use dto::ViewLatestBlogPostsDTO;
+use dto_mapper::blog_post_entities_to_view_latest_dto;
 
 pub struct ViewLatestBlogPostsUseCase {
   repository: Arc<dyn BlogPostRepository>,
@@ -12,16 +16,21 @@ impl ViewLatestBlogPostsUseCase {
     Self { repository }
   }
 
-  pub async fn execute(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>> {
+  pub async fn execute(&self, quantity: Option<u32>) -> anyhow::Result<ViewLatestBlogPostsDTO> {
     // リポジトリから最新記事を取得
-    let blog_posts = self.repository.find_latests(quantity).await?;
-    Ok(blog_posts)
+    let blog_post_entities = self.repository.find_latests(quantity).await?;
+
+    // エンティティをDTOに変換
+    let dto = blog_post_entities_to_view_latest_dto(blog_post_entities)?;
+
+    Ok(dto)
   }
 }
 
 #[cfg(test)]
 mod tests {
   use super::*;
+  use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
   use anyhow::Result;
   use async_trait::async_trait;
@@ -67,6 +76,11 @@ mod tests {
         let id = Uuid::new_v4();
         let mut post = BlogPostEntity::new(id, title.clone());
         post.set_post_date(*date);
+        
+        // テスト用のダミーサムネイル画像を設定
+        let thumbnail_id = Uuid::new_v4();
+        post.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
+        
         posts.push(post);
       }
       Ok(posts)
@@ -102,6 +116,11 @@ mod tests {
     let id = Uuid::new_v4();
     let mut post = BlogPostEntity::new(id, title.to_string());
     post.set_post_date(post_date);
+    
+    // テスト用のダミーサムネイル画像を設定
+    let thumbnail_id = Uuid::new_v4();
+    post.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
+    
     post
   }
 
@@ -126,18 +145,18 @@ mod tests {
 
     // Assert
     assert!(result.is_ok());
-    let posts = result.unwrap();
-    assert_eq!(posts.len(), 3);
+    let dto = result.unwrap();
+    assert_eq!(dto.blog_posts.len(), 3);
 
     // 新着順（投稿日降順）で並んでいることを確認
-    assert_eq!(posts[0].get_title_text(), "新しい記事");
-    assert_eq!(posts[0].get_post_date(), new_date);
+    assert_eq!(dto.blog_posts[0].title, "新しい記事");
+    assert_eq!(dto.blog_posts[0].post_date, new_date);
 
-    assert_eq!(posts[1].get_title_text(), "中間の記事");
-    assert_eq!(posts[1].get_post_date(), middle_date);
+    assert_eq!(dto.blog_posts[1].title, "中間の記事");
+    assert_eq!(dto.blog_posts[1].post_date, middle_date);
 
-    assert_eq!(posts[2].get_title_text(), "古い記事");
-    assert_eq!(posts[2].get_post_date(), old_date);
+    assert_eq!(dto.blog_posts[2].title, "古い記事");
+    assert_eq!(dto.blog_posts[2].post_date, old_date);
   }
 
   #[tokio::test]
@@ -160,14 +179,14 @@ mod tests {
 
     // Assert
     assert!(result.is_ok());
-    let posts = result.unwrap();
+    let dto = result.unwrap();
 
     // 全件取得されることを確認
-    assert_eq!(posts.len(), 5);
+    assert_eq!(dto.blog_posts.len(), 5);
 
     // 新着順で並んでいることを確認
     for i in 0..4 {
-      assert!(posts[i].get_post_date() >= posts[i + 1].get_post_date());
+      assert!(dto.blog_posts[i].post_date >= dto.blog_posts[i + 1].post_date);
     }
   }
 
@@ -183,8 +202,8 @@ mod tests {
 
     // Assert
     assert!(result.is_ok());
-    let posts = result.unwrap();
-    assert_eq!(posts.len(), 0);
+    let dto = result.unwrap();
+    assert_eq!(dto.blog_posts.len(), 0);
   }
 
   #[tokio::test]
@@ -206,10 +225,10 @@ mod tests {
     assert!(result_without_quantity.is_ok());
 
     // どちらの場合も正常に動作することを確認
-    let posts_with_quantity = result_with_quantity.unwrap();
-    let posts_without_quantity = result_without_quantity.unwrap();
+    let dto_with_quantity = result_with_quantity.unwrap();
+    let dto_without_quantity = result_without_quantity.unwrap();
 
-    assert_eq!(posts_with_quantity.len(), 1);
-    assert_eq!(posts_without_quantity.len(), 1);
+    assert_eq!(dto_with_quantity.blog_posts.len(), 1);
+    assert_eq!(dto_without_quantity.blog_posts.len(), 1);
   }
 }
