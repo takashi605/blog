@@ -32,23 +32,22 @@ pub fn admin_blog_posts_scope() -> Scope {
 
 pub mod handle_funcs {
   use crate::{
-    db::{
+    application::usecase::view_blog_post::ViewBlogPostUseCase, db::{
       pool::POOL,
       tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
-    },
-    infrastructure::server::handlers::{
+    }, infrastructure::{repositories::blog_post_sqlx_repository::{db_pool::create_db_pool, BlogPostSqlxRepository}, server::{handlers::{
       crud_helpers::{
         create_blog_post::create_single_blog_post,
         fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
         update_blog_post::{update_pickup_posts, update_popular_posts},
       },
       response::err::ApiCustomError,
-    },
+    }, response_mapper::view_blog_post_dto_to_response}}
   };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
-  use uuid::Uuid;
+  use std::sync::Arc;
 
   #[utoipa::path(
     get,
@@ -64,8 +63,17 @@ pub mod handle_funcs {
   pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
     println!("get_blog_post");
     let post_id = path.into_inner();
-    let parsed_post_id = Uuid::parse_str(&post_id).map_err(|_| ApiCustomError::Other(anyhow::anyhow!("パスパラメータのパースに失敗しました。")))?;
-    let blog_post = fetch_single_blog_post(parsed_post_id).await?;
+
+    // リポジトリを作成
+    let pool = create_db_pool().await.map_err(|e| ApiCustomError::Other(e))?;
+    let repository = Arc::new(BlogPostSqlxRepository::new(pool));
+
+    // ユースケースを実行
+    let usecase = ViewBlogPostUseCase::new(repository);
+    let dto = usecase.execute(&post_id).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;
 
     Ok(HttpResponse::Ok().json(blog_post))
   }
