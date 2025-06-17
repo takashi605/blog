@@ -327,9 +327,8 @@ PNPM ワークスペース構成のパッケージ:
    - [x] api_v2_testの該当テスト通過確認
 
 2. **新着記事一覧取得ユースケース（ViewLatestBlogPosts）**
-   - [ ] BlogPostコレクション型の実装
    - [x] リポジトリインターフェースにfetchLatests(limit)メソッド追加
-   - [ ] SQLxリポジトリ実装（複数記事取得、ソート対応）
+   - [x] SQLxリポジトリ実装（複数記事取得、ソート対応）
    - [ ] ViewLatestBlogPostsユースケース実装
    - [ ] GET /api/v2/blog/posts/latest ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
