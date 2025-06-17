@@ -8,7 +8,7 @@
 
 
 [jobs.run-api]
-command = ["cargo", "run", "-p", "api"]
+command = ["cargo", "run", "-p", "blog-api-v2"]
 watch = ["api", "common"]
 need_stdout = true
 on_change_strategy = "kill_then_restart"
