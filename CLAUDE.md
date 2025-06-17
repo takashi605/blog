@@ -323,8 +323,8 @@ PNPM ワークスペース構成のパッケージ:
    - [x] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
    - [x] SQLxリポジトリ実装（単一記事取得）
    - [x] ViewBlogPostユースケース実装
-   - [ ] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 2. **新着記事一覧取得ユースケース（ViewLatestBlogPosts）**
    - [ ] BlogPostコレクション型の実装

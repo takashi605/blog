@@ -11,9 +11,13 @@ use handlers::{
 };
 use openapi::openapi_handler;
 use std::env;
+use super::di_container::DiContainer;
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
+
+  // DIコンテナを初期化
+  let di_container = web::Data::new(DiContainer::new().await?);
 
   // 開発環境でのみ Cors を設定する
   // 本番環境では Nginx などで設定する
@@ -22,7 +26,12 @@ pub async fn start_api_server() -> Result<()> {
     let is_dev = env == "development";
 
     let mut app =
-      App::new().wrap(Condition::new(is_dev, configure_cors())).service(admin_scope()).service(blog_scope()).default_service(web::route().to(route_unmatch));
+      App::new()
+        .app_data(di_container.clone())
+        .wrap(Condition::new(is_dev, configure_cors()))
+        .service(admin_scope())
+        .service(blog_scope())
+        .default_service(web::route().to(route_unmatch));
 
     // 開発環境でのみOpenAPI仕様書エンドポイントを有効化
     if is_dev {

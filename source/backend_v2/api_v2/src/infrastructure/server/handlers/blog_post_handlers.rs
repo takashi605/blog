@@ -32,22 +32,28 @@ pub fn admin_blog_posts_scope() -> Scope {
 
 pub mod handle_funcs {
   use crate::{
-    application::usecase::view_blog_post::ViewBlogPostUseCase, db::{
+    db::{
       pool::POOL,
       tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
-    }, infrastructure::{repositories::blog_post_sqlx_repository::{db_pool::create_db_pool, BlogPostSqlxRepository}, server::{handlers::{
-      crud_helpers::{
-        create_blog_post::create_single_blog_post,
-        fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
-        update_blog_post::{update_pickup_posts, update_popular_posts},
+    },
+    infrastructure::{
+      di_container::DiContainer,
+      server::{
+        handlers::{
+          crud_helpers::{
+            create_blog_post::create_single_blog_post,
+            fetch_blog_post::{fetch_all_latest_blog_posts, fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
+            update_blog_post::{update_pickup_posts, update_popular_posts},
+          },
+          response::err::ApiCustomError,
+        },
+        response_mapper::view_blog_post_dto_to_response,
       },
-      response::err::ApiCustomError,
-    }, response_mapper::view_blog_post_dto_to_response}}
+    },
   };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::response::BlogPost;
-  use std::sync::Arc;
 
   #[utoipa::path(
     get,
@@ -60,16 +66,12 @@ pub mod handle_funcs {
       ("uuid" = String, Path, description = "Blog post UUID")
     )
   )]
-  pub async fn get_blog_post(path: web::Path<String>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_blog_post(path: web::Path<String>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_blog_post");
     let post_id = path.into_inner();
 
-    // リポジトリを作成
-    let pool = create_db_pool().await.map_err(|e| ApiCustomError::Other(e))?;
-    let repository = Arc::new(BlogPostSqlxRepository::new(pool));
-
-    // ユースケースを実行
-    let usecase = ViewBlogPostUseCase::new(repository);
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_blog_post_usecase();
     let dto = usecase.execute(&post_id).await.map_err(|e| ApiCustomError::Other(e))?;
 
     // DTOをAPIレスポンスに変換
