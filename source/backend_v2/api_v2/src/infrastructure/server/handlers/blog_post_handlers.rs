@@ -72,7 +72,15 @@ pub mod handle_funcs {
 
     // DIコンテナからユースケースを取得
     let usecase = di_container.view_blog_post_usecase();
-    let dto = usecase.execute(&post_id).await.map_err(|e| ApiCustomError::Other(e))?;
+    let dto = usecase.execute(&post_id).await.map_err(|e| {
+      // BlogPostNotFound エラーを特別扱い
+      let error_message = e.to_string();
+      if error_message.starts_with("BlogPostNotFound:") {
+        ApiCustomError::BlogPostNotFound(post_id.clone())
+      } else {
+        ApiCustomError::Other(e)
+      }
+    })?;
 
     // DTOをAPIレスポンスに変換
     let blog_post = view_blog_post_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;

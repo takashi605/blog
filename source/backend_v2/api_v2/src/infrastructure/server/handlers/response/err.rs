@@ -6,6 +6,9 @@ pub enum ApiCustomError {
   #[error("未定義の URL です。")]
   NotFoundURL,
 
+  #[error("ブログ記事が見つかりませんでした。")]
+  BlogPostNotFound(String),
+
   #[error(transparent)]
   ActixWebError(#[from] actix_web::Error),
 
@@ -18,6 +21,7 @@ impl ResponseError for ApiCustomError {
   fn status_code(&self) -> actix_web::http::StatusCode {
     match self {
       ApiCustomError::NotFoundURL => StatusCode::NOT_FOUND,
+      ApiCustomError::BlogPostNotFound(_) => StatusCode::NOT_FOUND,
       ApiCustomError::ActixWebError(err) => err.as_response_error().status_code(),
       ApiCustomError::Other(_) => StatusCode::INTERNAL_SERVER_ERROR,
     }
@@ -27,6 +31,7 @@ impl ResponseError for ApiCustomError {
   fn error_response(&self) -> HttpResponse<BoxBody> {
     match self {
       ApiCustomError::NotFoundURL => HttpResponse::build(self.status_code()).json(ErrResponse { message: format!("{}", self) }),
+      ApiCustomError::BlogPostNotFound(_) => HttpResponse::build(self.status_code()).json(ErrResponse { message: format!("{}", self) }),
       ApiCustomError::ActixWebError(err) => {
         let message = match self.status_code() {
           StatusCode::NOT_FOUND => "Not Found.",

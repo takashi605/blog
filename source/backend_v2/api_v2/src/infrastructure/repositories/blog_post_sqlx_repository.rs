@@ -38,7 +38,18 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     let post_id = Uuid::parse_str(id).context("無効なUUID形式のIDです")?;
 
     // ブログ記事のメイン情報を取得
-    let blog_post_record = fetch_blog_post_by_id(&self.pool, post_id).await.context("ブログ記事の取得に失敗しました")?;
+    let blog_post_record = match fetch_blog_post_by_id(&self.pool, post_id).await {
+      Ok(record) => record,
+      Err(err) => {
+        // SQLx の RowNotFound エラーを特定してカスタムエラーに変換
+        if let Some(sqlx_err) = err.downcast_ref::<sqlx::Error>() {
+          if matches!(sqlx_err, sqlx::Error::RowNotFound) {
+            return Err(anyhow::anyhow!("BlogPostNotFound:{}", id));
+          }
+        }
+        return Err(err.context("ブログ記事の取得に失敗しました"));
+      }
+    };
 
     // サムネイル画像を取得
     let thumbnail_record = fetch_image_by_id(&self.pool, blog_post_record.thumbnail_image_id).await.context("サムネイル画像の取得に失敗しました")?;
