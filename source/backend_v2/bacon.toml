@@ -9,6 +9,9 @@
 
 [jobs.run-api]
 command = ["cargo", "run", "-p", "blog-api-v2"]
-watch = ["api", "common"]
+watch = ["api_v2", "common"]
 need_stdout = true
 on_change_strategy = "kill_then_restart"
+# 増分コンパイルを最大限活用
+[env]
+CARGO_INCREMENTAL = "1"
