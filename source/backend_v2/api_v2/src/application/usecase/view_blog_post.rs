@@ -1,11 +1,8 @@
 use std::sync::Arc;
 
-use dto::ViewBlogPostDTO;
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+use crate::application::dto::BlogPostDTO;
+use crate::application::dto_mapper;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-
-pub mod dto;
-pub mod dto_mapper;
 
 pub struct ViewBlogPostUseCase {
   repository: Arc<dyn BlogPostRepository>,
@@ -16,7 +13,7 @@ impl ViewBlogPostUseCase {
     Self { repository }
   }
 
-  pub async fn execute(&self, id: &str) -> anyhow::Result<ViewBlogPostDTO> {
+  pub async fn execute(&self, id: &str) -> anyhow::Result<BlogPostDTO> {
     // リポジトリから記事を取得
     let blog_post = self.repository.find(id).await?;
 
@@ -25,13 +22,13 @@ impl ViewBlogPostUseCase {
 
     Ok(dto)
   }
-
 }
 
 #[cfg(test)]
 mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+  use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use anyhow::Result;
   use async_trait::async_trait;
   use std::sync::Arc;

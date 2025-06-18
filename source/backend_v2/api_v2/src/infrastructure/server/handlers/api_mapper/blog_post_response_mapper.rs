@@ -2,13 +2,13 @@ use anyhow::{anyhow, Result};
 use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
-use crate::application::usecase::view_blog_post::dto::{
-  ViewBlogPostCodeBlockDTO, ViewBlogPostContentDTO, ViewBlogPostDTO, ViewBlogPostH2BlockDTO, ViewBlogPostH3BlockDTO, ViewBlogPostImageBlockDTO,
-  ViewBlogPostImageDTO, ViewBlogPostLinkDTO, ViewBlogPostParagraphBlockDTO, ViewBlogPostRichTextDTO, ViewBlogPostStyleDTO,
+use crate::application::dto::{
+  BlogPostCodeBlockDTO, BlogPostContentDTO, BlogPostDTO, BlogPostH2BlockDTO, BlogPostH3BlockDTO, BlogPostImageBlockDTO, BlogPostImageDTO, BlogPostLinkDTO,
+  BlogPostParagraphBlockDTO, BlogPostRichTextDTO, BlogPostStyleDTO,
 };
 
 /// ViewBlogPostDTOをAPIレスポンス用のBlogPostに変換
-pub fn view_blog_post_dto_to_response(dto: ViewBlogPostDTO) -> Result<BlogPost> {
+pub fn view_blog_post_dto_to_response(dto: BlogPostDTO) -> Result<BlogPost> {
   let id = Uuid::parse_str(&dto.id).map_err(|_| anyhow!("DTOのIDをUUIDに変換できませんでした: {}", dto.id))?;
 
   Ok(BlogPost {
@@ -22,38 +22,38 @@ pub fn view_blog_post_dto_to_response(dto: ViewBlogPostDTO) -> Result<BlogPost> 
 }
 
 /// ViewBlogPostImageDTOをAPI型のImageに変換
-fn convert_image_dto_to_api(dto: ViewBlogPostImageDTO) -> Image {
+fn convert_image_dto_to_api(dto: BlogPostImageDTO) -> Image {
   Image { id: dto.id, path: dto.path }
 }
 
 /// ViewBlogPostContentDTOのVecをAPI型のBlogPostContentのVecに変換
-fn convert_contents_dto_to_api(dto_contents: Vec<ViewBlogPostContentDTO>) -> Vec<BlogPostContent> {
+fn convert_contents_dto_to_api(dto_contents: Vec<BlogPostContentDTO>) -> Vec<BlogPostContent> {
   dto_contents.into_iter().map(convert_content_dto_to_api).collect()
 }
 
 /// ViewBlogPostContentDTOをAPI型のBlogPostContentに変換
-fn convert_content_dto_to_api(dto: ViewBlogPostContentDTO) -> BlogPostContent {
+fn convert_content_dto_to_api(dto: BlogPostContentDTO) -> BlogPostContent {
   match dto {
-    ViewBlogPostContentDTO::H2(h2) => BlogPostContent::H2(convert_h2_dto_to_api(h2)),
-    ViewBlogPostContentDTO::H3(h3) => BlogPostContent::H3(convert_h3_dto_to_api(h3)),
-    ViewBlogPostContentDTO::Paragraph(para) => BlogPostContent::Paragraph(convert_paragraph_dto_to_api(para)),
-    ViewBlogPostContentDTO::Image(img) => BlogPostContent::Image(convert_image_block_dto_to_api(img)),
-    ViewBlogPostContentDTO::Code(code) => BlogPostContent::Code(convert_code_block_dto_to_api(code)),
+    BlogPostContentDTO::H2(h2) => BlogPostContent::H2(convert_h2_dto_to_api(h2)),
+    BlogPostContentDTO::H3(h3) => BlogPostContent::H3(convert_h3_dto_to_api(h3)),
+    BlogPostContentDTO::Paragraph(para) => BlogPostContent::Paragraph(convert_paragraph_dto_to_api(para)),
+    BlogPostContentDTO::Image(img) => BlogPostContent::Image(convert_image_block_dto_to_api(img)),
+    BlogPostContentDTO::Code(code) => BlogPostContent::Code(convert_code_block_dto_to_api(code)),
   }
 }
 
 /// ViewBlogPostH2BlockDTOをAPI型のH2Blockに変換
-fn convert_h2_dto_to_api(dto: ViewBlogPostH2BlockDTO) -> H2Block {
+fn convert_h2_dto_to_api(dto: BlogPostH2BlockDTO) -> H2Block {
   H2Block { id: dto.id, text: dto.text }
 }
 
 /// ViewBlogPostH3BlockDTOをAPI型のH3Blockに変換
-fn convert_h3_dto_to_api(dto: ViewBlogPostH3BlockDTO) -> H3Block {
+fn convert_h3_dto_to_api(dto: BlogPostH3BlockDTO) -> H3Block {
   H3Block { id: dto.id, text: dto.text }
 }
 
 /// ViewBlogPostParagraphBlockDTOをAPI型のParagraphBlockに変換
-fn convert_paragraph_dto_to_api(dto: ViewBlogPostParagraphBlockDTO) -> ParagraphBlock {
+fn convert_paragraph_dto_to_api(dto: BlogPostParagraphBlockDTO) -> ParagraphBlock {
   ParagraphBlock {
     id: dto.id,
     text: dto.text.into_iter().map(convert_rich_text_dto_to_api).collect(),
@@ -61,7 +61,7 @@ fn convert_paragraph_dto_to_api(dto: ViewBlogPostParagraphBlockDTO) -> Paragraph
 }
 
 /// ViewBlogPostRichTextDTOをAPI型のRichTextに変換
-fn convert_rich_text_dto_to_api(dto: ViewBlogPostRichTextDTO) -> RichText {
+fn convert_rich_text_dto_to_api(dto: BlogPostRichTextDTO) -> RichText {
   RichText {
     text: dto.text,
     styles: convert_style_dto_to_api(dto.styles),
@@ -70,7 +70,7 @@ fn convert_rich_text_dto_to_api(dto: ViewBlogPostRichTextDTO) -> RichText {
 }
 
 /// ViewBlogPostStyleDTOをAPI型のStyleに変換
-fn convert_style_dto_to_api(dto: ViewBlogPostStyleDTO) -> Style {
+fn convert_style_dto_to_api(dto: BlogPostStyleDTO) -> Style {
   Style {
     bold: dto.bold,
     inline_code: dto.inline_code,
@@ -78,17 +78,17 @@ fn convert_style_dto_to_api(dto: ViewBlogPostStyleDTO) -> Style {
 }
 
 /// ViewBlogPostLinkDTOをAPI型のLinkに変換
-fn convert_link_dto_to_api(dto: ViewBlogPostLinkDTO) -> Link {
+fn convert_link_dto_to_api(dto: BlogPostLinkDTO) -> Link {
   Link { url: dto.url }
 }
 
 /// ViewBlogPostImageBlockDTOをAPI型のImageBlockに変換
-fn convert_image_block_dto_to_api(dto: ViewBlogPostImageBlockDTO) -> ImageBlock {
+fn convert_image_block_dto_to_api(dto: BlogPostImageBlockDTO) -> ImageBlock {
   ImageBlock { id: dto.id, path: dto.path }
 }
 
 /// ViewBlogPostCodeBlockDTOをAPI型のCodeBlockに変換
-fn convert_code_block_dto_to_api(dto: ViewBlogPostCodeBlockDTO) -> CodeBlock {
+fn convert_code_block_dto_to_api(dto: BlogPostCodeBlockDTO) -> CodeBlock {
   CodeBlock {
     id: dto.id,
     title: dto.title,
@@ -108,16 +108,16 @@ mod tests {
     let test_h2_id = Uuid::new_v4();
     let test_thumbnail_id = Uuid::new_v4();
 
-    let dto = ViewBlogPostDTO {
+    let dto = BlogPostDTO {
       id: "550e8400-e29b-41d4-a716-446655440000".to_string(),
       title: "テスト記事".to_string(),
-      thumbnail: ViewBlogPostImageDTO {
+      thumbnail: BlogPostImageDTO {
         id: test_thumbnail_id,
         path: "/test/image.jpg".to_string(),
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
-      contents: vec![ViewBlogPostContentDTO::H2(ViewBlogPostH2BlockDTO {
+      contents: vec![BlogPostContentDTO::H2(BlogPostH2BlockDTO {
         id: test_h2_id,
         text: "見出し".to_string(),
       })],
@@ -147,10 +147,10 @@ mod tests {
 
   #[test]
   fn test_view_blog_post_dto_to_response_invalid_uuid() {
-    let dto = ViewBlogPostDTO {
+    let dto = BlogPostDTO {
       id: "invalid-uuid".to_string(),
       title: "テスト記事".to_string(),
-      thumbnail: ViewBlogPostImageDTO {
+      thumbnail: BlogPostImageDTO {
         id: Uuid::new_v4(),
         path: "/test/image.jpg".to_string(),
       },
