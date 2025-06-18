@@ -2,9 +2,12 @@ use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use anyhow::Result;
 use chrono::Utc;
-use common::types::api::{BlogPostContent, Image};
 
-use super::dto::{ViewLatestBlogPostDTO, ViewLatestBlogPostsDTO};
+use super::dto::{
+  ViewLatestBlogPostCodeBlockDTO, ViewLatestBlogPostContentDTO, ViewLatestBlogPostH2BlockDTO, ViewLatestBlogPostH3BlockDTO, ViewLatestBlogPostImageBlockDTO,
+  ViewLatestBlogPostImageDTO, ViewLatestBlogPostItemDTO, ViewLatestBlogPostLinkDTO, ViewLatestBlogPostParagraphBlockDTO, ViewLatestBlogPostRichTextDTO,
+  ViewLatestBlogPostStyleDTO, ViewLatestBlogPostsDTO,
+};
 
 /// BlogPostEntityのVecからViewLatestBlogPostsDTOに変換する
 pub fn blog_post_entities_to_view_latest_dto(entities: Vec<BlogPostEntity>) -> Result<ViewLatestBlogPostsDTO> {
@@ -18,11 +21,11 @@ pub fn blog_post_entities_to_view_latest_dto(entities: Vec<BlogPostEntity>) -> R
   Ok(ViewLatestBlogPostsDTO { blog_posts })
 }
 
-/// BlogPostEntityからViewLatestBlogPostDTOに変換する
-fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<ViewLatestBlogPostDTO> {
+/// BlogPostEntityからViewLatestBlogPostItemDTOに変換する
+fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<ViewLatestBlogPostItemDTO> {
   // サムネイル画像の変換
   let thumbnail = match entity.get_thumbnail() {
-    Some(thumbnail_entity) => Image {
+    Some(thumbnail_entity) => ViewLatestBlogPostImageDTO {
       id: thumbnail_entity.get_id(),
       path: thumbnail_entity.get_path().to_string(),
     },
@@ -34,11 +37,11 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
   // コンテンツの変換
   let mut contents = Vec::new();
   for content_entity in entity.get_contents() {
-    let content = convert_content_entity_to_blog_post_content(content_entity)?;
+    let content = convert_content_entity_to_view_latest_content(content_entity)?;
     contents.push(content);
   }
 
-  Ok(ViewLatestBlogPostDTO {
+  Ok(ViewLatestBlogPostItemDTO {
     id: entity.get_id().to_string(),
     title: entity.get_title_text().to_string(),
     thumbnail,
@@ -50,16 +53,14 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
   })
 }
 
-/// ContentEntityをBlogPostContentに変換する
-fn convert_content_entity_to_blog_post_content(content_entity: &ContentEntity) -> Result<BlogPostContent> {
-  use common::types::api::*;
-
+/// ContentEntityをViewLatestBlogPostContentDTOに変換する
+fn convert_content_entity_to_view_latest_content(content_entity: &ContentEntity) -> Result<ViewLatestBlogPostContentDTO> {
   match content_entity {
-    ContentEntity::H2(h2_entity) => Ok(BlogPostContent::H2(H2Block {
+    ContentEntity::H2(h2_entity) => Ok(ViewLatestBlogPostContentDTO::H2(ViewLatestBlogPostH2BlockDTO {
       id: h2_entity.get_id(),
       text: h2_entity.get_value().to_string(),
     })),
-    ContentEntity::H3(h3_entity) => Ok(BlogPostContent::H3(H3Block {
+    ContentEntity::H3(h3_entity) => Ok(ViewLatestBlogPostContentDTO::H3(ViewLatestBlogPostH3BlockDTO {
       id: h3_entity.get_id(),
       text: h3_entity.get_value().to_string(),
     })),
@@ -69,13 +70,13 @@ fn convert_content_entity_to_blog_post_content(content_entity: &ContentEntity) -
 
       for rich_text_part in rich_text_vo.get_text() {
         let link = match rich_text_part.get_link() {
-          Some(link_vo) => Some(Link { url: link_vo.url.clone() }),
+          Some(link_vo) => Some(ViewLatestBlogPostLinkDTO { url: link_vo.url.clone() }),
           None => None,
         };
 
-        let rich_text_element = RichText {
+        let rich_text_element = ViewLatestBlogPostRichTextDTO {
           text: rich_text_part.get_text().to_string(),
-          styles: Style {
+          styles: ViewLatestBlogPostStyleDTO {
             bold: rich_text_part.get_styles().bold,
             inline_code: rich_text_part.get_styles().inline_code,
           },
@@ -84,16 +85,16 @@ fn convert_content_entity_to_blog_post_content(content_entity: &ContentEntity) -
         text_elements.push(rich_text_element);
       }
 
-      Ok(BlogPostContent::Paragraph(ParagraphBlock {
+      Ok(ViewLatestBlogPostContentDTO::Paragraph(ViewLatestBlogPostParagraphBlockDTO {
         id: paragraph_entity.get_id(),
         text: text_elements,
       }))
     }
-    ContentEntity::Image(image_entity) => Ok(BlogPostContent::Image(ImageBlock {
+    ContentEntity::Image(image_entity) => Ok(ViewLatestBlogPostContentDTO::Image(ViewLatestBlogPostImageBlockDTO {
       id: image_entity.get_id(),
       path: image_entity.get_path().to_string(),
     })),
-    ContentEntity::CodeBlock(code_entity) => Ok(BlogPostContent::Code(CodeBlock {
+    ContentEntity::CodeBlock(code_entity) => Ok(ViewLatestBlogPostContentDTO::Code(ViewLatestBlogPostCodeBlockDTO {
       id: code_entity.get_id(),
       title: code_entity.get_title().to_string(),
       code: code_entity.get_code().to_string(),
@@ -198,8 +199,7 @@ mod tests {
 
   #[test]
   fn test_全種類のコンテンツを正しく変換できる() {
-    use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{RichTextPartVO, RichTextVO, LinkVO, RichTextStylesVO};
-    use common::types::api::BlogPostContent;
+    use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO};
 
     // Arrange
     let post_id = Uuid::new_v4();
@@ -286,7 +286,7 @@ mod tests {
 
     // H2コンテンツの検証
     match &blog_post.contents[0] {
-      BlogPostContent::H2(h2_block) => {
+      ViewLatestBlogPostContentDTO::H2(h2_block) => {
         assert_eq!(h2_block.id, h2_id);
         assert_eq!(h2_block.text, "見出し2");
       }
@@ -295,7 +295,7 @@ mod tests {
 
     // H3コンテンツの検証
     match &blog_post.contents[1] {
-      BlogPostContent::H3(h3_block) => {
+      ViewLatestBlogPostContentDTO::H3(h3_block) => {
         assert_eq!(h3_block.id, h3_id);
         assert_eq!(h3_block.text, "見出し3");
       }
@@ -304,7 +304,7 @@ mod tests {
 
     // Paragraphコンテンツの検証
     match &blog_post.contents[2] {
-      BlogPostContent::Paragraph(paragraph_block) => {
+      ViewLatestBlogPostContentDTO::Paragraph(paragraph_block) => {
         assert_eq!(paragraph_block.id, paragraph_id);
         assert_eq!(paragraph_block.text.len(), 3);
 
@@ -331,7 +331,7 @@ mod tests {
 
     // Imageコンテンツの検証
     match &blog_post.contents[3] {
-      BlogPostContent::Image(image_block) => {
+      ViewLatestBlogPostContentDTO::Image(image_block) => {
         assert_eq!(image_block.id, image_id);
         assert_eq!(image_block.path, "test-image.jpg");
       }
@@ -340,7 +340,7 @@ mod tests {
 
     // CodeBlockコンテンツの検証
     match &blog_post.contents[4] {
-      BlogPostContent::Code(code_block) => {
+      ViewLatestBlogPostContentDTO::Code(code_block) => {
         assert_eq!(code_block.id, code_id);
         assert_eq!(code_block.title, "サンプルコード");
         assert_eq!(code_block.code, "console.log('Hello, World!');");
