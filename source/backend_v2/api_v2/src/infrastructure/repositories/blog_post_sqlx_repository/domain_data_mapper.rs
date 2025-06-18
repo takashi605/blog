@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use uuid::Uuid;
 
-use crate::domain::{
+use crate::{domain::{
   blog_domain::blog_post_entity::{
     code_block_entity::CodeBlockEntity,
     content_entity::ContentEntity,
@@ -13,10 +13,10 @@ use crate::domain::{
     BlogPostEntity,
   },
   image_domain::ImageEntity,
-};
+}, infrastructure::repositories::image_sqlx_repository::ImageRecord};
 
 use super::tables::{
-  AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ImageRecord, ParagraphBlockRecordWithRelations,
+  AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations,
   PostContentRecord, PostContentType, RichTextRecordWithRelations,
 };
 

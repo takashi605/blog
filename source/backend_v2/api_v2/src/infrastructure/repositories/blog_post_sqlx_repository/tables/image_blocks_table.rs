@@ -2,7 +2,9 @@ use anyhow::{Context, Result};
 use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
-use super::images_table::{fetch_image_by_id, ImageRecord};
+use crate::infrastructure::repositories::image_sqlx_repository::{table::fetch_image_by_id, ImageRecord};
+
+// use crate::infrastructure::repositories::blog_post_sqlx_repository::{images_table::fetch_image_by_id, ImageRecord};
 
 /*
  * 各レコードの関連をまとめた構造体
@@ -21,11 +23,14 @@ pub struct ImageBlockRecord {
   pub id: Uuid,
   pub image_id: Uuid,
 }
- 
+
 /*
  * データベース操作関数
  */
-pub async fn fetch_image_block_record_with_relations(executor: impl Executor<'_, Database = Postgres> + Copy, content_record_id: Uuid) -> Result<ImageBlockRecordWithRelations> {
+pub async fn fetch_image_block_record_with_relations(
+  executor: impl Executor<'_, Database = Postgres> + Copy,
+  content_record_id: Uuid,
+) -> Result<ImageBlockRecordWithRelations> {
   // let mut conn = executor.acquire().await?;
   let image_block_record: ImageBlockRecord =
     fetch_image_blocks_by_content_id(executor, content_record_id).await.context("画像ブロックの取得に失敗しました。")?;

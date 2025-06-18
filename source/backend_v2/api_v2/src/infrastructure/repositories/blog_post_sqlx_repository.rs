@@ -16,7 +16,10 @@ use crate::{
     blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository},
     image_domain::image_repository::ImageRepository,
   },
-  infrastructure::repositories::blog_post_sqlx_repository::blog_posts_table::{fetch_blog_post_by_id, fetch_latest_blog_posts_records_with_limit},
+  infrastructure::repositories::{
+    blog_post_sqlx_repository::blog_posts_table::{fetch_blog_post_by_id, fetch_latest_blog_posts_records_with_limit},
+    image_sqlx_repository::convert_from_image_entity,
+  },
 };
 
 use self::tables::{
@@ -61,14 +64,14 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     };
 
     // サムネイル画像を取得
-    let thumbnail_entity = self.image_repository.find(&blog_post_record.thumbnail_image_id.to_string()).await
+    let thumbnail_entity = self
+      .image_repository
+      .find(&blog_post_record.thumbnail_image_id.to_string())
+      .await
       .map_err(|e| anyhow::anyhow!("サムネイル画像の取得に失敗しました: {:?}", e))?;
-    
+
     // ImageEntityをImageRecordに変換（既存のconvert_to_blog_post_entity関数と互換性を保つため）
-    let thumbnail_record = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::images_table::ImageRecord {
-      id: thumbnail_entity.get_id(),
-      file_path: thumbnail_entity.get_path().to_string(),
-    };
+    let thumbnail_record = convert_from_image_entity(&thumbnail_entity);
 
     // コンテンツ一覧を取得
     let post_content_records = fetch_post_contents_by_post_id(&self.pool, post_id).await.context("コンテンツ一覧の取得に失敗しました")?;
@@ -86,8 +89,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
 
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     // record_mapperを使用してBlogPostEntityをDBレコードに変換
-    let (blog_post_record, content_records) =
-      convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
+    let (blog_post_record, content_records) = convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
 
     // トランザクションを開始
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
@@ -158,14 +160,14 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
 
     for blog_post_record in blog_post_records {
       // サムネイル画像を取得
-      let thumbnail_entity = self.image_repository.find(&blog_post_record.thumbnail_image_id.to_string()).await
+      let thumbnail_entity = self
+        .image_repository
+        .find(&blog_post_record.thumbnail_image_id.to_string())
+        .await
         .map_err(|e| anyhow::anyhow!("サムネイル画像の取得に失敗しました: {:?}", e))?;
-      
+
       // ImageEntityをImageRecordに変換（既存のconvert_to_blog_post_entity関数と互換性を保つため）
-      let thumbnail_record = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::images_table::ImageRecord {
-        id: thumbnail_entity.get_id(),
-        file_path: thumbnail_entity.get_path().to_string(),
-      };
+      let thumbnail_record = convert_from_image_entity(&thumbnail_entity);
 
       // コンテンツ一覧を取得
       let post_content_records = fetch_post_contents_by_post_id(&self.pool, blog_post_record.id).await.context("コンテンツ一覧の取得に失敗しました")?;

@@ -2,7 +2,9 @@ use anyhow::Result;
 use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
-use super::{images_table::ImageRecord, post_contents_table::AnyContentBlockRecord};
+use crate::infrastructure::repositories::image_sqlx_repository::ImageRecord;
+
+use super::{post_contents_table::AnyContentBlockRecord};
 
 /*
  * 各レコードの関連をまとめた構造体

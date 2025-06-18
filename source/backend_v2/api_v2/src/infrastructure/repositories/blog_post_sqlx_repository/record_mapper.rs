@@ -1,12 +1,14 @@
 use anyhow::Result;
 use uuid::Uuid;
 
-use crate::domain::blog_domain::blog_post_entity::{content_entity::ContentEntity, rich_text_vo::RichTextPartVO, BlogPostEntity};
+use crate::{
+  domain::blog_domain::blog_post_entity::{content_entity::ContentEntity, rich_text_vo::RichTextPartVO, BlogPostEntity},
+  infrastructure::repositories::image_sqlx_repository::ImageRecord,
+};
 
 use super::tables::{
-  AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecord, ImageBlockRecordWithRelations, ImageRecord,
-  ParagraphBlockRecord, ParagraphBlockRecordWithRelations, PostContentRecord, PostContentType, RichTextLinkRecord, RichTextRecord, RichTextRecordWithRelations,
-  TextStyleRecord,
+  AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecord,
+  ParagraphBlockRecordWithRelations, PostContentRecord, PostContentType, RichTextLinkRecord, RichTextRecord, RichTextRecordWithRelations, TextStyleRecord,
 };
 
 /// BlogPostEntityからBlogPostRecordとその関連データに分解する
