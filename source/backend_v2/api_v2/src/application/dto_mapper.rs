@@ -6,7 +6,7 @@ use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use chrono::{TimeZone, Utc};
 
-pub fn convert_to_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
+pub fn convert_to_blog_post_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
   // TODO エンティティに公開状態を追加したら、ここで設定する
   // NaiveDateをDateTime<Utc>に変換（UTC 00:00:00として）
   let published_date = Utc.from_utc_datetime(&blog_post.get_post_date().and_hms_opt(0, 0, 0).unwrap());
@@ -179,7 +179,7 @@ mod tests {
     }
 
     // Act
-    let dto = convert_to_dto(blog_post);
+    let dto = convert_to_blog_post_dto(blog_post);
 
     // Assert
     // 基本情報の検証

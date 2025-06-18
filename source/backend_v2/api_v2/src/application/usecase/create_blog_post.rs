@@ -30,7 +30,7 @@ impl CreateBlogPostUseCase {
     let saved_blog_post = self.repository.save(&blog_post).await?;
 
     // BlogPostEntityをBlogPostDTOに変換
-    let result_dto = dto_mapper::convert_to_dto(saved_blog_post);
+    let result_dto = dto_mapper::convert_to_blog_post_dto(saved_blog_post);
 
     Ok(result_dto)
   }

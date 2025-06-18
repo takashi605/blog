@@ -18,7 +18,7 @@ impl ViewBlogPostUseCase {
     let blog_post = self.repository.find(id).await?;
 
     // BlogPostEntityからViewBlogPostDTOに変換
-    let dto = dto_mapper::convert_to_dto(blog_post);
+    let dto = dto_mapper::convert_to_blog_post_dto(blog_post);
 
     Ok(dto)
   }
@@ -27,8 +27,8 @@ impl ViewBlogPostUseCase {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+  use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
   use anyhow::Result;
   use async_trait::async_trait;
   use std::sync::Arc;
