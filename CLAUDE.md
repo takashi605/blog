@@ -338,8 +338,8 @@ PNPM ワークスペース構成のパッケージ:
    - [x] リポジトリインターフェースにsave(post)メソッド追加
    - [x] SQLxリポジトリ実装（記事保存）
    - [x] CreateBlogPostユースケース実装
-   - [ ] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 4. **画像登録ユースケース（CreateImage）**
    - [x] ImageEntity（ID、Path）の実装（命名規則: XxxEntity）

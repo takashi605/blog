@@ -8,6 +8,7 @@ pub fn api_blog_post_to_create_dto(api_blog_post: api::BlogPost) -> CreateBlogPo
         title: api_blog_post.title,
         thumbnail: api_image_to_create_dto(api_blog_post.thumbnail),
         post_date: Some(api_blog_post.post_date),
+        last_update_date: Some(api_blog_post.last_update_date),
         contents: api_blog_post.contents.into_iter().map(api_content_to_create_dto).collect(),
     }
 }
@@ -138,6 +139,7 @@ mod tests {
 
         assert_eq!(dto.title, expected_title);
         assert_eq!(dto.post_date, expected_post_date);
+        assert_eq!(dto.last_update_date, Some(create_test_api_blog_post().last_update_date));
         assert_eq!(dto.thumbnail.id, expected_thumbnail_id);
         assert_eq!(dto.thumbnail.path, expected_thumbnail_path);
         assert_eq!(dto.contents.len(), 5);

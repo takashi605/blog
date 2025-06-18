@@ -40,12 +40,12 @@ pub mod handle_funcs {
       di_container::DiContainer,
       server::handlers::{
         crud_helpers::{
-          create_blog_post::create_single_blog_post,
           fetch_blog_post::{fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
           update_blog_post::{update_pickup_posts, update_popular_posts},
         },
         response::err::ApiCustomError,
         api_mapper::{view_blog_post_dto_to_response, view_latest_blog_posts_dto_to_response},
+        dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
       },
     },
   };
@@ -220,11 +220,20 @@ pub mod handle_funcs {
       (status = 200, description = "Blog post created", body = BlogPost)
     )
   )]
-  pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("create_blog_post");
     let blog_post_req = blog_post_req.into_inner();
 
-    let inserted_blog_post = create_single_blog_post(blog_post_req).await?;
-    Ok(HttpResponse::Ok().json(inserted_blog_post))
+    // API型をDTO型に変換
+    let create_dto = api_blog_post_to_create_dto(blog_post_req);
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.create_blog_post_usecase();
+    let blog_post_dto = usecase.execute(create_dto).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(blog_post_dto).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_post))
   }
 }

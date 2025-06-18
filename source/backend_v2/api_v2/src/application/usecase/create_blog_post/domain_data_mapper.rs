@@ -12,6 +12,7 @@ pub fn convert_dto_to_domain_input(dto: CreateBlogPostDTO) -> CreateBlogPostInpu
     title: dto.title,
     thumbnail: Some(convert_image_dto_to_domain(dto.thumbnail)),
     post_date: dto.post_date,
+    last_update_date: dto.last_update_date,
     contents: dto.contents.into_iter().map(convert_content_dto_to_domain).collect(),
   }
 }
@@ -74,6 +75,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       },
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -97,6 +99,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       },
       post_date: Some(NaiveDate::from_ymd_opt(2024, 6, 15).unwrap()),
+      last_update_date: Some(NaiveDate::from_ymd_opt(2024, 6, 16).unwrap()),
       contents: vec![],
     };
 
@@ -127,6 +130,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       },
       post_date: None,
+      last_update_date: None,
       contents: vec![
         CreateContentDTO::H2 {
           id: h2_id,
@@ -221,6 +225,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       },
       post_date: None,
+      last_update_date: None,
       contents: vec![CreateContentDTO::Paragraph {
         id: para_id,
         text: vec![
@@ -302,6 +307,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       },
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 

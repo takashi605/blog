@@ -14,6 +14,7 @@ pub struct CreateBlogPostInput {
   pub title: String,
   pub thumbnail: Option<CreateImageInput>,
   pub post_date: Option<NaiveDate>,
+  pub last_update_date: Option<NaiveDate>,
   pub contents: Vec<CreateContentInput>,
 }
 
@@ -65,6 +66,13 @@ impl BlogPostFactory {
     // 投稿日を設定（指定があれば設定、なければデフォルトの現在日付）
     if let Some(post_date) = input.post_date {
       blog_post.set_post_date(post_date);
+    }
+
+    // 最終更新日を設定（指定があれば設定、なければpost_dateと同じ値）
+    if let Some(last_update_date) = input.last_update_date {
+      blog_post.set_last_update_date(last_update_date);
+    } else if let Some(post_date) = input.post_date {
+      blog_post.set_last_update_date(post_date);
     }
 
     // サムネイルを設定
@@ -123,6 +131,7 @@ mod tests {
       title: "テスト記事".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -144,6 +153,7 @@ mod tests {
         path: "path/to/thumbnail.jpg".to_string(),
       }),
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -166,6 +176,7 @@ mod tests {
       title: "複合記事".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![
         CreateContentInput::H2 {
           id: h2_id,
@@ -241,6 +252,7 @@ mod tests {
       title: "日付指定記事".to_string(),
       thumbnail: None,
       post_date: Some(specified_date),
+      last_update_date: Some(specified_date),
       contents: vec![],
     };
 
@@ -257,6 +269,7 @@ mod tests {
       title: "リッチテキスト記事".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![CreateContentInput::Paragraph {
         id: para_id,
         text: vec![
@@ -338,6 +351,7 @@ mod tests {
       title: "空の記事".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -353,6 +367,7 @@ mod tests {
       title: "記事1".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -360,6 +375,7 @@ mod tests {
       title: "記事2".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -368,11 +384,11 @@ mod tests {
 
     // 各記事が異なるIDを持つことを確認（重要なビジネスロジック）
     assert_ne!(blog_post1.get_id(), blog_post2.get_id());
-    
+
     // IDがnilでないことを確認
     assert_ne!(blog_post1.get_id(), Uuid::nil());
     assert_ne!(blog_post2.get_id(), Uuid::nil());
-    
+
     // IDがバージョン4 UUID（ランダム生成）であることを確認
     assert_eq!(blog_post1.get_id().get_version_num(), 4);
     assert_eq!(blog_post2.get_id().get_version_num(), 4);
@@ -384,6 +400,7 @@ mod tests {
       title: "テスト記事".to_string(),
       thumbnail: None,
       post_date: None,
+      last_update_date: None,
       contents: vec![],
     };
 
@@ -394,14 +411,14 @@ mod tests {
         title: input.title.clone(),
         thumbnail: input.thumbnail.clone(),
         post_date: input.post_date,
+        last_update_date: input.last_update_date,
         contents: input.contents.clone(),
       });
-      
+
       // 重複するIDが生成されないことを確認
-      assert!(generated_ids.insert(blog_post.get_id()), 
-              "重複したIDが生成されました: {}", blog_post.get_id());
+      assert!(generated_ids.insert(blog_post.get_id()), "重複したIDが生成されました: {}", blog_post.get_id());
     }
-    
+
     // 10個の異なるIDが生成されたことを確認
     assert_eq!(generated_ids.len(), 10);
   }

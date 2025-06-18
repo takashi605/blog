@@ -23,7 +23,6 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
     last_update_date: entity.get_last_update_date(),
   };
 
-
   // ContentRecordを作成
   let mut content_records = Vec::new();
   for (index, content) in entity.get_contents().iter().enumerate() {
@@ -36,7 +35,7 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
       sort_order: index as i32,
     };
 
-    let content_block_record = convert_content_entity_to_block_record(content)?;
+    let content_block_record = convert_content_entity_to_block_record(content, content_id)?;
     content_records.push((post_content_record, content_block_record));
   }
 
@@ -65,22 +64,22 @@ fn get_content_type_from_entity(content: &ContentEntity) -> PostContentType {
 }
 
 /// ContentEntityからAnyContentBlockRecordに変換する
-fn convert_content_entity_to_block_record(content: &ContentEntity) -> Result<AnyContentBlockRecord> {
+fn convert_content_entity_to_block_record(content: &ContentEntity, content_id: Uuid) -> Result<AnyContentBlockRecord> {
   match content {
     ContentEntity::H2(h2) => Ok(AnyContentBlockRecord::HeadingBlockRecord(HeadingBlockRecord {
-      id: h2.get_id(),
+      id: content_id,
       heading_level: 2,
       text_content: h2.get_value().to_string(),
     })),
     ContentEntity::H3(h3) => Ok(AnyContentBlockRecord::HeadingBlockRecord(HeadingBlockRecord {
-      id: h3.get_id(),
+      id: content_id,
       heading_level: 3,
       text_content: h3.get_value().to_string(),
     })),
     ContentEntity::Paragraph(paragraph) => {
-      let paragraph_block_record = ParagraphBlockRecord { id: paragraph.get_id() };
+      let paragraph_block_record = ParagraphBlockRecord { id: content_id };
 
-      let rich_text_records = convert_rich_text_vo_to_records(paragraph.get_value(), paragraph.get_id())?;
+      let rich_text_records = convert_rich_text_vo_to_records(paragraph.get_value(), content_id)?;
 
       Ok(AnyContentBlockRecord::ParagraphBlockRecord(ParagraphBlockRecordWithRelations {
         paragraph_block: paragraph_block_record,
@@ -89,12 +88,12 @@ fn convert_content_entity_to_block_record(content: &ContentEntity) -> Result<Any
     }
     ContentEntity::Image(image) => {
       let image_record = ImageRecord {
-        id: Uuid::new_v4(), // 画像コンテンツ用の新しいID
+        id: image.get_id(), // 画像コンテンツのIDを画像レコードのIDとして使用
         file_path: image.get_path().to_string(),
       };
 
       let image_block_record = ImageBlockRecord {
-        id: image.get_id(),
+        id: content_id, // post_contentのIDを使用
         image_id: image_record.id,
       };
 
@@ -104,7 +103,7 @@ fn convert_content_entity_to_block_record(content: &ContentEntity) -> Result<Any
       }))
     }
     ContentEntity::CodeBlock(code_block) => Ok(AnyContentBlockRecord::CodeBlockRecord(CodeBlockRecord {
-      id: code_block.get_id(),
+      id: content_id,
       title: code_block.get_title().to_string(),
       code: code_block.get_code().to_string(),
       language: code_block.get_language().to_string(),
@@ -239,7 +238,6 @@ mod tests {
     assert_eq!(blog_post_record.post_date, post_date);
     assert_eq!(blog_post_record.last_update_date, post_date);
     assert_eq!(blog_post_record.thumbnail_image_id, thumbnail_id);
-
 
     // ContentRecordsの検証（3つのコンテンツ）
     assert_eq!(content_records.len(), 3);
