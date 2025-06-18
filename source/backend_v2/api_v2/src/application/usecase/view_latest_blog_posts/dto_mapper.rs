@@ -195,4 +195,158 @@ mod tests {
       assert_eq!(blog_post.post_date, NaiveDate::from_ymd_opt(2024, 1, (i + 1) as u32).unwrap());
     }
   }
+
+  #[test]
+  fn test_全種類のコンテンツを正しく変換できる() {
+    use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{RichTextPartVO, RichTextVO, LinkVO, RichTextStylesVO};
+    use common::types::api::response::BlogPostContent;
+
+    // Arrange
+    let post_id = Uuid::new_v4();
+    let thumbnail_id = Uuid::new_v4();
+    let h2_id = Uuid::new_v4();
+    let h3_id = Uuid::new_v4();
+    let paragraph_id = Uuid::new_v4();
+    let image_id = Uuid::new_v4();
+    let code_id = Uuid::new_v4();
+
+    let mut entity = BlogPostEntity::new(post_id, "コンテンツ変換テスト記事".to_string());
+    entity.set_post_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
+    entity.set_last_update_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
+    entity.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
+
+    // H2コンテンツ
+    let h2_content = ContentEntity::h2(h2_id, "見出し2".to_string());
+    entity.add_content(h2_content);
+
+    // H3コンテンツ
+    let h3_content = ContentEntity::h3(h3_id, "見出し3".to_string());
+    entity.add_content(h3_content);
+
+    // Paragraphコンテンツ（リッチテキスト含む）
+    let rich_text_parts = vec![
+      RichTextPartVO::new(
+        "通常のテキスト".to_string(),
+        Some(RichTextStylesVO {
+          bold: false,
+          inline_code: false,
+        }),
+        None,
+      ),
+      RichTextPartVO::new(
+        "太字のテキスト".to_string(),
+        Some(RichTextStylesVO {
+          bold: true,
+          inline_code: false,
+        }),
+        None,
+      ),
+      RichTextPartVO::new(
+        "リンクテキスト".to_string(),
+        Some(RichTextStylesVO {
+          bold: false,
+          inline_code: false,
+        }),
+        Some(LinkVO {
+          url: "https://example.com".to_string(),
+        }),
+      ),
+    ];
+    let rich_text_vo = RichTextVO::new(rich_text_parts);
+    let paragraph_content = ContentEntity::paragraph(paragraph_id, rich_text_vo);
+    entity.add_content(paragraph_content);
+
+    // Imageコンテンツ
+    let image_content = ContentEntity::image(image_id, "test-image.jpg".to_string());
+    entity.add_content(image_content);
+
+    // CodeBlockコンテンツ
+    let code_content = ContentEntity::code_block(
+      code_id,
+      "サンプルコード".to_string(),
+      "console.log('Hello, World!');".to_string(),
+      "javascript".to_string(),
+    );
+    entity.add_content(code_content);
+
+    let entities = vec![entity];
+
+    // Act
+    let result = blog_post_entities_to_view_latest_dto(entities);
+
+    // Assert
+    assert!(result.is_ok());
+    let dto = result.unwrap();
+    assert_eq!(dto.blog_posts.len(), 1);
+
+    let blog_post = &dto.blog_posts[0];
+    assert_eq!(blog_post.id, post_id.to_string());
+    assert_eq!(blog_post.title, "コンテンツ変換テスト記事");
+    assert_eq!(blog_post.contents.len(), 5);
+
+    // H2コンテンツの検証
+    match &blog_post.contents[0] {
+      BlogPostContent::H2(h2_block) => {
+        assert_eq!(h2_block.id, h2_id);
+        assert_eq!(h2_block.text, "見出し2");
+      }
+      _ => panic!("期待されたH2コンテンツではありません"),
+    }
+
+    // H3コンテンツの検証
+    match &blog_post.contents[1] {
+      BlogPostContent::H3(h3_block) => {
+        assert_eq!(h3_block.id, h3_id);
+        assert_eq!(h3_block.text, "見出し3");
+      }
+      _ => panic!("期待されたH3コンテンツではありません"),
+    }
+
+    // Paragraphコンテンツの検証
+    match &blog_post.contents[2] {
+      BlogPostContent::Paragraph(paragraph_block) => {
+        assert_eq!(paragraph_block.id, paragraph_id);
+        assert_eq!(paragraph_block.text.len(), 3);
+
+        // 通常のテキスト
+        assert_eq!(paragraph_block.text[0].text, "通常のテキスト");
+        assert!(!paragraph_block.text[0].styles.bold);
+        assert!(!paragraph_block.text[0].styles.inline_code);
+        assert!(paragraph_block.text[0].link.is_none());
+
+        // 太字のテキスト
+        assert_eq!(paragraph_block.text[1].text, "太字のテキスト");
+        assert!(paragraph_block.text[1].styles.bold);
+        assert!(!paragraph_block.text[1].styles.inline_code);
+        assert!(paragraph_block.text[1].link.is_none());
+
+        // リンクテキスト
+        assert_eq!(paragraph_block.text[2].text, "リンクテキスト");
+        assert!(!paragraph_block.text[2].styles.bold);
+        assert!(!paragraph_block.text[2].styles.inline_code);
+        assert_eq!(paragraph_block.text[2].link.as_ref().unwrap().url, "https://example.com");
+      }
+      _ => panic!("期待されたParagraphコンテンツではありません"),
+    }
+
+    // Imageコンテンツの検証
+    match &blog_post.contents[3] {
+      BlogPostContent::Image(image_block) => {
+        assert_eq!(image_block.id, image_id);
+        assert_eq!(image_block.path, "test-image.jpg");
+      }
+      _ => panic!("期待されたImageコンテンツではありません"),
+    }
+
+    // CodeBlockコンテンツの検証
+    match &blog_post.contents[4] {
+      BlogPostContent::Code(code_block) => {
+        assert_eq!(code_block.id, code_id);
+        assert_eq!(code_block.title, "サンプルコード");
+        assert_eq!(code_block.code, "console.log('Hello, World!');");
+        assert_eq!(code_block.language, "javascript");
+      }
+      _ => panic!("期待されたCodeコンテンツではありません"),
+    }
+  }
 }
