@@ -7,4 +7,4 @@ pub mod usecase {
   pub mod create_blog_post;
 }
 pub mod dto;
-mod dto_mapper;
+pub mod dto_mapper;
