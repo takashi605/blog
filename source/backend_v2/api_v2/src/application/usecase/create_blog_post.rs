@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+use crate::application::dto::BlogPostDTO;
+use crate::application::dto_mapper;
 use crate::domain::blog_domain::blog_post_factory::BlogPostFactory;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 use domain_data_mapper::convert_dto_to_domain_input;
@@ -18,7 +19,7 @@ impl CreateBlogPostUseCase {
     Self { repository }
   }
 
-  pub async fn execute(&self, dto: CreateBlogPostDTO) -> anyhow::Result<BlogPostEntity> {
+  pub async fn execute(&self, dto: CreateBlogPostDTO) -> anyhow::Result<BlogPostDTO> {
     // DTOをドメイン入力に変換
     let domain_input = convert_dto_to_domain_input(dto);
 
@@ -28,13 +29,17 @@ impl CreateBlogPostUseCase {
     // リポジトリで保存
     let saved_blog_post = self.repository.save(&blog_post).await?;
 
-    Ok(saved_blog_post)
+    // BlogPostEntityをBlogPostDTOに変換
+    let result_dto = dto_mapper::convert_to_dto(saved_blog_post);
+
+    Ok(result_dto)
   }
 }
 
 #[cfg(test)]
 mod tests {
   use super::*;
+  use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
   use anyhow::Result;
   use async_trait::async_trait;
@@ -150,13 +155,12 @@ mod tests {
 
     // Assert
     assert!(result.is_ok());
-    let saved_blog_post = result.unwrap();
-    assert_eq!(saved_blog_post.get_title_text(), "テスト記事");
+    let blog_post_dto = result.unwrap();
+    assert_eq!(blog_post_dto.title, "テスト記事");
 
     // サムネイルが正しく設定されていることを確認
-    let thumbnail = saved_blog_post.get_thumbnail().unwrap();
-    assert_eq!(thumbnail.get_id(), thumbnail_id);
-    assert_eq!(thumbnail.get_path(), "path/to/thumbnail.jpg");
+    assert_eq!(blog_post_dto.thumbnail.id, thumbnail_id);
+    assert_eq!(blog_post_dto.thumbnail.path, "path/to/thumbnail.jpg");
 
     // saveメソッドが呼ばれたことを確認
     assert_eq!(mock_repository.get_save_count(), 1);
@@ -176,11 +180,12 @@ mod tests {
 
     // Assert
     assert!(result.is_ok());
-    let saved_blog_post = result.unwrap();
+    let blog_post_dto = result.unwrap();
 
     // ファクトリで自動生成されたIDが正しく設定されていることを確認
-    assert_ne!(saved_blog_post.get_id(), Uuid::nil());
-    assert_eq!(saved_blog_post.get_id().get_version_num(), 4); // UUID v4
+    let id_uuid = Uuid::parse_str(&blog_post_dto.id).unwrap();
+    assert_ne!(id_uuid, Uuid::nil());
+    assert_eq!(id_uuid.get_version_num(), 4); // UUID v4
 
     // saveメソッドが呼ばれたことを確認
     assert_eq!(mock_repository.get_save_count(), 1);
