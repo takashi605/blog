@@ -18,8 +18,13 @@ use crate::{
 };
 
 use self::tables::{
+  blog_posts_table::insert_blog_post_with_published_at,
+  code_blocks_table::insert_code_block,
+  heading_blocks_table::insert_heading_block,
+  image_blocks_table::insert_image_block,
   images_table::fetch_image_by_id,
-  post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id},
+  paragraph_blocks_table::{insert_paragraph_block, insert_rich_text, insert_rich_text_link, insert_rich_text_style, insert_text_style_if_not_exists},
+  post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, insert_blog_post_content},
 };
 
 /// SQLxを使用したBlogPostRepositoryの実装
@@ -72,114 +77,59 @@ impl BlogPostRepository for BlogPostSqlxRepository {
 
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     // record_mapperを使用してBlogPostEntityをDBレコードに変換
-    let (blog_post_record, thumbnail_record, content_records) =
+    let (blog_post_record, _thumbnail_record, content_records) =
       convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
 
     // トランザクションを開始
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
     // 1. ブログ記事の挿入
-    sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")
-      .bind(blog_post_record.id)
-      .bind(&blog_post_record.title)
-      .bind(blog_post_record.thumbnail_image_id)
-      .bind(blog_post_record.post_date)
-      .bind(blog_post_record.last_update_date)
-      .bind(chrono::Utc::now().naive_utc())
-      .execute(&mut *tx)
-      .await
-      .context("ブログ記事の挿入に失敗しました")?;
+    insert_blog_post_with_published_at(&mut *tx, blog_post_record, chrono::Utc::now().naive_utc()).await.context("ブログ記事の挿入に失敗しました")?;
 
     // 2. コンテンツの挿入
     for (post_content_record, content_block_record) in content_records {
       // PostContentRecordの挿入
-      sqlx::query("INSERT INTO post_contents (id, post_id, content_type, sort_order) VALUES ($1, $2, $3, $4)")
-        .bind(post_content_record.id)
-        .bind(post_content_record.post_id)
-        .bind(&post_content_record.content_type)
-        .bind(post_content_record.sort_order)
-        .execute(&mut *tx)
-        .await
-        .context("コンテンツレコードの挿入に失敗しました")?;
+      insert_blog_post_content(&mut *tx, post_content_record).await.context("コンテンツレコードの挿入に失敗しました")?;
 
       // 各コンテンツタイプごとの詳細データを挿入
       match content_block_record {
         AnyContentBlockRecord::HeadingBlockRecord(heading) => {
-          sqlx::query("INSERT INTO heading_blocks (id, heading_level, text_content) VALUES ($1, $2, $3)")
-          .bind(heading.id)
-          .bind(heading.heading_level)
-          .bind(&heading.text_content)
-          .execute(&mut *tx)
-          .await
-          .context("見出しブロックの挿入に失敗しました")?;
+          insert_heading_block(&mut *tx, heading).await.context("見出しブロックの挿入に失敗しました")?;
         }
         AnyContentBlockRecord::ParagraphBlockRecord(paragraph) => {
           // ParagraphBlockの挿入
-          sqlx::query("INSERT INTO paragraph_blocks (id) VALUES ($1)")
-            .bind(paragraph.paragraph_block.id)
-            .execute(&mut *tx)
-            .await
-            .context("段落ブロックの挿入に失敗しました")?;
+          insert_paragraph_block(&mut *tx, paragraph.paragraph_block).await.context("段落ブロックの挿入に失敗しました")?;
 
           // RichTextRecordの挿入
           for rich_text_record in paragraph.rich_text_records_with_relations {
-            sqlx::query("INSERT INTO rich_texts (id, paragraph_block_id, text_content, sort_order) VALUES ($1, $2, $3, $4)")
-              .bind(rich_text_record.text_record.id)
-              .bind(rich_text_record.text_record.paragraph_block_id)
-              .bind(&rich_text_record.text_record.text_content)
-              .bind(rich_text_record.text_record.sort_order)
-              .execute(&mut *tx)
-              .await
-              .context("リッチテキストの挿入に失敗しました")?;
+            let rich_text_id = rich_text_record.text_record.id;
+
+            insert_rich_text(&mut *tx, rich_text_record.text_record).await.context("リッチテキストの挿入に失敗しました")?;
 
             // スタイルの挿入
             for style_record in rich_text_record.style_records {
               // text_stylesテーブルにスタイルが存在しない場合は挿入
-              sqlx::query("INSERT INTO text_styles (id, style_type) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING")
-                .bind(style_record.id)
-                .bind(&style_record.style_type)
-                .execute(&mut *tx)
-                .await
-                .context("テキストスタイルの挿入に失敗しました")?;
+              insert_text_style_if_not_exists(&mut *tx, style_record.clone()).await.context("テキストスタイルの挿入に失敗しました")?;
 
-              sqlx::query("INSERT INTO rich_text_styles (style_id, rich_text_id) VALUES ($1, $2)")
-              .bind(style_record.id)
-              .bind(rich_text_record.text_record.id)
-              .execute(&mut *tx)
-              .await
-              .context("リッチテキストスタイルの挿入に失敗しました")?;
+              let rich_text_style = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::paragraph_blocks_table::RichTextStyleRecord {
+                style_id: style_record.id,
+                rich_text_id,
+              };
+              insert_rich_text_style(&mut *tx, rich_text_style).await.context("リッチテキストスタイルの挿入に失敗しました")?;
             }
 
             // リンクの挿入（存在する場合）
             if let Some(link_record) = rich_text_record.link_record {
-              sqlx::query("INSERT INTO rich_text_links (id, rich_text_id, url) VALUES ($1, $2, $3)")
-              .bind(link_record.id)
-              .bind(link_record.rich_text_id)
-              .bind(&link_record.url)
-              .execute(&mut *tx)
-              .await
-              .context("リッチテキストリンクの挿入に失敗しました")?;
+              insert_rich_text_link(&mut *tx, link_record).await.context("リッチテキストリンクの挿入に失敗しました")?;
             }
           }
         }
         AnyContentBlockRecord::ImageBlockRecord(image_block) => {
           // 画像ブロックの挿入
-          sqlx::query("INSERT INTO image_blocks (id, image_id) VALUES ($1, $2)")
-            .bind(image_block.image_block_record.id)
-            .bind(image_block.image_block_record.image_id)
-            .execute(&mut *tx)
-            .await
-            .context("画像ブロックの挿入に失敗しました")?;
+          insert_image_block(&mut *tx, image_block.image_block_record).await.context("画像ブロックの挿入に失敗しました")?;
         }
         AnyContentBlockRecord::CodeBlockRecord(code_block) => {
-          sqlx::query("INSERT INTO code_blocks (id, title, code, lang) VALUES ($1, $2, $3, $4)")
-            .bind(code_block.id)
-            .bind(&code_block.title)
-            .bind(&code_block.code)
-            .bind(&code_block.language)
-            .execute(&mut *tx)
-            .await
-            .context("コードブロックの挿入に失敗しました")?;
+          insert_code_block(&mut *tx, code_block).await.context("コードブロックの挿入に失敗しました")?;
         }
       }
     }

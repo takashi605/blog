@@ -40,7 +40,7 @@ pub struct RichTextStyleRecord {
   pub rich_text_id: Uuid,
 }
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, Clone, FromRow)]
 pub struct TextStyleRecord {
   pub id: Uuid,
   pub style_type: String,
@@ -146,6 +146,15 @@ pub async fn insert_rich_text(executor: impl Executor<'_, Database = Postgres>, 
 
 pub async fn insert_rich_text_style(executor: impl Executor<'_, Database = Postgres>, style: RichTextStyleRecord) -> Result<()> {
   sqlx::query("insert into rich_text_styles (style_id, rich_text_id) values ($1, $2)").bind(style.style_id).bind(style.rich_text_id).execute(executor).await?;
+  Ok(())
+}
+
+pub async fn insert_text_style_if_not_exists(executor: impl Executor<'_, Database = Postgres>, style: TextStyleRecord) -> Result<()> {
+  sqlx::query("INSERT INTO text_styles (id, style_type) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING")
+    .bind(style.id)
+    .bind(style.style_type)
+    .execute(executor)
+    .await?;
   Ok(())
 }
 

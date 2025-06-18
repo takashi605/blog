@@ -66,3 +66,16 @@ pub async fn insert_blog_post(executor: impl Executor<'_, Database = Postgres>, 
     .await?;
   Ok(())
 }
+
+pub async fn insert_blog_post_with_published_at(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord, published_at: chrono::NaiveDateTime) -> Result<()> {
+  sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")
+    .bind(post.id)
+    .bind(post.title)
+    .bind(post.thumbnail_image_id)
+    .bind(post.post_date)
+    .bind(post.last_update_date)
+    .bind(published_at)
+    .execute(executor)
+    .await?;
+  Ok(())
+}
