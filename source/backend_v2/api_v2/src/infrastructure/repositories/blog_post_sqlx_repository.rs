@@ -70,7 +70,6 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     convert_to_blog_post_entity(blog_post_record, thumbnail_record, content_blocks).context("BlogPostEntityへの変換に失敗しました")
   }
 
-  // TODO images への挿入は本来役目でないので、後で削除
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     // record_mapperを使用してBlogPostEntityをDBレコードに変換
     let (blog_post_record, thumbnail_record, content_records) =

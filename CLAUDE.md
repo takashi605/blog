@@ -44,7 +44,7 @@ make e2e-sh         # E2Eコンテナシェル
 # 全テストスイート
 make frontend-test    # フロントエンドテスト
 make api-test-run     # v1 バックエンドテスト + APIテスト
-make api-v2-test-run  # v2 バックエンドテスト + APIテスト
+make api-v2-test-run-include-ignored  # v2 バックエンドテスト + APIテスト
 make e2e-run          # E2Eテスト
 ```
 
@@ -200,7 +200,7 @@ PNPM ワークスペース構成のパッケージ:
 
    - **配置場所:** `source/backend_v2/api_v2_test/src/tests/handlers/[リソース名]/[操作名].rs`
    - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
-   - `make api-v2-test-run` でテスト実行し、失敗確認（Red 状態）
+   - `make api-v2-test-run-include-ignored` でテスト実行し、失敗確認（Red 状態）
 
 3. **TDD サイクル実行**
    - 各モジュールで以下を繰り返し:
