@@ -37,6 +37,7 @@ pub struct PostContentRecord {
  */
 // content_type が何を表しているかを enum で表現
 // content_type に match 式を使う時はこの enum を使う
+#[derive(Debug, PartialEq)]
 pub enum PostContentType {
   Paragraph,
   Heading,
@@ -54,6 +55,17 @@ impl TryFrom<String> for PostContentType {
       "code_block" => Ok(PostContentType::CodeBlock),
       // 何らかの理由で想定外の文字列が来る場合
       other => anyhow::bail!("想定しない content type: {}", other),
+    }
+  }
+}
+
+impl From<PostContentType> for String {
+  fn from(content_type: PostContentType) -> Self {
+    match content_type {
+      PostContentType::Heading => "heading".to_string(),
+      PostContentType::Image => "image".to_string(),
+      PostContentType::Paragraph => "paragraph".to_string(),
+      PostContentType::CodeBlock => "code_block".to_string(),
     }
   }
 }

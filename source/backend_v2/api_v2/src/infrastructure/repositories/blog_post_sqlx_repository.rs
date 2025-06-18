@@ -1,9 +1,11 @@
 pub mod db_pool;
 pub mod entity_mapper;
+pub mod record_mapper;
 pub mod tables;
 
 // 公開する必要のある型をre-export
 pub use entity_mapper::*;
+pub use record_mapper::*;
 pub use tables::*;
 
 use anyhow::{Context, Result};

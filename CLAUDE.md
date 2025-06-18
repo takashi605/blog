@@ -435,7 +435,7 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 2-3 完了 → Phase 2-4 記事投稿ユースケース（CreateBlogPost）のSQLxリポジトリ実装開始
+**現在作業中**: Phase 2-3 完了（双方向変換システム確立） → Phase 2-3 記事投稿ユースケース（CreateBlogPost）のSQLxリポジトリ実装準備完了
 
 **Phase 2-1 完了事項**:
 - DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
@@ -453,12 +453,14 @@ PNPM ワークスペース構成のパッケージ:
 
 **Phase 2-3 完了事項**:
 - infrastructure/blog_post_sqlx_repository/tables/ にテーブルマッピング型をモジュール化
-- infrastructure/blog_post_sqlx_repository/converter.rs で型安全なDBレコード⇔ドメインエンティティ変換システム実装
+- infrastructure/blog_post_sqlx_repository/entity_mapper.rs で型安全なDBレコード→ドメインエンティティ変換システム実装
+- infrastructure/blog_post_sqlx_repository/record_mapper.rs で型安全なドメインエンティティ→DBレコード変換システム実装（逆変換）
 - infrastructure/db_pool.rs でDI対応のDB接続プール管理追加
 - BlogPostSqlxRepository::find() メソッドの完全実装（単一記事取得）
 - リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
 - 不要なClone deriveを削除してRustのmove semanticsを適切に活用
 - 包括的なテストスイートとエラーハンドリングの実装
+- 双方向変換システムによる記事保存機能（saveメソッド）実装の基盤確立
 
 **Phase 2-4 完了事項**:
 - ViewBlogPostDTOの完全実装（記事閲覧用データ転送オブジェクト）
