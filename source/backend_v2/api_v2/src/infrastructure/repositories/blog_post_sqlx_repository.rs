@@ -78,15 +78,7 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     // トランザクションを開始
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
-    // 1. サムネイル画像の挿入（既存の場合はスキップ）
-    sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
-      .bind(thumbnail_record.id)
-      .bind(&thumbnail_record.file_path)
-      .execute(&mut *tx)
-      .await
-      .context("サムネイル画像の挿入に失敗しました")?;
-
-    // 2. ブログ記事の挿入
+    // 1. ブログ記事の挿入
     sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")
       .bind(blog_post_record.id)
       .bind(&blog_post_record.title)
@@ -98,7 +90,7 @@ impl BlogPostRepository for BlogPostSqlxRepository {
       .await
       .context("ブログ記事の挿入に失敗しました")?;
 
-    // 3. コンテンツの挿入
+    // 2. コンテンツの挿入
     for (post_content_record, content_block_record) in content_records {
       // PostContentRecordの挿入
       sqlx::query("INSERT INTO post_contents (id, post_id, content_type, sort_order) VALUES ($1, $2, $3, $4)")
@@ -171,14 +163,6 @@ impl BlogPostRepository for BlogPostSqlxRepository {
           }
         }
         AnyContentBlockRecord::ImageBlockRecord(image_block) => {
-          // 画像レコードの挿入
-          sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
-            .bind(image_block.image_record.id)
-            .bind(&image_block.image_record.file_path)
-            .execute(&mut *tx)
-            .await
-            .context("画像レコードの挿入に失敗しました")?;
-
           // 画像ブロックの挿入
           sqlx::query("INSERT INTO image_blocks (id, image_id) VALUES ($1, $2)")
             .bind(image_block.image_block_record.id)
@@ -273,6 +257,36 @@ mod tests {
   };
   use chrono::NaiveDate;
 
+  /// テスト用に画像レコードを事前挿入するヘルパー関数
+  async fn insert_test_images(pool: &PgPool, blog_post: &BlogPostEntity) -> Result<()> {
+    let mut tx = pool.begin().await.context("トランザクションの開始に失敗しました")?;
+
+    // サムネイル画像の挿入
+    if let Some(thumbnail) = blog_post.get_thumbnail() {
+      sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
+        .bind(thumbnail.get_id())
+        .bind(thumbnail.get_path())
+        .execute(&mut *tx)
+        .await
+        .context("サムネイル画像の挿入に失敗しました")?;
+    }
+
+    // コンテンツ内の画像挿入
+    for content in blog_post.get_contents() {
+      if let ContentEntity::Image(image_content) = content {
+        sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
+          .bind(uuid::Uuid::new_v4()) // 画像コンテンツ用の新しいID
+          .bind(image_content.get_path())
+          .execute(&mut *tx)
+          .await
+          .context("画像コンテンツの挿入に失敗しました")?;
+      }
+    }
+
+    tx.commit().await.context("トランザクションのコミットに失敗しました")?;
+    Ok(())
+  }
+
   fn create_test_blog_post() -> BlogPostEntity {
     let blog_post_id = uuid::Uuid::new_v4();
     let mut blog_post = BlogPostEntity::new(blog_post_id, "テスト記事".to_string());
@@ -321,11 +335,14 @@ mod tests {
   async fn test_save_blog_post_integration() {
     // テスト用データベースプールを作成
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
-    let repository = BlogPostSqlxRepository::new(pool);
+    let repository = BlogPostSqlxRepository::new(pool.clone());
 
     // テスト用BlogPostEntityを作成
     let blog_post = create_test_blog_post();
     let original_id = blog_post.get_id();
+
+    // テスト用画像を事前挿入
+    insert_test_images(&pool, &blog_post).await.expect("テスト用画像の挿入に失敗しました");
 
     // saveメソッドを実行
     let result = repository.save(&blog_post).await;
@@ -385,11 +402,14 @@ mod tests {
   async fn test_save_and_find_blog_post_roundtrip() {
     // テスト用データベースプールを作成
     let pool = create_db_pool().await.expect("テスト用データベースプールの作成に失敗しました");
-    let repository = BlogPostSqlxRepository::new(pool);
+    let repository = BlogPostSqlxRepository::new(pool.clone());
 
     // テスト用BlogPostEntityを作成
     let original_blog_post = create_test_blog_post();
     let original_id = original_blog_post.get_id();
+
+    // テスト用画像を事前挿入
+    insert_test_images(&pool, &original_blog_post).await.expect("テスト用画像の挿入に失敗しました");
 
     // saveメソッドを実行
     let saved_result = repository.save(&original_blog_post).await;
