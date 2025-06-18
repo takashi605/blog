@@ -2,13 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::{
-  application::usecase::{
-    create_blog_post::CreateBlogPostUseCase,
-    view_blog_post::ViewBlogPostUseCase, 
-    view_latest_blog_posts::ViewLatestBlogPostsUseCase
-  },
+  application::usecase::{create_blog_post::CreateBlogPostUseCase, view_blog_post::ViewBlogPostUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase},
   domain::blog_domain::blog_post_repository::BlogPostRepository,
-  infrastructure::repositories::blog_post_sqlx_repository::{db_pool::create_db_pool, BlogPostSqlxRepository},
+  infrastructure::repositories::{blog_post_sqlx_repository::BlogPostSqlxRepository, db_pool::create_db_pool},
 };
 
 /// DIコンテナ

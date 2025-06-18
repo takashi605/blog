@@ -1,4 +1,3 @@
-pub mod db_pool;
 pub mod domain_data_mapper;
 pub mod record_mapper;
 pub mod tables;
@@ -203,7 +202,7 @@ mod tests {
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
       BlogPostEntity,
     },
-    infrastructure::repositories::blog_post_sqlx_repository::db_pool::create_db_pool,
+    infrastructure::repositories::db_pool::create_db_pool,
   };
   use chrono::NaiveDate;
 
