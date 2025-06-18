@@ -1,3 +1,4 @@
 // 画像リポジトリモジュール
-pub mod table;
+pub mod domain_data_mapper;
 pub mod record_mapper;
+pub mod table;
