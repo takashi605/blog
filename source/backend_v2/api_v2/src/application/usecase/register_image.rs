@@ -19,6 +19,7 @@ pub enum RegisterImageError {
 impl From<ImageRepositoryError> for RegisterImageError {
   fn from(error: ImageRepositoryError) -> Self {
     match error {
+      ImageRepositoryError::FindFailed(msg) => RegisterImageError::RepositoryError(msg),
       ImageRepositoryError::SaveFailed(msg) => RegisterImageError::RepositoryError(msg),
       ImageRepositoryError::FindAllFailed(msg) => RegisterImageError::RepositoryError(msg),
     }
@@ -76,6 +77,10 @@ mod tests {
 
   #[async_trait]
   impl ImageRepository for MockImageRepository {
+    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindFailed("モック実装のため未対応".to_string()))
+    }
+
     async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
       if self.should_fail {
         return Err(ImageRepositoryError::SaveFailed("保存に失敗しました".to_string()));
