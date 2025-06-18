@@ -341,10 +341,11 @@ PNPM ワークスペース構成のパッケージ:
    - [x] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
    - [x] api_v2_testの該当テスト通過確認
 
-4. **画像登録ユースケース（CreateImage）**
+4. **画像登録ユースケース（RegisterImage）**
    - [x] ImageEntity（ID、Path）の実装（命名規則: XxxEntity）
-   - [ ] ImageリポジトリインターフェースとSQLx実装
-   - [ ] CreateImageユースケース実装
+   - [ ] Imageリポジトリインターフェースの定義
+   - [ ] SQLxリポジトリ実装（画像登録）
+   - [ ] RegisterImageユースケース実装
    - [ ] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
 
