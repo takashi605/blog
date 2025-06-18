@@ -191,7 +191,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("find_top_tech_pick メソッドは後で実装します")
   }
 
-  async fn reselect_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+  async fn update_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     todo!("reselect_top_tech_pick_post メソッドは後で実装します")
   }
 
@@ -199,7 +199,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("find_pick_up_posts メソッドは後で実装します")
   }
 
-  async fn reselect_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+  async fn update_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
     todo!("reselect_pick_up_posts メソッドは後で実装します")
   }
 
@@ -207,7 +207,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("find_popular_posts メソッドは後で実装します")
   }
 
-  async fn reselect_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+  async fn update_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
     todo!("reselect_popular_posts メソッドは後で実装します")
   }
 }

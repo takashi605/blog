@@ -107,7 +107,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+    async fn update_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
       todo!()
     }
 
@@ -115,7 +115,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
       todo!()
     }
 
@@ -123,7 +123,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
       todo!()
     }
   }

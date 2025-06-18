@@ -76,11 +76,11 @@ mod tests {
         let id = Uuid::new_v4();
         let mut post = BlogPostEntity::new(id, title.clone());
         post.set_post_date(*date);
-        
+
         // テスト用のダミーサムネイル画像を設定
         let thumbnail_id = Uuid::new_v4();
         post.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
-        
+
         posts.push(post);
       }
       Ok(posts)
@@ -90,7 +90,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+    async fn update_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
       todo!()
     }
 
@@ -98,7 +98,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
       todo!()
     }
 
@@ -106,7 +106,7 @@ mod tests {
       todo!()
     }
 
-    async fn reselect_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
       todo!()
     }
   }
@@ -116,11 +116,11 @@ mod tests {
     let id = Uuid::new_v4();
     let mut post = BlogPostEntity::new(id, title.to_string());
     post.set_post_date(post_date);
-    
+
     // テスト用のダミーサムネイル画像を設定
     let thumbnail_id = Uuid::new_v4();
     post.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
-    
+
     post
   }
 
