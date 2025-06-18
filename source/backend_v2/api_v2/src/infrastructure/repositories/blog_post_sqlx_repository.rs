@@ -70,6 +70,7 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     convert_to_blog_post_entity(blog_post_record, thumbnail_record, content_blocks).context("BlogPostEntityへの変換に失敗しました")
   }
 
+  // TODO images への挿入は本来役目でないので、後で削除
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     // record_mapperを使用してBlogPostEntityをDBレコードに変換
     let (blog_post_record, thumbnail_record, content_records) =
@@ -78,8 +79,8 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     // トランザクションを開始
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
-    // 1. サムネイル画像の挿入（既存の場合はスキップまたは更新）
-    sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO UPDATE SET id = EXCLUDED.id")
+    // 1. サムネイル画像の挿入（既存の場合はスキップ）
+    sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
       .bind(thumbnail_record.id)
       .bind(&thumbnail_record.file_path)
       .execute(&mut *tx)
@@ -172,7 +173,7 @@ impl BlogPostRepository for BlogPostSqlxRepository {
         }
         AnyContentBlockRecord::ImageBlockRecord(image_block) => {
           // 画像レコードの挿入
-          sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO UPDATE SET id = EXCLUDED.id")
+          sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO NOTHING")
             .bind(image_block.image_record.id)
             .bind(&image_block.image_record.file_path)
             .execute(&mut *tx)
