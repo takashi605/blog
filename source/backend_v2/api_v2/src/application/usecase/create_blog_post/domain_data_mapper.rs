@@ -1,60 +1,8 @@
-use chrono::NaiveDate;
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
-
 use crate::domain::blog_domain::blog_post_factory::{
   CreateBlogPostInput, CreateContentInput, CreateImageInput, CreateLinkInput, CreateRichTextInput, CreateStyleInput,
 };
 
-// DTOの定義（APIリクエストから受け取るデータ構造）
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateBlogPostDTO {
-  pub title: String,
-  pub thumbnail: CreateImageDTO,
-  pub post_date: Option<NaiveDate>,
-  pub contents: Vec<CreateContentDTO>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateImageDTO {
-  pub id: Uuid,
-  pub path: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type")]
-pub enum CreateContentDTO {
-  #[serde(rename = "h2")]
-  H2 { id: Uuid, text: String },
-  #[serde(rename = "h3")]
-  H3 { id: Uuid, text: String },
-  #[serde(rename = "paragraph")]
-  Paragraph { id: Uuid, text: Vec<CreateRichTextDTO> },
-  #[serde(rename = "image")]
-  Image { id: Uuid, path: String },
-  #[serde(rename = "code-block")]
-  CodeBlock { id: Uuid, title: String, code: String, language: String },
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateRichTextDTO {
-  pub text: String,
-  pub styles: CreateStyleDTO,
-  pub link: Option<CreateLinkDTO>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateStyleDTO {
-  pub bold: bool,
-  #[serde(rename = "inline-code")]
-  pub inline_code: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateLinkDTO {
-  pub url: String,
-}
+use super::dto::{CreateBlogPostDTO, CreateContentDTO, CreateImageDTO, CreateLinkDTO, CreateRichTextDTO, CreateStyleDTO};
 
 // DTO -> ドメイン変換関数
 
@@ -70,10 +18,7 @@ pub fn convert_dto_to_domain_input(dto: CreateBlogPostDTO) -> CreateBlogPostInpu
 
 /// CreateImageDTOをCreateImageInputに変換する
 fn convert_image_dto_to_domain(dto: CreateImageDTO) -> CreateImageInput {
-  CreateImageInput {
-    id: dto.id,
-    path: dto.path,
-  }
+  CreateImageInput { id: dto.id, path: dto.path }
 }
 
 /// CreateContentDTOをCreateContentInputに変換する
@@ -114,6 +59,7 @@ fn convert_link_dto_to_domain(dto: CreateLinkDTO) -> CreateLinkInput {
 
 #[cfg(test)]
 mod tests {
+  use super::super::dto::*;
   use super::*;
   use chrono::NaiveDate;
   use uuid::Uuid;
@@ -157,11 +103,11 @@ mod tests {
     let domain_input = convert_dto_to_domain_input(dto);
 
     assert_eq!(domain_input.title, "日付指定記事");
-    
+
     let thumbnail = domain_input.thumbnail.unwrap();
     assert_eq!(thumbnail.id, thumbnail_id);
     assert_eq!(thumbnail.path, "path/to/thumbnail.jpg");
-    
+
     assert_eq!(domain_input.post_date, Some(NaiveDate::from_ymd_opt(2024, 6, 15).unwrap()));
   }
 

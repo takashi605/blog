@@ -3,9 +3,11 @@ use std::sync::Arc;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_factory::BlogPostFactory;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-use domain_data_mapper::{convert_dto_to_domain_input, CreateBlogPostDTO};
+use domain_data_mapper::convert_dto_to_domain_input;
+use dto::CreateBlogPostDTO;
 
 pub mod domain_data_mapper;
+pub mod dto;
 
 pub struct CreateBlogPostUseCase {
   repository: Arc<dyn BlogPostRepository>,
@@ -36,7 +38,7 @@ mod tests {
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
   use anyhow::Result;
   use async_trait::async_trait;
-  use domain_data_mapper::{CreateBlogPostDTO, CreateImageDTO};
+  use dto::{CreateBlogPostDTO, CreateImageDTO};
   use std::sync::{Arc, Mutex};
   use uuid::Uuid;
 
