@@ -6,7 +6,7 @@ use crate::{
   infrastructure::server::handlers::response::err::ApiCustomError,
 };
 use anyhow::Result;
-use common::types::api::response::BlogPost;
+use common::types::api::BlogPost;
 
 pub async fn update_pickup_posts(new_pickup_posts: Vec<BlogPost>) -> Result<(), ApiCustomError> {
   let pickup_post_records: Vec<PickUpPostRecord> =

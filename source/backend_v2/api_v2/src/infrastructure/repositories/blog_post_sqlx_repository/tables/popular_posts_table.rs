@@ -1,5 +1,5 @@
 use anyhow::Result;
-use common::types::api::response::BlogPost;
+use common::types::api::BlogPost;
 use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
@@ -40,7 +40,7 @@ impl From<BlogPost> for PopularPostRecord {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use common::types::api::response::{BlogPost, Image};
+  use common::types::api::{BlogPost, Image};
 
   #[tokio::test(flavor = "current_thread")]
   async fn blog_post_to_record_by_from_func() {
@@ -52,7 +52,7 @@ mod tests {
 
   mod helper {
     use chrono::NaiveDate;
-    use common::types::api::response::BlogPost;
+    use common::types::api::BlogPost;
 
     use super::*;
 

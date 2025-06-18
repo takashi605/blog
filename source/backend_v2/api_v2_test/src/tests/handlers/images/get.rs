@@ -5,7 +5,7 @@ mod tests {
     helper::http::{methods::Methods, request::Request},
   };
   use anyhow::{Context, Result};
-  use common::types::api::response::Image;
+  use common::types::api::Image;
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]

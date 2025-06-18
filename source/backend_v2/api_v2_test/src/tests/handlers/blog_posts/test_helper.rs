@@ -1,7 +1,7 @@
 use crate::tests::helper::http::methods::Methods;
 use crate::tests::helper::http::request::Request;
 use anyhow::{Context, Result};
-use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
+use common::types::api::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
 pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {

@@ -17,7 +17,7 @@ pub mod handle_funcs {
     infrastructure::server::handlers::response::err::ApiCustomError,
   };
   use actix_web::{web, HttpResponse, Responder};
-  use common::types::api::response::Image;
+  use common::types::api::Image;
 
   #[utoipa::path(
     get,

@@ -51,7 +51,7 @@ pub mod handle_funcs {
   };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
-  use common::types::api::response::BlogPost;
+  use common::types::api::BlogPost;
 
   #[utoipa::path(
     get,

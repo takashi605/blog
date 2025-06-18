@@ -5,7 +5,7 @@ mod tests {
     helper::http::{methods::Methods, request::Request},
   };
   use anyhow::{Context, Result};
-  use common::types::api::response::Image;
+  use common::types::api::Image;
 
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_image() -> Result<()> {
@@ -31,7 +31,7 @@ mod tests {
 }
 
 mod helper {
-  use common::types::api::response::Image;
+  use common::types::api::Image;
   use uuid::Uuid;
 
   pub fn create_image_for_req() -> Image {

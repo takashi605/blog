@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use common::types::api::response::BlogPost;
+use common::types::api::BlogPost;
 use uuid::Uuid;
 
 use crate::application::usecase::view_latest_blog_posts::dto::ViewLatestBlogPostsDTO;
@@ -33,7 +33,7 @@ mod tests {
     use super::*;
     use crate::application::usecase::view_latest_blog_posts::dto::ViewLatestBlogPostDTO;
     use chrono::{NaiveDate, Utc};
-    use common::types::api::response::{BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
+    use common::types::api::{BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
     use uuid::Uuid;
 
     #[test]

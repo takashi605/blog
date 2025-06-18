@@ -1,5 +1,5 @@
 use chrono::{DateTime, NaiveDate, Utc};
-use common::types::api::response::{BlogPostContent, Image};
+use common::types::api::{BlogPostContent, Image};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

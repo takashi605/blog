@@ -12,7 +12,7 @@ use crate::{
   infrastructure::server::handlers::response::{convert_to_response::generate_blog_post_response, err::ApiCustomError},
 };
 use anyhow::{Context, Result};
-use common::types::api::response::BlogPost;
+use common::types::api::BlogPost;
 use uuid::Uuid;
 
 struct ContentWithOrder {

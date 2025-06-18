@@ -1,5 +1,5 @@
 use actix_web::{body::BoxBody, http::StatusCode, HttpResponse, ResponseError};
-use common::types::api::response::ErrResponse;
+use common::types::api::ErrResponse;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ApiCustomError {

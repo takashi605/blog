@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use common::types::api::response::BlogPost;
+use common::types::api::BlogPost;
 use uuid::Uuid;
 
 use crate::application::usecase::view_blog_post::dto::ViewBlogPostDTO;
@@ -23,7 +23,7 @@ pub fn view_blog_post_dto_to_response(dto: ViewBlogPostDTO) -> Result<BlogPost> 
 mod tests {
     use super::*;
     use chrono::{NaiveDate, Utc};
-    use common::types::api::response::{BlogPostContent, H2Block, Image};
+    use common::types::api::{BlogPostContent, H2Block, Image};
     use uuid::Uuid;
 
     #[test]

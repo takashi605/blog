@@ -6,7 +6,7 @@ use crate::{
   infrastructure::server::handlers::response::err::ApiCustomError,
 };
 use anyhow::Result;
-use common::types::api::response::Image;
+use common::types::api::Image;
 
 pub async fn fetch_images() -> Result<Vec<Image>, ApiCustomError> {
   let image_records: Vec<ImageRecord> =

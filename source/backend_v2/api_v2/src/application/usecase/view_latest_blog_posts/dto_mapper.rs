@@ -2,7 +2,7 @@ use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use anyhow::Result;
 use chrono::Utc;
-use common::types::api::response::{BlogPostContent, Image};
+use common::types::api::{BlogPostContent, Image};
 
 use super::dto::{ViewLatestBlogPostDTO, ViewLatestBlogPostsDTO};
 
@@ -52,7 +52,7 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
 
 /// ContentEntityをBlogPostContentに変換する
 fn convert_content_entity_to_blog_post_content(content_entity: &ContentEntity) -> Result<BlogPostContent> {
-  use common::types::api::response::*;
+  use common::types::api::*;
 
   match content_entity {
     ContentEntity::H2(h2_entity) => Ok(BlogPostContent::H2(H2Block {
@@ -199,7 +199,7 @@ mod tests {
   #[test]
   fn test_全種類のコンテンツを正しく変換できる() {
     use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{RichTextPartVO, RichTextVO, LinkVO, RichTextStylesVO};
-    use common::types::api::response::BlogPostContent;
+    use common::types::api::BlogPostContent;
 
     // Arrange
     let post_id = Uuid::new_v4();

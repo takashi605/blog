@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use common::types::api::response::{
+    use common::types::api::{
         BlogPost, BlogPostContent, H2Block, H3Block, Image, ImageBlock,
         ParagraphBlock, RichText, Style, CodeBlock, Link,
     };

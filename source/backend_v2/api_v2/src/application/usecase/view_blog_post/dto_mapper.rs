@@ -2,7 +2,7 @@ use super::dto::ViewBlogPostDTO;
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use chrono::{TimeZone, Utc};
-use common::types::api::response::{BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
+use common::types::api::{BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 
 pub fn convert_to_dto(blog_post: BlogPostEntity) -> ViewBlogPostDTO {
   // TODO エンティティに公開状態を追加したら、ここで設定する
@@ -102,7 +102,7 @@ mod tests {
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
     };
     use chrono::NaiveDate;
-    use common::types::api::response::BlogPostContent;
+    use common::types::api::BlogPostContent;
 
     // Arrange
     // 複雑なコンテンツを含むBlogPostEntityを作成

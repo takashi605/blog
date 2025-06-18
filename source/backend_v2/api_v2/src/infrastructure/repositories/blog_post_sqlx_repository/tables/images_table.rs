@@ -1,5 +1,5 @@
 use anyhow::Result;
-use common::types::api::response::Image;
+use common::types::api::Image;
 use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
@@ -50,7 +50,7 @@ impl From<ImageRecord> for Image {
 mod tests {
   use super::*;
   use anyhow::Result;
-  use common::types::api::response::Image;
+  use common::types::api::Image;
 
   #[tokio::test(flavor = "current_thread")]
   async fn image_to_record_by_from_func() {
