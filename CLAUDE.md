@@ -346,11 +346,10 @@ PNPM ワークスペース構成のパッケージ:
    - [x] Imageリポジトリインターフェースの定義
    - [x] SQLxリポジトリ実装（画像登録）
    - [x] RegisterImageユースケース実装
-   - [ ] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 5. **全画像取得ユースケース（ViewImages）**
-   - [ ] ImageリポジトリにfindAll()メソッド追加
    - [ ] SQLxリポジトリ実装（全画像取得）
    - [ ] ViewImagesユースケース実装
    - [ ] GET /api/v2/admin/images ハンドラーの新アーキテクチャ移行

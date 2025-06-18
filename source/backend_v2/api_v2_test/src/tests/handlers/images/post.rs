@@ -20,11 +20,11 @@ mod tests {
 
     assert_image(&image_by_resp, &image_for_req);
 
-    // 全件取得して、insert した画像の uuid が含まれているか確認する
+    // 全件取得して、insert した画像の path が含まれているか確認する
     let url = "http://localhost:8001/blog/images";
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
     let actual_all_images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
-    helper::assert_any_image_has_uuid(&actual_all_images_resp, image_for_req.id);
+    helper::assert_any_image_has_path(&actual_all_images_resp, &image_for_req.path);
 
     Ok(())
   }
@@ -43,7 +43,7 @@ mod helper {
     image
   }
 
-  pub fn assert_any_image_has_uuid(images: &Vec<Image>, uuid: Uuid) {
-    assert!(images.iter().any(|image| image.id == uuid));
+  pub fn assert_any_image_has_path(images: &Vec<Image>, path: &str) {
+    assert!(images.iter().any(|image| image.path == path));
   }
 }
