@@ -73,7 +73,18 @@ impl ImageRepository for ImageSqlxRepository {
   }
 
   async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
-    todo!("find_allメソッドは後で実装します")
+    // 全画像を取得
+    let image_records = crate::infrastructure::repositories::image_sqlx_repository::table::images_table::fetch_all_images(&self.pool).await.map_err(|err| {
+      ImageRepositoryError::FindAllFailed(format!("全画像の取得に失敗しました: {}", err))
+    })?;
+
+    // ImageRecordのVecをImageEntityのVecに変換
+    let image_entities = image_records
+      .into_iter()
+      .map(convert_to_image_entity)
+      .collect();
+
+    Ok(image_entities)
   }
 }
 
@@ -209,5 +220,48 @@ mod tests {
     // 元のデータと取得したデータを比較
     assert_eq!(found_image.get_id(), test_image_id);
     assert_eq!(found_image.get_path(), test_file_path);
+  }
+
+  #[tokio::test]
+  #[ignore] // 実際のデータベースが必要なため、通常は無視
+  async fn test_find_all_images() {
+    // テスト用データベースプールを作成
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let repository = ImageSqlxRepository::new(pool.clone());
+
+    // テスト用画像を複数保存
+    let test_image1_id = Uuid::new_v4();
+    let test_file_path1 = format!("/images/find_all_test1_{}.jpg", Uuid::new_v4());
+    let test_image1 = crate::domain::image_domain::image_entity::ImageEntity::new(test_image1_id, test_file_path1.clone());
+    
+    let test_image2_id = Uuid::new_v4();
+    let test_file_path2 = format!("/images/find_all_test2_{}.jpg", Uuid::new_v4());
+    let test_image2 = crate::domain::image_domain::image_entity::ImageEntity::new(test_image2_id, test_file_path2.clone());
+
+    // 画像を保存
+    let save_result1 = repository.save(test_image1).await;
+    assert!(save_result1.is_ok(), "画像1の保存操作が失敗しました: {:?}", save_result1.err());
+    
+    let save_result2 = repository.save(test_image2).await;
+    assert!(save_result2.is_ok(), "画像2の保存操作が失敗しました: {:?}", save_result2.err());
+
+    // find_allメソッドを実行
+    let find_all_result = repository.find_all().await;
+    assert!(find_all_result.is_ok(), "find_all操作が失敗しました: {:?}", find_all_result.err());
+    
+    let all_images = find_all_result.unwrap();
+    
+    // 保存した画像が含まれていることを確認（データベースには他の画像もある可能性があるため、最低限の検証）
+    assert!(all_images.len() >= 2, "find_allで取得した画像数が期待値を下回っています");
+    
+    // 保存した画像が結果に含まれていることを確認
+    let found_image1 = all_images.iter().find(|img| img.get_id() == test_image1_id);
+    let found_image2 = all_images.iter().find(|img| img.get_id() == test_image2_id);
+    
+    assert!(found_image1.is_some(), "保存した画像1がfind_allの結果に含まれていません");
+    assert!(found_image2.is_some(), "保存した画像2がfind_allの結果に含まれていません");
+    
+    assert_eq!(found_image1.unwrap().get_path(), test_file_path1);
+    assert_eq!(found_image2.unwrap().get_path(), test_file_path2);
   }
 }

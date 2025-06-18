@@ -350,10 +350,10 @@ PNPM ワークスペース構成のパッケージ:
    - [x] api_v2_testの該当テスト通過確認
 
 5. **全画像取得ユースケース（ViewImages）**
-   - [ ] SQLxリポジトリ実装（全画像取得）
-   - [ ] ViewImagesユースケース実装
-   - [ ] GET /api/v2/admin/images ハンドラーの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x]  SQLxリポジトリ実装（全画像取得）
+   - [x] ViewImagesユースケース実装
+   - [x] GET /api/v2/admin/images ハンドラーの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 6. **人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）**
    - [ ] 人気記事選択ロジックの実装
