@@ -77,7 +77,7 @@ impl BlogPostRepository for BlogPostSqlxRepository {
 
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
     // record_mapperを使用してBlogPostEntityをDBレコードに変換
-    let (blog_post_record, _thumbnail_record, content_records) =
+    let (blog_post_record, content_records) =
       convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
 
     // トランザクションを開始

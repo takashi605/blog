@@ -10,7 +10,7 @@ use super::tables::{
 };
 
 /// BlogPostEntityからBlogPostRecordとその関連データに分解する
-pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPostRecord, ImageRecord, Vec<(PostContentRecord, AnyContentBlockRecord)>)> {
+pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPostRecord, Vec<(PostContentRecord, AnyContentBlockRecord)>)> {
   // サムネイルが設定されていることを確認
   let thumbnail = entity.get_thumbnail().ok_or_else(|| anyhow::anyhow!("サムネイル画像が設定されていません"))?;
 
@@ -23,11 +23,6 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
     last_update_date: entity.get_last_update_date(),
   };
 
-  // ImageRecordを作成
-  let thumbnail_record = ImageRecord {
-    id: thumbnail.get_id(),
-    file_path: thumbnail.get_path().to_string(),
-  };
 
   // ContentRecordを作成
   let mut content_records = Vec::new();
@@ -45,7 +40,7 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
     content_records.push((post_content_record, content_block_record));
   }
 
-  Ok((blog_post_record, thumbnail_record, content_records))
+  Ok((blog_post_record, content_records))
 }
 
 /// ContentEntityからIDを取得する
@@ -236,7 +231,7 @@ mod tests {
     let result = convert_from_blog_post_entity(&blog_post);
     assert!(result.is_ok());
 
-    let (blog_post_record, thumbnail_record, content_records) = result.unwrap();
+    let (blog_post_record, content_records) = result.unwrap();
 
     // BlogPostRecordの検証
     assert_eq!(blog_post_record.id, blog_post_id);
@@ -245,9 +240,6 @@ mod tests {
     assert_eq!(blog_post_record.last_update_date, post_date);
     assert_eq!(blog_post_record.thumbnail_image_id, thumbnail_id);
 
-    // ImageRecordの検証
-    assert_eq!(thumbnail_record.id, thumbnail_id);
-    assert_eq!(thumbnail_record.file_path, "/images/thumbnail.jpg");
 
     // ContentRecordsの検証（3つのコンテンツ）
     assert_eq!(content_records.len(), 3);
