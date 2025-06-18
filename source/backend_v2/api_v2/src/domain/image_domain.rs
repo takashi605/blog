@@ -1,4 +1,5 @@
 use uuid::Uuid;
+use async_trait::async_trait;
 
 #[derive(Debug, PartialEq)]
 pub struct ImageEntity {
@@ -18,6 +19,18 @@ impl ImageEntity {
     pub fn get_path(&self) -> &str {
         &self.path
     }
+}
+
+#[async_trait]
+pub trait ImageRepository {
+    async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError>;
+    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError>;
+}
+
+#[derive(Debug, PartialEq)]
+pub enum ImageRepositoryError {
+    SaveFailed(String),
+    FindAllFailed(String),
 }
 
 #[cfg(test)]
