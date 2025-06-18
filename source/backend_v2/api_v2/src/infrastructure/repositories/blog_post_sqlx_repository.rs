@@ -207,8 +207,8 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("find_popular_posts メソッドは後で実装します")
   }
 
-  async fn update_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
-    todo!("reselect_popular_posts メソッドは後で実装します")
+  async fn update_popular_posts(&self, _popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity> {
+    todo!("update_popular_posts メソッドは後で実装します")
   }
 }
 

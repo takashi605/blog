@@ -357,7 +357,7 @@ PNPM ワークスペース構成のパッケージ:
 
 6. **人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）**
    - [x] 人気記事群(PopularPostSet)エンティティの定義
-   - [ ] 人気記事選択サービスの実装
+   - [x] 人気記事選択サービスの実装
    - [x] リポジトリインターフェースに人気記事関連メソッド追加
    - [ ] SQLxリポジトリ実装（人気記事の取得・更新）
    - [ ] ViewPopularBlogPostsとSelectPopularPostsユースケース実装

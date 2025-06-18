@@ -1,4 +1,4 @@
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+use crate::domain::blog_domain::{blog_post_entity::BlogPostEntity, popular_post_set_entity::PopularPostSetEntity};
 use anyhow::Result;
 
 /// ブログ記事リポジトリのトレイト
@@ -86,10 +86,10 @@ pub trait BlogPostRepository: Send + Sync {
   /// 人気記事を更新する
   ///
   /// # Arguments
-  /// * `popular_posts` - 新しい人気記事のリスト（3件固定）
+  /// * `popular_post_set` - 新しい人気記事群（3件固定）
   ///
   /// # Returns
-  /// * `Ok(Vec<BlogPostEntity>)` - 更新に成功した場合、更新された記事リストを返す
-  /// * `Err` - 更新に失敗した場合（記事数が3件でない場合を含む）
-  async fn update_popular_posts(&self, popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>>;
+  /// * `Ok(PopularPostSetEntity)` - 更新に成功した場合、更新された人気記事群を返す
+  /// * `Err` - 更新に失敗した場合
+  async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
 }

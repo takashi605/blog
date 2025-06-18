@@ -123,7 +123,7 @@ mod tests {
       todo!()
     }
 
-    async fn update_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_popular_posts(&self, _popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity> {
       todo!()
     }
   }
