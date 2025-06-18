@@ -1,8 +1,10 @@
-use super::dto::ViewBlogPostDTO;
+use super::dto::{
+  ViewBlogPostCodeBlockDTO, ViewBlogPostContentDTO, ViewBlogPostDTO, ViewBlogPostH2BlockDTO, ViewBlogPostH3BlockDTO, ViewBlogPostImageBlockDTO,
+  ViewBlogPostImageDTO, ViewBlogPostLinkDTO, ViewBlogPostParagraphBlockDTO, ViewBlogPostRichTextDTO, ViewBlogPostStyleDTO,
+};
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use chrono::{TimeZone, Utc};
-use common::types::api::{BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 
 pub fn convert_to_dto(blog_post: BlogPostEntity) -> ViewBlogPostDTO {
   // TODO エンティティに公開状態を追加したら、ここで設定する
@@ -24,59 +26,59 @@ pub fn convert_to_dto(blog_post: BlogPostEntity) -> ViewBlogPostDTO {
   }
 }
 
-fn convert_thumbnail(blog_post: &BlogPostEntity) -> Image {
+fn convert_thumbnail(blog_post: &BlogPostEntity) -> ViewBlogPostImageDTO {
   if let Some(thumb) = blog_post.get_thumbnail() {
-    Image {
+    ViewBlogPostImageDTO {
       id: thumb.get_id(),
       path: thumb.get_path().to_string(),
     }
   } else {
     // デフォルトのサムネイル
-    Image {
+    ViewBlogPostImageDTO {
       id: uuid::Uuid::nil(),
       path: String::new(),
     }
   }
 }
 
-fn convert_contents(blog_post: &BlogPostEntity) -> Vec<BlogPostContent> {
+fn convert_contents(blog_post: &BlogPostEntity) -> Vec<ViewBlogPostContentDTO> {
   blog_post
     .get_contents()
     .iter()
     .map(|content| match content {
-      ContentEntity::H2(h2) => BlogPostContent::H2(H2Block {
+      ContentEntity::H2(h2) => ViewBlogPostContentDTO::H2(ViewBlogPostH2BlockDTO {
         id: h2.get_id(),
         text: h2.get_value().to_string(),
       }),
-      ContentEntity::H3(h3) => BlogPostContent::H3(H3Block {
+      ContentEntity::H3(h3) => ViewBlogPostContentDTO::H3(ViewBlogPostH3BlockDTO {
         id: h3.get_id(),
         text: h3.get_value().to_string(),
       }),
       ContentEntity::Paragraph(para) => {
-        let rich_texts: Vec<RichText> = para
+        let rich_texts: Vec<ViewBlogPostRichTextDTO> = para
           .get_value()
           .get_text()
           .iter()
-          .map(|part| RichText {
+          .map(|part| ViewBlogPostRichTextDTO {
             text: part.get_text().to_string(),
-            styles: Style {
+            styles: ViewBlogPostStyleDTO {
               bold: part.get_styles().bold,
               inline_code: part.get_styles().inline_code,
             },
-            link: part.get_link().map(|link| Link { url: link.url.clone() }),
+            link: part.get_link().map(|link| ViewBlogPostLinkDTO { url: link.url.clone() }),
           })
           .collect();
 
-        BlogPostContent::Paragraph(ParagraphBlock {
+        ViewBlogPostContentDTO::Paragraph(ViewBlogPostParagraphBlockDTO {
           id: para.get_id(),
           text: rich_texts,
         })
       }
-      ContentEntity::Image(img) => BlogPostContent::Image(ImageBlock {
+      ContentEntity::Image(img) => ViewBlogPostContentDTO::Image(ViewBlogPostImageBlockDTO {
         id: img.get_id(),
         path: img.get_path().to_string(),
       }),
-      ContentEntity::CodeBlock(code) => BlogPostContent::Code(CodeBlock {
+      ContentEntity::CodeBlock(code) => ViewBlogPostContentDTO::Code(ViewBlogPostCodeBlockDTO {
         id: code.get_id(),
         title: code.get_title().to_string(),
         code: code.get_code().to_string(),
@@ -102,7 +104,6 @@ mod tests {
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
     };
     use chrono::NaiveDate;
-    use common::types::api::BlogPostContent;
 
     // Arrange
     // 複雑なコンテンツを含むBlogPostEntityを作成
@@ -194,7 +195,7 @@ mod tests {
 
     // H2ブロックの検証
     match &dto.contents[0] {
-      BlogPostContent::H2(h2) => {
+      ViewBlogPostContentDTO::H2(h2) => {
         assert_eq!(h2.id, Uuid::parse_str("550e8400-e29b-41d4-a716-446655440003").unwrap());
         assert_eq!(h2.text, "見出し2");
       }
@@ -203,7 +204,7 @@ mod tests {
 
     // H3ブロックの検証
     match &dto.contents[1] {
-      BlogPostContent::H3(h3) => {
+      ViewBlogPostContentDTO::H3(h3) => {
         assert_eq!(h3.id, Uuid::parse_str("550e8400-e29b-41d4-a716-446655440004").unwrap());
         assert_eq!(h3.text, "見出し3");
       }
@@ -212,7 +213,7 @@ mod tests {
 
     // Paragraphブロックの検証
     match &dto.contents[2] {
-      BlogPostContent::Paragraph(para) => {
+      ViewBlogPostContentDTO::Paragraph(para) => {
         assert_eq!(para.id, Uuid::parse_str("550e8400-e29b-41d4-a716-446655440005").unwrap());
         assert_eq!(para.text.len(), 6); // 6つのRichTextパート
 
@@ -258,7 +259,7 @@ mod tests {
 
     // Imageブロックの検証
     match &dto.contents[3] {
-      BlogPostContent::Image(img) => {
+      ViewBlogPostContentDTO::Image(img) => {
         assert_eq!(img.id, Uuid::parse_str("550e8400-e29b-41d4-a716-446655440006").unwrap());
         assert_eq!(img.path, "https://example.com/image.jpg");
       }
@@ -267,7 +268,7 @@ mod tests {
 
     // CodeBlockの検証
     match &dto.contents[4] {
-      BlogPostContent::Code(code) => {
+      ViewBlogPostContentDTO::Code(code) => {
         assert_eq!(code.id, Uuid::parse_str("550e8400-e29b-41d4-a716-446655440007").unwrap());
         assert_eq!(code.title, "サンプルコード");
         assert_eq!(code.code, "fn main() { println!(\"Hello\"); }");
