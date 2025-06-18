@@ -45,7 +45,7 @@ pub mod handle_funcs {
           update_blog_post::{update_pickup_posts, update_popular_posts},
         },
         response::err::ApiCustomError,
-        response_mapper::{view_blog_post_dto_to_response, view_latest_blog_posts_dto_to_response},
+        api_mapper::{view_blog_post_dto_to_response, view_latest_blog_posts_dto_to_response},
       },
     },
   };
