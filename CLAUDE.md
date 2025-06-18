@@ -337,7 +337,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] BlogPost生成ロジック（ID生成、日付設定）の実装
    - [x] リポジトリインターフェースにsave(post)メソッド追加
    - [x] SQLxリポジトリ実装（記事保存）
-   - [ ] CreateBlogPostユースケース実装
+   - [x] CreateBlogPostユースケース実装
    - [ ] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
 
