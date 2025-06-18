@@ -2,13 +2,17 @@ use anyhow::Result;
 use uuid::Uuid;
 
 use crate::{
-  domain::blog_domain::blog_post_entity::{content_entity::ContentEntity, rich_text_vo::RichTextPartVO, BlogPostEntity},
+  domain::blog_domain::{
+    blog_post_entity::{content_entity::ContentEntity, rich_text_vo::RichTextPartVO, BlogPostEntity},
+    popular_post_set_entity::PopularPostSetEntity,
+  },
   infrastructure::repositories::image_sqlx_repository::ImageRecord,
 };
 
 use super::tables::{
   AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecord,
   ParagraphBlockRecordWithRelations, PostContentRecord, PostContentType, RichTextLinkRecord, RichTextRecord, RichTextRecordWithRelations, TextStyleRecord,
+  popular_posts_table::PopularPostRecord,
 };
 
 /// BlogPostEntityからBlogPostRecordとその関連データに分解する
@@ -318,4 +322,15 @@ mod tests {
     let code_block_content = ContentEntity::code_block(Uuid::new_v4(), "タイトル".to_string(), "コード".to_string(), "rust".to_string());
     assert_eq!(get_content_type_from_entity(&code_block_content), PostContentType::CodeBlock);
   }
+}
+
+/// PopularPostSetEntityからPopularPostRecordのVecに変換する
+pub fn convert_popular_post_set_to_records(popular_post_set: &PopularPostSetEntity) -> Vec<PopularPostRecord> {
+  popular_post_set.get_all_posts()
+    .iter()
+    .map(|post| PopularPostRecord {
+      id: Uuid::new_v4(), // 新規UUID生成
+      post_id: post.get_id(),
+    })
+    .collect()
 }

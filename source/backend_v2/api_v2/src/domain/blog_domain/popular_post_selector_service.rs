@@ -119,7 +119,7 @@ mod tests {
       unimplemented!()
     }
 
-    async fn find_popular_posts(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
+    async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>> {
       unimplemented!()
     }
 

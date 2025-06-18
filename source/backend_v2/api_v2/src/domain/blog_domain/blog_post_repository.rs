@@ -73,15 +73,12 @@ pub trait BlogPostRepository: Send + Sync {
   /// * `Err` - 更新に失敗した場合（記事数が3件でない場合を含む）
   async fn update_pick_up_posts(&self, pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>>;
 
-  /// 人気記事を複数取得する
-  ///
-  /// # Arguments
-  /// * `quantity` - 取得する記事数（Noneの場合はデフォルト数）
+  /// 人気記事を複数取得する（3件固定）
   ///
   /// # Returns
-  /// * `Ok(Vec<BlogPostEntity>)` - 人気記事のリスト
+  /// * `Ok(Vec<BlogPostEntity>)` - 人気記事のリスト（3件固定）
   /// * `Err` - データベースエラーの場合
-  async fn find_popular_posts(&self, quantity: Option<u32>) -> Result<Vec<BlogPostEntity>>;
+  async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>>;
 
   /// 人気記事を更新する
   ///

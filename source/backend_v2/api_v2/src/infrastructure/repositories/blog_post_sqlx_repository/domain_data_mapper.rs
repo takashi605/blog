@@ -2,15 +2,18 @@ use anyhow::{Context, Result};
 use uuid::Uuid;
 
 use crate::{domain::{
-  blog_domain::blog_post_entity::{
-    code_block_entity::CodeBlockEntity,
-    content_entity::ContentEntity,
-    h2_entity::H2Entity,
-    h3_entity::H3Entity,
-    image_content_entity::ImageContentEntity,
-    paragraph_entity::ParagraphEntity,
-    rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
-    BlogPostEntity,
+  blog_domain::{
+    blog_post_entity::{
+      code_block_entity::CodeBlockEntity,
+      content_entity::ContentEntity,
+      h2_entity::H2Entity,
+      h3_entity::H3Entity,
+      image_content_entity::ImageContentEntity,
+      paragraph_entity::ParagraphEntity,
+      rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
+      BlogPostEntity,
+    },
+    popular_post_set_entity::PopularPostSetEntity,
   },
   image_domain::ImageEntity,
 }, infrastructure::repositories::image_sqlx_repository::ImageRecord};
@@ -18,6 +21,7 @@ use crate::{domain::{
 use super::tables::{
   AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations,
   PostContentRecord, PostContentType, RichTextRecordWithRelations,
+  popular_posts_table::PopularPostRecord,
 };
 
 /// BlogPostRecordとその関連データからBlogPostEntityを作成する
@@ -195,4 +199,28 @@ mod tests {
       _ => panic!("期待されるコンテンツタイプはCodeBlockです"),
     }
   }
+}
+
+/// PopularPostRecordのVecからPopularPostSetEntityに変換する（記事取得には外部リポジトリが必要）
+/// 
+/// # Arguments
+/// * `records` - PopularPostRecordのVec
+/// * `blog_posts` - 取得済みのBlogPostEntityのVec
+/// 
+/// # Returns
+/// * `Ok(PopularPostSetEntity)` - 変換されたPopularPostSetEntity
+/// * `Err` - レコード数が3件でない場合
+pub fn convert_popular_records_to_entity(records: Vec<PopularPostRecord>, blog_posts: Vec<BlogPostEntity>) -> Result<PopularPostSetEntity> {
+  if records.len() != 3 {
+    return Err(anyhow::anyhow!("人気記事は必ず3件である必要があります。取得件数: {}", records.len()));
+  }
+
+  if blog_posts.len() != 3 {
+    return Err(anyhow::anyhow!("ブログ記事は必ず3件である必要があります。取得件数: {}", blog_posts.len()));
+  }
+
+  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into()
+    .map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
+
+  Ok(PopularPostSetEntity::new(posts_array))
 }

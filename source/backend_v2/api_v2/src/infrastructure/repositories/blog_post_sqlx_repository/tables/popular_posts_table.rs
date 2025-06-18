@@ -1,6 +1,6 @@
 use anyhow::Result;
 use common::types::api::BlogPost;
-use sqlx::{Executor, FromRow, Postgres};
+use sqlx::{Executor, FromRow, Postgres, Transaction};
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
@@ -14,13 +14,13 @@ pub async fn fetch_all_popular_blog_posts(executor: impl Executor<'_, Database =
   Ok(post)
 }
 
-pub async fn update_popular_blog_posts(executor: impl Executor<'_, Database = Postgres> + Copy, popular_blog_posts: Vec<PopularPostRecord>) -> Result<()> {
+pub async fn update_popular_blog_posts(tx: &mut Transaction<'_, Postgres>, popular_blog_posts: Vec<PopularPostRecord>) -> Result<()> {
   // 一旦全削除
-  sqlx::query("delete from popular_posts").execute(executor).await?;
+  sqlx::query("delete from popular_posts").execute(&mut **tx).await?;
 
   // 挿入
   for post in popular_blog_posts {
-    sqlx::query("insert into popular_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(executor).await?;
+    sqlx::query("insert into popular_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut **tx).await?;
   }
   println!("insert into popular_posts");
 

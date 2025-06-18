@@ -278,6 +278,8 @@ api-v2-test-run-include-ignored:
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
 	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- cargo test -- --include-ignored
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
 	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2-test -- cargo test -- --include-ignored
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
