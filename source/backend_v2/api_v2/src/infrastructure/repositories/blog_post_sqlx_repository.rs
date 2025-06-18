@@ -12,7 +12,10 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::{
-  domain::blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository},
+  domain::{
+    blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository},
+    image_domain::image_repository::ImageRepository,
+  },
   infrastructure::repositories::blog_post_sqlx_repository::blog_posts_table::{fetch_blog_post_by_id, fetch_latest_blog_posts_records_with_limit},
 };
 
@@ -21,25 +24,25 @@ use self::tables::{
   code_blocks_table::insert_code_block,
   heading_blocks_table::insert_heading_block,
   image_blocks_table::insert_image_block,
-  images_table::fetch_image_by_id,
   paragraph_blocks_table::{insert_paragraph_block, insert_rich_text, insert_rich_text_link, insert_rich_text_style, insert_text_style_if_not_exists},
   post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, insert_blog_post_content},
 };
 
 /// SQLxを使用したBlogPostRepositoryの実装
-pub struct BlogPostSqlxRepository {
+pub struct BlogPostSqlxRepository<I: ImageRepository> {
   pool: PgPool,
+  image_repository: I,
 }
 
-impl BlogPostSqlxRepository {
+impl<I: ImageRepository> BlogPostSqlxRepository<I> {
   /// 新しいBlogPostSqlxRepositoryインスタンスを作成する
-  pub fn new(pool: PgPool) -> Self {
-    Self { pool }
+  pub fn new(pool: PgPool, image_repository: I) -> Self {
+    Self { pool, image_repository }
   }
 }
 
 #[async_trait::async_trait]
-impl BlogPostRepository for BlogPostSqlxRepository {
+impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxRepository<I> {
   async fn find(&self, id: &str) -> Result<BlogPostEntity> {
     let post_id = Uuid::parse_str(id).context("無効なUUID形式のIDです")?;
 
@@ -58,7 +61,14 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     };
 
     // サムネイル画像を取得
-    let thumbnail_record = fetch_image_by_id(&self.pool, blog_post_record.thumbnail_image_id).await.context("サムネイル画像の取得に失敗しました")?;
+    let thumbnail_entity = self.image_repository.find(&blog_post_record.thumbnail_image_id.to_string()).await
+      .map_err(|e| anyhow::anyhow!("サムネイル画像の取得に失敗しました: {:?}", e))?;
+    
+    // ImageEntityをImageRecordに変換（既存のconvert_to_blog_post_entity関数と互換性を保つため）
+    let thumbnail_record = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::images_table::ImageRecord {
+      id: thumbnail_entity.get_id(),
+      file_path: thumbnail_entity.get_path().to_string(),
+    };
 
     // コンテンツ一覧を取得
     let post_content_records = fetch_post_contents_by_post_id(&self.pool, post_id).await.context("コンテンツ一覧の取得に失敗しました")?;
@@ -148,7 +158,14 @@ impl BlogPostRepository for BlogPostSqlxRepository {
 
     for blog_post_record in blog_post_records {
       // サムネイル画像を取得
-      let thumbnail_record = fetch_image_by_id(&self.pool, blog_post_record.thumbnail_image_id).await.context("サムネイル画像の取得に失敗しました")?;
+      let thumbnail_entity = self.image_repository.find(&blog_post_record.thumbnail_image_id.to_string()).await
+        .map_err(|e| anyhow::anyhow!("サムネイル画像の取得に失敗しました: {:?}", e))?;
+      
+      // ImageEntityをImageRecordに変換（既存のconvert_to_blog_post_entity関数と互換性を保つため）
+      let thumbnail_record = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::images_table::ImageRecord {
+        id: thumbnail_entity.get_id(),
+        file_path: thumbnail_entity.get_path().to_string(),
+      };
 
       // コンテンツ一覧を取得
       let post_content_records = fetch_post_contents_by_post_id(&self.pool, blog_post_record.id).await.context("コンテンツ一覧の取得に失敗しました")?;
@@ -284,7 +301,8 @@ mod tests {
   async fn test_save_blog_post_integration() {
     // テスト用データベースプールを作成
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
-    let repository = BlogPostSqlxRepository::new(pool.clone());
+    let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
+    let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
 
     // テスト用BlogPostEntityを作成
     let blog_post = create_test_blog_post();
@@ -351,7 +369,8 @@ mod tests {
   async fn test_save_and_find_blog_post_roundtrip() {
     // テスト用データベースプールを作成
     let pool = create_db_pool().await.expect("テスト用データベースプールの作成に失敗しました");
-    let repository = BlogPostSqlxRepository::new(pool.clone());
+    let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
+    let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
 
     // テスト用BlogPostEntityを作成
     let original_blog_post = create_test_blog_post();

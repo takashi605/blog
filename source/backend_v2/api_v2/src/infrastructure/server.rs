@@ -1,6 +1,7 @@
 pub mod handlers;
 pub mod openapi;
 
+use super::di_container::DiContainer;
 use actix_cors::Cors;
 use actix_web::{http, middleware::Condition, web, App, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
@@ -10,7 +11,6 @@ use handlers::{
 };
 use openapi::openapi_handler;
 use std::env;
-use super::di_container::DiContainer;
 
 pub async fn start_api_server() -> Result<()> {
   println!("api started");
@@ -24,13 +24,12 @@ pub async fn start_api_server() -> Result<()> {
     let env = env::var("RUST_ENV").expect("RUST_ENV must be set");
     let is_dev = env == "development";
 
-    let mut app =
-      App::new()
-        .app_data(di_container.clone())
-        .wrap(Condition::new(is_dev, configure_cors()))
-        .service(admin_scope())
-        .service(blog_scope())
-        .default_service(web::route().to(route_unmatch));
+    let mut app = App::new()
+      .app_data(di_container.clone())
+      .wrap(Condition::new(is_dev, configure_cors()))
+      .service(admin_scope())
+      .service(blog_scope())
+      .default_service(web::route().to(route_unmatch));
 
     // 開発環境でのみOpenAPI仕様書エンドポイントを有効化
     if is_dev {
