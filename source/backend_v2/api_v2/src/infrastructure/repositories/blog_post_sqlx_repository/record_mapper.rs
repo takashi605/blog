@@ -32,8 +32,10 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
   // ContentRecordを作成
   let mut content_records = Vec::new();
   for (index, content) in entity.get_contents().iter().enumerate() {
+    // コンテンツエンティティのIDを使用してpost_contentのIDとする
+    let content_id = get_content_id_from_entity(content);
     let post_content_record = PostContentRecord {
-      id: Uuid::new_v4(),
+      id: content_id,
       post_id: entity.get_id(),
       content_type: String::from(get_content_type_from_entity(content)),
       sort_order: index as i32,
@@ -44,6 +46,17 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
   }
 
   Ok((blog_post_record, thumbnail_record, content_records))
+}
+
+/// ContentEntityからIDを取得する
+fn get_content_id_from_entity(content: &ContentEntity) -> Uuid {
+  match content {
+    ContentEntity::H2(h2) => h2.get_id(),
+    ContentEntity::H3(h3) => h3.get_id(),
+    ContentEntity::Paragraph(paragraph) => paragraph.get_id(),
+    ContentEntity::Image(image) => image.get_id(),
+    ContentEntity::CodeBlock(code_block) => code_block.get_id(),
+  }
 }
 
 /// ContentEntityからPostContentTypeを取得する
@@ -72,7 +85,7 @@ fn convert_content_entity_to_block_record(content: &ContentEntity) -> Result<Any
     ContentEntity::Paragraph(paragraph) => {
       let paragraph_block_record = ParagraphBlockRecord { id: paragraph.get_id() };
 
-      let rich_text_records = convert_rich_text_vo_to_records(paragraph.get_value())?;
+      let rich_text_records = convert_rich_text_vo_to_records(paragraph.get_value(), paragraph.get_id())?;
 
       Ok(AnyContentBlockRecord::ParagraphBlockRecord(ParagraphBlockRecordWithRelations {
         paragraph_block: paragraph_block_record,
@@ -107,11 +120,12 @@ fn convert_content_entity_to_block_record(content: &ContentEntity) -> Result<Any
 /// RichTextVOからRichTextRecordWithRelationsのベクターに変換する
 fn convert_rich_text_vo_to_records(
   rich_text: &crate::domain::blog_domain::blog_post_entity::rich_text_vo::RichTextVO,
+  paragraph_block_id: Uuid,
 ) -> Result<Vec<RichTextRecordWithRelations>> {
   let mut records = Vec::new();
 
   for (index, part) in rich_text.get_text().iter().enumerate() {
-    let record = convert_rich_text_part_to_record(part, index, Uuid::new_v4())?;
+    let record = convert_rich_text_part_to_record(part, index, paragraph_block_id)?;
     records.push(record);
   }
 

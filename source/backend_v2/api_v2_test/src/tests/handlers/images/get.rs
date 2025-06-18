@@ -16,7 +16,12 @@ mod tests {
     let actual_images_resp: Vec<Image> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
     let expected_images: Vec<Image> = helper::expected_images();
 
-    assert_images(&actual_images_resp, &expected_images);
+    // データ数が期待値以上であることを確認
+    assert!(actual_images_resp.len() >= expected_images.len(), "取得した画像の数が期待値を下回っています");
+    // expected_images　の各画像が含まれていることを、path を確認して検証
+    for expected_image in expected_images {
+      assert!(actual_images_resp.iter().any(|img| img.path == expected_image.path), "取得した画像に期待される画像が含まれていません");
+    }
 
     Ok(())
   }

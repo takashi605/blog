@@ -70,8 +70,141 @@ impl BlogPostRepository for BlogPostSqlxRepository {
     convert_to_blog_post_entity(blog_post_record, thumbnail_record, content_blocks).context("BlogPostEntityへの変換に失敗しました")
   }
 
-  async fn save(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
-    todo!("save メソッドは後で実装します")
+  async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+    // record_mapperを使用してBlogPostEntityをDBレコードに変換
+    let (blog_post_record, thumbnail_record, content_records) =
+      convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
+
+    // トランザクションを開始
+    let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
+
+    // 1. サムネイル画像の挿入（既存の場合はスキップまたは更新）
+    sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO UPDATE SET id = EXCLUDED.id")
+      .bind(thumbnail_record.id)
+      .bind(&thumbnail_record.file_path)
+      .execute(&mut *tx)
+      .await
+      .context("サムネイル画像の挿入に失敗しました")?;
+
+    // 2. ブログ記事の挿入
+    sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")
+      .bind(blog_post_record.id)
+      .bind(&blog_post_record.title)
+      .bind(blog_post_record.thumbnail_image_id)
+      .bind(blog_post_record.post_date)
+      .bind(blog_post_record.last_update_date)
+      .bind(chrono::Utc::now().naive_utc())
+      .execute(&mut *tx)
+      .await
+      .context("ブログ記事の挿入に失敗しました")?;
+
+    // 3. コンテンツの挿入
+    for (post_content_record, content_block_record) in content_records {
+      // PostContentRecordの挿入
+      sqlx::query("INSERT INTO post_contents (id, post_id, content_type, sort_order) VALUES ($1, $2, $3, $4)")
+        .bind(post_content_record.id)
+        .bind(post_content_record.post_id)
+        .bind(&post_content_record.content_type)
+        .bind(post_content_record.sort_order)
+        .execute(&mut *tx)
+        .await
+        .context("コンテンツレコードの挿入に失敗しました")?;
+
+      // 各コンテンツタイプごとの詳細データを挿入
+      match content_block_record {
+        AnyContentBlockRecord::HeadingBlockRecord(heading) => {
+          sqlx::query("INSERT INTO heading_blocks (id, heading_level, text_content) VALUES ($1, $2, $3)")
+          .bind(heading.id)
+          .bind(heading.heading_level)
+          .bind(&heading.text_content)
+          .execute(&mut *tx)
+          .await
+          .context("見出しブロックの挿入に失敗しました")?;
+        }
+        AnyContentBlockRecord::ParagraphBlockRecord(paragraph) => {
+          // ParagraphBlockの挿入
+          sqlx::query("INSERT INTO paragraph_blocks (id) VALUES ($1)")
+            .bind(paragraph.paragraph_block.id)
+            .execute(&mut *tx)
+            .await
+            .context("段落ブロックの挿入に失敗しました")?;
+
+          // RichTextRecordの挿入
+          for rich_text_record in paragraph.rich_text_records_with_relations {
+            sqlx::query("INSERT INTO rich_texts (id, paragraph_block_id, text_content, sort_order) VALUES ($1, $2, $3, $4)")
+              .bind(rich_text_record.text_record.id)
+              .bind(rich_text_record.text_record.paragraph_block_id)
+              .bind(&rich_text_record.text_record.text_content)
+              .bind(rich_text_record.text_record.sort_order)
+              .execute(&mut *tx)
+              .await
+              .context("リッチテキストの挿入に失敗しました")?;
+
+            // スタイルの挿入
+            for style_record in rich_text_record.style_records {
+              // text_stylesテーブルにスタイルが存在しない場合は挿入
+              sqlx::query("INSERT INTO text_styles (id, style_type) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING")
+                .bind(style_record.id)
+                .bind(&style_record.style_type)
+                .execute(&mut *tx)
+                .await
+                .context("テキストスタイルの挿入に失敗しました")?;
+
+              sqlx::query("INSERT INTO rich_text_styles (style_id, rich_text_id) VALUES ($1, $2)")
+              .bind(style_record.id)
+              .bind(rich_text_record.text_record.id)
+              .execute(&mut *tx)
+              .await
+              .context("リッチテキストスタイルの挿入に失敗しました")?;
+            }
+
+            // リンクの挿入（存在する場合）
+            if let Some(link_record) = rich_text_record.link_record {
+              sqlx::query("INSERT INTO rich_text_links (id, rich_text_id, url) VALUES ($1, $2, $3)")
+              .bind(link_record.id)
+              .bind(link_record.rich_text_id)
+              .bind(&link_record.url)
+              .execute(&mut *tx)
+              .await
+              .context("リッチテキストリンクの挿入に失敗しました")?;
+            }
+          }
+        }
+        AnyContentBlockRecord::ImageBlockRecord(image_block) => {
+          // 画像レコードの挿入
+          sqlx::query("INSERT INTO images (id, file_path) VALUES ($1, $2) ON CONFLICT (file_path) DO UPDATE SET id = EXCLUDED.id")
+            .bind(image_block.image_record.id)
+            .bind(&image_block.image_record.file_path)
+            .execute(&mut *tx)
+            .await
+            .context("画像レコードの挿入に失敗しました")?;
+
+          // 画像ブロックの挿入
+          sqlx::query("INSERT INTO image_blocks (id, image_id) VALUES ($1, $2)")
+            .bind(image_block.image_block_record.id)
+            .bind(image_block.image_block_record.image_id)
+            .execute(&mut *tx)
+            .await
+            .context("画像ブロックの挿入に失敗しました")?;
+        }
+        AnyContentBlockRecord::CodeBlockRecord(code_block) => {
+          sqlx::query("INSERT INTO code_blocks (id, title, code, lang) VALUES ($1, $2, $3, $4)")
+            .bind(code_block.id)
+            .bind(&code_block.title)
+            .bind(&code_block.code)
+            .bind(&code_block.language)
+            .execute(&mut *tx)
+            .await
+            .context("コードブロックの挿入に失敗しました")?;
+        }
+      }
+    }
+
+    // トランザクションをコミット
+    tx.commit().await.context("トランザクションのコミットに失敗しました")?;
+
+    // 保存されたデータを取得して返す
+    self.find(&blog_post.get_id().to_string()).await
   }
 
   async fn find_latests(&self, quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
@@ -124,5 +257,161 @@ impl BlogPostRepository for BlogPostSqlxRepository {
 
   async fn reselect_popular_posts(&self, _popular_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
     todo!("reselect_popular_posts メソッドは後で実装します")
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use crate::{
+    domain::blog_domain::blog_post_entity::{
+      content_entity::ContentEntity,
+      rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
+      BlogPostEntity,
+    },
+    infrastructure::repositories::blog_post_sqlx_repository::db_pool::create_db_pool,
+  };
+  use chrono::NaiveDate;
+
+  fn create_test_blog_post() -> BlogPostEntity {
+    let blog_post_id = uuid::Uuid::new_v4();
+    let mut blog_post = BlogPostEntity::new(blog_post_id, "テスト記事".to_string());
+
+    // サムネイル画像を設定（ユニークなファイルパスを生成）
+    let thumbnail_id = uuid::Uuid::new_v4();
+    let unique_thumbnail_path = format!("/images/test_thumbnail_{}.jpg", uuid::Uuid::new_v4());
+    blog_post.set_thumbnail(thumbnail_id, unique_thumbnail_path);
+
+    // 日付を設定
+    let post_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
+    blog_post.set_post_date(post_date);
+    blog_post.set_last_update_date(post_date);
+
+    // H2見出しを追加
+    let h2_content = ContentEntity::h2(uuid::Uuid::new_v4(), "テスト見出し".to_string());
+    blog_post.add_content(h2_content);
+
+    // パラグラフを追加（リッチテキスト付き）
+    let mut styles = RichTextStylesVO::default();
+    styles.bold = true;
+
+    let link = LinkVO {
+      url: "https://example.com/test".to_string(),
+    };
+
+    let rich_text_part = RichTextPartVO::new("テストパラグラフ内容".to_string(), Some(styles), Some(link));
+    let rich_text = RichTextVO::new(vec![rich_text_part]);
+    let paragraph_content = ContentEntity::paragraph(uuid::Uuid::new_v4(), rich_text);
+    blog_post.add_content(paragraph_content);
+
+    // コードブロックを追加
+    let code_block_content = ContentEntity::code_block(
+      uuid::Uuid::new_v4(),
+      "テストコード".to_string(),
+      "fn test() { println!(\"Hello, World!\"); }".to_string(),
+      "rust".to_string(),
+    );
+    blog_post.add_content(code_block_content);
+
+    blog_post
+  }
+
+  #[tokio::test]
+  #[ignore] // 実際のデータベースが必要なため、通常は無視
+  async fn test_save_blog_post_integration() {
+    // テスト用データベースプールを作成
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let repository = BlogPostSqlxRepository::new(pool);
+
+    // テスト用BlogPostEntityを作成
+    let blog_post = create_test_blog_post();
+    let original_id = blog_post.get_id();
+
+    // saveメソッドを実行
+    let result = repository.save(&blog_post).await;
+
+    // 結果を検証
+    assert!(result.is_ok(), "save操作が失敗しました: {:?}", result.err());
+    let saved_blog_post = result.unwrap();
+
+    // 基本情報の検証
+    assert_eq!(saved_blog_post.get_id(), original_id);
+    assert_eq!(saved_blog_post.get_title_text(), "テスト記事");
+
+    // サムネイルの検証
+    assert!(saved_blog_post.get_thumbnail().is_some());
+    let thumbnail = saved_blog_post.get_thumbnail().unwrap();
+    assert!(thumbnail.get_path().starts_with("/images/test_thumbnail_"));
+    assert!(thumbnail.get_path().ends_with(".jpg"));
+
+    // コンテンツの検証
+    let contents = saved_blog_post.get_contents();
+    assert_eq!(contents.len(), 3);
+
+    // H2見出しの検証
+    match &contents[0] {
+      ContentEntity::H2(h2) => {
+        assert_eq!(h2.get_value(), "テスト見出し");
+      }
+      _ => panic!("最初のコンテンツはH2見出しである必要があります"),
+    }
+
+    // パラグラフの検証
+    match &contents[1] {
+      ContentEntity::Paragraph(paragraph) => {
+        let rich_text_parts = paragraph.get_value().get_text();
+        assert_eq!(rich_text_parts.len(), 1);
+        assert_eq!(rich_text_parts[0].get_text(), "テストパラグラフ内容");
+        assert!(rich_text_parts[0].get_styles().bold);
+        assert!(rich_text_parts[0].get_link().is_some());
+        assert_eq!(rich_text_parts[0].get_link().unwrap().url, "https://example.com/test");
+      }
+      _ => panic!("2番目のコンテンツはパラグラフである必要があります"),
+    }
+
+    // コードブロックの検証
+    match &contents[2] {
+      ContentEntity::CodeBlock(code_block) => {
+        assert_eq!(code_block.get_title(), "テストコード");
+        assert_eq!(code_block.get_code(), "fn test() { println!(\"Hello, World!\"); }");
+        assert_eq!(code_block.get_language(), "rust");
+      }
+      _ => panic!("3番目のコンテンツはコードブロックである必要があります"),
+    }
+  }
+
+  #[tokio::test]
+  #[ignore] // 実際のデータベースが必要なため、通常は無視
+  async fn test_save_and_find_blog_post_roundtrip() {
+    // テスト用データベースプールを作成
+    let pool = create_db_pool().await.expect("テスト用データベースプールの作成に失敗しました");
+    let repository = BlogPostSqlxRepository::new(pool);
+
+    // テスト用BlogPostEntityを作成
+    let original_blog_post = create_test_blog_post();
+    let original_id = original_blog_post.get_id();
+
+    // saveメソッドを実行
+    let saved_result = repository.save(&original_blog_post).await;
+    assert!(saved_result.is_ok(), "save操作が失敗しました: {:?}", saved_result.err());
+
+    // findメソッドで保存したデータを取得
+    let found_result = repository.find(&original_id.to_string()).await;
+    assert!(found_result.is_ok(), "find操作が失敗しました: {:?}", found_result.err());
+    let found_blog_post = found_result.unwrap();
+
+    // 元のデータと取得したデータを比較
+    assert_eq!(found_blog_post.get_id(), original_id);
+    assert_eq!(found_blog_post.get_title_text(), original_blog_post.get_title_text());
+    assert_eq!(found_blog_post.get_post_date(), original_blog_post.get_post_date());
+    assert_eq!(found_blog_post.get_last_update_date(), original_blog_post.get_last_update_date());
+
+    // コンテンツ数が一致することを確認
+    assert_eq!(found_blog_post.get_contents().len(), original_blog_post.get_contents().len());
+
+    // サムネイル情報の一致を確認
+    let original_thumbnail = original_blog_post.get_thumbnail().unwrap();
+    let found_thumbnail = found_blog_post.get_thumbnail().unwrap();
+    assert_eq!(found_thumbnail.get_path(), original_thumbnail.get_path());
   }
 }
