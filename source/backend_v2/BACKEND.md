@@ -21,7 +21,7 @@ make api-sh            # v1 APIコンテナシェル
 make api-test-sh       # v1 APIテストコンテナシェル
 
 # v2 API（新アーキテクチャ）
-make api-v2-test-run   # v2 APIテスト実行（単体 + 統合）
+make api-v2-test-run-include-ignored   # v2 APIテスト実行（単体 + 統合）
 make api-v2-test-unit  # v2 単体テストのみ実行
 make api-v2-sh         # v2 APIコンテナシェル
 make api-v2-test-sh    # v2 APIテストコンテナシェル
@@ -48,7 +48,7 @@ make api-migrate-add-seeds name=seed_name
 
 - **配置場所:** `source/backend_v2/api_v2_test/src/tests/handlers/[リソース名]/[操作名].rs`
 - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
-- `make api-v2-test-run` でテスト実行し、失敗確認（Red 状態）
+- `make api-v2-test-run-include-ignored` でテスト実行し、失敗確認（Red 状態）
 
 ## バックエンド API アクセス
 
