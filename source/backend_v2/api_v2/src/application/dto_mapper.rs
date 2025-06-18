@@ -1,5 +1,5 @@
 use crate::application::dto::{
-  BlogPostCodeBlockDTO, BlogPostContentDTO, BlogPostDTO, BlogPostH2BlockDTO, BlogPostH3BlockDTO, BlogPostImageBlockDTO, BlogPostImageDTO, BlogPostLinkDTO,
+  BlogPostCodeBlockDTO, BlogPostContentDTO, BlogPostDTO, BlogPostH2BlockDTO, BlogPostH3BlockDTO, BlogPostImageBlockDTO, ImageDTO, BlogPostLinkDTO,
   BlogPostParagraphBlockDTO, BlogPostRichTextDTO, BlogPostStyleDTO,
 };
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
@@ -26,15 +26,15 @@ pub fn convert_to_blog_post_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
   }
 }
 
-fn convert_thumbnail(blog_post: &BlogPostEntity) -> BlogPostImageDTO {
+fn convert_thumbnail(blog_post: &BlogPostEntity) -> ImageDTO {
   if let Some(thumb) = blog_post.get_thumbnail() {
-    BlogPostImageDTO {
+    ImageDTO {
       id: thumb.get_id(),
       path: thumb.get_path().to_string(),
     }
   } else {
     // デフォルトのサムネイル
-    BlogPostImageDTO {
+    ImageDTO {
       id: uuid::Uuid::nil(),
       path: String::new(),
     }

@@ -3,8 +3,8 @@ use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block,
 use uuid::Uuid;
 
 use crate::application::dto::{
-  BlogPostCodeBlockDTO, BlogPostContentDTO, BlogPostDTO, BlogPostH2BlockDTO, BlogPostH3BlockDTO, BlogPostImageBlockDTO, BlogPostImageDTO, BlogPostLinkDTO,
-  BlogPostParagraphBlockDTO, BlogPostRichTextDTO, BlogPostStyleDTO,
+  BlogPostCodeBlockDTO, BlogPostContentDTO, BlogPostDTO, BlogPostH2BlockDTO, BlogPostH3BlockDTO, BlogPostImageBlockDTO, BlogPostLinkDTO,
+  BlogPostParagraphBlockDTO, BlogPostRichTextDTO, BlogPostStyleDTO, ImageDTO,
 };
 
 /// ViewBlogPostDTOをAPIレスポンス用のBlogPostに変換
@@ -22,7 +22,7 @@ pub fn view_blog_post_dto_to_response(dto: BlogPostDTO) -> Result<BlogPost> {
 }
 
 /// ViewBlogPostImageDTOをAPI型のImageに変換
-fn convert_image_dto_to_api(dto: BlogPostImageDTO) -> Image {
+fn convert_image_dto_to_api(dto: ImageDTO) -> Image {
   Image { id: dto.id, path: dto.path }
 }
 
@@ -111,7 +111,7 @@ mod tests {
     let dto = BlogPostDTO {
       id: "550e8400-e29b-41d4-a716-446655440000".to_string(),
       title: "テスト記事".to_string(),
-      thumbnail: BlogPostImageDTO {
+      thumbnail: ImageDTO {
         id: test_thumbnail_id,
         path: "/test/image.jpg".to_string(),
       },
@@ -150,7 +150,7 @@ mod tests {
     let dto = BlogPostDTO {
       id: "invalid-uuid".to_string(),
       title: "テスト記事".to_string(),
-      thumbnail: BlogPostImageDTO {
+      thumbnail: ImageDTO {
         id: Uuid::new_v4(),
         path: "/test/image.jpg".to_string(),
       },

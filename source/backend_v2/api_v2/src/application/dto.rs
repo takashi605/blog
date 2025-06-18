@@ -5,18 +5,12 @@ use uuid::Uuid;
 pub struct BlogPostDTO {
   pub id: String,
   pub title: String,
-  pub thumbnail: BlogPostImageDTO,
+  pub thumbnail: ImageDTO,
   pub post_date: NaiveDate,
   pub last_update_date: NaiveDate,
   pub contents: Vec<BlogPostContentDTO>,
   pub published_date: DateTime<Utc>,
   pub is_public: bool,
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct BlogPostImageDTO {
-  pub id: Uuid,
-  pub path: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -76,4 +70,10 @@ pub struct BlogPostCodeBlockDTO {
   pub title: String,
   pub code: String,
   pub language: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ImageDTO {
+  pub id: Uuid,
+  pub path: String,
 }
