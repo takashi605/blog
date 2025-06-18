@@ -345,7 +345,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] ImageEntity（ID、Path）の実装（命名規則: XxxEntity）
    - [x] Imageリポジトリインターフェースの定義
    - [ ] SQLxリポジトリ実装（画像登録）
-   - [ ] RegisterImageユースケース実装
+   - [x] RegisterImageユースケース実装
    - [ ] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
 
