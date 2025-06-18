@@ -16,7 +16,7 @@ use crate::{
     image_entity::ImageEntity,
     image_repository::{ImageRepository, ImageRepositoryError},
   },
-  infrastructure::repositories::image_sqlx_repository::table::images_table::fetch_image_by_id,
+  infrastructure::repositories::image_sqlx_repository::table::images_table::{fetch_image_by_id, insert_image},
 };
 
 /// SQLxを使用したImageRepositoryの実装
@@ -52,8 +52,24 @@ impl ImageRepository for ImageSqlxRepository {
     Ok(image_entity)
   }
 
-  async fn save(&self, _image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
-    todo!("saveメソッドは後で実装します")
+  async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
+    // ImageEntityをImageRecordに変換
+    let image_record = convert_from_image_entity(&image);
+    
+    // common::types::api::Imageに変換（insert_image関数が期待する型）
+    let api_image = common::types::api::Image {
+      id: image_record.id,
+      path: image_record.file_path,
+    };
+    
+    // データベースに挿入
+    let saved_record = insert_image(&self.pool, api_image).await.map_err(|err| {
+      ImageRepositoryError::SaveFailed(format!("画像の保存に失敗しました: {}", err))
+    })?;
+    
+    // 保存されたレコードをImageEntityに変換して返す
+    let saved_entity = convert_to_image_entity(saved_record);
+    Ok(saved_entity)
   }
 
   async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
@@ -143,5 +159,55 @@ mod tests {
     } else {
       panic!("期待されるエラータイプではありません: {:?}", result.err());
     }
+  }
+
+  #[tokio::test]
+  #[ignore] // 実際のデータベースが必要なため、通常は無視
+  async fn test_save_image_success() {
+    // テスト用データベースプールを作成
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let repository = ImageSqlxRepository::new(pool);
+
+    // テスト用ImageEntityを作成
+    let test_image_id = Uuid::new_v4();
+    let test_file_path = format!("/images/save_test_{}.jpg", Uuid::new_v4());
+    let test_image = crate::domain::image_domain::image_entity::ImageEntity::new(test_image_id, test_file_path.clone());
+
+    // saveメソッドを実行
+    let result = repository.save(test_image).await;
+
+    // 結果を検証
+    assert!(result.is_ok(), "save操作が失敗しました: {:?}", result.err());
+    let saved_image = result.unwrap();
+
+    // 基本情報の検証
+    assert_eq!(saved_image.get_id(), test_image_id);
+    assert_eq!(saved_image.get_path(), test_file_path);
+  }
+
+  #[tokio::test]
+  #[ignore] // 実際のデータベースが必要なため、通常は無視
+  async fn test_save_and_find_image_roundtrip() {
+    // テスト用データベースプールを作成
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let repository = ImageSqlxRepository::new(pool);
+
+    // テスト用ImageEntityを作成
+    let test_image_id = Uuid::new_v4();
+    let test_file_path = format!("/images/roundtrip_test_{}.jpg", Uuid::new_v4());
+    let original_image = crate::domain::image_domain::image_entity::ImageEntity::new(test_image_id, test_file_path.clone());
+
+    // saveメソッドを実行
+    let save_result = repository.save(original_image).await;
+    assert!(save_result.is_ok(), "save操作が失敗しました: {:?}", save_result.err());
+
+    // findメソッドで保存したデータを取得
+    let find_result = repository.find(&test_image_id.to_string()).await;
+    assert!(find_result.is_ok(), "find操作が失敗しました: {:?}", find_result.err());
+    let found_image = find_result.unwrap();
+
+    // 元のデータと取得したデータを比較
+    assert_eq!(found_image.get_id(), test_image_id);
+    assert_eq!(found_image.get_path(), test_file_path);
   }
 }
