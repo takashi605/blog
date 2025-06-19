@@ -4,6 +4,7 @@ use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+use crate::domain::blog_domain::popular_post_selector_service::PopularPostSelectorService;
 
 /// 人気記事選択ユースケース
 ///
@@ -30,26 +31,9 @@ impl SelectPopularPostsUseCase {
   /// * `Ok(Vec<BlogPostDTO>)` - 更新後の人気記事3件のDTOリスト
   /// * `Err` - 記事IDが3件でない場合、記事が見つからない場合、更新に失敗した場合
   pub async fn execute(&self, post_ids: Vec<String>) -> anyhow::Result<Vec<BlogPostDTO>> {
-    // 3件であることを検証
-    if post_ids.len() != 3 {
-      return Err(anyhow::anyhow!("人気記事は必ず3件である必要があります。実際の件数: {}", post_ids.len()));
-    }
-
-    // 各記事をリポジトリから取得
-    let mut blog_posts = Vec::new();
-    for post_id in post_ids {
-      let blog_post = self.repository.find(&post_id).await?;
-      blog_posts.push(blog_post);
-    }
-
-    // 3件の記事を配列に変換
-    let posts_array: [BlogPostEntity; 3] = blog_posts.try_into().map_err(|_| anyhow::anyhow!("記事の変換に失敗しました"))?;
-
-    // PopularPostSetEntityを作成
-    let popular_post_set = crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity::new(posts_array);
-
-    // リポジトリを通じて更新
-    let updated_popular_post_set = self.repository.update_popular_posts(&popular_post_set).await?;
+    // PopularPostSelectorServiceを使用して人気記事の選択と更新を行う
+    let service = PopularPostSelectorService::new(self.repository.clone());
+    let updated_popular_post_set = service.select_popular_posts(post_ids).await?;
 
     // PopularPostSetEntity -> Vec<BlogPostDTO>に変換
     let posts = updated_popular_post_set.get_all_posts();

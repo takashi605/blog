@@ -360,7 +360,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] 人気記事選択サービスの実装
    - [x] リポジトリインターフェースに人気記事関連メソッド追加
    - [x] SQLxリポジトリ実装（人気記事の取得・更新）
-   - [ ] ViewPopularBlogPostsとSelectPopularPostsユースケース実装
+   - [x] ViewPopularBlogPostsとSelectPopularPostsユースケース実装
    - [ ] 関連エンドポイントの新アーキテクチャ移行
    - [ ] api_v2_testの該当テスト通過確認
 

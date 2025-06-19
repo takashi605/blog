@@ -1,20 +1,21 @@
 use crate::domain::blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository, popular_post_set_entity::PopularPostSetEntity};
 use anyhow::{bail, Result};
+use std::sync::Arc;
 use uuid::Uuid;
 
 /// 人気記事選択ドメインサービス
 ///
 /// 人気記事の選択と更新を行うビジネスロジックを提供する
-pub struct PopularPostSelectorService<R: BlogPostRepository> {
-  repository: R,
+pub struct PopularPostSelectorService {
+  repository: Arc<dyn BlogPostRepository>,
 }
 
-impl<R: BlogPostRepository> PopularPostSelectorService<R> {
+impl PopularPostSelectorService {
   /// 新しいサービスインスタンスを作成する
   ///
   /// # Arguments
   /// * `repository` - ブログ記事リポジトリ
-  pub fn new(repository: R) -> Self {
+  pub fn new(repository: Arc<dyn BlogPostRepository>) -> Self {
     Self { repository }
   }
 
@@ -150,10 +151,12 @@ mod tests {
     let post2_id = "00000000-0000-0000-0000-000000000002";
     let post3_id = "00000000-0000-0000-0000-000000000003";
 
-    let mock_repo = MockBlogPostRepository::new()
-      .with_find_result(post1_id.to_string(), "人気記事1".to_string())
-      .with_find_result(post2_id.to_string(), "人気記事2".to_string())
-      .with_find_result(post3_id.to_string(), "人気記事3".to_string());
+    let mock_repo = Arc::new(
+      MockBlogPostRepository::new()
+        .with_find_result(post1_id.to_string(), "人気記事1".to_string())
+        .with_find_result(post2_id.to_string(), "人気記事2".to_string())
+        .with_find_result(post3_id.to_string(), "人気記事3".to_string())
+    );
 
     let service = PopularPostSelectorService::new(mock_repo);
 
@@ -169,7 +172,7 @@ mod tests {
 
   #[tokio::test]
   async fn 記事idが3件でない場合はエラーになる() {
-    let mock_repo = MockBlogPostRepository::new();
+    let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PopularPostSelectorService::new(mock_repo);
 
     // 2件の場合
@@ -186,7 +189,7 @@ mod tests {
 
   #[tokio::test]
   async fn 記事idが4件の場合はエラーになる() {
-    let mock_repo = MockBlogPostRepository::new();
+    let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PopularPostSelectorService::new(mock_repo);
 
     // 4件の場合
@@ -205,10 +208,12 @@ mod tests {
 
   #[tokio::test]
   async fn 存在しない記事idを指定した場合はエラーになる() {
-    let mock_repo = MockBlogPostRepository::new()
-      .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
-      .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string());
-    // 3番目の記事は設定しない（存在しない）
+    let mock_repo = Arc::new(
+      MockBlogPostRepository::new()
+        .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
+        .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string())
+      // 3番目の記事は設定しない（存在しない）
+    );
 
     let service = PopularPostSelectorService::new(mock_repo);
 
@@ -226,7 +231,7 @@ mod tests {
 
   #[tokio::test]
   async fn 空の配列を指定した場合はエラーになる() {
-    let mock_repo = MockBlogPostRepository::new();
+    let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PopularPostSelectorService::new(mock_repo);
 
     let result = service.select_popular_posts(vec![]).await;
