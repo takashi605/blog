@@ -365,12 +365,12 @@ PNPM ワークスペース構成のパッケージ:
    - [x] api_v2_testの該当テスト通過確認
 
 7. **ピックアップ記事ユースケース（ViewPickUpPost）**
-   - [ ] ピックアップ記事取得ロジックの実装
+   - [x] ピックアップ記事取得ロジックの実装
    - [x] リポジトリインターフェースにfetchPickUpPosts(limit)メソッド追加
-   - [ ] SQLxリポジトリ実装
-   - [ ] ViewPickUpPostユースケース実装
-   - [ ] GET /api/v2/blog/posts/pick-up ハンドラーの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x] SQLxリポジトリ実装
+   - [x] ViewPickUpPostユースケース実装
+   - [x] GET /api/v2/blog/posts/pick-up ハンドラーの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 8. **トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）**
    - [ ] TopTechPickSelectorビジネスロジックの実装

@@ -2,17 +2,16 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 
-/// 人気記事閲覧ユースケース
+/// ピックアップ記事閲覧ユースケース
 ///
-/// 人気記事3件を取得し、DTOに変換して返す
-pub struct ViewPopularBlogPostsUseCase {
+/// ピックアップ記事3件を取得し、DTOに変換して返す
+pub struct ViewPickUpPostsUseCase {
   repository: Arc<dyn BlogPostRepository>,
 }
 
-impl ViewPopularBlogPostsUseCase {
+impl ViewPickUpPostsUseCase {
   /// 新しいユースケースインスタンスを作成する
   ///
   /// # Arguments
@@ -21,17 +20,17 @@ impl ViewPopularBlogPostsUseCase {
     Self { repository }
   }
 
-  /// 人気記事を取得する
+  /// ピックアップ記事を取得する
   ///
   /// # Returns
-  /// * `Ok(Vec<BlogPostDTO>)` - 人気記事3件のDTOリスト
+  /// * `Ok(Vec<BlogPostDTO>)` - ピックアップ記事3件のDTOリスト
   /// * `Err` - データベースエラーの場合
   pub async fn execute(&self) -> anyhow::Result<Vec<BlogPostDTO>> {
-    // リポジトリから人気記事群を取得
-    let popular_post_set = self.repository.find_popular_posts().await?;
+    // リポジトリからピックアップ記事群を取得
+    let pick_up_post_set = self.repository.find_pick_up_posts().await?;
 
-    // PopularPostSetEntityから記事を取得してBlogPostDTOに変換
-    let posts = popular_post_set.into_all_posts();
+    // PickUpPostSetEntityから記事を取得してBlogPostDTOに変換
+    let posts = pick_up_post_set.into_all_posts();
     let dtos = posts
       .into_iter()
       .map(|post| {
@@ -58,12 +57,12 @@ mod tests {
 
   // モックリポジトリ
   struct MockBlogPostRepository {
-    popular_posts: Vec<BlogPostEntity>,
+    pick_up_posts: Vec<BlogPostEntity>,
   }
 
   impl MockBlogPostRepository {
-    fn new_with_popular_posts(posts: Vec<BlogPostEntity>) -> Self {
-      Self { popular_posts: posts }
+    fn new_with_pick_up_posts(posts: Vec<BlogPostEntity>) -> Self {
+      Self { pick_up_posts: posts }
     }
   }
 
@@ -90,26 +89,26 @@ mod tests {
     }
 
     async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
-      todo!()
+      // PickUpPostSetEntityは3件必須なので、件数チェック
+      if self.pick_up_posts.len() != 3 {
+        return Err(anyhow::anyhow!("ピックアップ記事は3件である必要があります。実際の件数: {}", self.pick_up_posts.len()));
+      }
+
+      // PickUpPostSetEntityを作成して返す
+      let posts_array: [BlogPostEntity; 3] = [
+        BlogPostEntity::new(self.pick_up_posts[0].get_id(), self.pick_up_posts[0].get_title_text().to_string()),
+        BlogPostEntity::new(self.pick_up_posts[1].get_id(), self.pick_up_posts[1].get_title_text().to_string()),
+        BlogPostEntity::new(self.pick_up_posts[2].get_id(), self.pick_up_posts[2].get_title_text().to_string()),
+      ];
+      Ok(PickUpPostSetEntity::new(posts_array))
     }
 
-    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
+    async fn update_pick_up_posts(&self, _pick_up_post_set: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
       todo!()
     }
 
     async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
-      // PopularPostSetEntityは3件必須なので、件数チェック
-      if self.popular_posts.len() != 3 {
-        return Err(anyhow::anyhow!("人気記事は3件である必要があります。実際の件数: {}", self.popular_posts.len()));
-      }
-
-      // PopularPostSetEntityを作成して返す
-      let posts_array: [BlogPostEntity; 3] = [
-        BlogPostEntity::new(self.popular_posts[0].get_id(), self.popular_posts[0].get_title_text().to_string()),
-        BlogPostEntity::new(self.popular_posts[1].get_id(), self.popular_posts[1].get_title_text().to_string()),
-        BlogPostEntity::new(self.popular_posts[2].get_id(), self.popular_posts[2].get_title_text().to_string()),
-      ];
-      Ok(PopularPostSetEntity::new(posts_array))
+      todo!()
     }
 
     async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
@@ -123,16 +122,16 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 人気記事3件を正常に取得できる() {
+  async fn ピックアップ記事3件を正常に取得できる() {
     // Arrange
-    let popular_posts = vec![
-      create_test_blog_post("00000000-0000-0000-0000-000000000001", "人気記事1"),
-      create_test_blog_post("00000000-0000-0000-0000-000000000002", "人気記事2"),
-      create_test_blog_post("00000000-0000-0000-0000-000000000003", "人気記事3"),
+    let pick_up_posts = vec![
+      create_test_blog_post("00000000-0000-0000-0000-000000000001", "ピックアップ記事1"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000002", "ピックアップ記事2"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000003", "ピックアップ記事3"),
     ];
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_popular_posts(popular_posts));
-    let usecase = ViewPopularBlogPostsUseCase::new(mock_repository);
+    let mock_repository = Arc::new(MockBlogPostRepository::new_with_pick_up_posts(pick_up_posts));
+    let usecase = ViewPickUpPostsUseCase::new(mock_repository);
 
     // Act
     let result = usecase.execute().await;
@@ -141,25 +140,25 @@ mod tests {
     assert!(result.is_ok());
     let dtos = result.unwrap();
     assert_eq!(dtos.len(), 3);
-    assert_eq!(dtos[0].title, "人気記事1");
-    assert_eq!(dtos[1].title, "人気記事2");
-    assert_eq!(dtos[2].title, "人気記事3");
+    assert_eq!(dtos[0].title, "ピックアップ記事1");
+    assert_eq!(dtos[1].title, "ピックアップ記事2");
+    assert_eq!(dtos[2].title, "ピックアップ記事3");
   }
 
   #[tokio::test]
-  async fn 人気記事のidが正しく変換される() {
+  async fn ピックアップ記事のidが正しく変換される() {
     // Arrange
     let expected_id1 = "00000000-0000-0000-0000-000000000001";
     let expected_id2 = "00000000-0000-0000-0000-000000000002";
     let expected_id3 = "00000000-0000-0000-0000-000000000003";
-    let popular_posts = vec![
+    let pick_up_posts = vec![
       create_test_blog_post(expected_id1, "テスト記事1"),
       create_test_blog_post(expected_id2, "テスト記事2"),
       create_test_blog_post(expected_id3, "テスト記事3"),
     ];
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_popular_posts(popular_posts));
-    let usecase = ViewPopularBlogPostsUseCase::new(mock_repository);
+    let mock_repository = Arc::new(MockBlogPostRepository::new_with_pick_up_posts(pick_up_posts));
+    let usecase = ViewPickUpPostsUseCase::new(mock_repository);
 
     // Act
     let result = usecase.execute().await;
@@ -179,13 +178,13 @@ mod tests {
   #[tokio::test]
   async fn リポジトリで不正な件数の場合はエラーとなる() {
     // Arrange: 意図的に2件しか設定しない（3件であるべき）
-    let popular_posts = vec![
+    let pick_up_posts = vec![
       create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
       create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
     ];
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_popular_posts(popular_posts));
-    let usecase = ViewPopularBlogPostsUseCase::new(mock_repository);
+    let mock_repository = Arc::new(MockBlogPostRepository::new_with_pick_up_posts(pick_up_posts));
+    let usecase = ViewPickUpPostsUseCase::new(mock_repository);
 
     // Act
     let result = usecase.execute().await;

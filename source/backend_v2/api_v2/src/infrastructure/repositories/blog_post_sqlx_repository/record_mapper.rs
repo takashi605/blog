@@ -4,6 +4,7 @@ use uuid::Uuid;
 use crate::{
   domain::blog_domain::{
     blog_post_entity::{content_entity::ContentEntity, rich_text_vo::RichTextPartVO, BlogPostEntity},
+    pick_up_post_set_entity::PickUpPostSetEntity,
     popular_post_set_entity::PopularPostSetEntity,
   },
   infrastructure::repositories::image_sqlx_repository::ImageRecord,
@@ -12,6 +13,7 @@ use crate::{
 use super::tables::{
   AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecord,
   ParagraphBlockRecordWithRelations, PostContentRecord, PostContentType, RichTextLinkRecord, RichTextRecord, RichTextRecordWithRelations, TextStyleRecord,
+  pickup_posts_table::PickUpPostRecord,
   popular_posts_table::PopularPostRecord,
 };
 
@@ -329,6 +331,17 @@ pub fn convert_popular_post_set_to_records(popular_post_set: &PopularPostSetEnti
   popular_post_set.get_all_posts()
     .iter()
     .map(|post| PopularPostRecord {
+      id: Uuid::new_v4(), // 新規UUID生成
+      post_id: post.get_id(),
+    })
+    .collect()
+}
+
+/// PickUpPostSetEntityをPickUpPostRecordのリストに変換する
+pub fn convert_pickup_post_set_to_records(pickup_post_set: &PickUpPostSetEntity) -> Vec<PickUpPostRecord> {
+  pickup_post_set.get_all_posts()
+    .iter()
+    .map(|post| PickUpPostRecord {
       id: Uuid::new_v4(), // 新規UUID生成
       post_id: post.get_id(),
     })

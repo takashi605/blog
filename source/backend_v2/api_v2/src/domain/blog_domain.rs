@@ -1,6 +1,8 @@
 pub mod blog_post_entity;
 pub mod blog_post_factory;
 pub mod blog_post_repository;
+pub mod pick_up_post_set_entity;
+pub mod pick_up_post_selector_service;
 pub mod popular_post_set_entity;
 pub mod popular_post_selector_service;
 

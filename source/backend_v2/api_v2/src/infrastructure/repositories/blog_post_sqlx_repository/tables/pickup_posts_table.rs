@@ -1,6 +1,6 @@
 use anyhow::Result;
 use common::types::api::BlogPost;
-use sqlx::{Executor, FromRow, Postgres};
+use sqlx::{Executor, FromRow, Postgres, Transaction};
 use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
@@ -15,13 +15,13 @@ pub async fn fetch_all_pickup_blog_posts(executor: impl Executor<'_, Database = 
 }
 
 // TODO トランザクションを貼る
-pub async fn update_pickup_blog_posts(executor: impl Executor<'_, Database = Postgres> + Copy, pickup_blog_posts: Vec<PickUpPostRecord>) -> Result<()> {
+pub async fn update_pickup_blog_posts(tx: &mut Transaction<'_, Postgres>, pickup_blog_posts: Vec<PickUpPostRecord>) -> Result<()> {
   // 一旦全削除
-  sqlx::query("delete from pickup_posts").execute(executor).await?;
+  sqlx::query("delete from pickup_posts").execute(&mut **tx).await?;
 
   // 挿入
   for post in pickup_blog_posts {
-    sqlx::query("insert into pickup_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(executor).await?;
+    sqlx::query("insert into pickup_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut **tx).await?;
   }
   println!("insert into pickup_posts");
 

@@ -41,6 +41,7 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+  use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
   use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use anyhow::Result;
   use async_trait::async_trait;
@@ -112,11 +113,11 @@ mod tests {
       todo!()
     }
 
-    async fn find_pick_up_posts(&self, _quantity: u32) -> Result<Vec<BlogPostEntity>> {
+    async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
       todo!()
     }
 
-    async fn update_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
+    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
       todo!()
     }
 

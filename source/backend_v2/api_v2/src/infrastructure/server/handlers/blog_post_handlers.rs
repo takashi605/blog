@@ -39,10 +39,9 @@ pub mod handle_funcs {
     infrastructure::{
       di_container::DiContainer,
       server::handlers::{
-        api_mapper::{view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
+        api_mapper::{blog_post_response_mapper, view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
         crud_helpers::{
-          fetch_blog_post::{fetch_pickup_posts, fetch_single_blog_post},
-          update_blog_post::{update_pickup_posts},
+          fetch_blog_post::{fetch_single_blog_post},
         },
         dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
         response::err::ApiCustomError,
@@ -153,10 +152,18 @@ pub mod handle_funcs {
       (status = 200, description = "Pickup blog posts", body = Vec<BlogPost>)
     )
   )]
-  pub async fn get_pickup_blog_posts() -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_pickup_blog_posts(di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_pickup_blog_posts");
 
-    let result = fetch_pickup_posts().await?;
+    // ViewPickUpPostsUseCaseを使用してピックアップ記事を取得
+    let usecase = di_container.view_pick_up_posts_usecase();
+    let dtos = usecase.execute().await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOからBlogPostレスポンスに変換
+    let result: Vec<BlogPost> = dtos
+      .into_iter()
+      .map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap())
+      .collect();
 
     Ok(HttpResponse::Ok().json(result))
   }
@@ -169,13 +176,26 @@ pub mod handle_funcs {
       (status = 200, description = "Pickup blog posts updated", body = Vec<BlogPost>)
     )
   )]
-  pub async fn put_pickup_blog_posts(pickup_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn put_pickup_blog_posts(di_container: web::Data<DiContainer>, pickup_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
     println!("put_pickup_blog_posts");
 
     let pickup_blog_posts: Vec<BlogPost> = pickup_posts_req.into_inner();
-    update_pickup_posts(pickup_blog_posts).await?;
+    
+    // BlogPostレスポンスから記事IDのリストを抽出
+    let post_ids: Vec<String> = pickup_blog_posts
+      .into_iter()
+      .map(|post| post.id.to_string())
+      .collect();
 
-    let result = fetch_pickup_posts().await?;
+    // SelectPickUpPostsUseCaseを使用してピックアップ記事を更新
+    let usecase = di_container.select_pick_up_posts_usecase();
+    let dtos = usecase.execute(post_ids).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOからBlogPostレスポンスに変換
+    let result: Vec<BlogPost> = dtos
+      .into_iter()
+      .map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap())
+      .collect();
 
     Ok(HttpResponse::Ok().json(result))
   }

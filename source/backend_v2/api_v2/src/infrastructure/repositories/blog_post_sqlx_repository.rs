@@ -13,7 +13,12 @@ use uuid::Uuid;
 
 use crate::{
   domain::{
-    blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository, popular_post_set_entity::PopularPostSetEntity},
+    blog_domain::{
+      blog_post_entity::BlogPostEntity,
+      blog_post_repository::BlogPostRepository,
+      pick_up_post_set_entity::PickUpPostSetEntity,
+      popular_post_set_entity::PopularPostSetEntity,
+    },
     image_domain::image_repository::ImageRepository,
   },
   infrastructure::repositories::{
@@ -195,13 +200,6 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("reselect_top_tech_pick_post メソッドは後で実装します")
   }
 
-  async fn find_pick_up_posts(&self, _quantity: u32) -> Result<Vec<BlogPostEntity>> {
-    todo!("find_pick_up_posts メソッドは後で実装します")
-  }
-
-  async fn update_pick_up_posts(&self, _pickup_posts: &[BlogPostEntity]) -> Result<Vec<BlogPostEntity>> {
-    todo!("reselect_pick_up_posts メソッドは後で実装します")
-  }
 
   async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
     use self::tables::popular_posts_table::fetch_all_popular_blog_posts;
@@ -251,6 +249,56 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     }
 
     convert_popular_records_to_entity(updated_records, blog_posts)
+  }
+
+  async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
+    use self::tables::pickup_posts_table::fetch_all_pickup_blog_posts;
+
+    // ピックアップ記事レコードを取得（3件固定）
+    let pickup_post_records = fetch_all_pickup_blog_posts(&self.pool).await.context("ピックアップ記事レコードの取得に失敗しました")?;
+
+    // 各記事IDからBlogPostEntityを取得
+    let mut blog_posts = Vec::new();
+    for record in pickup_post_records {
+      let blog_post = self.find(&record.post_id.to_string()).await.context(format!("ピックアップ記事ID {}の取得に失敗しました", record.post_id))?;
+      blog_posts.push(blog_post);
+    }
+
+    // Vec<BlogPostEntity>を[BlogPostEntity; 3]に変換してPickUpPostSetEntityを作成
+    let posts_array: [BlogPostEntity; 3] =
+      blog_posts.try_into().map_err(|v: Vec<BlogPostEntity>| anyhow::anyhow!("ピックアップ記事は3件である必要があります。実際の件数: {}", v.len()))?;
+
+    Ok(PickUpPostSetEntity::new(posts_array))
+  }
+
+  async fn update_pick_up_posts(&self, pickup_post_set: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
+    use self::tables::pickup_posts_table::update_pickup_blog_posts;
+    use crate::infrastructure::repositories::blog_post_sqlx_repository::domain_data_mapper::convert_pickup_records_to_entity;
+    use crate::infrastructure::repositories::blog_post_sqlx_repository::record_mapper::convert_pickup_post_set_to_records;
+
+    // PickUpPostSetEntityをPickUpPostRecordに変換
+    let pickup_post_records = convert_pickup_post_set_to_records(pickup_post_set);
+
+    // トランザクションを開始
+    let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
+
+    // データベースを更新
+    update_pickup_blog_posts(&mut tx, pickup_post_records).await.context("ピックアップ記事の更新に失敗しました")?;
+
+    // トランザクションをコミット
+    tx.commit().await.context("トランザクションのコミットに失敗しました")?;
+
+    // 更新後のデータを取得してPickUpPostSetEntityとして返す
+    let updated_records = self::tables::pickup_posts_table::fetch_all_pickup_blog_posts(&self.pool).await.context("更新後のピックアップ記事取得に失敗しました")?;
+
+    // 各記事を取得
+    let mut blog_posts = Vec::new();
+    for record in &updated_records {
+      let blog_post = self.find(&record.post_id.to_string()).await.context(format!("ピックアップ記事ID {}の取得に失敗しました", record.post_id))?;
+      blog_posts.push(blog_post);
+    }
+
+    convert_pickup_records_to_entity(updated_records, blog_posts)
   }
 }
 
@@ -550,5 +598,105 @@ mod tests {
     let expected_ids: std::collections::HashSet<Uuid> = updated_posts.iter().map(|post| post.get_id()).collect();
     let actual_ids: std::collections::HashSet<Uuid> = verification_posts_array.iter().map(|post| post.get_id()).collect();
     assert_eq!(actual_ids, expected_ids, "更新後の人気記事IDが期待されるものと一致しません");
+  }
+
+  #[tokio::test]
+  #[ignore = "データベース接続が必要なテスト"]
+  async fn test_find_pick_up_posts_取得機能() {
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
+    let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
+
+    // テスト用記事を3件作成して保存
+    let mut test_posts = Vec::new();
+    for i in 1..=3 {
+      // 各記事に異なるタイトルを設定して完全な記事を作成
+      let blog_post = create_test_blog_post_with_title(&format!("ピックアップ記事{}", i));
+      test_posts.push(blog_post);
+    }
+
+    // 各記事をデータベースに保存
+    for blog_post in &test_posts {
+      insert_test_images(&pool, blog_post).await.expect("テスト用画像の挿入に失敗しました");
+      repository.save(blog_post).await.expect("記事の保存に失敗しました");
+    }
+
+    // ピックアップ記事テーブルに挿入
+    let pickup_post_records: Vec<pickup_posts_table::PickUpPostRecord> = test_posts
+      .iter()
+      .map(|post| pickup_posts_table::PickUpPostRecord {
+        id: Uuid::new_v4(),
+        post_id: post.get_id(),
+      })
+      .collect();
+
+    use self::tables::pickup_posts_table::update_pickup_blog_posts;
+    let mut tx = pool.begin().await.expect("トランザクションの開始に失敗しました");
+    update_pickup_blog_posts(&mut tx, pickup_post_records).await.expect("ピックアップ記事の挿入に失敗しました");
+    tx.commit().await.expect("トランザクションのコミットに失敗しました");
+
+    // find_pick_up_postsをテスト
+    let result = repository.find_pick_up_posts().await;
+    assert!(
+      result.is_ok(),
+      "find_pick_up_posts操作が失敗しました: {:?}",
+      result.err()
+    );
+
+    let pick_up_posts = result.unwrap();
+    let posts = pick_up_posts.get_all_posts();
+    assert_eq!(posts.len(), 3, "ピックアップ記事は3件取得されるべきです");
+
+    // 取得した記事のIDが期待されるものと一致することを確認
+    let expected_ids: std::collections::HashSet<Uuid> = test_posts.iter().map(|post| post.get_id()).collect();
+    let actual_ids: std::collections::HashSet<Uuid> = posts.iter().map(|post| post.get_id()).collect();
+    assert_eq!(actual_ids, expected_ids, "取得したピックアップ記事のIDが期待されるものと一致しません");
+  }
+
+  #[tokio::test]
+  #[ignore = "データベース接続が必要なテスト"]
+  async fn test_update_pick_up_posts_更新機能() {
+    let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
+    let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
+    let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
+
+    // テスト用記事を3件作成して保存
+    let mut test_posts = Vec::new();
+    for i in 1..=3 {
+      // 各記事に異なるタイトルを設定して完全な記事を作成
+      let blog_post = create_test_blog_post_with_title(&format!("ピックアップ更新テスト記事{}", i));
+      test_posts.push(blog_post);
+    }
+
+    // 各記事をデータベースに保存
+    for blog_post in &test_posts {
+      insert_test_images(&pool, blog_post).await.expect("テスト用画像の挿入に失敗しました");
+      repository.save(blog_post).await.expect("記事の保存に失敗しました");
+    }
+
+    // PickUpPostSetEntityを作成
+    let posts_array: [BlogPostEntity; 3] = test_posts.try_into().expect("配列変換に失敗しました");
+    let pick_up_post_set = PickUpPostSetEntity::new(posts_array);
+
+    // update_pick_up_postsをテスト
+    let result = repository.update_pick_up_posts(&pick_up_post_set).await;
+    assert!(result.is_ok(), "update_pick_up_posts操作が失敗しました: {:?}", result.err());
+
+    let updated_pick_up_post_set = result.unwrap();
+    let updated_posts = updated_pick_up_post_set.get_all_posts();
+    assert_eq!(updated_posts.len(), 3, "更新後のピックアップ記事は3件であるべきです");
+
+    // 更新されたデータがデータベースに反映されていることを確認
+    let verification_result = repository.find_pick_up_posts().await;
+    assert!(verification_result.is_ok(), "更新後の検証取得が失敗しました");
+
+    let verification_posts = verification_result.unwrap();
+    let verification_posts_array = verification_posts.get_all_posts();
+    assert_eq!(verification_posts_array.len(), 3, "検証用取得でも3件であるべきです");
+
+    // 期待される記事IDと一致することを確認
+    let expected_ids: std::collections::HashSet<Uuid> = updated_posts.iter().map(|post| post.get_id()).collect();
+    let actual_ids: std::collections::HashSet<Uuid> = verification_posts_array.iter().map(|post| post.get_id()).collect();
+    assert_eq!(actual_ids, expected_ids, "更新後のピックアップ記事IDが期待されるものと一致しません");
   }
 }

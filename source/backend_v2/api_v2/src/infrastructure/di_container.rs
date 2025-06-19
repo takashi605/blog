@@ -2,7 +2,17 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::{
-  application::usecase::{create_blog_post::CreateBlogPostUseCase, register_image::RegisterImageUseCase, select_popular_posts::SelectPopularPostsUseCase, view_blog_post::ViewBlogPostUseCase, view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase, view_popular_blog_posts::ViewPopularBlogPostsUseCase},
+  application::usecase::{
+    create_blog_post::CreateBlogPostUseCase,
+    register_image::RegisterImageUseCase,
+    select_pick_up_posts::SelectPickUpPostsUseCase,
+    select_popular_posts::SelectPopularPostsUseCase,
+    view_blog_post::ViewBlogPostUseCase,
+    view_images::ViewImagesUseCase,
+    view_latest_blog_posts::ViewLatestBlogPostsUseCase,
+    view_pick_up_posts::ViewPickUpPostsUseCase,
+    view_popular_blog_posts::ViewPopularBlogPostsUseCase,
+  },
   domain::{blog_domain::blog_post_repository::BlogPostRepository, image_domain::image_repository::ImageRepository},
   infrastructure::repositories::{blog_post_sqlx_repository::BlogPostSqlxRepository, db_pool::create_db_pool, image_sqlx_repository::ImageSqlxRepository},
 };
@@ -68,5 +78,15 @@ impl DiContainer {
   /// SelectPopularPostsUseCaseを作成する
   pub fn select_popular_posts_usecase(&self) -> SelectPopularPostsUseCase {
     SelectPopularPostsUseCase::new(self.blog_post_repository.clone())
+  }
+
+  /// ViewPickUpPostsUseCaseを作成する
+  pub fn view_pick_up_posts_usecase(&self) -> ViewPickUpPostsUseCase {
+    ViewPickUpPostsUseCase::new(self.blog_post_repository.clone())
+  }
+
+  /// SelectPickUpPostsUseCaseを作成する
+  pub fn select_pick_up_posts_usecase(&self) -> SelectPickUpPostsUseCase {
+    SelectPickUpPostsUseCase::new(self.blog_post_repository.clone())
   }
 }

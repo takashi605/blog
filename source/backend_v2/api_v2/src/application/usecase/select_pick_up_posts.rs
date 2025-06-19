@@ -2,18 +2,17 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-use crate::domain::blog_domain::popular_post_selector_service::PopularPostSelectorService;
+use crate::domain::blog_domain::pick_up_post_selector_service::PickUpPostSelectorService;
 
-/// 人気記事選択ユースケース
+/// ピックアップ記事選択ユースケース
 ///
-/// 指定された記事IDを人気記事として選択し、更新する
-pub struct SelectPopularPostsUseCase {
+/// 指定された記事IDをピックアップ記事として選択し、更新する
+pub struct SelectPickUpPostsUseCase {
   repository: Arc<dyn BlogPostRepository>,
 }
 
-impl SelectPopularPostsUseCase {
+impl SelectPickUpPostsUseCase {
   /// 新しいユースケースインスタンスを作成する
   ///
   /// # Arguments
@@ -22,21 +21,21 @@ impl SelectPopularPostsUseCase {
     Self { repository }
   }
 
-  /// 人気記事を選択・更新する
+  /// ピックアップ記事を選択・更新する
   ///
   /// # Arguments
-  /// * `post_ids` - 人気記事に設定する記事IDのリスト（3件必須）
+  /// * `post_ids` - ピックアップ記事に設定する記事IDのリスト（3件必須）
   ///
   /// # Returns
-  /// * `Ok(Vec<BlogPostDTO>)` - 更新後の人気記事3件のDTOリスト
+  /// * `Ok(Vec<BlogPostDTO>)` - 更新後のピックアップ記事3件のDTOリスト
   /// * `Err` - 記事IDが3件でない場合、記事が見つからない場合、更新に失敗した場合
   pub async fn execute(&self, post_ids: Vec<String>) -> anyhow::Result<Vec<BlogPostDTO>> {
-    // PopularPostSelectorServiceを使用して人気記事の選択と更新を行う
-    let service = PopularPostSelectorService::new(self.repository.clone());
-    let updated_popular_post_set = service.select_popular_posts(post_ids).await?;
+    // PickUpPostSelectorServiceを使用してピックアップ記事の選択と更新を行う
+    let service = PickUpPostSelectorService::new(self.repository.clone());
+    let updated_pick_up_post_set = service.select_pick_up_posts(post_ids).await?;
 
-    // PopularPostSetEntity -> Vec<BlogPostDTO>に変換
-    let posts = updated_popular_post_set.into_all_posts();
+    // PickUpPostSetEntity -> Vec<BlogPostDTO>に変換
+    let posts = updated_pick_up_post_set.into_all_posts();
     let dtos = posts
       .into_iter()
       .map(|post| {
@@ -54,8 +53,8 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
+  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use anyhow::Result;
   use async_trait::async_trait;
   use std::sync::Arc;
@@ -118,27 +117,27 @@ mod tests {
       todo!()
     }
 
-    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
-      todo!()
+    async fn update_pick_up_posts(&self, pick_up_post_set: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
+      if self.should_update_succeed {
+        // 入力された PickUpPostSetEntity を元に新しいエンティティを作成して返す
+        let posts = pick_up_post_set.get_all_posts();
+        let new_posts = [
+          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
+          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
+          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
+        ];
+        Ok(PickUpPostSetEntity::new(new_posts))
+      } else {
+        Err(anyhow::anyhow!("更新に失敗しました"))
+      }
     }
 
     async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
       todo!()
     }
 
-    async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
-      if self.should_update_succeed {
-        // 入力された PopularPostSetEntity を元に新しいエンティティを作成して返す
-        let posts = popular_post_set.get_all_posts();
-        let new_posts = [
-          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
-          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
-          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
-        ];
-        Ok(PopularPostSetEntity::new(new_posts))
-      } else {
-        Err(anyhow::anyhow!("更新に失敗しました"))
-      }
+    async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
+      todo!()
     }
   }
 
@@ -148,7 +147,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 正常に3件の記事を人気記事として選択・更新できる() {
+  async fn 正常に3件の記事をピックアップ記事として選択・更新できる() {
     // Arrange
     let post1_id = "00000000-0000-0000-0000-000000000001";
     let post2_id = "00000000-0000-0000-0000-000000000002";
@@ -156,12 +155,12 @@ mod tests {
 
     let mock_repo = Arc::new(
       MockBlogPostRepository::new()
-        .with_find_result(post1_id.to_string(), "人気記事1".to_string())
-        .with_find_result(post2_id.to_string(), "人気記事2".to_string())
-        .with_find_result(post3_id.to_string(), "人気記事3".to_string()),
+        .with_find_result(post1_id.to_string(), "ピックアップ記事1".to_string())
+        .with_find_result(post2_id.to_string(), "ピックアップ記事2".to_string())
+        .with_find_result(post3_id.to_string(), "ピックアップ記事3".to_string()),
     );
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act
     let result = usecase.execute(vec![post1_id.to_string(), post2_id.to_string(), post3_id.to_string()]).await;
@@ -170,9 +169,9 @@ mod tests {
     assert!(result.is_ok());
     let dtos = result.unwrap();
     assert_eq!(dtos.len(), 3);
-    assert_eq!(dtos[0].title, "人気記事1");
-    assert_eq!(dtos[1].title, "人気記事2");
-    assert_eq!(dtos[2].title, "人気記事3");
+    assert_eq!(dtos[0].title, "ピックアップ記事1");
+    assert_eq!(dtos[1].title, "ピックアップ記事2");
+    assert_eq!(dtos[2].title, "ピックアップ記事3");
     assert_eq!(dtos[0].id, post1_id);
     assert_eq!(dtos[1].id, post2_id);
     assert_eq!(dtos[2].id, post3_id);
@@ -182,7 +181,7 @@ mod tests {
   async fn 記事idが3件でない場合はエラーになる() {
     // Arrange
     let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act: 2件の場合
     let result = usecase
@@ -194,14 +193,14 @@ mod tests {
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
   }
 
   #[tokio::test]
   async fn 記事idが4件の場合はエラーになる() {
     // Arrange
     let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act: 4件の場合
     let result = usecase
@@ -215,7 +214,7 @@ mod tests {
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
   }
 
   #[tokio::test]
@@ -228,7 +227,7 @@ mod tests {
       // 3番目の記事は設定しない（存在しない）
     );
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act
     let result = usecase
@@ -248,14 +247,14 @@ mod tests {
   async fn 空の配列を指定した場合はエラーになる() {
     // Arrange
     let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act
     let result = usecase.execute(vec![]).await;
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
   }
 
   #[tokio::test]
@@ -269,7 +268,7 @@ mod tests {
         .with_update_failure(), // 更新失敗を設定
     );
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPickUpPostsUseCase::new(mock_repo);
 
     // Act
     let result = usecase

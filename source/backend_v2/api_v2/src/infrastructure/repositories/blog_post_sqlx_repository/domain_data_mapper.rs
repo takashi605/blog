@@ -13,6 +13,7 @@ use crate::{domain::{
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
       BlogPostEntity,
     },
+    pick_up_post_set_entity::PickUpPostSetEntity,
     popular_post_set_entity::PopularPostSetEntity,
   },
   image_domain::ImageEntity,
@@ -21,6 +22,7 @@ use crate::{domain::{
 use super::tables::{
   AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations,
   PostContentRecord, PostContentType, RichTextRecordWithRelations,
+  pickup_posts_table::PickUpPostRecord,
   popular_posts_table::PopularPostRecord,
 };
 
@@ -223,4 +225,20 @@ pub fn convert_popular_records_to_entity(records: Vec<PopularPostRecord>, blog_p
     .map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
 
   Ok(PopularPostSetEntity::new(posts_array))
+}
+
+/// PickUpPostRecordとBlogPostEntityのリストからPickUpPostSetEntityを作成する
+pub fn convert_pickup_records_to_entity(records: Vec<PickUpPostRecord>, blog_posts: Vec<BlogPostEntity>) -> Result<PickUpPostSetEntity> {
+  if records.len() != 3 {
+    return Err(anyhow::anyhow!("ピックアップ記事は必ず3件である必要があります。取得件数: {}", records.len()));
+  }
+
+  if blog_posts.len() != 3 {
+    return Err(anyhow::anyhow!("ブログ記事は必ず3件である必要があります。取得件数: {}", blog_posts.len()));
+  }
+
+  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into()
+    .map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
+
+  Ok(PickUpPostSetEntity::new(posts_array))
 }
