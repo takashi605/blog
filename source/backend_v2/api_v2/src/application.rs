@@ -8,6 +8,7 @@ pub mod usecase {
   pub mod register_image;
   pub mod view_images;
   pub mod view_popular_blog_posts;
+  pub mod select_popular_posts;
 }
 pub mod dto;
 pub mod dto_mapper;
