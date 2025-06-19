@@ -39,7 +39,7 @@ pub mod handle_funcs {
     infrastructure::{
       di_container::DiContainer,
       server::handlers::{
-        api_mapper::{view_blog_post_dto_to_response, view_latest_blog_posts_dto_to_response},
+        api_mapper::{view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
         crud_helpers::{
           fetch_blog_post::{fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
           update_blog_post::{update_pickup_posts, update_popular_posts},
@@ -187,10 +187,17 @@ pub mod handle_funcs {
       (status = 200, description = "Popular blog posts", body = Vec<BlogPost>)
     )
   )]
-  pub async fn get_popular_blog_posts() -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_popular_blog_posts(di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_popular_blog_posts");
-    let result = fetch_popular_posts().await?;
-    Ok(HttpResponse::Ok().json(result))
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_popular_blog_posts_usecase();
+    let dtos = usecase.execute().await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_posts))
   }
 
   #[utoipa::path(

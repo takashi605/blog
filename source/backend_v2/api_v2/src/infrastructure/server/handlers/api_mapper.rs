@@ -2,6 +2,6 @@ pub mod blog_post_response_mapper;
 pub mod image_response_mapper;
 pub mod latest_blog_posts_response_mapper;
 
-pub use blog_post_response_mapper::view_blog_post_dto_to_response;
+pub use blog_post_response_mapper::{view_blog_post_dto_to_response, view_blog_post_dtos_to_response};
 pub use image_response_mapper::{image_dto_to_response, image_dto_list_to_response};
 pub use latest_blog_posts_response_mapper::view_latest_blog_posts_dto_to_response;

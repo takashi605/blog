@@ -21,6 +21,18 @@ pub fn view_blog_post_dto_to_response(dto: BlogPostDTO) -> Result<BlogPost> {
   })
 }
 
+/// Vec<BlogPostDTO>をAPIレスポンス用のVec<BlogPost>に変換
+pub fn view_blog_post_dtos_to_response(dtos: Vec<BlogPostDTO>) -> Result<Vec<BlogPost>> {
+  let mut blog_posts = Vec::new();
+
+  for dto in dtos {
+    let blog_post = view_blog_post_dto_to_response(dto)?;
+    blog_posts.push(blog_post);
+  }
+
+  Ok(blog_posts)
+}
+
 /// ViewBlogPostImageDTOをAPI型のImageに変換
 fn convert_image_dto_to_api(dto: ImageDTO) -> Image {
   Image { id: dto.id, path: dto.path }
