@@ -41,8 +41,8 @@ pub mod handle_funcs {
       server::handlers::{
         api_mapper::{view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
         crud_helpers::{
-          fetch_blog_post::{fetch_pickup_posts, fetch_popular_posts, fetch_single_blog_post},
-          update_blog_post::{update_pickup_posts, update_popular_posts},
+          fetch_blog_post::{fetch_pickup_posts, fetch_single_blog_post},
+          update_blog_post::{update_pickup_posts},
         },
         dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
         response::err::ApiCustomError,
@@ -208,15 +208,24 @@ pub mod handle_funcs {
       (status = 200, description = "Popular blog posts updated", body = Vec<BlogPost>)
     )
   )]
-  pub async fn put_popular_blog_posts(popular_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn put_popular_blog_posts(popular_posts_req: web::Json<Vec<BlogPost>>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("put_popular_blog_posts");
 
+    // リクエストボディから記事IDリストを抽出
     let popular_blog_posts: Vec<BlogPost> = popular_posts_req.into_inner();
-    update_popular_posts(popular_blog_posts).await?;
+    let post_ids: Vec<String> = popular_blog_posts
+      .into_iter()
+      .map(|post| post.id.to_string())
+      .collect();
 
-    let result = fetch_popular_posts().await?;
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.select_popular_posts_usecase();
+    let dtos = usecase.execute(post_ids).await.map_err(|e| ApiCustomError::Other(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    // DTOをAPIレスポンスに変換
+    let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_posts))
   }
 
   #[utoipa::path(
