@@ -28,6 +28,14 @@ impl PopularPostSetEntity {
         &self.posts
     }
 
+    /// 全ての人気記事を移動して取得する
+    /// 
+    /// # Returns
+    /// * `[BlogPostEntity; 3]` - 人気記事の配列（3件固定）
+    pub fn into_all_posts(self) -> [BlogPostEntity; 3] {
+        self.posts
+    }
+
     /// 人気記事を置き換える
     /// 
     /// # Arguments

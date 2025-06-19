@@ -36,13 +36,12 @@ impl SelectPopularPostsUseCase {
     let updated_popular_post_set = service.select_popular_posts(post_ids).await?;
 
     // PopularPostSetEntity -> Vec<BlogPostDTO>に変換
-    let posts = updated_popular_post_set.get_all_posts();
+    let posts = updated_popular_post_set.into_all_posts();
     let dtos = posts
-      .iter()
+      .into_iter()
       .map(|post| {
-        // Cloneを避けて新しいBlogPostEntityを作成
-        let new_post = BlogPostEntity::new(post.get_id(), post.get_title_text().to_string());
-        dto_mapper::convert_to_blog_post_dto(new_post)
+        // 元のBlogPostEntityをそのまま使用（move semantics）
+        dto_mapper::convert_to_blog_post_dto(post)
       })
       .collect();
 
