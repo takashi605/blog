@@ -7,6 +7,7 @@ pub mod usecase {
   pub mod create_blog_post;
   pub mod register_image;
   pub mod view_images;
+  pub mod view_popular_blog_posts;
 }
 pub mod dto;
 pub mod dto_mapper;
