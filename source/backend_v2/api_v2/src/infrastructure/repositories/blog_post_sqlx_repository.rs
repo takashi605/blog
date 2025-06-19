@@ -203,7 +203,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     todo!("reselect_pick_up_posts メソッドは後で実装します")
   }
 
-  async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>> {
+  async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
     use self::tables::popular_posts_table::fetch_all_popular_blog_posts;
 
     // 人気記事レコードを取得（3件固定）
@@ -216,7 +216,11 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
       blog_posts.push(blog_post);
     }
 
-    Ok(blog_posts)
+    // Vec<BlogPostEntity>を[BlogPostEntity; 3]に変換してPopularPostSetEntityを作成
+    let posts_array: [BlogPostEntity; 3] =
+      blog_posts.try_into().map_err(|v: Vec<BlogPostEntity>| anyhow::anyhow!("人気記事は3件である必要があります。実際の件数: {}", v.len()))?;
+
+    Ok(PopularPostSetEntity::new(posts_array))
   }
 
   async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
@@ -492,11 +496,12 @@ mod tests {
     );
 
     let popular_posts = result.unwrap();
-    assert_eq!(popular_posts.len(), 3, "人気記事は3件取得されるべきです");
+    let posts = popular_posts.get_all_posts();
+    assert_eq!(posts.len(), 3, "人気記事は3件取得されるべきです");
 
     // 取得した記事のIDが期待されるものと一致することを確認
     let expected_ids: std::collections::HashSet<Uuid> = test_posts.iter().map(|post| post.get_id()).collect();
-    let actual_ids: std::collections::HashSet<Uuid> = popular_posts.iter().map(|post| post.get_id()).collect();
+    let actual_ids: std::collections::HashSet<Uuid> = posts.iter().map(|post| post.get_id()).collect();
     assert_eq!(actual_ids, expected_ids, "取得した人気記事のIDが期待されるものと一致しません");
   }
 
@@ -538,11 +543,12 @@ mod tests {
     assert!(verification_result.is_ok(), "更新後の検証取得が失敗しました");
 
     let verification_posts = verification_result.unwrap();
-    assert_eq!(verification_posts.len(), 3, "検証用取得でも3件であるべきです");
+    let verification_posts_array = verification_posts.get_all_posts();
+    assert_eq!(verification_posts_array.len(), 3, "検証用取得でも3件であるべきです");
 
     // 期待される記事IDと一致することを確認
     let expected_ids: std::collections::HashSet<Uuid> = updated_posts.iter().map(|post| post.get_id()).collect();
-    let actual_ids: std::collections::HashSet<Uuid> = verification_posts.iter().map(|post| post.get_id()).collect();
+    let actual_ids: std::collections::HashSet<Uuid> = verification_posts_array.iter().map(|post| post.get_id()).collect();
     assert_eq!(actual_ids, expected_ids, "更新後の人気記事IDが期待されるものと一致しません");
   }
 }

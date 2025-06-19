@@ -76,9 +76,9 @@ pub trait BlogPostRepository: Send + Sync {
   /// 人気記事を複数取得する（3件固定）
   ///
   /// # Returns
-  /// * `Ok(Vec<BlogPostEntity>)` - 人気記事のリスト（3件固定）
+  /// * `Ok(PopularPostSetEntity)` - 人気記事群エンティティ（3件固定）
   /// * `Err` - データベースエラーの場合
-  async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>>;
+  async fn find_popular_posts(&self) -> Result<PopularPostSetEntity>;
 
   /// 人気記事を更新する
   ///

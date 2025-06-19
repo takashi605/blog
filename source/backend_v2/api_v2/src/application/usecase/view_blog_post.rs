@@ -29,6 +29,7 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use anyhow::Result;
   use async_trait::async_trait;
   use std::sync::Arc;
@@ -80,7 +81,7 @@ mod tests {
       todo!()
     }
 
-    async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>> {
+    async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
       todo!()
     }
 

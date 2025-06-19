@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
+use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 
 /// 人気記事閲覧ユースケース
@@ -26,13 +27,18 @@ impl ViewPopularBlogPostsUseCase {
   /// * `Ok(Vec<BlogPostDTO>)` - 人気記事3件のDTOリスト
   /// * `Err` - データベースエラーの場合
   pub async fn execute(&self) -> anyhow::Result<Vec<BlogPostDTO>> {
-    // リポジトリから人気記事3件を取得
-    let popular_posts = self.repository.find_popular_posts().await?;
+    // リポジトリから人気記事群を取得
+    let popular_post_set = self.repository.find_popular_posts().await?;
 
-    // BlogPostEntity -> BlogPostDTOに変換
-    let dtos = popular_posts
-      .into_iter()
-      .map(dto_mapper::convert_to_blog_post_dto)
+    // PopularPostSetEntityから記事を取得してBlogPostDTOに変換
+    let posts = popular_post_set.get_all_posts();
+    let dtos = posts
+      .iter()
+      .map(|post| {
+        // Cloneを避けて新しいBlogPostEntityを作成
+        let new_post = BlogPostEntity::new(post.get_id(), post.get_title_text().to_string());
+        dto_mapper::convert_to_blog_post_dto(new_post)
+      })
       .collect();
 
     Ok(dtos)
@@ -57,9 +63,7 @@ mod tests {
 
   impl MockBlogPostRepository {
     fn new_with_popular_posts(posts: Vec<BlogPostEntity>) -> Self {
-      Self {
-        popular_posts: posts,
-      }
+      Self { popular_posts: posts }
     }
   }
 
@@ -93,14 +97,19 @@ mod tests {
       todo!()
     }
 
-    async fn find_popular_posts(&self) -> Result<Vec<BlogPostEntity>> {
-      // Cloneする代わりに、新しいエンティティを作成して返す
-      let posts = self
-        .popular_posts
-        .iter()
-        .map(|post| BlogPostEntity::new(post.get_id(), post.get_title_text().to_string()))
-        .collect();
-      Ok(posts)
+    async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
+      // PopularPostSetEntityは3件必須なので、件数チェック
+      if self.popular_posts.len() != 3 {
+        return Err(anyhow::anyhow!("人気記事は3件である必要があります。実際の件数: {}", self.popular_posts.len()));
+      }
+
+      // PopularPostSetEntityを作成して返す
+      let posts_array: [BlogPostEntity; 3] = [
+        BlogPostEntity::new(self.popular_posts[0].get_id(), self.popular_posts[0].get_title_text().to_string()),
+        BlogPostEntity::new(self.popular_posts[1].get_id(), self.popular_posts[1].get_title_text().to_string()),
+        BlogPostEntity::new(self.popular_posts[2].get_id(), self.popular_posts[2].get_title_text().to_string()),
+      ];
+      Ok(PopularPostSetEntity::new(posts_array))
     }
 
     async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
@@ -140,9 +149,13 @@ mod tests {
   #[tokio::test]
   async fn 人気記事のidが正しく変換される() {
     // Arrange
-    let expected_id = "00000000-0000-0000-0000-000000000001";
+    let expected_id1 = "00000000-0000-0000-0000-000000000001";
+    let expected_id2 = "00000000-0000-0000-0000-000000000002";
+    let expected_id3 = "00000000-0000-0000-0000-000000000003";
     let popular_posts = vec![
-      create_test_blog_post(expected_id, "テスト記事"),
+      create_test_blog_post(expected_id1, "テスト記事1"),
+      create_test_blog_post(expected_id2, "テスト記事2"),
+      create_test_blog_post(expected_id3, "テスト記事3"),
     ];
 
     let mock_repository = Arc::new(MockBlogPostRepository::new_with_popular_posts(popular_posts));
@@ -154,15 +167,22 @@ mod tests {
     // Assert
     assert!(result.is_ok());
     let dtos = result.unwrap();
-    assert_eq!(dtos.len(), 1);
-    assert_eq!(dtos[0].id, expected_id);
-    assert_eq!(dtos[0].title, "テスト記事");
+    assert_eq!(dtos.len(), 3);
+    assert_eq!(dtos[0].id, expected_id1);
+    assert_eq!(dtos[0].title, "テスト記事1");
+    assert_eq!(dtos[1].id, expected_id2);
+    assert_eq!(dtos[1].title, "テスト記事2");
+    assert_eq!(dtos[2].id, expected_id3);
+    assert_eq!(dtos[2].title, "テスト記事3");
   }
 
   #[tokio::test]
-  async fn 人気記事が空の場合は空のリストを返す() {
-    // Arrange
-    let popular_posts = vec![];
+  async fn リポジトリで不正な件数の場合はエラーとなる() {
+    // Arrange: 意図的に2件しか設定しない（3件であるべき）
+    let popular_posts = vec![
+      create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
+    ];
 
     let mock_repository = Arc::new(MockBlogPostRepository::new_with_popular_posts(popular_posts));
     let usecase = ViewPopularBlogPostsUseCase::new(mock_repository);
@@ -170,9 +190,7 @@ mod tests {
     // Act
     let result = usecase.execute().await;
 
-    // Assert
-    assert!(result.is_ok());
-    let dtos = result.unwrap();
-    assert_eq!(dtos.len(), 0);
+    // Assert: エラーになることを確認
+    assert!(result.is_err());
   }
 }
