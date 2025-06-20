@@ -1,5 +1,4 @@
 use uuid::Uuid;
-use super::content_type::ContentType;
 use super::rich_text_vo::RichTextVO;
 
 #[derive(Debug)]
@@ -19,9 +18,5 @@ impl ParagraphEntity {
 
     pub fn get_value(&self) -> &RichTextVO {
         &self.text
-    }
-
-    pub fn get_type(&self) -> ContentType {
-        ContentType::Paragraph
     }
 }

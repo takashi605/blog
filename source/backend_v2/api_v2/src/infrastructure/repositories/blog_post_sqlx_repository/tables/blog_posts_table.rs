@@ -2,20 +2,6 @@ use anyhow::Result;
 use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
-use crate::infrastructure::repositories::image_sqlx_repository::ImageRecord;
-
-use super::{post_contents_table::AnyContentBlockRecord};
-
-/*
- * 各レコードの関連をまとめた構造体
- */
-#[derive(Debug)]
-pub struct BlogPostRecordWithRelations {
-  pub blog_post_record: BlogPostRecord,
-  pub thumbnail_record: ImageRecord,
-  pub content_block_records: Vec<AnyContentBlockRecord>,
-}
-
 /*
  * DB内の各テーブル構造に紐づく構造体正義
  */
@@ -54,19 +40,6 @@ pub async fn fetch_latest_blog_posts_records_with_limit(executor: impl Executor<
 
   let posts = query.build_query_as::<BlogPostRecord>().fetch_all(executor).await?;
   Ok(posts)
-}
-
-pub async fn insert_blog_post(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
-  sqlx::query("insert into blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) values ($1, $2, $3, $4, $5, $6)")
-    .bind(post.id)
-    .bind(post.title)
-    .bind(post.thumbnail_image_id)
-    .bind(post.post_date)
-    .bind(post.last_update_date)
-    .bind(chrono::Utc::now())
-    .execute(executor)
-    .await?;
-  Ok(())
 }
 
 pub async fn insert_blog_post_with_published_at(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord, published_at: chrono::NaiveDateTime) -> Result<()> {

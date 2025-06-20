@@ -50,7 +50,6 @@ mod tests {
       image_entity::ImageEntity,
       image_repository::{ImageRepository, ImageRepositoryError},
     },
-    application::dto::ImageDTO,
   };
   use mockall::mock;
   use uuid::Uuid;

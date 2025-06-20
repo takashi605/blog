@@ -1,6 +1,4 @@
 use uuid::Uuid;
-use super::content_type::ContentType;
-
 #[derive(Debug)]
 pub struct H2Entity {
     id: Uuid,
@@ -18,9 +16,5 @@ impl H2Entity {
 
     pub fn get_value(&self) -> &str {
         &self.text
-    }
-
-    pub fn get_type(&self) -> ContentType {
-        ContentType::H2
     }
 }

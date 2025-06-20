@@ -1,5 +1,3 @@
-mod db;
-
 //  3層アーキテクチャモジュール
 mod domain;
 mod application;

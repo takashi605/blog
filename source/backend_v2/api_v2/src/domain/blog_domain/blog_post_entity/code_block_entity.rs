@@ -1,5 +1,4 @@
 use uuid::Uuid;
-use super::content_type::ContentType;
 
 #[derive(Debug)]
 pub struct CodeBlockEntity {
@@ -28,9 +27,5 @@ impl CodeBlockEntity {
 
     pub fn get_language(&self) -> &str {
         &self.language
-    }
-
-    pub fn get_type(&self) -> ContentType {
-        ContentType::CodeBlock
     }
 }

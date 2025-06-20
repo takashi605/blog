@@ -1,5 +1,4 @@
 use uuid::Uuid;
-use super::content_type::ContentType;
 use crate::domain::image_domain::image_entity::ImageEntity;
 
 #[derive(Debug)]
@@ -23,9 +22,5 @@ impl ImageContentEntity {
 
     pub fn get_path(&self) -> &str {
         self.image.get_path()
-    }
-
-    pub fn get_type(&self) -> ContentType {
-        ContentType::Image
     }
 }

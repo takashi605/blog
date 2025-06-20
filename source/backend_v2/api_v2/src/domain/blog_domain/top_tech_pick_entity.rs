@@ -35,14 +35,6 @@ impl TopTechPickEntity {
     pub fn into_post(self) -> BlogPostEntity {
         self.post
     }
-
-    /// トップテック記事を置き換える
-    /// 
-    /// # Arguments
-    /// * `new_post` - 新しいトップテック記事
-    pub fn replace_post(&mut self, new_post: BlogPostEntity) {
-        self.post = new_post;
-    }
 }
 
 #[cfg(test)]
@@ -76,18 +68,6 @@ mod tests {
     }
 
     #[test]
-    fn can_replace_top_tech_pick_post() {
-        let initial_post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "古い記事");
-        let mut top_tech_pick = TopTechPickEntity::new(initial_post);
-
-        let new_post = create_test_blog_post("00000000-0000-0000-0000-000000000002", "新しい記事");
-        top_tech_pick.replace_post(new_post);
-
-        let updated_post = top_tech_pick.get_post();
-        assert_eq!(updated_post.get_title_text(), "新しい記事");
-    }
-
-    #[test]
     fn top_tech_pick_post_id_is_correctly_maintained() {
         let post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事");
 
@@ -97,21 +77,6 @@ mod tests {
         assert_eq!(
             retrieved_post.get_id(),
             Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap()
-        );
-    }
-
-    #[test]
-    fn id_is_correctly_updated_after_replacement() {
-        let initial_post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1");
-        let mut top_tech_pick = TopTechPickEntity::new(initial_post);
-
-        let new_post = create_test_blog_post("00000000-0000-0000-0000-000000000010", "新記事");
-        top_tech_pick.replace_post(new_post);
-        let updated_post = top_tech_pick.get_post();
-
-        assert_eq!(
-            updated_post.get_id(),
-            Uuid::parse_str("00000000-0000-0000-0000-000000000010").unwrap()
         );
     }
 

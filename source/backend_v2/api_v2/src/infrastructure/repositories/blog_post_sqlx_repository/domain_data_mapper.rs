@@ -1,15 +1,10 @@
 use anyhow::{Context, Result};
-use uuid::Uuid;
 
 use crate::{domain::{
   blog_domain::{
     blog_post_entity::{
-      code_block_entity::CodeBlockEntity,
       content_entity::ContentEntity,
-      h2_entity::H2Entity,
-      h3_entity::H3Entity,
       image_content_entity::ImageContentEntity,
-      paragraph_entity::ParagraphEntity,
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
       BlogPostEntity,
     },
@@ -21,7 +16,7 @@ use crate::{domain::{
 
 use super::tables::{
   AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations,
-  PostContentRecord, PostContentType, RichTextRecordWithRelations,
+  PostContentRecord, RichTextRecordWithRelations,
   pickup_posts_table::PickUpPostRecord,
   popular_posts_table::PopularPostRecord,
 };
@@ -142,8 +137,9 @@ fn convert_styles_to_vo(style_records: &[super::tables::TextStyleRecord]) -> Ric
 
 #[cfg(test)]
 mod tests {
-  use super::*;
-  use chrono::NaiveDate;
+  use uuid::Uuid;
+
+use super::*;
 
   #[test]
   fn test_convert_styles_to_vo() {

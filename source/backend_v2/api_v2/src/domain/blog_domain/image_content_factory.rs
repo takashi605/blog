@@ -1,6 +1,5 @@
 use std::sync::Arc;
 use uuid::Uuid;
-use async_trait::async_trait;
 
 use crate::domain::image_domain::{image_repository::ImageRepository, image_repository::ImageRepositoryError};
 use super::blog_post_entity::image_content_entity::ImageContentEntity;
@@ -46,6 +45,7 @@ mod tests {
     use super::*;
     use crate::domain::image_domain::image_entity::ImageEntity;
     use std::collections::HashMap;
+    use async_trait::async_trait;
     use uuid::Uuid;
 
     // テスト用のモックリポジトリ

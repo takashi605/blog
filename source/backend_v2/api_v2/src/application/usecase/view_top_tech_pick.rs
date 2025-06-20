@@ -2,11 +2,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 
-use crate::{
-  application::dto::BlogPostDTO,
-  application::dto_mapper,
-  domain::blog_domain::{blog_post_repository::BlogPostRepository, top_tech_pick_entity::TopTechPickEntity},
-};
+use crate::{application::dto::BlogPostDTO, application::dto_mapper, domain::blog_domain::blog_post_repository::BlogPostRepository};
 
 /// トップテック記事閲覧ユースケース
 ///
@@ -47,6 +43,7 @@ mod tests {
     blog_post_entity::BlogPostEntity,
     blog_post_factory::{BlogPostFactory, CreateBlogPostInput, CreateImageInput},
     image_content_factory::ImageContentFactory,
+    top_tech_pick_entity::TopTechPickEntity,
   };
   use crate::domain::image_domain::{image_entity::ImageEntity, image_repository::ImageRepository, image_repository::ImageRepositoryError};
   use async_trait::async_trait;
