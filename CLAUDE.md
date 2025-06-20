@@ -373,12 +373,12 @@ PNPM ワークスペース構成のパッケージ:
    - [x] api_v2_testの該当テスト通過確認
 
 8. **トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）**
-   - [ ] TopTechPickSelectorビジネスロジックの実装
+   - [x] TopTechPickSelectorビジネスロジックの実装
    - [x] リポジトリインターフェースにトップテック記事関連メソッド追加
-   - [ ] SQLxリポジトリ実装
-   - [ ] ViewTopTechPickとSelectTopTechPickPostユースケース実装
-   - [ ] 関連エンドポイントの新アーキテクチャ移行
-   - [ ] api_v2_testの該当テスト通過確認
+   - [x] SQLxリポジトリ実装
+   - [x] ViewTopTechPickとSelectTopTechPickPostユースケース実装
+   - [x] 関連エンドポイントの新アーキテクチャ移行
+   - [x] api_v2_testの該当テスト通過確認
 
 9. **共通基盤の整備**
    - [ ] DIコンテナ（依存性注入）の実装

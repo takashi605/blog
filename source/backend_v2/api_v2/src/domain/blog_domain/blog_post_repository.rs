@@ -1,7 +1,8 @@
 use crate::domain::blog_domain::{
-    blog_post_entity::BlogPostEntity,
-    pick_up_post_set_entity::PickUpPostSetEntity,
-    popular_post_set_entity::PopularPostSetEntity,
+  blog_post_entity::BlogPostEntity, 
+  pick_up_post_set_entity::PickUpPostSetEntity, 
+  popular_post_set_entity::PopularPostSetEntity,
+  top_tech_pick_entity::TopTechPickEntity,
 };
 use anyhow::Result;
 
@@ -43,19 +44,19 @@ pub trait BlogPostRepository: Send + Sync {
   /// トップテックピック記事を取得する
   ///
   /// # Returns
-  /// * `Ok(BlogPostEntity)` - 現在のトップテックピック記事
+  /// * `Ok(TopTechPickEntity)` - 現在のトップテックピック記事
   /// * `Err` - 記事が見つからないか、データベースエラーの場合
-  async fn find_top_tech_pick(&self) -> Result<BlogPostEntity>;
+  async fn find_top_tech_pick(&self) -> Result<TopTechPickEntity>;
 
   /// トップテックピック記事を更新する
   ///
   /// # Arguments
-  /// * `blog_post` - 新しいトップテックピック記事
+  /// * `top_tech_pick` - 新しいトップテックピック記事
   ///
   /// # Returns
-  /// * `Ok(BlogPostEntity)` - 更新に成功した場合、更新された記事を返す
+  /// * `Ok(TopTechPickEntity)` - 更新に成功した場合、更新された記事を返す
   /// * `Err` - 更新に失敗した場合
-  async fn update_top_tech_pick_post(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
+  async fn update_top_tech_pick_post(&self, top_tech_pick: &TopTechPickEntity) -> Result<TopTechPickEntity>;
 
   /// ピックアップ記事を取得する
   ///

@@ -11,6 +11,8 @@ pub mod usecase {
   pub mod select_popular_posts;
   pub mod view_pick_up_posts;
   pub mod select_pick_up_posts;
+  pub mod view_top_tech_pick;
+  pub mod select_top_tech_pick_post;
 }
 pub mod dto;
 pub mod dto_mapper;

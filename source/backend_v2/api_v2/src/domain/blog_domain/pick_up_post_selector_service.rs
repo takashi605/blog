@@ -105,11 +105,11 @@ mod tests {
       unimplemented!()
     }
 
-    async fn find_top_tech_pick(&self) -> Result<BlogPostEntity> {
+    async fn find_top_tech_pick(&self) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
       unimplemented!()
     }
 
-    async fn update_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+    async fn update_top_tech_pick_post(&self, _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
       unimplemented!()
     }
 

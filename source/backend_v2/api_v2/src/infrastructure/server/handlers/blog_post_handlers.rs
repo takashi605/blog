@@ -31,21 +31,12 @@ pub fn admin_blog_posts_scope() -> Scope {
 }
 
 pub mod handle_funcs {
-  use crate::{
-    db::{
-      pool::POOL,
-      tables::top_tech_pick_table::{fetch_top_tech_pick_blog_post, update_top_tech_pick_post},
-    },
-    infrastructure::{
-      di_container::DiContainer,
-      server::handlers::{
-        api_mapper::{blog_post_response_mapper, view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
-        crud_helpers::{
-          fetch_blog_post::{fetch_single_blog_post},
-        },
-        dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
-        response::err::ApiCustomError,
-      },
+  use crate::infrastructure::{
+    di_container::DiContainer,
+    server::handlers::{
+      api_mapper::{blog_post_response_mapper, view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
+      dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
+      response::err::ApiCustomError,
     },
   };
   use actix_web::{web, HttpResponse, Responder};
@@ -113,13 +104,16 @@ pub mod handle_funcs {
       (status = 200, description = "Top tech pick blog post", body = BlogPost)
     )
   )]
-  pub async fn get_top_tech_pick_blog_post() -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_top_tech_pick_blog_post(di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     println!("get_top_tech_pick_blog_post");
-    let top_tech_pick_blog_post =
-      fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
 
-    // top_tech_pick_blog_post.post_id を元に実際のブログ記事を fetch する
-    let blog_post = fetch_single_blog_post(top_tech_pick_blog_post.post_id).await?;
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_top_tech_pick_usecase();
+    let dto = usecase.execute().await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;
+
     Ok(HttpResponse::Ok().json(blog_post))
   }
 
@@ -131,18 +125,22 @@ pub mod handle_funcs {
       (status = 200, description = "Top tech pick blog post updated", body = BlogPost)
     )
   )]
-  pub async fn put_top_tech_pick_blog_post(top_tech_pick_posts_req: web::Json<BlogPost>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn put_top_tech_pick_blog_post(
+    di_container: web::Data<DiContainer>,
+    top_tech_pick_posts_req: web::Json<BlogPost>,
+  ) -> Result<impl Responder, ApiCustomError> {
     println!("put_top_tech_pick_blog_post");
 
     let requested_post: BlogPost = top_tech_pick_posts_req.into_inner();
-    update_top_tech_pick_post(&*POOL, requested_post.id).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の更新に失敗しました。")))?;
 
-    let updated_post =
-      fetch_top_tech_pick_blog_post(&*POOL).await.map_err(|_| ApiCustomError::Other(anyhow::anyhow!("ピックアップ記事の取得に失敗しました。")))?;
-    let updated_post_id = updated_post.post_id;
-    let result = fetch_single_blog_post(updated_post_id).await?;
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.select_top_tech_pick_post_usecase();
+    let dto = usecase.execute(requested_post.id.to_string()).await.map_err(|e| ApiCustomError::Other(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_post))
   }
 
   #[utoipa::path(
@@ -160,10 +158,7 @@ pub mod handle_funcs {
     let dtos = usecase.execute().await.map_err(|e| ApiCustomError::Other(e))?;
 
     // DTOからBlogPostレスポンスに変換
-    let result: Vec<BlogPost> = dtos
-      .into_iter()
-      .map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap())
-      .collect();
+    let result: Vec<BlogPost> = dtos.into_iter().map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap()).collect();
 
     Ok(HttpResponse::Ok().json(result))
   }
@@ -176,26 +171,23 @@ pub mod handle_funcs {
       (status = 200, description = "Pickup blog posts updated", body = Vec<BlogPost>)
     )
   )]
-  pub async fn put_pickup_blog_posts(di_container: web::Data<DiContainer>, pickup_posts_req: web::Json<Vec<BlogPost>>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn put_pickup_blog_posts(
+    di_container: web::Data<DiContainer>,
+    pickup_posts_req: web::Json<Vec<BlogPost>>,
+  ) -> Result<impl Responder, ApiCustomError> {
     println!("put_pickup_blog_posts");
 
     let pickup_blog_posts: Vec<BlogPost> = pickup_posts_req.into_inner();
-    
+
     // BlogPostレスポンスから記事IDのリストを抽出
-    let post_ids: Vec<String> = pickup_blog_posts
-      .into_iter()
-      .map(|post| post.id.to_string())
-      .collect();
+    let post_ids: Vec<String> = pickup_blog_posts.into_iter().map(|post| post.id.to_string()).collect();
 
     // SelectPickUpPostsUseCaseを使用してピックアップ記事を更新
     let usecase = di_container.select_pick_up_posts_usecase();
     let dtos = usecase.execute(post_ids).await.map_err(|e| ApiCustomError::Other(e))?;
 
     // DTOからBlogPostレスポンスに変換
-    let result: Vec<BlogPost> = dtos
-      .into_iter()
-      .map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap())
-      .collect();
+    let result: Vec<BlogPost> = dtos.into_iter().map(|dto| blog_post_response_mapper::view_blog_post_dto_to_response(dto).unwrap()).collect();
 
     Ok(HttpResponse::Ok().json(result))
   }
@@ -228,15 +220,15 @@ pub mod handle_funcs {
       (status = 200, description = "Popular blog posts updated", body = Vec<BlogPost>)
     )
   )]
-  pub async fn put_popular_blog_posts(popular_posts_req: web::Json<Vec<BlogPost>>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn put_popular_blog_posts(
+    popular_posts_req: web::Json<Vec<BlogPost>>,
+    di_container: web::Data<DiContainer>,
+  ) -> Result<impl Responder, ApiCustomError> {
     println!("put_popular_blog_posts");
 
     // リクエストボディから記事IDリストを抽出
     let popular_blog_posts: Vec<BlogPost> = popular_posts_req.into_inner();
-    let post_ids: Vec<String> = popular_blog_posts
-      .into_iter()
-      .map(|post| post.id.to_string())
-      .collect();
+    let post_ids: Vec<String> = popular_blog_posts.into_iter().map(|post| post.id.to_string()).collect();
 
     // DIコンテナからユースケースを取得
     let usecase = di_container.select_popular_posts_usecase();

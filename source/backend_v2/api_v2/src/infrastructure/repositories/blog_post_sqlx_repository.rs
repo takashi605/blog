@@ -18,6 +18,7 @@ use crate::{
       blog_post_repository::BlogPostRepository,
       pick_up_post_set_entity::PickUpPostSetEntity,
       popular_post_set_entity::PopularPostSetEntity,
+      top_tech_pick_entity::TopTechPickEntity,
     },
     image_domain::image_repository::ImageRepository,
   },
@@ -192,12 +193,36 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     Ok(blog_post_entities)
   }
 
-  async fn find_top_tech_pick(&self) -> Result<BlogPostEntity> {
-    todo!("find_top_tech_pick メソッドは後で実装します")
+  async fn find_top_tech_pick(&self) -> Result<TopTechPickEntity> {
+    use self::tables::top_tech_pick_table::fetch_top_tech_pick_blog_post;
+
+    // トップテック記事レコードを取得
+    let top_tech_pick_record = fetch_top_tech_pick_blog_post(&self.pool)
+      .await
+      .context("トップテック記事レコードの取得に失敗しました")?;
+
+    // 記事IDからBlogPostEntityを取得
+    let blog_post = self.find(&top_tech_pick_record.post_id.to_string())
+      .await
+      .context(format!("トップテック記事ID {}の取得に失敗しました", top_tech_pick_record.post_id))?;
+
+    // TopTechPickEntityを作成して返す
+    Ok(TopTechPickEntity::new(blog_post))
   }
 
-  async fn update_top_tech_pick_post(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
-    todo!("reselect_top_tech_pick_post メソッドは後で実装します")
+  async fn update_top_tech_pick_post(&self, top_tech_pick: &TopTechPickEntity) -> Result<TopTechPickEntity> {
+    use self::tables::top_tech_pick_table::update_top_tech_pick_post;
+
+    // 記事IDを取得（既にUuid型）
+    let post_uuid = top_tech_pick.get_post().get_id();
+
+    // トップテック記事を更新
+    update_top_tech_pick_post(&self.pool, post_uuid)
+      .await
+      .context("トップテック記事の更新に失敗しました")?;
+
+    // 更新後のトップテック記事を再取得して返す
+    self.find_top_tech_pick().await
   }
 
 
