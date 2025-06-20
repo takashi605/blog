@@ -44,7 +44,7 @@ make e2e-sh         # E2Eコンテナシェル
 # 全テストスイート
 make frontend-test    # フロントエンドテスト
 make api-test-run     # v1 バックエンドテスト + APIテスト
-make api-v2-test-run  # v2 バックエンドテスト + APIテスト
+make api-v2-test-run-include-ignored  # v2 バックエンドテスト + APIテスト
 make e2e-run          # E2Eテスト
 ```
 
@@ -200,7 +200,7 @@ PNPM ワークスペース構成のパッケージ:
 
    - **配置場所:** `source/backend_v2/api_v2_test/src/tests/handlers/[リソース名]/[操作名].rs`
    - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
-   - `make api-v2-test-run` でテスト実行し、失敗確認（Red 状態）
+   - `make api-v2-test-run-include-ignored` でテスト実行し、失敗確認（Red 状態）
 
 3. **TDD サイクル実行**
    - 各モジュールで以下を繰り返し:
@@ -316,28 +316,17 @@ PNPM ワークスペース構成のパッケージ:
 
 **目的**: APIインターフェースを変えずに、DDDベースの3層アーキテクチャを実装
 
-**実装計画**:
-1. **ドメイン層の実装**
-   - [ ] BlogPostエンティティ実装（内部表現）
-   - [ ] 値オブジェクト実装
-   - [ ] リポジトリインターフェース定義
-   - [ ] ドメインエラー定義
+**実装計画（ユースケースベース）**:
 
-2. **インフラ層の実装**
-   - [ ] SQLxリポジトリ実装
-   - [ ] ドメインエンティティ ⇔ DBレコード変換
-   - [ ] 既存のデータベーススキーマとの互換性維持
-
-3. **アプリケーション層の実装**
-   - [ ] ユースケース実装
-   - [ ] DIコンテナによる依存性注入
-   - [ ] エラーハンドリング実装
-
-4. **Webハンドラーの移行**
-   - [ ] 新アーキテクチャを使用するハンドラー実装
-   - [ ] アダプター層でレスポンス形式を保証
-   - [ ] エンドポイントごとに段階的切り替え
-   - [ ] 各エンドポイント切り替え後のテスト確認
+- [x] 記事閲覧ユースケース（ViewBlogPost）
+- [x] 新着記事一覧取得ユースケース（ViewLatestBlogPosts）
+- [x] 記事投稿ユースケース（CreateBlogPost）
+- [x] 画像登録ユースケース（RegisterImage）
+- [x] 全画像取得ユースケース（ViewImages）
+- [x] 人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）
+- [x] ピックアップ記事ユースケース（ViewPickUpPost）
+- [x] トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）
+- [x] 共通基盤の整備
 
 #### Phase 3: フロントエンド内部再設計
 
@@ -388,7 +377,48 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 現在のステータス
 
-**現在作業中**: Phase 1 - バックエンドとフロントエンドの境界再構築
+**現在作業中**: Phase 2-3 完了（双方向変換システム確立） → Phase 2-3 記事投稿ユースケース（CreateBlogPost）のSQLxリポジトリ実装準備完了
+
+**Phase 2-1 完了事項**:
+- DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
+- 命名規則適用（XxxEntity, XxxVO）
+- mod.rs廃止とmodule_name.rs採用
+- BlogPostEntityとImageEntityの完全実装
+- RichTextVOとその関連値オブジェクトの実装
+- 包括的なテストスイート（12テスト）の成功
+
+**Phase 2-2 完了事項**:
+- BlogPostRepositoryトレイト定義（全9メソッド実装）
+- async-trait依存関係追加
+- フロントエンドApiBlogPostRepositoryとの完全対応
+- 全APIテスト（25+24件）通過確認
+
+**Phase 2-3 完了事項**:
+- infrastructure/blog_post_sqlx_repository/tables/ にテーブルマッピング型をモジュール化
+- infrastructure/blog_post_sqlx_repository/entity_mapper.rs で型安全なDBレコード→ドメインエンティティ変換システム実装
+- infrastructure/blog_post_sqlx_repository/record_mapper.rs で型安全なドメインエンティティ→DBレコード変換システム実装（逆変換）
+- infrastructure/db_pool.rs でDI対応のDB接続プール管理追加
+- BlogPostSqlxRepository::find() メソッドの完全実装（単一記事取得）
+- リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
+- 不要なClone deriveを削除してRustのmove semanticsを適切に活用
+- 包括的なテストスイートとエラーハンドリングの実装
+- 双方向変換システムによる記事保存機能（saveメソッド）実装の基盤確立
+
+**Phase 2-4 完了事項**:
+- ViewBlogPostDTOの完全実装（記事閲覧用データ転送オブジェクト）
+- ViewBlogPostUseCaseのTDD実装完了（Red-Green-Refactorサイクル）
+- アプリケーション層の再構成（application.rs採用、mod.rs廃止徹底）
+- BlogPostEntityからViewBlogPostDTOへの変換ロジック実装
+- モックリポジトリを使用した包括的な単体テスト
+- 変換ロジックの分離とコード品質向上（リファクタリング完了）
+
+**Phase 2-3 完了事項（今回追加）**:
+- BlogPostFactoryの完全実装（ファクトリパターン採用）
+- APIレスポンス型を参考にしたドメイン層独自の入力構造体定義（CreateBlogPostInput等）
+- ID自動生成ビジネスロジックの実装（Uuid::new_v4による一意性保証）
+- 包括的なテストスイート（8テストケース）：基本機能・サムネイル・複数コンテンツ・日付指定・リッチテキスト変換・エッジケース・ID生成ロジック
+- 重要なビジネスロジックとしてのID生成の明示的テスト（一意性・予測不可能性・コリジョン回避）
+- Clone traitの適切な実装とコンパイル時型安全性の確保
 
 ### 進捗追跡
 

@@ -12,7 +12,7 @@ pub mod top_tech_pick_table;
 use anyhow::Result;
 use blog_posts_table::BlogPostRecord;
 use code_blocks_table::CodeBlockRecord;
-use common::types::api::response::{BlogPost, BlogPostContent};
+use common::types::api::{BlogPost, BlogPostContent};
 use heading_blocks_table::HeadingBlockRecord;
 use image_blocks_table::ImageBlockRecord;
 use images_table::ImageRecord;
@@ -279,7 +279,7 @@ mod tests {
 
   mod helper {
     use super::*;
-    use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
+    use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
     use uuid::Uuid;
 
     pub fn create_blog_post_mock(post_id: Uuid) -> Result<BlogPost> {

@@ -37,6 +37,10 @@ COPY --chown=rust:rust ./$APP_ROOT_DIR/common ./common
 
 FROM base AS dev
 ENV RUST_ENV=development
+# 増分コンパイルを有効化
+ENV CARGO_INCREMENTAL=1
+# コンパイルキャッシュを最適化
+ENV CARGO_TARGET_DIR=/source/backend_v2/target
 
 # 開発環境用にcurlをインストール（rootユーザーで実行）
 USER root
@@ -46,8 +50,11 @@ USER rust:rust
 RUN cargo install --locked bacon
 RUN cargo install sqlx-cli --no-default-features --features postgres
 
+# targetディレクトリの権限を設定
+RUN mkdir -p /source/backend_v2/target && chown rust:rust /source/backend_v2/target
+
 # コンテナ起動時に実行するコマンド
-CMD ["cargo", "run", "-p", "blog-api-v2"]
+CMD ["bacon", "--headless", "run-api"]
 
 FROM base AS builder
 ARG APP_ROOT_DIR=source/backend_v2

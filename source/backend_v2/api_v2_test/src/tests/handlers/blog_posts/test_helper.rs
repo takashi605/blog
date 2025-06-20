@@ -1,12 +1,11 @@
 use crate::tests::helper::http::methods::Methods;
 use crate::tests::helper::http::request::Request;
 use anyhow::{Context, Result};
-use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
+use common::types::api::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
 pub fn assert_blog_post_without_uuid(actual: &BlogPost, expected: &BlogPost) {
-  // BlogPost の id, title, post_date などを比較
-  assert_eq!(actual.id, expected.id);
+  // BlogPost の title, post_date などを比較（IDは自動生成のため除外）
   assert_eq!(actual.title, expected.title);
   assert_eq!(actual.thumbnail.path, expected.thumbnail.path);
   assert_eq!(actual.post_date, expected.post_date);

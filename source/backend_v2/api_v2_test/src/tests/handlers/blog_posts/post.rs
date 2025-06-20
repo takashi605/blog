@@ -4,7 +4,7 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::response::BlogPost;
+  use common::types::api::BlogPost;
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
@@ -28,7 +28,7 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
+  use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {

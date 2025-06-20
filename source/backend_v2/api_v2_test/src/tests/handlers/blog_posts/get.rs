@@ -3,7 +3,7 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::response::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
+  use common::types::api::{BlogPost, BlogPostContent, H2Block, Image, ImageBlock, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
@@ -91,7 +91,7 @@ mod tests {
   }
 
   mod helper {
-    use common::types::api::response::{CodeBlock, H3Block, Link};
+    use common::types::api::{CodeBlock, H3Block, Link};
 
     use super::*;
 

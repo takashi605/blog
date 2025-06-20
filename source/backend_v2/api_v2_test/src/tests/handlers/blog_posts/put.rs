@@ -3,7 +3,7 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::response::BlogPost;
+  use common::types::api::BlogPost;
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_top_tech_pick_post() -> Result<()> {
