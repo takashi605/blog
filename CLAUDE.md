@@ -318,74 +318,15 @@ PNPM ワークスペース構成のパッケージ:
 
 **実装計画（ユースケースベース）**:
 
-1. **記事閲覧ユースケース（ViewBlogPost）**
-   - [x] BlogPostEntity（ID、Title、Content等）の実装（命名規則: XxxEntity）
-   - [x] BlogPostリポジトリインターフェース定義（fetch(id)メソッド）
-   - [x] SQLxリポジトリ実装（単一記事取得）
-   - [x] ViewBlogPostユースケース実装
-   - [x] GET /api/v2/blog/posts/{id} ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-2. **新着記事一覧取得ユースケース（ViewLatestBlogPosts）**
-   - [x] リポジトリインターフェースにfetchLatests(limit)メソッド追加
-   - [x] SQLxリポジトリ実装（複数記事取得、ソート対応）
-   - [x] ViewLatestBlogPostsユースケース実装
-   - [x] GET /api/v2/blog/posts/latest ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-3. **記事投稿ユースケース（CreateBlogPost）**
-   - [x] BlogPost生成ロジック（ID生成、日付設定）の実装
-   - [x] リポジトリインターフェースにsave(post)メソッド追加
-   - [x] SQLxリポジトリ実装（記事保存）
-   - [x] CreateBlogPostユースケース実装
-   - [x] POST /api/v2/admin/blog/posts ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-4. **画像登録ユースケース（RegisterImage）**
-   - [x] ImageEntity（ID、Path）の実装（命名規則: XxxEntity）
-   - [x] Imageリポジトリインターフェースの定義
-   - [x] SQLxリポジトリ実装（画像登録）
-   - [x] RegisterImageユースケース実装
-   - [x] POST /api/v2/admin/images ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-5. **全画像取得ユースケース（ViewImages）**
-   - [x]  SQLxリポジトリ実装（全画像取得）
-   - [x] ViewImagesユースケース実装
-   - [x] GET /api/v2/admin/images ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-6. **人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）**
-   - [x] 人気記事群(PopularPostSet)エンティティの定義
-   - [x] 人気記事選択サービスの実装
-   - [x] リポジトリインターフェースに人気記事関連メソッド追加
-   - [x] SQLxリポジトリ実装（人気記事の取得・更新）
-   - [x] ViewPopularBlogPostsとSelectPopularPostsユースケース実装
-   - [x] 関連エンドポイントの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-7. **ピックアップ記事ユースケース（ViewPickUpPost）**
-   - [x] ピックアップ記事取得ロジックの実装
-   - [x] リポジトリインターフェースにfetchPickUpPosts(limit)メソッド追加
-   - [x] SQLxリポジトリ実装
-   - [x] ViewPickUpPostユースケース実装
-   - [x] GET /api/v2/blog/posts/pick-up ハンドラーの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-8. **トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）**
-   - [x] TopTechPickSelectorビジネスロジックの実装
-   - [x] リポジトリインターフェースにトップテック記事関連メソッド追加
-   - [x] SQLxリポジトリ実装
-   - [x] ViewTopTechPickとSelectTopTechPickPostユースケース実装
-   - [x] 関連エンドポイントの新アーキテクチャ移行
-   - [x] api_v2_testの該当テスト通過確認
-
-9. **共通基盤の整備**
-   - [x] DIコンテナ（依存性注入）の実装
-   - [x] ドメインエラー定義とエラーハンドリング（命名規則に従った実装）
-   - [x] ドメインエンティティとVO構造の基盤作成（blog_domain.rs, image_domain.rs）
-   - [x] ドメインエンティティ ⇔ DBレコード変換ロジック
-   - [x] 全api_v2_testの通過確認
+- [x] 記事閲覧ユースケース（ViewBlogPost）
+- [x] 新着記事一覧取得ユースケース（ViewLatestBlogPosts）
+- [x] 記事投稿ユースケース（CreateBlogPost）
+- [x] 画像登録ユースケース（RegisterImage）
+- [x] 全画像取得ユースケース（ViewImages）
+- [x] 人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）
+- [x] ピックアップ記事ユースケース（ViewPickUpPost）
+- [x] トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）
+- [x] 共通基盤の整備
 
 #### Phase 3: フロントエンド内部再設計
 
