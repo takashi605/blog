@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 
 /// 人気記事閲覧ユースケース

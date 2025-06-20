@@ -29,12 +29,14 @@
     "chrono",
     "distroless",
     "funcs",
+    "mockall",
     "nindent",
     "nonroot",
     "sqlx",
     "Tecca",
     "Usecase",
-    "usecases"
+    "usecases",
+    "withf"
   ],
   "rust-analyzer.server.extraEnv": {
     "SQLX_OFFLINE": "true"

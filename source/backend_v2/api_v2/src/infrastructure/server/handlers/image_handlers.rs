@@ -1,5 +1,3 @@
-pub mod fetch_images;
-
 use actix_web::{web, Scope};
 
 pub fn image_scope() -> Scope {
@@ -11,7 +9,6 @@ pub fn admin_image_scope() -> Scope {
 }
 
 pub mod handle_funcs {
-  use super::fetch_images::fetch_images;
   use crate::infrastructure::{
     di_container::DiContainer,
     server::handlers::{

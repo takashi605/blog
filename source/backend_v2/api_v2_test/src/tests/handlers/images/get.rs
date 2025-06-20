@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tests {
   use crate::tests::{
-    handlers::images::test_helper::assert_images,
     helper::http::{methods::Methods, request::Request},
   };
   use anyhow::{Context, Result};

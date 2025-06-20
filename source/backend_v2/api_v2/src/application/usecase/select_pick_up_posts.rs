@@ -75,11 +75,6 @@ mod tests {
     }
   }
 
-  fn create_test_blog_post(id: &str, title: &str) -> BlogPostEntity {
-    let uuid = Uuid::parse_str(id).unwrap();
-    BlogPostEntity::new(uuid, title.to_string())
-  }
-
   #[tokio::test]
   async fn test_can_select_and_update_three_articles_as_pickup_posts() {
     // Arrange

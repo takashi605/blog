@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
-use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 use crate::domain::blog_domain::popular_post_selector_service::PopularPostSelectorService;
 
@@ -78,11 +77,6 @@ mod tests {
       async fn find_popular_posts(&self) -> Result<PopularPostSetEntity>;
       async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
     }
-  }
-
-  fn create_test_blog_post(id: &str, title: &str) -> BlogPostEntity {
-    let uuid = Uuid::parse_str(id).unwrap();
-    BlogPostEntity::new(uuid, title.to_string())
   }
 
   #[tokio::test]

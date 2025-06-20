@@ -115,11 +115,6 @@ pub async fn fetch_styles_by_rich_text_id(executor: impl Executor<'_, Database =
   Ok(styles)
 }
 
-pub async fn fetch_text_styles_all(executor: impl Executor<'_, Database = Postgres>) -> Result<Vec<TextStyleRecord>> {
-  let styles = sqlx::query_as::<_, TextStyleRecord>("select id, style_type from text_styles").fetch_all(executor).await?;
-  Ok(styles)
-}
-
 pub async fn fetch_link_by_rich_text_id(executor: impl Executor<'_, Database = Postgres>, rich_text_id: Uuid) -> Result<Option<RichTextLinkRecord>> {
   let link = sqlx::query_as::<_, RichTextLinkRecord>("select id, rich_text_id, url from rich_text_links where rich_text_id = $1")
     .bind(rich_text_id)
