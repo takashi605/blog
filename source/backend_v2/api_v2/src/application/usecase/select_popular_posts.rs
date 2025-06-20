@@ -60,85 +60,23 @@ mod tests {
   use async_trait::async_trait;
   use std::sync::Arc;
   use uuid::Uuid;
+  use mockall::{mock, predicate::eq};
 
-  // モックリポジトリ
-  struct MockBlogPostRepository {
-    // IDから記事タイトルへのマッピング
-    find_results: std::collections::HashMap<String, String>,
-    should_update_succeed: bool,
-  }
-
-  impl MockBlogPostRepository {
-    fn new() -> Self {
-      Self {
-        find_results: std::collections::HashMap::new(),
-        should_update_succeed: true,
-      }
-    }
-
-    fn with_find_result(mut self, id: String, title: String) -> Self {
-      self.find_results.insert(id, title);
-      self
-    }
-
-    fn with_update_failure(mut self) -> Self {
-      self.should_update_succeed = false;
-      self
-    }
-  }
-
-  #[async_trait]
-  impl BlogPostRepository for MockBlogPostRepository {
-    async fn find(&self, id: &str) -> Result<BlogPostEntity> {
-      if let Some(title) = self.find_results.get(id) {
-        let uuid = Uuid::parse_str(id).map_err(|_| anyhow::anyhow!("無効なUUID: {}", id))?;
-        Ok(BlogPostEntity::new(uuid, title.clone()))
-      } else {
-        Err(anyhow::anyhow!("記事が見つかりません: {}", id))
-      }
-    }
-
-    async fn save(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
-      todo!()
-    }
-
-    async fn find_latests(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
-      todo!()
-    }
-
-    async fn find_top_tech_pick(&self) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn update_top_tech_pick_post(&self, _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
-      if self.should_update_succeed {
-        // 入力された PopularPostSetEntity を元に新しいエンティティを作成して返す
-        let posts = popular_post_set.get_all_posts();
-        let new_posts = [
-          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
-          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
-          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
-        ];
-        Ok(PopularPostSetEntity::new(new_posts))
-      } else {
-        Err(anyhow::anyhow!("更新に失敗しました"))
-      }
+  // mockallによるモックリポジトリ
+  mock! {
+    BlogPostRepo {}
+    
+    #[async_trait]
+    impl BlogPostRepository for BlogPostRepo {
+      async fn find(&self, id: &str) -> Result<BlogPostEntity>;
+      async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
+      async fn find_latests(&self, quantity: Option<u32>) -> Result<Vec<BlogPostEntity>>;
+      async fn find_top_tech_pick(&self) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity>;
+      async fn update_pick_up_posts(&self, pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity>;
+      async fn find_popular_posts(&self) -> Result<PopularPostSetEntity>;
+      async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
     }
   }
 
@@ -154,14 +92,45 @@ mod tests {
     let post2_id = "00000000-0000-0000-0000-000000000002";
     let post3_id = "00000000-0000-0000-0000-000000000003";
 
-    let mock_repo = Arc::new(
-      MockBlogPostRepository::new()
-        .with_find_result(post1_id.to_string(), "人気記事1".to_string())
-        .with_find_result(post2_id.to_string(), "人気記事2".to_string())
-        .with_find_result(post3_id.to_string(), "人気記事3".to_string()),
-    );
+    let mut mock_repo = MockBlogPostRepo::new();
+    
+    // findメソッドの期待値設定
+    mock_repo
+      .expect_find()
+      .with(eq(post1_id))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "人気記事1".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq(post2_id))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "人気記事2".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq(post3_id))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "人気記事3".to_string()))
+      });
+    
+    // update_popular_postsメソッドの期待値設定
+    mock_repo
+      .expect_update_popular_posts()
+      .returning(|popular_post_set| {
+        let posts = popular_post_set.get_all_posts();
+        let new_posts = [
+          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
+          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
+          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
+        ];
+        Ok(PopularPostSetEntity::new(new_posts))
+      });
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act
     let result = usecase.execute(vec![post1_id.to_string(), post2_id.to_string(), post3_id.to_string()]).await;
@@ -181,8 +150,8 @@ mod tests {
   #[tokio::test]
   async fn 記事idが3件でない場合はエラーになる() {
     // Arrange
-    let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let mock_repo = MockBlogPostRepo::new();
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act: 2件の場合
     let result = usecase
@@ -200,8 +169,8 @@ mod tests {
   #[tokio::test]
   async fn 記事idが4件の場合はエラーになる() {
     // Arrange
-    let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let mock_repo = MockBlogPostRepo::new();
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act: 4件の場合
     let result = usecase
@@ -221,14 +190,29 @@ mod tests {
   #[tokio::test]
   async fn 存在しない記事idを指定した場合はエラーになる() {
     // Arrange
-    let mock_repo = Arc::new(
-      MockBlogPostRepository::new()
-        .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
-        .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string()),
-      // 3番目の記事は設定しない（存在しない）
-    );
+    let mut mock_repo = MockBlogPostRepo::new();
+    
+    // 最初の2件は成功、3件目は失敗
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000001"))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000002"))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000003"))
+      .returning(|id| Err(anyhow::anyhow!("記事が見つかりません: {}", id)));
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act
     let result = usecase
@@ -247,8 +231,8 @@ mod tests {
   #[tokio::test]
   async fn 空の配列を指定した場合はエラーになる() {
     // Arrange
-    let mock_repo = Arc::new(MockBlogPostRepository::new());
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let mock_repo = MockBlogPostRepo::new();
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act
     let result = usecase.execute(vec![]).await;
@@ -261,15 +245,37 @@ mod tests {
   #[tokio::test]
   async fn リポジトリの更新処理が失敗した場合はエラーになる() {
     // Arrange
-    let mock_repo = Arc::new(
-      MockBlogPostRepository::new()
-        .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
-        .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string())
-        .with_find_result("00000000-0000-0000-0000-000000000003".to_string(), "記事3".to_string())
-        .with_update_failure(), // 更新失敗を設定
-    );
+    let mut mock_repo = MockBlogPostRepo::new();
+    
+    // findメソッドの期待値設定
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000001"))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000002"))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+      });
+    mock_repo
+      .expect_find()
+      .with(eq("00000000-0000-0000-0000-000000000003"))
+      .returning(|id| {
+        let uuid = Uuid::parse_str(id).unwrap();
+        Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
+      });
+    
+    // update_popular_postsメソッドでエラーを返す
+    mock_repo
+      .expect_update_popular_posts()
+      .returning(|_| Err(anyhow::anyhow!("更新に失敗しました")));
 
-    let usecase = SelectPopularPostsUseCase::new(mock_repo);
+    let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
     // Act
     let result = usecase

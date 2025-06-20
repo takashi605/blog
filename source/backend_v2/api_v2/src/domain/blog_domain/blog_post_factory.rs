@@ -9,7 +9,7 @@ use super::blog_post_entity::{
 
 // ファクトリの入力用構造体（APIレスポンス型を参考にドメイン層独自に定義）
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateBlogPostInput {
   pub title: String,
   pub thumbnail: Option<CreateImageInput>,
@@ -18,13 +18,13 @@ pub struct CreateBlogPostInput {
   pub contents: Vec<CreateContentInput>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateImageInput {
   pub id: Uuid,
   pub path: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum CreateContentInput {
   H2 { id: Uuid, text: String },
   H3 { id: Uuid, text: String },
@@ -33,20 +33,20 @@ pub enum CreateContentInput {
   CodeBlock { id: Uuid, title: String, code: String, language: String },
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateRichTextInput {
   pub text: String,
   pub styles: CreateStyleInput,
   pub link: Option<CreateLinkInput>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateStyleInput {
   pub bold: bool,
   pub inline_code: bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateLinkInput {
   pub url: String,
 }
@@ -396,7 +396,7 @@ mod tests {
 
   #[test]
   fn 複数回実行しても毎回異なるIDが生成される() {
-    let input = CreateBlogPostInput {
+    let _input = CreateBlogPostInput {
       title: "テスト記事".to_string(),
       thumbnail: None,
       post_date: None,
@@ -408,11 +408,11 @@ mod tests {
     let mut generated_ids = std::collections::HashSet::new();
     for _ in 0..10 {
       let blog_post = BlogPostFactory::create(CreateBlogPostInput {
-        title: input.title.clone(),
-        thumbnail: input.thumbnail.clone(),
-        post_date: input.post_date,
-        last_update_date: input.last_update_date,
-        contents: input.contents.clone(),
+        title: "テスト記事".to_string(),
+        thumbnail: None,
+        post_date: None,
+        last_update_date: None,
+        contents: vec![],
       });
 
       // 重複するIDが生成されないことを確認

@@ -57,47 +57,31 @@ impl RegisterImageUseCase {
 mod tests {
   use super::*;
   use crate::domain::image_domain::image_entity::ImageEntity;
-  use async_trait::async_trait;
+  use crate::domain::image_domain::image_repository::{ImageRepository, ImageRepositoryError};
+  use mockall::mock;
   use uuid::Uuid;
 
-  // テスト用モックリポジトリ
-  struct MockImageRepository {
-    should_fail: bool,
-  }
+  mock! {
+    ImageRepo {}
 
-  impl MockImageRepository {
-    fn new() -> Self {
-      Self { should_fail: false }
-    }
-
-    fn new_with_failure() -> Self {
-      Self { should_fail: true }
-    }
-  }
-
-  #[async_trait]
-  impl ImageRepository for MockImageRepository {
-    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
-      Err(ImageRepositoryError::FindFailed("モック実装のため未対応".to_string()))
-    }
-
-    async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
-      if self.should_fail {
-        return Err(ImageRepositoryError::SaveFailed("保存に失敗しました".to_string()));
-      }
-      Ok(image)
-    }
-
-    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
-      Ok(vec![])
+    #[async_trait::async_trait]
+    impl ImageRepository for ImageRepo {
+      async fn find(&self, id: &str) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError>;
     }
   }
 
   #[tokio::test]
   async fn test_execute_基本的な画像登録が成功する() {
     // Arrange
-    let mock_repo = Arc::new(MockImageRepository::new());
-    let usecase = RegisterImageUseCase::new(mock_repo);
+    let mut mock_repo = MockImageRepo::new();
+    mock_repo
+      .expect_save()
+      .times(1)
+      .returning(|image| Ok(image));
+
+    let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
     let dto = RegisterImageDTO {
       path: "images/test.jpg".to_string(),
     };
@@ -119,8 +103,13 @@ mod tests {
 
     for path in test_cases {
       // Arrange
-      let mock_repo = Arc::new(MockImageRepository::new());
-      let usecase = RegisterImageUseCase::new(mock_repo);
+      let mut mock_repo = MockImageRepo::new();
+      mock_repo
+        .expect_save()
+        .times(1)
+        .returning(|image| Ok(image));
+
+      let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
       let dto = RegisterImageDTO { path: path.to_string() };
 
       // Act
@@ -137,8 +126,13 @@ mod tests {
   #[tokio::test]
   async fn test_execute_特殊文字を含むパスで登録が成功する() {
     // Arrange
-    let mock_repo = Arc::new(MockImageRepository::new());
-    let usecase = RegisterImageUseCase::new(mock_repo);
+    let mut mock_repo = MockImageRepo::new();
+    mock_repo
+      .expect_save()
+      .times(1)
+      .returning(|image| Ok(image));
+
+    let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
     let path_with_special_chars = "images/テスト画像_123-file.jpg";
     let dto = RegisterImageDTO {
       path: path_with_special_chars.to_string(),
@@ -156,13 +150,17 @@ mod tests {
 
   #[tokio::test]
   async fn test_execute_毎回異なるUUIDが生成される() {
-    // Arrange
-    let mock_repo = Arc::new(MockImageRepository::new());
-    let usecase = RegisterImageUseCase::new(mock_repo);
-
     // Act - 複数回実行
     let mut generated_ids = std::collections::HashSet::new();
     for i in 0..5 {
+      // Arrange
+      let mut mock_repo = MockImageRepo::new();
+      mock_repo
+        .expect_save()
+        .times(1)
+        .returning(|image| Ok(image));
+
+      let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
       let dto = RegisterImageDTO {
         path: format!("images/test{}.jpg", i),
       };
@@ -181,8 +179,13 @@ mod tests {
   #[tokio::test]
   async fn test_execute_リポジトリ保存失敗時にエラーを返す() {
     // Arrange
-    let mock_repo = Arc::new(MockImageRepository::new_with_failure());
-    let usecase = RegisterImageUseCase::new(mock_repo);
+    let mut mock_repo = MockImageRepo::new();
+    mock_repo
+      .expect_save()
+      .times(1)
+      .returning(|_| Err(ImageRepositoryError::SaveFailed("保存に失敗しました".to_string())));
+
+    let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
     let dto = RegisterImageDTO {
       path: "images/test.jpg".to_string(),
     };
@@ -199,8 +202,13 @@ mod tests {
   #[tokio::test]
   async fn test_execute_空のパスでも登録が成功する() {
     // Arrange
-    let mock_repo = Arc::new(MockImageRepository::new());
-    let usecase = RegisterImageUseCase::new(mock_repo);
+    let mut mock_repo = MockImageRepo::new();
+    mock_repo
+      .expect_save()
+      .times(1)
+      .returning(|image| Ok(image));
+
+    let usecase = RegisterImageUseCase::new(Arc::new(mock_repo));
     let dto = RegisterImageDTO { path: "".to_string() };
 
     // Act

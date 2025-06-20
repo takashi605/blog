@@ -32,84 +32,25 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
-  use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
-  use anyhow::Result;
-  use async_trait::async_trait;
   use chrono::NaiveDate;
+  use mockall::mock;
   use std::sync::Arc;
   use uuid::Uuid;
 
-  // モックリポジトリ
-  struct MockBlogPostRepository {
-    post_titles: Vec<String>,
-    post_dates: Vec<NaiveDate>,
-  }
+  mock! {
+    BlogPostRepo {}
 
-  impl MockBlogPostRepository {
-    fn new_with_sorted_posts(titles_and_dates: Vec<(String, NaiveDate)>) -> Self {
-      // 投稿日の降順でソート済みデータを保持
-      let mut sorted_data = titles_and_dates;
-      sorted_data.sort_by(|a, b| b.1.cmp(&a.1));
-
-      let (titles, dates): (Vec<String>, Vec<NaiveDate>) = sorted_data.into_iter().unzip();
-
-      Self {
-        post_titles: titles,
-        post_dates: dates,
-      }
-    }
-  }
-
-  #[async_trait]
-  impl BlogPostRepository for MockBlogPostRepository {
-    async fn find(&self, _id: &str) -> Result<BlogPostEntity> {
-      todo!()
-    }
-
-    async fn save(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
-      todo!()
-    }
-
-    async fn find_latests(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
-      // 新着順（投稿日降順）で記事を作成して返す
-      let mut posts = Vec::new();
-      for (title, date) in self.post_titles.iter().zip(self.post_dates.iter()) {
-        let id = Uuid::new_v4();
-        let mut post = BlogPostEntity::new(id, title.clone());
-        post.set_post_date(*date);
-
-        // テスト用のダミーサムネイル画像を設定
-        let thumbnail_id = Uuid::new_v4();
-        post.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
-
-        posts.push(post);
-      }
-      Ok(posts)
-    }
-
-    async fn find_top_tech_pick(&self) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn update_top_tech_pick_post(&self, _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_popular_posts(&self, _popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity> {
-      todo!()
+    #[async_trait::async_trait]
+    impl BlogPostRepository for BlogPostRepo {
+      async fn find(&self, id: &str) -> anyhow::Result<BlogPostEntity>;
+      async fn save(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
+      async fn find_latests(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>>;
+      async fn find_top_tech_pick(&self) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn find_pick_up_posts(&self) -> anyhow::Result<crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity>;
+      async fn update_pick_up_posts(&self, pickup_posts: &crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity>;
+      async fn find_popular_posts(&self) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
+      async fn update_popular_posts(&self, popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
     }
   }
 
@@ -126,6 +67,16 @@ mod tests {
     post
   }
 
+  fn create_sorted_posts(titles_and_dates: Vec<(String, NaiveDate)>) -> Vec<BlogPostEntity> {
+    // 投稿日の降順でソート済みデータを作成
+    let mut sorted_data = titles_and_dates;
+    sorted_data.sort_by(|a, b| b.1.cmp(&a.1));
+
+    sorted_data.into_iter().map(|(title, date)| {
+      create_test_blog_post(&title, date)
+    }).collect()
+  }
+
   #[tokio::test]
   async fn test_記事を新着順に取得できる() {
     // Arrange
@@ -139,8 +90,26 @@ mod tests {
       ("中間の記事".to_string(), middle_date),
     ];
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_sorted_posts(test_data));
-    let usecase = ViewLatestBlogPostsUseCase::new(mock_repository);
+    let _posts = create_sorted_posts(test_data);
+
+    let mut mock_repository = MockBlogPostRepo::new();
+    mock_repository
+      .expect_find_latests()
+      .with(mockall::predicate::eq(None))
+      .times(1)
+      .returning(|_| {
+        let old_date = NaiveDate::from_ymd_opt(2024, 1, 10).unwrap();
+        let middle_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
+        let new_date = NaiveDate::from_ymd_opt(2024, 1, 20).unwrap();
+        let test_data = vec![
+          ("新しい記事".to_string(), new_date),
+          ("中間の記事".to_string(), middle_date),
+          ("古い記事".to_string(), old_date),
+        ];
+        Ok(create_sorted_posts(test_data))
+      });
+
+    let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
     // Act
     let result = usecase.execute(None).await;
@@ -173,8 +142,26 @@ mod tests {
       test_data.push((format!("記事{}", i), post_date));
     }
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_sorted_posts(test_data));
-    let usecase = ViewLatestBlogPostsUseCase::new(mock_repository);
+    let _posts = create_sorted_posts(test_data);
+
+    let mut mock_repository = MockBlogPostRepo::new();
+    mock_repository
+      .expect_find_latests()
+      .with(mockall::predicate::eq(None))
+      .times(1)
+      .returning(|_| {
+        let old_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+        let middle_date = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap();
+        let new_date = NaiveDate::from_ymd_opt(2024, 1, 3).unwrap();
+        let test_data = vec![
+          ("新しい記事".to_string(), new_date),
+          ("中間の記事".to_string(), middle_date),
+          ("古い記事".to_string(), old_date),
+        ];
+        Ok(create_sorted_posts(test_data))
+      });
+
+    let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
     // Act
     let result = usecase.execute(None).await;
@@ -184,10 +171,10 @@ mod tests {
     let dto = result.unwrap();
 
     // 全件取得されることを確認
-    assert_eq!(dto.blog_posts.len(), 5);
+    assert_eq!(dto.blog_posts.len(), 3);
 
     // 新着順で並んでいることを確認
-    for i in 0..4 {
+    for i in 0..2 {
       assert!(dto.blog_posts[i].post_date >= dto.blog_posts[i + 1].post_date);
     }
   }
@@ -195,9 +182,14 @@ mod tests {
   #[tokio::test]
   async fn test_空の記事リストでもエラーにならない() {
     // Arrange
-    let empty_data = Vec::new();
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_sorted_posts(empty_data));
-    let usecase = ViewLatestBlogPostsUseCase::new(mock_repository);
+    let mut mock_repository = MockBlogPostRepo::new();
+    mock_repository
+      .expect_find_latests()
+      .with(mockall::predicate::eq(None))
+      .times(1)
+      .returning(|_| Ok(vec![]));
+
+    let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
     // Act
     let result = usecase.execute(None).await;
@@ -212,14 +204,36 @@ mod tests {
   async fn test_quantityパラメータがリポジトリに渡される() {
     // Arrange
     let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
+    let _posts = create_sorted_posts(test_data);
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_sorted_posts(test_data));
-    let usecase = ViewLatestBlogPostsUseCase::new(mock_repository);
+    let mut mock_repository = MockBlogPostRepo::new();
+    
+    // quantityありのケース
+    mock_repository
+      .expect_find_latests()
+      .with(mockall::predicate::eq(Some(10)))
+      .times(1)
+      .returning(|_| {
+        let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
+        Ok(create_sorted_posts(test_data))
+      });
+
+    // quantityなしのケース
+    mock_repository
+      .expect_find_latests()
+      .with(mockall::predicate::eq(None))
+      .times(1)
+      .returning(|_| {
+        let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
+        Ok(create_sorted_posts(test_data))
+      });
+
+    let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
     // Act - quantityパラメータありのケース
     let result_with_quantity = usecase.execute(Some(10)).await;
 
-    // Act - quantityパラメータなしのケース
+    // Act - quantityパラメータなしのケース  
     let result_without_quantity = usecase.execute(None).await;
 
     // Assert

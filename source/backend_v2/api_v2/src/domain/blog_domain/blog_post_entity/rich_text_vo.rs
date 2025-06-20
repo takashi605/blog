@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct RichTextVO {
     text: Vec<RichTextPartVO>,
 }
@@ -13,7 +13,7 @@ impl RichTextVO {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct RichTextPartVO {
     text: String,
     styles: RichTextStylesVO,
@@ -42,13 +42,13 @@ impl RichTextPartVO {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, PartialEq, Default)]
 pub struct RichTextStylesVO {
     pub bold: bool,
     pub inline_code: bool,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct LinkVO {
     pub url: String,
 }
@@ -70,7 +70,7 @@ mod tests {
                 None,
             ),
         ];
-        let rich_text = RichTextVO::new(parts.clone());
+        let rich_text = RichTextVO::new(parts);
         
         assert_eq!(rich_text.get_text().len(), 2);
         assert_eq!(rich_text.get_text()[0].get_text(), "通常のテキスト");
@@ -86,7 +86,7 @@ mod tests {
         let part = RichTextPartVO::new(
             "リンクテキスト".to_string(),
             None,
-            Some(link.clone()),
+            Some(link),
         );
         
         assert_eq!(part.get_text(), "リンクテキスト");

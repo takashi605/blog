@@ -52,68 +52,30 @@ mod tests {
     },
     application::dto::ImageDTO,
   };
-  use async_trait::async_trait;
+  use mockall::mock;
   use uuid::Uuid;
 
-  // テスト用のモックリポジトリ
-  struct MockImageRepository {
-    should_fail: bool,
-    images: Vec<ImageEntity>,
-  }
+  mock! {
+    ImageRepo {}
 
-  impl MockImageRepository {
-    fn new() -> Self {
-      Self {
-        should_fail: false,
-        images: vec![],
-      }
-    }
-
-    fn with_images(images: Vec<ImageEntity>) -> Self {
-      Self {
-        should_fail: false,
-        images,
-      }
-    }
-
-    fn with_error() -> Self {
-      Self {
-        should_fail: true,
-        images: vec![],
-      }
-    }
-  }
-
-  #[async_trait]
-  impl ImageRepository for MockImageRepository {
-    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
-      unreachable!("findメソッドはこのテストでは呼ばれません")
-    }
-
-    async fn save(&self, _image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
-      unreachable!("saveメソッドはこのテストでは呼ばれません")
-    }
-
-    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
-      if self.should_fail {
-        return Err(ImageRepositoryError::FindAllFailed(
-          "テスト用のエラーです".to_string(),
-        ));
-      }
-      // imagesを個別に再構築してVecを返す
-      let result = self.images
-        .iter()
-        .map(|img| ImageEntity::new(img.get_id(), img.get_path().to_string()))
-        .collect();
-      Ok(result)
+    #[async_trait::async_trait]
+    impl ImageRepository for ImageRepo {
+      async fn find(&self, id: &str) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError>;
     }
   }
 
   #[tokio::test]
   async fn test_execute_success_empty_list() {
     // 空のリポジトリでユースケースを作成
-    let repository = Arc::new(MockImageRepository::new());
-    let usecase = ViewImagesUseCase::new(repository);
+    let mut repository = MockImageRepo::new();
+    repository
+      .expect_find_all()
+      .times(1)
+      .returning(|| Ok(vec![]));
+
+    let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
     // execute実行
     let result = usecase.execute().await;
@@ -127,17 +89,34 @@ mod tests {
   #[tokio::test]
   async fn test_execute_success_with_images() {
     // テスト用画像エンティティを作成
-    let image1_id = Uuid::new_v4();
-    let image1_path = "/images/test1.jpg".to_string();
+    let image1_id = Uuid::parse_str("550e8400-e29b-41d4-a716-446655440001").unwrap();
+    let image1_path = "images/test1.jpg".to_string();
     let image1 = ImageEntity::new(image1_id, image1_path.clone());
 
-    let image2_id = Uuid::new_v4();
-    let image2_path = "/images/test2.jpg".to_string();
+    let image2_id = Uuid::parse_str("550e8400-e29b-41d4-a716-446655440002").unwrap();
+    let image2_path = "images/test2.jpg".to_string();
     let image2 = ImageEntity::new(image2_id, image2_path.clone());
 
+    let _images = vec![image1, image2];
+
     // モックリポジトリにテスト画像を設定
-    let repository = Arc::new(MockImageRepository::with_images(vec![image1, image2]));
-    let usecase = ViewImagesUseCase::new(repository);
+    let mut repository = MockImageRepo::new();
+    repository
+      .expect_find_all()
+      .times(1)
+      .returning(|| {
+        let image1 = ImageEntity::new(
+          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440001").unwrap(),
+          "images/test1.jpg".to_string(),
+        );
+        let image2 = ImageEntity::new(
+          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440002").unwrap(),
+          "images/test2.jpg".to_string(),
+        );
+        Ok(vec![image1, image2])
+      });
+
+    let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
     // execute実行
     let result = usecase.execute().await;
@@ -161,8 +140,13 @@ mod tests {
   #[tokio::test]
   async fn test_execute_repository_error() {
     // エラーを返すモックリポジトリでユースケースを作成
-    let repository = Arc::new(MockImageRepository::with_error());
-    let usecase = ViewImagesUseCase::new(repository);
+    let mut repository = MockImageRepo::new();
+    repository
+      .expect_find_all()
+      .times(1)
+      .returning(|| Err(ImageRepositoryError::FindAllFailed("テスト用のエラーです".to_string())));
+
+    let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
     // execute実行
     let result = usecase.execute().await;
@@ -182,10 +166,15 @@ mod tests {
     // 1つの画像でテスト
     let image_id = Uuid::new_v4();
     let image_path = "/images/single.jpg".to_string();
-    let image = ImageEntity::new(image_id, image_path.clone());
+    let expected_path = image_path.clone();
 
-    let repository = Arc::new(MockImageRepository::with_images(vec![image]));
-    let usecase = ViewImagesUseCase::new(repository);
+    let mut repository = MockImageRepo::new();
+    repository
+      .expect_find_all()
+      .times(1)
+      .returning(move || Ok(vec![ImageEntity::new(image_id, image_path.clone())]));
+
+    let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
     // execute実行
     let result = usecase.execute().await;
@@ -197,14 +186,19 @@ mod tests {
 
     let dto = &image_dtos[0];
     assert_eq!(dto.id, image_id);
-    assert_eq!(dto.path, image_path);
+    assert_eq!(dto.path, expected_path);
   }
 
   #[tokio::test]
   async fn test_usecase_new() {
     // ViewImagesUseCaseの作成をテスト
-    let repository = Arc::new(MockImageRepository::new());
-    let usecase = ViewImagesUseCase::new(repository);
+    let mut repository = MockImageRepo::new();
+    repository
+      .expect_find_all()
+      .times(1)
+      .returning(|| Ok(vec![]));
+
+    let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
     // ユースケースが正常に作成されることを確認
     // 実際には内部フィールドにアクセスできないため、executeメソッドが正常に動作することで確認

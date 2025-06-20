@@ -4,7 +4,7 @@ use super::image_entity::ImageEntity;
 
 // ファクトリの入力用構造体
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct CreateImageInput {
     pub path: String,
 }
@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn 複数回実行しても毎回異なるIDが生成される() {
-        let input = CreateImageInput {
+        let _input = CreateImageInput {
             path: "images/test.jpg".to_string(),
         };
 
@@ -74,7 +74,7 @@ mod tests {
         let mut generated_ids = std::collections::HashSet::new();
         for _ in 0..10 {
             let image = ImageFactory::create(CreateImageInput {
-                path: input.path.clone(),
+                path: "images/test.jpg".to_string(),
             });
 
             // 重複するIDが生成されないことを確認

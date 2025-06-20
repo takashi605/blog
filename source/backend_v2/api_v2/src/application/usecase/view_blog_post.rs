@@ -29,65 +29,24 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
-  use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
-  use anyhow::Result;
-  use async_trait::async_trait;
+  use mockall::mock;
   use std::sync::Arc;
   use uuid::Uuid;
 
-  // モックリポジトリ
-  struct MockBlogPostRepository {
-    expected_id: Uuid,
-    expected_title: String,
-  }
+  mock! {
+    BlogPostRepo {}
 
-  impl MockBlogPostRepository {
-    fn new_with_post_data(id: Uuid, title: String) -> Self {
-      Self {
-        expected_id: id,
-        expected_title: title,
-      }
-    }
-  }
-
-  #[async_trait]
-  impl BlogPostRepository for MockBlogPostRepository {
-    async fn find(&self, _id: &str) -> Result<BlogPostEntity> {
-      let post = BlogPostEntity::new(self.expected_id, self.expected_title.clone());
-      Ok(post)
-    }
-
-    async fn save(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
-      todo!()
-    }
-
-    async fn find_latests(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
-      todo!()
-    }
-
-    async fn find_top_tech_pick(&self) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn update_top_tech_pick_post(&self, _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
-      todo!()
-    }
-
-    async fn find_pick_up_posts(&self) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_pick_up_posts(&self, _pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity> {
-      todo!()
-    }
-
-    async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
-      todo!()
-    }
-
-    async fn update_popular_posts(&self, _popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity> {
-      todo!()
+    #[async_trait::async_trait]
+    impl BlogPostRepository for BlogPostRepo {
+      async fn find(&self, id: &str) -> anyhow::Result<BlogPostEntity>;
+      async fn save(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
+      async fn find_latests(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>>;
+      async fn find_top_tech_pick(&self) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
+      async fn find_pick_up_posts(&self) -> anyhow::Result<crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity>;
+      async fn update_pick_up_posts(&self, pickup_posts: &crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity>;
+      async fn find_popular_posts(&self) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
+      async fn update_popular_posts(&self, popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
     }
   }
 
@@ -97,8 +56,14 @@ mod tests {
     let test_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let _expected_post = BlogPostEntity::new(test_id, "テストタイトル".to_string());
 
-    let mock_repository = Arc::new(MockBlogPostRepository::new_with_post_data(test_id, "テストタイトル".to_string()));
-    let usecase = ViewBlogPostUseCase::new(mock_repository);
+    let mut mock_repository = MockBlogPostRepo::new();
+    mock_repository
+      .expect_find()
+      .with(mockall::predicate::eq("test-id"))
+      .times(1)
+      .returning(move |_| Ok(BlogPostEntity::new(test_id, "テストタイトル".to_string())));
+
+    let usecase = ViewBlogPostUseCase::new(Arc::new(mock_repository));
 
     // Act
     let result = usecase.execute("test-id").await;
