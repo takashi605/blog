@@ -12,14 +12,12 @@ pub fn admin_image_scope() -> Scope {
 
 pub mod handle_funcs {
   use super::fetch_images::fetch_images;
-  use crate::{
-    infrastructure::{
-      di_container::DiContainer,
-      server::handlers::{
-        api_mapper::image_response_mapper::{image_dto_to_response, image_dto_list_to_response},
-        dto_mapper::api_image_to_register_dto,
-        response::err::ApiCustomError,
-      },
+  use crate::infrastructure::{
+    di_container::DiContainer,
+    server::handlers::{
+      api_mapper::image_response_mapper::{image_dto_list_to_response, image_dto_to_response},
+      dto_mapper::api_image_to_register_dto,
+      response::err::ApiCustomError,
     },
   };
   use actix_web::{web, HttpResponse, Responder};
@@ -37,9 +35,7 @@ pub mod handle_funcs {
     let usecase = di_container.view_images_usecase();
 
     // 2. ユースケースを実行
-    let image_dtos = usecase.execute().await.map_err(|e| {
-      ApiCustomError::Other(anyhow::anyhow!("画像一覧取得に失敗しました: {:?}", e))
-    })?;
+    let image_dtos = usecase.execute().await.map_err(|e| ApiCustomError::Other(anyhow::anyhow!("画像一覧取得に失敗しました: {:?}", e)))?;
 
     // 3. ImageDTOをAPIレスポンスに変換
     let response = image_dto_list_to_response(image_dtos);
@@ -64,9 +60,7 @@ pub mod handle_funcs {
     let usecase = di_container.register_image_usecase();
 
     // 3. ユースケースを実行
-    let image_dto = usecase.execute(register_dto).await.map_err(|e| {
-      ApiCustomError::Other(anyhow::anyhow!("画像登録に失敗しました: {:?}", e))
-    })?;
+    let image_dto = usecase.execute(register_dto).await.map_err(|e| ApiCustomError::Other(anyhow::anyhow!("画像登録に失敗しました: {:?}", e)))?;
 
     // 4. ImageDTOをAPIレスポンスに変換
     let response = image_dto_to_response(image_dto);
