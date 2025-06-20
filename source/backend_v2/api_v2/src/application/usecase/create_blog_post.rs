@@ -12,11 +12,12 @@ pub mod dto;
 
 pub struct CreateBlogPostUseCase {
   repository: Arc<dyn BlogPostRepository>,
+  blog_post_factory: Arc<BlogPostFactory>,
 }
 
 impl CreateBlogPostUseCase {
-  pub fn new(repository: Arc<dyn BlogPostRepository>) -> Self {
-    Self { repository }
+  pub fn new(repository: Arc<dyn BlogPostRepository>, blog_post_factory: Arc<BlogPostFactory>) -> Self {
+    Self { repository, blog_post_factory }
   }
 
   pub async fn execute(&self, dto: CreateBlogPostDTO) -> anyhow::Result<BlogPostDTO> {
@@ -24,7 +25,7 @@ impl CreateBlogPostUseCase {
     let domain_input = convert_dto_to_domain_input(dto);
 
     // ファクトリでBlogPostEntityを作成
-    let blog_post = BlogPostFactory::create(domain_input);
+    let blog_post = self.blog_post_factory.create(domain_input).await?;
 
     // リポジトリで保存
     let saved_blog_post = self.repository.save(&blog_post).await?;
@@ -41,8 +42,12 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+  use crate::domain::blog_domain::image_content_factory::ImageContentFactory;
+  use crate::domain::image_domain::{image_entity::ImageEntity, image_repository::ImageRepository, image_repository::ImageRepositoryError};
+  use async_trait::async_trait;
   use dto::{CreateBlogPostDTO, CreateImageDTO};
   use mockall::mock;
+  use std::collections::HashMap;
   use std::sync::Arc;
   use uuid::Uuid;
 
@@ -61,6 +66,57 @@ mod tests {
       async fn find_popular_posts(&self) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
       async fn update_popular_posts(&self, popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
     }
+  }
+
+  // テスト用のモックImageRepository
+  pub struct MockImageRepository {
+    images: HashMap<String, ImageEntity>,
+  }
+
+  impl MockImageRepository {
+    pub fn new() -> Self {
+      Self { images: HashMap::new() }
+    }
+
+    pub fn add_image(&mut self, path: String, image: ImageEntity) {
+      self.images.insert(path, image);
+    }
+  }
+
+  #[async_trait]
+  impl ImageRepository for MockImageRepository {
+    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindFailed("not implemented".to_string()))
+    }
+
+    async fn find_by_path(&self, path: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      match self.images.get(path) {
+        Some(image) => Ok(ImageEntity::new(image.get_id(), image.get_path().to_string())),
+        None => Err(ImageRepositoryError::FindByPathFailed(format!("Image not found for path: {}", path))),
+      }
+    }
+
+    async fn save(&self, _image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::SaveFailed("not implemented".to_string()))
+    }
+
+    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindAllFailed("not implemented".to_string()))
+    }
+  }
+
+  // テスト用のファクトリ作成ヘルパー
+  fn create_test_factory() -> Arc<BlogPostFactory> {
+    let mut mock_image_repo = MockImageRepository::new();
+
+    // テスト用の画像を追加
+    let image_id = Uuid::new_v4();
+    let image_path = "path/to/thumbnail.jpg".to_string();
+    let image = ImageEntity::new(image_id, image_path.clone());
+    mock_image_repo.add_image(image_path, image);
+
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_image_repo)));
+    Arc::new(BlogPostFactory::new(image_factory))
   }
 
   // テスト用データ作成ヘルパー
@@ -84,19 +140,17 @@ mod tests {
     let dto = create_test_dto("テスト記事", thumbnail_id);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_save()
-      .times(1)
-      .returning(move |blog_post| {
-        let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
-        if let Some(thumbnail) = blog_post.get_thumbnail() {
-          new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
-        }
-        new_post.set_post_date(blog_post.get_post_date());
-        Ok(new_post)
-      });
+    mock_repository.expect_save().times(1).returning(move |blog_post| {
+      let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
+      if let Some(thumbnail) = blog_post.get_thumbnail() {
+        new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
+      }
+      new_post.set_post_date(blog_post.get_post_date());
+      Ok(new_post)
+    });
 
-    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository));
+    let factory = create_test_factory();
+    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository), factory);
 
     // Act
     let result = usecase.execute(dto).await;
@@ -118,19 +172,17 @@ mod tests {
     let dto = create_test_dto("ID確認記事", thumbnail_id);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_save()
-      .times(1)
-      .returning(move |blog_post| {
-        let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
-        if let Some(thumbnail) = blog_post.get_thumbnail() {
-          new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
-        }
-        new_post.set_post_date(blog_post.get_post_date());
-        Ok(new_post)
-      });
+    mock_repository.expect_save().times(1).returning(move |blog_post| {
+      let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
+      if let Some(thumbnail) = blog_post.get_thumbnail() {
+        new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
+      }
+      new_post.set_post_date(blog_post.get_post_date());
+      Ok(new_post)
+    });
 
-    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository));
+    let factory = create_test_factory();
+    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository), factory);
 
     // Act
     let result = usecase.execute(dto).await;
@@ -152,19 +204,17 @@ mod tests {
     let dto = create_test_dto("保存確認記事", thumbnail_id);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_save()
-      .times(1)
-      .returning(move |blog_post| {
-        let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
-        if let Some(thumbnail) = blog_post.get_thumbnail() {
-          new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
-        }
-        new_post.set_post_date(blog_post.get_post_date());
-        Ok(new_post)
-      });
+    mock_repository.expect_save().times(1).returning(move |blog_post| {
+      let mut new_post = BlogPostEntity::new(blog_post.get_id(), blog_post.get_title_text().to_string());
+      if let Some(thumbnail) = blog_post.get_thumbnail() {
+        new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
+      }
+      new_post.set_post_date(blog_post.get_post_date());
+      Ok(new_post)
+    });
 
-    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository));
+    let factory = create_test_factory();
+    let usecase = CreateBlogPostUseCase::new(Arc::new(mock_repository), factory);
 
     // Act
     let result = usecase.execute(dto).await;

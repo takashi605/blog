@@ -61,6 +61,7 @@ mod tests {
     #[async_trait::async_trait]
     impl ImageRepository for ImageRepo {
       async fn find(&self, id: &str) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn find_by_path(&self, path: &str) -> Result<ImageEntity, ImageRepositoryError>;
       async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError>;
       async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError>;
     }

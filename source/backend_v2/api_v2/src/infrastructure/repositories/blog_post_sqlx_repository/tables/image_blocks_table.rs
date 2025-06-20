@@ -49,7 +49,7 @@ pub async fn fetch_image_blocks_by_content_id(executor: impl Executor<'_, Databa
 }
 
 pub async fn insert_image_block(executor: impl Executor<'_, Database = Postgres>, image_block: ImageBlockRecord) -> Result<()> {
-  sqlx::query("insert into image_blocks (id, image_id) values ($1, $2)")
+  let err = sqlx::query("insert into image_blocks (id, image_id) values ($1, $2)")
     .bind(image_block.id)
     .bind(image_block.image_id)
     .execute(executor)

@@ -94,15 +94,16 @@ fn convert_content_entity_to_block_record(content: &ContentEntity, content_id: U
         rich_text_records_with_relations: rich_text_records,
       }))
     }
-    ContentEntity::Image(image) => {
+    ContentEntity::Image(image_content) => {
+      let image_record_id = image_content.get_image().get_id();
       let image_record = ImageRecord {
-        id: image.get_id(), // 画像コンテンツのIDを画像レコードのIDとして使用
-        file_path: image.get_path().to_string(),
+        id: image_record_id, // 画像コンテンツのIDを画像レコードのIDとして使用
+        file_path: image_content.get_path().to_string(),
       };
 
       let image_block_record = ImageBlockRecord {
         id: content_id, // post_contentのIDを使用
-        image_id: image_record.id,
+        image_id: image_record_id,
       };
 
       Ok(AnyContentBlockRecord::ImageBlockRecord(ImageBlockRecordWithRelations {

@@ -55,9 +55,13 @@ mod tests {
   use crate::domain::blog_domain::{
     blog_post_entity::BlogPostEntity,
     blog_post_factory::{BlogPostFactory, CreateBlogPostInput, CreateImageInput},
+    image_content_factory::ImageContentFactory,
   };
+  use crate::domain::image_domain::{image_repository::ImageRepository, image_repository::ImageRepositoryError, image_entity::ImageEntity};
   use mockall::mock;
   use std::sync::Arc;
+  use std::collections::HashMap;
+  use async_trait::async_trait;
 
   // モックリポジトリの定義
   mock! {
@@ -77,54 +81,97 @@ mod tests {
       }
   }
 
+  // テスト用のモックImageRepository
+  pub struct MockImageRepository {
+    images: HashMap<String, ImageEntity>,
+  }
+
+  impl MockImageRepository {
+    pub fn new() -> Self {
+      Self {
+        images: HashMap::new(),
+      }
+    }
+
+    pub fn add_image(&mut self, path: String, image: ImageEntity) {
+      self.images.insert(path, image);
+    }
+  }
+
+  #[async_trait]
+  impl ImageRepository for MockImageRepository {
+    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindFailed("not implemented".to_string()))
+    }
+
+    async fn find_by_path(&self, path: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      match self.images.get(path) {
+        Some(image) => Ok(ImageEntity::new(image.get_id(), image.get_path().to_string())),
+        None => Err(ImageRepositoryError::FindByPathFailed(format!("Image not found for path: {}", path))),
+      }
+    }
+
+    async fn save(&self, _image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::SaveFailed("not implemented".to_string()))
+    }
+
+    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindAllFailed("not implemented".to_string()))
+    }
+  }
+
+  // テスト用のファクトリ作成ヘルパー
+  async fn create_test_factory_and_blog_post(title: &str, thumbnail_path: Option<&str>) -> (Arc<BlogPostFactory>, BlogPostEntity) {
+    let mut mock_image_repo = MockImageRepository::new();
+    
+    // テスト用の画像を追加
+    if let Some(path) = thumbnail_path {
+      let image_id = uuid::Uuid::new_v4();
+      let image = ImageEntity::new(image_id, path.to_string());
+      mock_image_repo.add_image(path.to_string(), image);
+    }
+
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_image_repo)));
+    let factory = Arc::new(BlogPostFactory::new(image_factory));
+
+    let input = CreateBlogPostInput {
+      title: title.to_string(),
+      thumbnail: thumbnail_path.map(|path| CreateImageInput {
+        id: uuid::Uuid::new_v4(),
+        path: path.to_string(),
+      }),
+      post_date: None,
+      last_update_date: None,
+      contents: vec![],
+    };
+
+    let blog_post = factory.create(input).await.unwrap();
+    (factory, blog_post)
+  }
+
   #[tokio::test]
   async fn test_execute_updates_top_tech_pick_post() {
     // Arrange
     let mut mock_repository = MockBlogPostRepositoryImpl::new();
 
     // テスト用のブログ記事を作成
-    let input = CreateBlogPostInput {
-      title: "新しいトップテック記事".to_string(),
-      thumbnail: Some(CreateImageInput {
-        id: uuid::Uuid::new_v4(),
-        path: "https://example.com/new-thumbnail.jpg".to_string(),
-      }),
-      post_date: None,
-      last_update_date: None,
-      contents: vec![],
-    };
-    let blog_post = BlogPostFactory::create(input);
+    let (_factory, blog_post) = create_test_factory_and_blog_post("新しいトップテック記事", Some("https://example.com/new-thumbnail.jpg")).await;
     let post_id_str = blog_post.get_id().to_string();
     let expected_id = post_id_str.clone();
 
     // モックの設定（findメソッド）
     mock_repository.expect_find().withf(move |id| id == &post_id_str).times(1).returning(move |_| {
-      let input = CreateBlogPostInput {
-        title: "新しいトップテック記事".to_string(),
-        thumbnail: Some(CreateImageInput {
-          id: uuid::Uuid::new_v4(),
-          path: "https://example.com/new-thumbnail.jpg".to_string(),
-        }),
-        post_date: None,
-        last_update_date: None,
-        contents: vec![],
-      };
-      Ok(BlogPostFactory::create(input))
+      // テスト用に簡単なブログ記事を返す
+      Ok(BlogPostEntity::new(uuid::Uuid::new_v4(), "新しいトップテック記事".to_string()))
     });
 
     // モックの設定（update_top_tech_pick_postメソッド）
     mock_repository.expect_update_top_tech_pick_post().times(1).returning(|_| {
-      let input = CreateBlogPostInput {
-        title: "更新されたトップテック記事".to_string(),
-        thumbnail: Some(CreateImageInput {
-          id: uuid::Uuid::new_v4(),
-          path: "https://example.com/updated-thumbnail.jpg".to_string(),
-        }),
-        post_date: None,
-        last_update_date: None,
-        contents: vec![],
-      };
-      Ok(TopTechPickEntity::new(BlogPostFactory::create(input)))
+      // テスト用に簡単なエンティティを返す
+      let mut updated_post = BlogPostEntity::new(uuid::Uuid::new_v4(), "更新されたトップテック記事".to_string());
+      // サムネイルを設定
+      updated_post.set_thumbnail(uuid::Uuid::new_v4(), "https://example.com/updated-thumbnail.jpg".to_string());
+      Ok(TopTechPickEntity::new(updated_post))
     });
 
     let repository = Arc::new(mock_repository);
@@ -169,26 +216,13 @@ mod tests {
     let mut mock_repository = MockBlogPostRepositoryImpl::new();
 
     // テスト用のブログ記事を作成
-    let input = CreateBlogPostInput {
-      title: "記事タイトル".to_string(),
-      thumbnail: None,
-      post_date: None,
-      last_update_date: None,
-      contents: vec![],
-    };
-    let blog_post = BlogPostFactory::create(input);
+    let (_factory, blog_post) = create_test_factory_and_blog_post("記事タイトル", None).await;
     let post_id_str = blog_post.get_id().to_string();
 
     // モックの設定（findメソッド）
     mock_repository.expect_find().withf(move |id| id == &post_id_str).times(1).returning(move |_| {
-      let input = CreateBlogPostInput {
-        title: "記事タイトル".to_string(),
-        thumbnail: None,
-        post_date: None,
-        last_update_date: None,
-        contents: vec![],
-      };
-      Ok(BlogPostFactory::create(input))
+      // テスト用に簡単なブログ記事を返す
+      Ok(BlogPostEntity::new(uuid::Uuid::new_v4(), "記事タイトル".to_string()))
     });
 
     // モックの設定（update_top_tech_pick_postメソッド - エラーを返す）

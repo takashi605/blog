@@ -156,10 +156,17 @@ mod tests {
         Uuid::parse_str("550e8400-e29b-41d4-a716-446655440005").unwrap(),
         rich_text,
       )),
-      ContentEntity::Image(ImageContentEntity::new(
-        Uuid::parse_str("550e8400-e29b-41d4-a716-446655440006").unwrap(),
-        "https://example.com/image.jpg".to_string(),
-      )),
+      {
+        use crate::domain::image_domain::image_entity::ImageEntity;
+        let image_entity = ImageEntity::new(
+          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440099").unwrap(),
+          "https://example.com/image.jpg".to_string(),
+        );
+        ContentEntity::Image(ImageContentEntity::new(
+          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440006").unwrap(),
+          image_entity,
+        ))
+      },
       ContentEntity::code_block(
         Uuid::parse_str("550e8400-e29b-41d4-a716-446655440007").unwrap(),
         "サンプルコード".to_string(),

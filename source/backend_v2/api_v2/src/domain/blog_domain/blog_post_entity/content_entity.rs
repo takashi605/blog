@@ -30,8 +30,14 @@ impl ContentEntity {
         ContentEntity::Paragraph(ParagraphEntity::new(id, text))
     }
 
-    pub fn image(id: Uuid, path: String) -> Self {
-        ContentEntity::Image(ImageContentEntity::new(id, path))
+    pub fn image(_id: Uuid, _path: String) -> Self {
+        // 後方互換性のための一時的なメソッド
+        // TODO: このメソッドは削除予定
+        panic!("Use image_from_entity instead")
+    }
+
+    pub fn image_from_entity(image_content: ImageContentEntity) -> Self {
+        ContentEntity::Image(image_content)
     }
 
     pub fn code_block(id: Uuid, title: String, code: String, language: String) -> Self {

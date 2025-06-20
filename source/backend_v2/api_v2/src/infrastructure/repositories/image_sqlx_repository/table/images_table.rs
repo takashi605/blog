@@ -19,6 +19,14 @@ pub async fn fetch_all_images(executor: impl Executor<'_, Database = Postgres>) 
   Ok(images)
 }
 
+pub async fn fetch_image_by_path(executor: impl Executor<'_, Database = Postgres>, path: &str) -> Result<ImageRecord> {
+  let image = sqlx::query_as::<_, ImageRecord>("select id, file_path from images where file_path = $1")
+    .bind(path)
+    .fetch_one(executor)
+    .await?;
+  Ok(image)
+}
+
 pub async fn insert_image(executor: impl Executor<'_, Database = Postgres>, image: Image) -> Result<ImageRecord> {
   let image = sqlx::query_as::<_, ImageRecord>("insert into images (id, file_path) values ($1, $2) returning id, file_path")
     .bind(image.id)

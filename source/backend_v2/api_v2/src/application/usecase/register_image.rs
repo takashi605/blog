@@ -20,6 +20,7 @@ impl From<ImageRepositoryError> for RegisterImageError {
   fn from(error: ImageRepositoryError) -> Self {
     match error {
       ImageRepositoryError::FindFailed(msg) => RegisterImageError::RepositoryError(msg),
+      ImageRepositoryError::FindByPathFailed(msg) => RegisterImageError::RepositoryError(msg),
       ImageRepositoryError::SaveFailed(msg) => RegisterImageError::RepositoryError(msg),
       ImageRepositoryError::FindAllFailed(msg) => RegisterImageError::RepositoryError(msg),
     }
@@ -67,6 +68,7 @@ mod tests {
     #[async_trait::async_trait]
     impl ImageRepository for ImageRepo {
       async fn find(&self, id: &str) -> Result<ImageEntity, ImageRepositoryError>;
+      async fn find_by_path(&self, path: &str) -> Result<ImageEntity, ImageRepositoryError>;
       async fn save(&self, image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError>;
       async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError>;
     }

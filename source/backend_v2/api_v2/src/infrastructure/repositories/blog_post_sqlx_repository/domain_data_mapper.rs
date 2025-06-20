@@ -82,7 +82,14 @@ fn convert_paragraph_to_content_entity(paragraph: ParagraphBlockRecordWithRelati
 
 /// ImageBlockRecordWithRelationsからContentEntityに変換する
 fn convert_image_block_to_content_entity(image_block: ImageBlockRecordWithRelations) -> Result<ContentEntity> {
-  Ok(ContentEntity::image(image_block.image_block_record.id, image_block.image_record.file_path))
+  // ImageEntityを作成
+  let image_entity = ImageEntity::new(image_block.image_record.id, image_block.image_record.file_path);
+  
+  // ImageContentEntityを作成
+  let image_content_entity = ImageContentEntity::new(image_block.image_block_record.id, image_entity);
+  
+  // ContentEntityとして返す
+  Ok(ContentEntity::image_from_entity(image_content_entity))
 }
 
 /// CodeBlockRecordからContentEntityに変換する

@@ -1,10 +1,14 @@
 use chrono::NaiveDate;
 use uuid::Uuid;
+use std::sync::Arc;
 
-use super::blog_post_entity::{
-  content_entity::ContentEntity,
-  rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
-  BlogPostEntity,
+use super::{
+  blog_post_entity::{
+    content_entity::ContentEntity,
+    rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
+    BlogPostEntity,
+  },
+  image_content_factory::{ImageContentFactory, ImageContentFactoryError},
 };
 
 // ファクトリの入力用構造体（APIレスポンス型を参考にドメイン層独自に定義）
@@ -53,10 +57,37 @@ pub struct CreateLinkInput {
 
 // BlogPostFactory 構造体
 
-pub struct BlogPostFactory;
+#[derive(Debug, PartialEq)]
+pub enum BlogPostFactoryError {
+  ImageContentCreationFailed(String),
+}
+
+impl std::fmt::Display for BlogPostFactoryError {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      BlogPostFactoryError::ImageContentCreationFailed(msg) => write!(f, "Image content creation failed: {}", msg),
+    }
+  }
+}
+
+impl std::error::Error for BlogPostFactoryError {}
+
+impl From<ImageContentFactoryError> for BlogPostFactoryError {
+  fn from(error: ImageContentFactoryError) -> Self {
+    BlogPostFactoryError::ImageContentCreationFailed(format!("Image content creation failed: {:?}", error))
+  }
+}
+
+pub struct BlogPostFactory {
+  image_content_factory: Arc<ImageContentFactory>,
+}
 
 impl BlogPostFactory {
-  pub fn create(input: CreateBlogPostInput) -> BlogPostEntity {
+  pub fn new(image_content_factory: Arc<ImageContentFactory>) -> Self {
+    Self { image_content_factory }
+  }
+
+  pub async fn create(&self, input: CreateBlogPostInput) -> Result<BlogPostEntity, BlogPostFactoryError> {
     // 新しいIDを生成
     let post_id = Uuid::new_v4();
 
@@ -82,24 +113,28 @@ impl BlogPostFactory {
 
     // コンテンツを変換して追加
     for content_input in input.contents {
-      let content_entity = Self::convert_content(content_input);
+      let content_entity = self.convert_content(content_input).await?;
       blog_post.add_content(content_entity);
     }
 
-    blog_post
+    Ok(blog_post)
   }
 
-  fn convert_content(input: CreateContentInput) -> ContentEntity {
+  async fn convert_content(&self, input: CreateContentInput) -> Result<ContentEntity, BlogPostFactoryError> {
     match input {
-      CreateContentInput::H2 { id, text } => ContentEntity::h2(id, text),
-      CreateContentInput::H3 { id, text } => ContentEntity::h3(id, text),
+      CreateContentInput::H2 { id, text } => Ok(ContentEntity::h2(id, text)),
+      CreateContentInput::H3 { id, text } => Ok(ContentEntity::h3(id, text)),
       CreateContentInput::Paragraph { id, text } => {
         let rich_text_parts: Vec<RichTextPartVO> = text.into_iter().map(Self::convert_rich_text).collect();
         let rich_text = RichTextVO::new(rich_text_parts);
-        ContentEntity::paragraph(id, rich_text)
+        Ok(ContentEntity::paragraph(id, rich_text))
       }
-      CreateContentInput::Image { id, path } => ContentEntity::image(id, path),
-      CreateContentInput::CodeBlock { id, title, code, language } => ContentEntity::code_block(id, title, code, language),
+      CreateContentInput::Image { id: _unused_id, path } => {
+        // pathを使ってImageContentFactoryから適切なエンティティを作成
+        let image_content = self.image_content_factory.create(path).await?;
+        Ok(ContentEntity::image_from_entity(image_content))
+      }
+      CreateContentInput::CodeBlock { id, title, code, language } => Ok(ContentEntity::code_block(id, title, code, language)),
     }
   }
 
@@ -124,9 +159,56 @@ impl BlogPostFactory {
 mod tests {
   use super::*;
   use chrono::Local;
+  use crate::domain::image_domain::{image_repository::ImageRepository, image_repository::ImageRepositoryError, image_entity::ImageEntity};
+  use std::collections::HashMap;
+  use std::sync::Arc;
+  use async_trait::async_trait;
 
-  #[test]
-  fn 基本的な記事作成() {
+  // テスト用のモックリポジトリ
+  pub struct MockImageRepository {
+    images: HashMap<String, ImageEntity>,
+  }
+
+  impl MockImageRepository {
+    pub fn new() -> Self {
+      Self {
+        images: HashMap::new(),
+      }
+    }
+
+    pub fn add_image(&mut self, path: String, image: ImageEntity) {
+      self.images.insert(path, image);
+    }
+  }
+
+  #[async_trait]
+  impl ImageRepository for MockImageRepository {
+    async fn find(&self, _id: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindFailed("not implemented".to_string()))
+    }
+
+    async fn find_by_path(&self, path: &str) -> Result<ImageEntity, ImageRepositoryError> {
+      match self.images.get(path) {
+        Some(image) => Ok(ImageEntity::new(image.get_id(), image.get_path().to_string())),
+        None => Err(ImageRepositoryError::FindByPathFailed(format!("Image not found for path: {}", path))),
+      }
+    }
+
+    async fn save(&self, _image: ImageEntity) -> Result<ImageEntity, ImageRepositoryError> {
+      Err(ImageRepositoryError::SaveFailed("not implemented".to_string()))
+    }
+
+    async fn find_all(&self) -> Result<Vec<ImageEntity>, ImageRepositoryError> {
+      Err(ImageRepositoryError::FindAllFailed("not implemented".to_string()))
+    }
+  }
+
+  #[tokio::test]
+  async fn 基本的な記事作成() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let input = CreateBlogPostInput {
       title: "テスト記事".to_string(),
       thumbnail: None,
@@ -135,16 +217,23 @@ mod tests {
       contents: vec![],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
 
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+    
     assert_eq!(blog_post.get_title_text(), "テスト記事");
     assert!(blog_post.get_thumbnail().is_none());
     assert_eq!(blog_post.get_contents().len(), 0);
     assert_eq!(blog_post.get_post_date(), Local::now().date_naive());
   }
 
-  #[test]
-  fn サムネイル付き記事作成() {
+  #[tokio::test]
+  async fn サムネイル付き記事作成() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let thumbnail_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let input = CreateBlogPostInput {
       title: "サムネイル付き記事".to_string(),
@@ -157,15 +246,27 @@ mod tests {
       contents: vec![],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
 
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+    
     let thumbnail = blog_post.get_thumbnail().unwrap();
     assert_eq!(thumbnail.get_id(), thumbnail_id);
     assert_eq!(thumbnail.get_path(), "path/to/thumbnail.jpg");
   }
 
-  #[test]
-  fn 複数コンテンツタイプを含む記事作成() {
+  #[tokio::test]
+  async fn 複数コンテンツタイプを含む記事作成() {
+    let mut mock_repo = MockImageRepository::new();
+    let image_entity_id = Uuid::new_v4();
+    let image_path = "path/to/image.jpg".to_string();
+    let image_entity = ImageEntity::new(image_entity_id, image_path.clone());
+    mock_repo.add_image(image_path.clone(), image_entity);
+    
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let h2_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let h3_id = Uuid::parse_str("00000000-0000-0000-0000-000000000002").unwrap();
     let para_id = Uuid::parse_str("00000000-0000-0000-0000-000000000003").unwrap();
@@ -199,7 +300,7 @@ mod tests {
         },
         CreateContentInput::Image {
           id: img_id,
-          path: "path/to/image.jpg".to_string(),
+          path: image_path,
         },
         CreateContentInput::CodeBlock {
           id: code_id,
@@ -210,7 +311,10 @@ mod tests {
       ],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
+
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
 
     assert_eq!(blog_post.get_contents().len(), 5);
 
@@ -243,9 +347,13 @@ mod tests {
     }
   }
 
-  #[test]
-  fn 日付指定ありの記事作成() {
+  #[tokio::test]
+  async fn 日付指定ありの記事作成() {
     use chrono::NaiveDate;
+
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
 
     let specified_date = NaiveDate::from_ymd_opt(2024, 6, 15).unwrap();
     let input = CreateBlogPostInput {
@@ -256,13 +364,20 @@ mod tests {
       contents: vec![],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
 
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+    
     assert_eq!(blog_post.get_post_date(), specified_date);
   }
 
-  #[test]
-  fn リッチテキスト変換の正確性() {
+  #[tokio::test]
+  async fn リッチテキスト変換の正確性() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let para_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
 
     let input = CreateBlogPostInput {
@@ -311,8 +426,11 @@ mod tests {
       }],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
 
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+    
     let contents = blog_post.get_contents();
     match &contents[0] {
       ContentEntity::Paragraph(para) => {
@@ -345,8 +463,12 @@ mod tests {
     }
   }
 
-  #[test]
-  fn エッジケース_空コンテンツ() {
+  #[tokio::test]
+  async fn エッジケース_空コンテンツ() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let input = CreateBlogPostInput {
       title: "空の記事".to_string(),
       thumbnail: None,
@@ -355,14 +477,21 @@ mod tests {
       contents: vec![],
     };
 
-    let blog_post = BlogPostFactory::create(input);
+    let result = factory.create(input).await;
 
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+    
     assert_eq!(blog_post.get_contents().len(), 0);
     assert_eq!(blog_post.get_title_text(), "空の記事");
   }
 
-  #[test]
-  fn ファクトリがユニークなIDを自動生成する() {
+  #[tokio::test]
+  async fn ファクトリがユニークなIDを自動生成する() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
     let input1 = CreateBlogPostInput {
       title: "記事1".to_string(),
       thumbnail: None,
@@ -379,8 +508,14 @@ mod tests {
       contents: vec![],
     };
 
-    let blog_post1 = BlogPostFactory::create(input1);
-    let blog_post2 = BlogPostFactory::create(input2);
+    let result1 = factory.create(input1).await;
+    let result2 = factory.create(input2).await;
+
+    assert!(result1.is_ok());
+    assert!(result2.is_ok());
+    
+    let blog_post1 = result1.unwrap();
+    let blog_post2 = result2.unwrap();
 
     // 各記事が異なるIDを持つことを確認（重要なビジネスロジック）
     assert_ne!(blog_post1.get_id(), blog_post2.get_id());
@@ -394,26 +529,25 @@ mod tests {
     assert_eq!(blog_post2.get_id().get_version_num(), 4);
   }
 
-  #[test]
-  fn 複数回実行しても毎回異なるIDが生成される() {
-    let _input = CreateBlogPostInput {
-      title: "テスト記事".to_string(),
-      thumbnail: None,
-      post_date: None,
-      last_update_date: None,
-      contents: vec![],
-    };
+  #[tokio::test]
+  async fn 複数回実行しても毎回異なるIDが生成される() {
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
 
     // 同じ入力で10回記事を生成
     let mut generated_ids = std::collections::HashSet::new();
     for _ in 0..10 {
-      let blog_post = BlogPostFactory::create(CreateBlogPostInput {
+      let result = factory.create(CreateBlogPostInput {
         title: "テスト記事".to_string(),
         thumbnail: None,
         post_date: None,
         last_update_date: None,
         contents: vec![],
-      });
+      }).await;
+
+      assert!(result.is_ok());
+      let blog_post = result.unwrap();
 
       // 重複するIDが生成されないことを確認
       assert!(generated_ids.insert(blog_post.get_id()), "重複したIDが生成されました: {}", blog_post.get_id());

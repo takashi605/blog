@@ -15,7 +15,7 @@ use crate::{
     view_popular_blog_posts::ViewPopularBlogPostsUseCase,
     view_top_tech_pick::ViewTopTechPickUseCase,
   },
-  domain::{blog_domain::blog_post_repository::BlogPostRepository, image_domain::image_repository::ImageRepository},
+  domain::{blog_domain::{blog_post_repository::BlogPostRepository, blog_post_factory::BlogPostFactory, image_content_factory::ImageContentFactory}, image_domain::image_repository::ImageRepository},
   infrastructure::repositories::{blog_post_sqlx_repository::BlogPostSqlxRepository, db_pool::create_db_pool, image_sqlx_repository::ImageSqlxRepository},
 };
 
@@ -59,7 +59,9 @@ impl DiContainer {
 
   /// CreateBlogPostUseCaseを作成する
   pub fn create_blog_post_usecase(&self) -> CreateBlogPostUseCase {
-    CreateBlogPostUseCase::new(self.blog_post_repository.clone())
+    let image_content_factory = Arc::new(ImageContentFactory::new(self.image_repository.clone()));
+    let blog_post_factory = Arc::new(BlogPostFactory::new(image_content_factory));
+    CreateBlogPostUseCase::new(self.blog_post_repository.clone(), blog_post_factory)
   }
 
   /// RegisterImageUseCaseを作成する
