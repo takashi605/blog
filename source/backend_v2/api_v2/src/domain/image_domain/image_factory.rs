@@ -28,7 +28,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn ファクトリで基本的な画像作成() {
+    fn factory_creates_basic_image() {
         let input = CreateImageInput {
             path: "images/test.jpg".to_string(),
         };
@@ -41,7 +41,7 @@ mod tests {
     }
 
     #[test]
-    fn ファクトリがユニークなIDを自動生成する() {
+    fn factory_generates_unique_ids_automatically() {
         let input1 = CreateImageInput {
             path: "images/test1.jpg".to_string(),
         };
@@ -65,7 +65,7 @@ mod tests {
     }
 
     #[test]
-    fn 複数回実行しても毎回異なるIDが生成される() {
+    fn multiple_executions_generate_different_ids_each_time() {
         let _input = CreateImageInput {
             path: "images/test.jpg".to_string(),
         };

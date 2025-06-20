@@ -204,7 +204,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 基本的な記事作成() {
+  async fn basic_blog_post_creation() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -229,7 +229,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn サムネイル付き記事作成() {
+  async fn blog_post_creation_with_thumbnail() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -257,7 +257,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 複数コンテンツタイプを含む記事作成() {
+  async fn blog_post_creation_with_multiple_content_types() {
     let mut mock_repo = MockImageRepository::new();
     let image_entity_id = Uuid::new_v4();
     let image_path = "path/to/image.jpg".to_string();
@@ -348,7 +348,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 日付指定ありの記事作成() {
+  async fn blog_post_creation_with_specified_dates() {
     use chrono::NaiveDate;
 
     let mock_repo = MockImageRepository::new();
@@ -373,7 +373,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn リッチテキスト変換の正確性() {
+  async fn rich_text_conversion_accuracy() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -464,7 +464,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn エッジケース_空コンテンツ() {
+  async fn edge_case_empty_content() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -487,7 +487,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn ファクトリがユニークなIDを自動生成する() {
+  async fn factory_generates_unique_ids_automatically() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -530,7 +530,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 複数回実行しても毎回異なるIDが生成される() {
+  async fn multiple_executions_generate_different_ids_each_time() {
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);

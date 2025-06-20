@@ -94,7 +94,7 @@ mod tests {
   use uuid::Uuid;
 
   #[test]
-  fn test_convert_to_dto_全てのコンテンツタイプを正しく変換する() {
+  fn test_convert_to_dto_converts_all_content_types_correctly() {
     use crate::domain::blog_domain::blog_post_entity::{
       content_entity::ContentEntity,
       h2_entity::H2Entity,

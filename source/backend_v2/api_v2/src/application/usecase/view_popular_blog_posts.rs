@@ -81,7 +81,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 人気記事3件を正常に取得できる() {
+  async fn test_can_retrieve_three_popular_posts_successfully() {
     // Arrange
     let popular_posts = [
       create_test_blog_post("00000000-0000-0000-0000-000000000001", "人気記事1"),
@@ -117,7 +117,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 人気記事のidが正しく変換される() {
+  async fn test_popular_post_ids_are_correctly_converted() {
     // Arrange
     let expected_id1 = "00000000-0000-0000-0000-000000000001";
     let expected_id2 = "00000000-0000-0000-0000-000000000002";
@@ -153,7 +153,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn リポジトリで不正な件数の場合はエラーとなる() {
+  async fn test_returns_error_when_repository_has_invalid_count() {
     // Arrange: リポジトリでエラーを返すように設定
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository

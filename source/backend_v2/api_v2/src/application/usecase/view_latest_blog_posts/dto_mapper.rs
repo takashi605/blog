@@ -112,7 +112,7 @@ mod tests {
   use uuid::Uuid;
 
   #[test]
-  fn test_空のリストを変換できる() {
+  fn test_can_convert_empty_list() {
     // Arrange
     let entities = Vec::new();
 
@@ -126,7 +126,7 @@ mod tests {
   }
 
   #[test]
-  fn test_単一記事を変換できる() {
+  fn test_can_convert_single_article() {
     // Arrange
     let post_id = Uuid::new_v4();
     let thumbnail_id = Uuid::new_v4();
@@ -165,7 +165,7 @@ mod tests {
   }
 
   #[test]
-  fn test_複数記事を変換できる() {
+  fn test_can_convert_multiple_articles() {
     // Arrange
     let mut entities = Vec::new();
 
@@ -198,7 +198,7 @@ mod tests {
   }
 
   #[test]
-  fn test_全種類のコンテンツを正しく変換できる() {
+  fn test_can_convert_all_content_types_correctly() {
     use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO};
 
     // Arrange

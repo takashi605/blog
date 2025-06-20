@@ -26,7 +26,7 @@ mod tests {
   use super::*;
 
   #[test]
-  fn 画像を作成できる() {
+  fn can_create_image() {
     let id = Uuid::new_v4();
     let path = "images/test.jpg".to_string();
 
@@ -37,7 +37,7 @@ mod tests {
   }
 
   #[test]
-  fn 同じIDの画像は等価() {
+  fn images_with_same_id_are_equal() {
     let id = Uuid::new_v4();
     let image1 = ImageEntity::new(id, "test.jpg".to_string());
     let image2 = ImageEntity::new(id, "test.jpg".to_string());
@@ -46,7 +46,7 @@ mod tests {
   }
 
   #[test]
-  fn 異なるIDの画像は等価ではない() {
+  fn images_with_different_ids_are_not_equal() {
     let image1 = ImageEntity::new(Uuid::new_v4(), "test.jpg".to_string());
     let image2 = ImageEntity::new(Uuid::new_v4(), "test.jpg".to_string());
 

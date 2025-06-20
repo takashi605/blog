@@ -147,7 +147,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 正常に3件の記事をピックアップ記事として選択できる() {
+  async fn can_successfully_select_three_posts_as_pick_up_posts() {
     let post1_id = "00000000-0000-0000-0000-000000000001";
     let post2_id = "00000000-0000-0000-0000-000000000002";
     let post3_id = "00000000-0000-0000-0000-000000000003";
@@ -172,7 +172,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 記事idが3件でない場合はエラーになる() {
+  async fn error_when_post_ids_are_not_three_items() {
     let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PickUpPostSelectorService::new(mock_repo);
 
@@ -189,7 +189,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 記事idが4件の場合はエラーになる() {
+  async fn error_when_post_ids_are_four_items() {
     let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PickUpPostSelectorService::new(mock_repo);
 
@@ -208,7 +208,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 存在しない記事idを指定した場合はエラーになる() {
+  async fn error_when_specifying_nonexistent_post_id() {
     let mock_repo = Arc::new(
       MockBlogPostRepository::new()
         .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
@@ -231,7 +231,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 空の配列を指定した場合はエラーになる() {
+  async fn error_when_specifying_empty_array() {
     let mock_repo = Arc::new(MockBlogPostRepository::new());
     let service = PickUpPostSelectorService::new(mock_repo);
 

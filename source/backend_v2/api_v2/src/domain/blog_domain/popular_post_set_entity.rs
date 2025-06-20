@@ -56,7 +56,7 @@ mod tests {
     }
 
     #[test]
-    fn 人気記事群を3件で作成できる() {
+    fn can_create_popular_post_set_with_three_posts() {
         let posts = [
             create_test_blog_post("00000000-0000-0000-0000-000000000001", "人気記事1"),
             create_test_blog_post("00000000-0000-0000-0000-000000000002", "人気記事2"),
@@ -73,7 +73,7 @@ mod tests {
     }
 
     #[test]
-    fn 全ての人気記事を取得できる() {
+    fn can_retrieve_all_popular_posts() {
         let posts = [
             create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事A"),
             create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事B"),
@@ -90,7 +90,7 @@ mod tests {
     }
 
     #[test]
-    fn 人気記事を置き換えできる() {
+    fn can_replace_popular_posts() {
         let initial_posts = [
             create_test_blog_post("00000000-0000-0000-0000-000000000001", "古い記事1"),
             create_test_blog_post("00000000-0000-0000-0000-000000000002", "古い記事2"),
@@ -114,7 +114,7 @@ mod tests {
     }
 
     #[test]
-    fn 人気記事のidが正しく保持される() {
+    fn popular_post_ids_are_correctly_maintained() {
         let posts = [
             create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
             create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
@@ -139,7 +139,7 @@ mod tests {
     }
 
     #[test]
-    fn 置き換え後のidが正しく更新される() {
+    fn ids_are_correctly_updated_after_replacement() {
         let initial_posts = [
             create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
             create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),

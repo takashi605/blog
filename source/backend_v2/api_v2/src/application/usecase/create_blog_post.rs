@@ -134,7 +134,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_記事作成用データをファクトリとリポジトリで処理する() {
+  async fn test_processes_blog_post_creation_data_with_factory_and_repository() {
     // Arrange
     let thumbnail_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let dto = create_test_dto("テスト記事", thumbnail_id);
@@ -166,7 +166,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_ファクトリで生成されたIDが保持される() {
+  async fn test_factory_generated_id_is_preserved() {
     // Arrange
     let thumbnail_id = Uuid::parse_str("00000000-0000-0000-0000-000000000002").unwrap();
     let dto = create_test_dto("ID確認記事", thumbnail_id);
@@ -198,7 +198,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_リポジトリのsaveメソッドが呼び出される() {
+  async fn test_repository_save_method_is_called() {
     // Arrange
     let thumbnail_id = Uuid::parse_str("00000000-0000-0000-0000-000000000003").unwrap();
     let dto = create_test_dto("保存確認記事", thumbnail_id);

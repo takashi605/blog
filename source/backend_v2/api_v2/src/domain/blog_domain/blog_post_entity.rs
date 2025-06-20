@@ -89,7 +89,7 @@ mod tests {
   };
 
   #[test]
-  fn idと記事タイトルを渡すと記事データを生成できる() {
+  fn can_generate_blog_post_data_with_id_and_title() {
     let id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let title = "記事タイトル1".to_string();
 
@@ -100,7 +100,7 @@ mod tests {
   }
 
   #[test]
-  fn サムネイル画像を持っている() {
+  fn has_thumbnail_image() {
     let post_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let mut blog_post = BlogPostEntity::new(post_id, "記事タイトル1".to_string());
 
@@ -115,7 +115,7 @@ mod tests {
   }
 
   #[test]
-  fn コンテンツとしてh2_h3及び段落を持つ記事を生成できる() {
+  fn can_generate_blog_post_with_h2_h3_and_paragraph_content() {
     let post_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let mut blog_post = BlogPostEntity::new(post_id, "記事タイトル1".to_string());
 
@@ -170,7 +170,7 @@ mod tests {
   }
 
   #[test]
-  fn サムネイル画像が設定されていない場合はNoneを返す() {
+  fn returns_none_when_thumbnail_image_is_not_set() {
     let post_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let blog_post = BlogPostEntity::new(post_id, "記事タイトル1".to_string());
 
@@ -178,7 +178,7 @@ mod tests {
   }
 
   #[test]
-  fn 複数のコンテンツを追加できる() {
+  fn can_add_multiple_contents() {
     let post_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let mut blog_post = BlogPostEntity::new(post_id, "記事タイトル".to_string());
 
@@ -192,7 +192,7 @@ mod tests {
   }
 
   #[test]
-  fn 空の記事を作成できる() {
+  fn can_create_empty_blog_post() {
     let id = Uuid::new_v4();
     let blog_post = BlogPostEntity::new(id, "空の記事".to_string());
 
@@ -201,7 +201,7 @@ mod tests {
   }
 
   #[test]
-  fn 投稿日と最終更新日を設定できる() {
+  fn can_set_post_date_and_last_update_date() {
     use chrono::NaiveDate;
 
     let id = Uuid::new_v4();
@@ -218,7 +218,7 @@ mod tests {
   }
 
   #[test]
-  fn 投稿日と最終更新日のデフォルト値() {
+  fn default_values_for_post_date_and_last_update_date() {
     use chrono::Local;
 
     let id = Uuid::new_v4();

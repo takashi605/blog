@@ -78,7 +78,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_記事を新着順に取得できる() {
+  async fn test_can_get_articles_in_latest_order() {
     // Arrange
     let old_date = NaiveDate::from_ymd_opt(2024, 1, 10).unwrap();
     let middle_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
@@ -131,7 +131,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_記事は全件取得される() {
+  async fn test_all_articles_are_retrieved() {
     // Arrange
     let base_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
 
@@ -180,7 +180,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_空の記事リストでもエラーにならない() {
+  async fn test_empty_article_list_does_not_cause_error() {
     // Arrange
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository
@@ -201,7 +201,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_quantityパラメータがリポジトリに渡される() {
+  async fn test_quantity_parameter_is_passed_to_repository() {
     // Arrange
     let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
     let _posts = create_sorted_posts(test_data);

@@ -51,7 +51,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn test_記事閲覧用データをリポジトリから取得する() {
+  async fn test_retrieves_blog_post_data_from_repository() {
     // Arrange
     let test_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let _expected_post = BlogPostEntity::new(test_id, "テストタイトル".to_string());

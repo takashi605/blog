@@ -118,7 +118,7 @@ mod tests {
   use uuid::Uuid;
 
   #[test]
-  fn test_空のViewLatestBlogPostsDTOを変換できる() {
+  fn test_converts_empty_view_latest_blog_posts_dto() {
     // Arrange
     let dto = ViewLatestBlogPostsDTO { blog_posts: vec![] };
 
@@ -132,7 +132,7 @@ mod tests {
   }
 
   #[test]
-  fn test_単一記事のViewLatestBlogPostsDTOを変換できる() {
+  fn test_converts_single_article_view_latest_blog_posts_dto() {
     // Arrange
     let post_id = Uuid::new_v4();
     let thumbnail_id = Uuid::new_v4();
@@ -171,7 +171,7 @@ mod tests {
   }
 
   #[test]
-  fn test_複数記事のViewLatestBlogPostsDTOを変換できる() {
+  fn test_converts_multiple_articles_view_latest_blog_posts_dto() {
     // Arrange
     let mut blog_posts_dto = vec![];
 
@@ -214,7 +214,7 @@ mod tests {
   }
 
   #[test]
-  fn test_コンテンツ変換を含むViewLatestBlogPostsDTOを変換できる() {
+  fn test_converts_view_latest_blog_posts_dto_with_content_conversion() {
     // Arrange
     let post_id = Uuid::new_v4();
     let thumbnail_id = Uuid::new_v4();
@@ -363,7 +363,7 @@ mod tests {
   }
 
   #[test]
-  fn test_ViewLatestBlogPostsDTO無効なUUID形式でエラーになる() {
+  fn test_view_latest_blog_posts_dto_returns_error_with_invalid_uuid_format() {
     // Arrange
     let invalid_post_dto = ViewLatestBlogPostItemDTO {
       id: "invalid-uuid".to_string(),

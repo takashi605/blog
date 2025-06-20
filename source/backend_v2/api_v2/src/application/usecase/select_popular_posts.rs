@@ -86,7 +86,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 正常に3件の記事を人気記事として選択・更新できる() {
+  async fn test_can_select_and_update_three_articles_as_popular_posts() {
     // Arrange
     let post1_id = "00000000-0000-0000-0000-000000000001";
     let post2_id = "00000000-0000-0000-0000-000000000002";
@@ -148,7 +148,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 記事idが3件でない場合はエラーになる() {
+  async fn test_returns_error_when_article_ids_are_not_exactly_three() {
     // Arrange
     let mock_repo = MockBlogPostRepo::new();
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
@@ -167,7 +167,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 記事idが4件の場合はエラーになる() {
+  async fn test_returns_error_when_four_article_ids_are_provided() {
     // Arrange
     let mock_repo = MockBlogPostRepo::new();
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
@@ -188,7 +188,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 存在しない記事idを指定した場合はエラーになる() {
+  async fn test_returns_error_when_non_existent_article_id_is_specified() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
     
@@ -229,7 +229,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn 空の配列を指定した場合はエラーになる() {
+  async fn test_returns_error_when_empty_array_is_provided() {
     // Arrange
     let mock_repo = MockBlogPostRepo::new();
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
@@ -243,7 +243,7 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn リポジトリの更新処理が失敗した場合はエラーになる() {
+  async fn test_returns_error_when_repository_update_fails() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
     

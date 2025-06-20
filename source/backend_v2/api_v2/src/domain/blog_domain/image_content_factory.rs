@@ -91,7 +91,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn 正常なパスで画像コンテンツを作成できる() {
+    async fn can_create_image_content_with_valid_path() {
         let mut mock_repo = MockImageRepository::new();
         let image_id = Uuid::new_v4();
         let image_path = "images/test.jpg".to_string();
@@ -114,7 +114,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn 存在しないパスでエラーが発生する() {
+    async fn error_occurs_with_nonexistent_path() {
         let mock_repo = MockImageRepository::new();
         let factory = ImageContentFactory::new(Arc::new(mock_repo));
 
@@ -130,7 +130,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn 複数回呼び出すと異なるIDが生成される() {
+    async fn multiple_calls_generate_different_ids() {
         let mut mock_repo = MockImageRepository::new();
         let image_id = Uuid::new_v4();
         let image_path = "images/test.jpg".to_string();
@@ -156,7 +156,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn ファクトリが正しいID形式を生成する() {
+    async fn factory_generates_correct_id_format() {
         let mut mock_repo = MockImageRepository::new();
         let image_id = Uuid::new_v4();
         let image_path = "images/test.jpg".to_string();

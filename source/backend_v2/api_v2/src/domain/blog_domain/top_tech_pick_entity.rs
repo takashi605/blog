@@ -56,7 +56,7 @@ mod tests {
     }
 
     #[test]
-    fn トップテック記事を1件で作成できる() {
+    fn can_create_top_tech_pick_with_single_post() {
         let post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "トップテック記事");
 
         let top_tech_pick = TopTechPickEntity::new(post);
@@ -66,7 +66,7 @@ mod tests {
     }
 
     #[test]
-    fn トップテック記事を取得できる() {
+    fn can_retrieve_top_tech_pick_post() {
         let post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "技術記事");
 
         let top_tech_pick = TopTechPickEntity::new(post);
@@ -76,7 +76,7 @@ mod tests {
     }
 
     #[test]
-    fn トップテック記事を置き換えできる() {
+    fn can_replace_top_tech_pick_post() {
         let initial_post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "古い記事");
         let mut top_tech_pick = TopTechPickEntity::new(initial_post);
 
@@ -88,7 +88,7 @@ mod tests {
     }
 
     #[test]
-    fn トップテック記事のidが正しく保持される() {
+    fn top_tech_pick_post_id_is_correctly_maintained() {
         let post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事");
 
         let top_tech_pick = TopTechPickEntity::new(post);
@@ -101,7 +101,7 @@ mod tests {
     }
 
     #[test]
-    fn 置き換え後のidが正しく更新される() {
+    fn id_is_correctly_updated_after_replacement() {
         let initial_post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1");
         let mut top_tech_pick = TopTechPickEntity::new(initial_post);
 
@@ -116,7 +116,7 @@ mod tests {
     }
 
     #[test]
-    fn into_postでトップテック記事を消費して取得できる() {
+    fn can_consume_and_retrieve_top_tech_pick_post_with_into_post() {
         let post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "消費記事");
         let top_tech_pick = TopTechPickEntity::new(post);
 

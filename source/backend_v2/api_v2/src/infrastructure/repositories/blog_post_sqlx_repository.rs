@@ -526,7 +526,7 @@ mod tests {
 
   #[tokio::test]
   #[ignore = "データベース接続が必要なテスト"]
-  async fn test_find_popular_posts_取得機能() {
+  async fn test_find_popular_posts_functionality() {
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
     let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
     let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
@@ -580,7 +580,7 @@ mod tests {
 
   #[tokio::test]
   #[ignore = "データベース接続が必要なテスト"]
-  async fn test_update_popular_posts_更新機能() {
+  async fn test_update_popular_posts_functionality() {
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
     let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
     let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
@@ -627,7 +627,7 @@ mod tests {
 
   #[tokio::test]
   #[ignore = "データベース接続が必要なテスト"]
-  async fn test_find_pick_up_posts_取得機能() {
+  async fn test_find_pick_up_posts_functionality() {
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
     let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
     let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);
@@ -680,7 +680,7 @@ mod tests {
 
   #[tokio::test]
   #[ignore = "データベース接続が必要なテスト"]
-  async fn test_update_pick_up_posts_更新機能() {
+  async fn test_update_pick_up_posts_functionality() {
     let pool = create_db_pool().await.expect("データベースプールの作成に失敗しました");
     let image_repository = crate::infrastructure::repositories::image_sqlx_repository::ImageSqlxRepository::new(pool.clone());
     let repository = BlogPostSqlxRepository::new(pool.clone(), image_repository);

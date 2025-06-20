@@ -58,7 +58,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn rich_text_voを作成できる() {
+    fn can_create_rich_text_vo() {
         let parts = vec![
             RichTextPartVO::new("通常のテキスト".to_string(), None, None),
             RichTextPartVO::new(
@@ -79,7 +79,7 @@ mod tests {
     }
 
     #[test]
-    fn rich_text_part_voでリンクを持てる() {
+    fn rich_text_part_vo_can_have_link() {
         let link = LinkVO {
             url: "https://example.com".to_string(),
         };
@@ -94,7 +94,7 @@ mod tests {
     }
 
     #[test]
-    fn rich_text_part_voでインラインコードスタイルを持てる() {
+    fn rich_text_part_vo_can_have_inline_code_style() {
         let part = RichTextPartVO::new(
             "console.log()".to_string(),
             Some(RichTextStylesVO {
