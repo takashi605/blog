@@ -1,10 +1,10 @@
 'use client';
 import { createContext, useCallback, useContext, useState } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { BlogPost } from 'shared-lib/src/api';
 
 type PopularPostListState = {
-  getAllPopularPosts: () => BlogPostDTO[];
-  updatePopularPosts: (PopularPosts: BlogPostDTO[]) => void;
+  getAllPopularPosts: () => BlogPost[];
+  updatePopularPosts: (PopularPosts: BlogPost[]) => void;
 };
 
 const PopularPostListContext = createContext<PopularPostListState | null>(null);
@@ -14,11 +14,11 @@ export default function PopularPostListProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [popularPostList, setPopularPostList] = useState<BlogPostDTO[]>([]);
+  const [popularPostList, setPopularPostList] = useState<BlogPost[]>([]);
   const getAllPopularPosts = useCallback(() => {
     return popularPostList;
   }, [popularPostList]);
-  const updatePopularPosts = useCallback((PopularPosts: BlogPostDTO[]) => {
+  const updatePopularPosts = useCallback((PopularPosts: BlogPost[]) => {
     setPopularPostList(PopularPosts);
   }, []);
 
