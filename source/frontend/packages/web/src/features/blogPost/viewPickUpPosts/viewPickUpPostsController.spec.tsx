@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
+import type { components } from 'shared-lib/src/generated/api-types';
 import ViewPickUpPostsController from './ViewPickUpPostsController';
 
 const mockApiForServer = setupMockApiForServer(
@@ -21,13 +21,13 @@ const renderController = async () => render(await ViewPickUpPostsController());
 describe('viewPickUpPosts', () => {
   it('props に3件分の記事データが渡されたコンポーネントを返却する', async () => {
     const { props } = await ViewPickUpPostsController();
-    const blogPostsDTO: BlogPostDTO[] = props.blogPostsDTO;
-    expect(blogPostsDTO).toHaveLength(3);
-    blogPostsDTO.forEach((blogPostDTO) => {
-      expect(blogPostDTO.title).toBeDefined();
-      expect(blogPostDTO.thumbnail).toBeDefined();
-      expect(blogPostDTO.postDate).toBeDefined();
-      expect(blogPostDTO.contents).toBeDefined();
+    const blogPosts: components['schemas']['BlogPost'][] = props.blogPosts;
+    expect(blogPosts).toHaveLength(3);
+    blogPosts.forEach((blogPost) => {
+      expect(blogPost.title).toBeDefined();
+      expect(blogPost.thumbnail).toBeDefined();
+      expect(blogPost.postDate).toBeDefined();
+      expect(blogPost.contents).toBeDefined();
     });
   });
 

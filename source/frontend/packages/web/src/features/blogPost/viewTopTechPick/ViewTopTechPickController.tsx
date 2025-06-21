@@ -4,9 +4,9 @@ import ViewTopTechPickPresenter from './ViewTopTechPickPresenter';
 async function ViewTopTechPickController() {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const blogPostDTO = await api.get('/api/v2/blog/posts/top-tech-pick');
+    const blogPost = await api.get('/api/v2/blog/posts/top-tech-pick');
 
-    return <ViewTopTechPickPresenter blogPostDTO={blogPostDTO} />;
+    return <ViewTopTechPickPresenter blogPost={blogPost} />;
   } catch (error) {
     console.error('トップテック記事の取得に失敗しました:', error);
     return <div>トップテック記事の読み込みに失敗しました</div>;

@@ -1,14 +1,16 @@
 import Link from 'next/link';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPickUpPostsPresenter.module.scss';
 
+type BlogPost = components['schemas']['BlogPost'];
+
 type ViewPickUpPostsPresenterProps = {
-  blogPostsDTO: BlogPostDTO[];
+  blogPosts: BlogPost[];
 };
 
 function ViewPickUpPostsPresenter({
-  blogPostsDTO,
+  blogPosts,
 }: ViewPickUpPostsPresenterProps) {
   return (
     <div className={styles.flexContainer}>
@@ -20,16 +22,16 @@ function ViewPickUpPostsPresenter({
           <p>このブログの雰囲気を掴んでいただけると思います。</p>
         </div>
       </div>
-      {blogPostsDTO.map((blogPostDTO) => (
+      {blogPosts.map((blogPost) => (
         <Link
-          href={`/posts/${blogPostDTO.id}`}
+          href={`/posts/${blogPost.id}`}
           className={`${styles.linkToPost} ${styles.flexItem}`}
-          key={blogPostDTO.id}
+          key={blogPost.id}
         >
           <div className={styles.thumbnail}>
-            <Thumbnail path={blogPostDTO.thumbnail.path} />
+            <Thumbnail path={blogPost.thumbnail.path} />
           </div>
-          <h3 className={styles.postTitle}>{blogPostDTO.title}</h3>
+          <h3 className={styles.postTitle}>{blogPost.title}</h3>
         </Link>
       ))}
     </div>

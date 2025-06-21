@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
+import type { components } from 'shared-lib/src/generated/api-types';
 import ViewTopTechPickController from './ViewTopTechPickController';
 
 const mockApiForServer = setupMockApiForServer(
@@ -20,10 +20,14 @@ afterAll(() => {
 const renderController = async () => render(await ViewTopTechPickController());
 
 describe('ViewTopTechPickController', () => {
-  it('props に記事データの DTO が渡されたコンポーネントを返却する', async () => {
+  it('props に記事データが渡されたコンポーネントを返却する', async () => {
     const { props } = await ViewTopTechPickController();
-    const { title, thumbnail, postDate, contents }: BlogPostDTO =
-      props.blogPostDTO;
+    const {
+      title,
+      thumbnail,
+      postDate,
+      contents,
+    }: components['schemas']['BlogPost'] = props.blogPost;
     expect(title).toBeDefined();
     expect(thumbnail).toBeDefined();
     expect(postDate).toBeDefined();
