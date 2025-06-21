@@ -342,8 +342,8 @@ PNPM ワークスペース構成のパッケージ:
    - [x] ViewBlogPostController.tsx を更新
    - [x] ViewLatestBlogPostsController.tsx を更新
    - [x] ViewPickUpPostsController.tsx を更新
-   - [ ] ViewPopularPostsController.tsx を更新
-   - [ ] ViewTopTechPickController.tsx を更新
+   - [x] ViewPopularPostsController.tsx を更新
+   - [x] ViewTopTechPickController.tsx を更新
 
 3. **blog-adminパッケージの段階的移行**
    - [x] CreateBlogPostForm.tsx を更新
