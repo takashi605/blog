@@ -357,7 +357,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] useImageList.tsx を更新
    - [x] ImageUploadModal.tsx を更新
    - [x] ImageInsertModal.tsx を更新
-   - [ ] ThumbnailPickModal.tsx を更新
+   - [x] ThumbnailPickModal.tsx を更新
    - [ ] ImagePicker.tsx を更新
 
 4. **既存パッケージの削除**
