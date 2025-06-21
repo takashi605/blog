@@ -11,9 +11,7 @@
   "scripts": {
     "web": "pnpm -F web",
     "e2e": "pnpm -F e2e",
-    "entities": "pnpm -F entities",
     "blog-admin": "pnpm -F blog-admin",
-    "service": "pnpm -F service",
     "shared-lib": "pnpm -F shared-lib",
     "shared-test-data": "pnpm -F shared-test-data",
     "e2e-test": "pnpm tsc && pnpm e2e e2e-test",
