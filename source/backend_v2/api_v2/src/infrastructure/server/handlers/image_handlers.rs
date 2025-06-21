@@ -22,7 +22,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/images",
+    path = "/api/v2/blog/images",
     responses(
       (status = 200, description = "List of images", body = Vec<Image>)
     )
@@ -42,7 +42,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     post,
-    path = "/api/admin/blog/images",
+    path = "/api/v2/admin/blog/images",
     request_body = Image,
     responses(
       (status = 200, description = "Image created", body = Image)

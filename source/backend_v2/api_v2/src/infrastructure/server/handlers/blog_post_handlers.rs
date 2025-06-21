@@ -45,7 +45,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/posts/{uuid}",
+    path = "/api/v2/blog/posts/{uuid}",
     responses(
       (status = 200, description = "Blog post found", body = BlogPost),
       (status = 404, description = "Blog post not found")
@@ -79,7 +79,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/posts/latest",
+    path = "/api/v2/blog/posts/latest",
     responses(
       (status = 200, description = "Latest blog posts", body = Vec<BlogPost>)
     )
@@ -99,7 +99,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/posts/top-tech-pick",
+    path = "/api/v2/blog/posts/top-tech-pick",
     responses(
       (status = 200, description = "Top tech pick blog post", body = BlogPost)
     )
@@ -119,7 +119,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     put,
-    path = "/api/admin/blog/posts/top-tech-pick",
+    path = "/api/v2/admin/blog/posts/top-tech-pick",
     request_body = BlogPost,
     responses(
       (status = 200, description = "Top tech pick blog post updated", body = BlogPost)
@@ -145,7 +145,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/posts/pickup",
+    path = "/api/v2/blog/posts/pickup",
     responses(
       (status = 200, description = "Pickup blog posts", body = Vec<BlogPost>)
     )
@@ -165,7 +165,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     put,
-    path = "/api/admin/blog/posts/pickup",
+    path = "/api/v2/admin/blog/posts/pickup",
     request_body = Vec<BlogPost>,
     responses(
       (status = 200, description = "Pickup blog posts updated", body = Vec<BlogPost>)
@@ -194,7 +194,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     get,
-    path = "/api/blog/posts/popular",
+    path = "/api/v2/blog/posts/popular",
     responses(
       (status = 200, description = "Popular blog posts", body = Vec<BlogPost>)
     )
@@ -214,7 +214,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     put,
-    path = "/api/admin/blog/posts/popular",
+    path = "/api/v2/admin/blog/posts/popular",
     request_body = Vec<BlogPost>,
     responses(
       (status = 200, description = "Popular blog posts updated", body = Vec<BlogPost>)
@@ -242,7 +242,7 @@ pub mod handle_funcs {
 
   #[utoipa::path(
     post,
-    path = "/api/admin/blog/posts",
+    path = "/api/v2/admin/blog/posts",
     request_body = BlogPost,
     responses(
       (status = 200, description = "Blog post created", body = BlogPost)
