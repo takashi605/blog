@@ -46,7 +46,7 @@ describe('useViewBlogPost', () => {
   it('記事が見つからない場合(404)のエラーハンドリング', async () => {
     mockApiForServer.use(
       http.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v2/blog/posts/:uuid`,
+        `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/:uuid`,
         () => {
           return new HttpResponse('Not found', {
             status: 404,
@@ -71,7 +71,7 @@ describe('useViewBlogPost', () => {
   it('その他のHTTPエラーのハンドリング', async () => {
     mockApiForServer.use(
       http.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v2/blog/posts/:uuid`,
+        `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/:uuid`,
         () => {
           return HttpResponse.json({ message: 'Bad Request' }, { status: 400 });
         },
