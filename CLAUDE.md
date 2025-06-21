@@ -339,7 +339,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] HTTPリクエストの共通処理
 
 2. **webパッケージの段階的移行**
-   - [ ] features/blogPost/api/useViewBlogPost.ts の作成 → ViewBlogPostController.tsx を更新
+   - [x] features/blogPost/api/useViewBlogPost.ts の作成 → ViewBlogPostController.tsx を更新
    - [ ] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → ViewLatestBlogPostsController.tsx を更新
    - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → ViewPickUpPostsController.tsx を更新
    - [ ] features/blogPost/api/useViewPopularPosts.ts の作成 → ViewPopularPostsController.tsx を更新
