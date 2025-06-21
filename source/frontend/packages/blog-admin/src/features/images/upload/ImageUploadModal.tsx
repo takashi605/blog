@@ -1,14 +1,10 @@
 'use client';
-import process from 'process';
 import React from 'react';
-import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import { ApiImageRepository } from 'shared-lib/src/repositories/apiImageRepository';
+import { api, HttpError } from 'shared-lib/src/api';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
-import { CreateImageUseCase } from '../../../usecases/create/createImage';
-import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
 import { useImageListContext } from '../list/ImageListProvider';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
@@ -31,36 +27,44 @@ function Modal() {
 
   const onSubmit = async (data: ImageUploadFormValues) => {
     const isSuccess = await uploadCloudinary(data);
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
-    }
     if (!isSuccess) {
       setErrorMessage('画像ストレージへのアップロードに失敗しました。');
       return;
     }
-    const imageRepository = new ApiImageRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
 
-    // TODO id の生成をエンティティに移動する
-    const imageDTO: ImageDTO = {
-      id: createUUIDv4(),
-      path: data.imagePath,
-    };
-    const createImageUsecase = new CreateImageUseCase(
-      imageDTO,
-      imageRepository,
-    );
     try {
-      await createImageUsecase.execute();
-    } catch {
+      // 画像をDBに保存
+      const imageData = {
+        id: createUUIDv4(),
+        path: data.imagePath,
+      };
+      
+      await api.post('/api/v2/admin/blog/images', imageData);
+    } catch (error) {
+      console.error('データベースへのアップロードに失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
       setErrorMessage('データベースへのアップロードに失敗しました。');
       // ここで return すると画像の再取得が行われず、e2e テストが適切な結果を返さない
     }
 
-    const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
-    const fetchedImages = await viewImagesUsecase.execute();
-    updateImages(fetchedImages);
+    try {
+      // 画像一覧を再取得
+      const fetchedImages = await api.get('/api/v2/blog/images');
+      updateImages(fetchedImages);
+    } catch (error) {
+      console.error('画像一覧の再取得に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
+      // エラー時は空配列を設定
+      updateImages([]);
+    }
 
     setIsUploadSuccess(true);
   };
