@@ -1,13 +1,13 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
+import type { Image } from 'shared-lib/src/api';
 import { useImageList } from '../list/useImageList';
 import styles from './imagePicker.module.scss';
 
 type ImagePickerProps = {
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>,
-    imageDTO: ImageDTO,
+    image: Image,
   ) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
