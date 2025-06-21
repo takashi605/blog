@@ -21,3 +21,6 @@ export { HttpError } from '../error/httpError';
 
 // 生成された型（便利のため再エクスポート）
 export type { components, paths } from '../generated/api-types';
+
+// よく使用される型のエイリアス
+export type * from './types';

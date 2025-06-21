@@ -5,10 +5,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { api, HttpError } from 'shared-lib/src/api';
-import type { components } from 'shared-lib/src/generated/api-types';
-
-type BlogPost = components['schemas']['BlogPost'];
+import { api, HttpError, type BlogPost } from 'shared-lib/src/api';
 
 interface UseViewBlogPostState {
   blogPost: BlogPost | null;
