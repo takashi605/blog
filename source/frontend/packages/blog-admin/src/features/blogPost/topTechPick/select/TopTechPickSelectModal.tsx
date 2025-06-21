@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
+import { api, HttpError } from 'shared-lib/src/api';
 import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import { SelectTopTechPickPostUseCase } from '../../../../usecases/select/selectTopTechPickPost';
 import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
 import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
@@ -30,31 +29,27 @@ function Modal() {
   const { selectedBlogPosts } = usePostsCheckboxes();
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
-    }
-    const blogPostRepository = new ApiBlogPostRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-
-    const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
-    if (selectedTopTechPickBlogPosts.length !== 1) {
-      alert('トップテックピック記事は1つだけ選択してください。');
-      return;
-    }
-
-    const selectTopTechPickPostsUseCase = new SelectTopTechPickPostUseCase(
-      selectedTopTechPickBlogPosts[0],
-      blogPostRepository,
-    );
-
     try {
-      const updatedTopTechPickPosts =
-        await selectTopTechPickPostsUseCase.execute();
-      updateTopTechPickPost(updatedTopTechPickPosts);
+      const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
+      if (selectedTopTechPickBlogPosts.length !== 1) {
+        alert('トップテックピック記事は1つだけ選択してください。');
+        return;
+      }
+
+      // 選択された記事（単一）を取得
+      const selectedPost = selectedTopTechPickBlogPosts[0];
+      
+      // トップテックピック記事を更新
+      const response = await api.put('/api/v2/admin/blog/posts/top-tech-pick', selectedPost);
+      updateTopTechPickPost(response);
       setIsUploadSuccess(true);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('トップテックピック記事の更新に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
       alert(
         'トップテックピック記事の更新に失敗しました。ログを確認してください。',
       );
