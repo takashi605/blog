@@ -1,32 +1,36 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
-import { ViewLatestBlogPostsUseCase } from '../../../usecases/view/viewLatestBlogPosts';
+import type { BlogPost } from 'shared-lib/src/api';
+import { api, HttpError } from 'shared-lib/src/api';
 
 export function useBlogPostList() {
-  const [blogPosts, setBlogPosts] = useState<BlogPostDTO[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   const getAllBlogPosts = useCallback(() => {
     return blogPosts;
   }, [blogPosts]);
 
   const updateBlogPosts = useCallback(
-    (blogPosts: BlogPostDTO[]) => {
+    (blogPosts: BlogPost[]) => {
       setBlogPosts(blogPosts);
     },
     [setBlogPosts],
   );
 
   const fetchBlogPosts = useCallback(async () => {
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
+    try {
+      const response = await api.get('/api/v2/blog/posts/latest');
+      updateBlogPosts(response);
+    } catch (error) {
+      console.error('記事一覧の取得に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        // 必要に応じて、より詳細なエラーハンドリングを追加
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
+      // エラー時は空配列を設定
+      updateBlogPosts([]);
     }
-    const repository = new ApiBlogPostRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-    const usecase = new ViewLatestBlogPostsUseCase(repository);
-    const postsDTO: BlogPostDTO[] = await usecase.execute();
-    updateBlogPosts(postsDTO);
   }, [updateBlogPosts]);
 
   useEffect(() => {
