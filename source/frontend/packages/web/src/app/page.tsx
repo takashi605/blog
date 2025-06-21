@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import ViewLatestBlogPostsController from '../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
-import ViewPickUpPostsController from '../controllers/blogPost/viewPickUpPosts/ViewPickUpPostsController';
-import ViewPopularPostsController from '../controllers/blogPost/viewPopularPosts/ViewPopularPostsController';
-import ViewTopTechPickController from '../controllers/blogPost/viewTopTechPick/ViewTopTechPickController';
+import ViewLatestBlogPostsController from '../features/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
+import ViewPickUpPostsController from '../features/blogPost/viewPickUpPosts/ViewPickUpPostsController';
+import ViewPopularPostsController from '../features/blogPost/viewPopularPosts/ViewPopularPostsController';
+import ViewTopTechPickController from '../features/blogPost/viewTopTechPick/ViewTopTechPickController';
 import styles from './page.module.scss';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う

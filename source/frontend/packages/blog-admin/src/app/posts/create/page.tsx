@@ -1,4 +1,4 @@
-import CreateBlogPostForm from '@/controllers/blogPost/create/CreateBlogPostForm';
+import CreateBlogPostForm from '@/features/blogPost/create/CreateBlogPostForm';
 import styles from './page.module.scss';
 
 export default function CreateBlogPostPage() {

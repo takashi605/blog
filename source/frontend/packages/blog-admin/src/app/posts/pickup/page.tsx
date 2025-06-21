@@ -1,7 +1,7 @@
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-import PickUpPostList from '../../../controllers/blogPost/pickup/list/PickUpPostList';
-import PickUpPostListProvider from '../../../controllers/blogPost/pickup/list/PickUpPostListProvider';
-import PickUpPostSelectModalWithOpenButton from '../../../controllers/blogPost/pickup/select/PickUpPostSelectModal';
+import PickUpPostList from '../../../features/blogPost/pickup/list/PickUpPostList';
+import PickUpPostListProvider from '../../../features/blogPost/pickup/list/PickUpPostListProvider';
+import PickUpPostSelectModalWithOpenButton from '../../../features/blogPost/pickup/select/PickUpPostSelectModal';
 
 export default function PickUpManagementPage() {
   return (

@@ -30,12 +30,12 @@ async fn test_get_openapi_spec() -> Result<()> {
     let paths = &openapi_spec["paths"];
     assert!(paths.is_object());
 
-    // 主要なエンドポイントが含まれていることを確認
-    assert!(paths.get("/api/blog/posts/latest").is_some());
-    assert!(paths.get("/api/blog/posts/{uuid}").is_some());
-    assert!(paths.get("/api/admin/blog/posts").is_some());
-    assert!(paths.get("/api/blog/images").is_some());
-    assert!(paths.get("/api/admin/blog/images").is_some());
+    // 主要なエンドポイントが含まれていることを確認（v2プレフィックス）
+    assert!(paths.get("/api/v2/blog/posts/latest").is_some());
+    assert!(paths.get("/api/v2/blog/posts/{uuid}").is_some());
+    assert!(paths.get("/api/v2/admin/blog/posts").is_some());
+    assert!(paths.get("/api/v2/blog/images").is_some());
+    assert!(paths.get("/api/v2/admin/blog/images").is_some());
 
     // スキーマ定義の確認
     let components = &openapi_spec["components"];
@@ -94,22 +94,22 @@ async fn test_openapi_spec_endpoints_methods() -> Result<()> {
     let paths = &openapi_spec["paths"];
 
     // GETエンドポイントの確認
-    let latest_posts_path = &paths["/api/blog/posts/latest"];
+    let latest_posts_path = &paths["/api/v2/blog/posts/latest"];
     assert!(latest_posts_path.get("get").is_some());
     assert_eq!(latest_posts_path["get"]["responses"]["200"]["description"], "Latest blog posts");
 
     // POSTエンドポイントの確認
-    let create_post_path = &paths["/api/admin/blog/posts"];
+    let create_post_path = &paths["/api/v2/admin/blog/posts"];
     assert!(create_post_path.get("post").is_some());
     assert_eq!(create_post_path["post"]["responses"]["200"]["description"], "Blog post created");
 
     // PUTエンドポイントの確認
-    let update_pickup_path = &paths["/api/admin/blog/posts/pickup"];
+    let update_pickup_path = &paths["/api/v2/admin/blog/posts/pickup"];
     assert!(update_pickup_path.get("put").is_some());
     assert_eq!(update_pickup_path["put"]["responses"]["200"]["description"], "Pickup blog posts updated");
 
     // パラメータ付きエンドポイントの確認
-    let get_post_path = &paths["/api/blog/posts/{uuid}"];
+    let get_post_path = &paths["/api/v2/blog/posts/{uuid}"];
     assert!(get_post_path.get("get").is_some());
     
     let parameters = &get_post_path["get"]["parameters"];

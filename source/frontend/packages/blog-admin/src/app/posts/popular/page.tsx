@@ -1,7 +1,7 @@
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-import PopularPostList from '../../../controllers/blogPost/popular/list/PopularPostList';
-import PopularPostListProvider from '../../../controllers/blogPost/popular/list/PopularPostListProvider';
-import PopularPostSelectModalWithOpenButton from '../../../controllers/blogPost/popular/select/PopularPostSelectModal';
+import PopularPostList from '../../../features/blogPost/popular/list/PopularPostList';
+import PopularPostListProvider from '../../../features/blogPost/popular/list/PopularPostListProvider';
+import PopularPostSelectModalWithOpenButton from '../../../features/blogPost/popular/select/PopularPostSelectModal';
 
 export default function PopularManagementPage() {
   return (
