@@ -2,7 +2,6 @@ import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
 import { UUIDList } from 'shared-test-data';
 import type { BlogPost } from '../../../api/types';
-import { blogPostResponseSchema } from '../../../repositories/apiBlogPostRepository/jsonMapper/blogPostSchema';
 import {
   blogPostResponses,
   pickupBlogPostResponses,
@@ -75,7 +74,7 @@ export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
           { status: 400 },
         );
       }
-      createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
+      createdBlogPosts.push(newPost as BlogPost);
       return HttpResponse.json(newPost, { status: 200 });
     }),
     http.put(
