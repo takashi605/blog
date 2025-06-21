@@ -1,6 +1,6 @@
 import type { DefaultBodyType } from 'msw';
 import { http, HttpResponse, type HttpHandler } from 'msw';
-import { imageSchema } from '../../../repositories/apiImageRepository/jsonMapper/imageSchema';
+import type { Image } from '../../../api/types';
 import { createdImages } from './imageHandlerReponse';
 
 export const createImageHandlers = (baseUrl: string): HttpHandler[] => {
@@ -16,7 +16,7 @@ export const createImageHandlers = (baseUrl: string): HttpHandler[] => {
           { status: 400 },
         );
       }
-      createdImages.push(imageSchema.parse(newImage));
+      createdImages.push(newImage as Image);
       return HttpResponse.json(newImage, { status: 200 });
     }),
     http.get(`${baseUrl}/blog/images`, async () => {
