@@ -1,20 +1,25 @@
 import { useCallback, useEffect } from 'react';
-import { ApiImageRepository } from 'shared-lib/src/repositories/apiImageRepository';
-import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
+import { api, HttpError } from 'shared-lib/src/api';
 import { useImageListContext } from './ImageListProvider';
 
 export function useImageList() {
   const { getAllImages, updateImages } = useImageListContext();
 
   const fetchImages = useCallback(async () => {
-    const api_url = process.env.NEXT_PUBLIC_API_URL;
-    if (!api_url) {
-      throw new Error('API URL が設定されていません');
+    try {
+      const response = await api.get('/api/v2/blog/images');
+      updateImages(response);
+    } catch (error) {
+      console.error('画像一覧の取得に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        // 必要に応じて、より詳細なエラーハンドリングを追加
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
+      // エラー時は空配列を設定
+      updateImages([]);
     }
-    const imageRepository = new ApiImageRepository(api_url);
-    const viewImagesUsecase = new ViewImagesUseCase(imageRepository);
-    const fetchedImages = await viewImagesUsecase.execute();
-    updateImages(fetchedImages);
   }, [updateImages]);
 
   useEffect(() => {

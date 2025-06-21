@@ -1,10 +1,10 @@
 'use client';
 import { createContext, useCallback, useContext, useState } from 'react';
-import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
+import type { Image } from 'shared-lib/src/api';
 
 type ImageListState = {
-  getAllImages: () => ImageDTO[];
-  updateImages: (image: ImageDTO[]) => void;
+  getAllImages: () => Image[];
+  updateImages: (image: Image[]) => void;
 };
 
 const ImageListContext = createContext<ImageListState | null>(null);
@@ -14,11 +14,11 @@ export default function ImageListProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [imageList, setImageList] = useState<ImageDTO[]>([]);
+  const [imageList, setImageList] = useState<Image[]>([]);
   const getAllImages = useCallback(() => {
     return imageList;
   }, [imageList]);
-  const updateImages = useCallback((images: ImageDTO[]) => {
+  const updateImages = useCallback((images: Image[]) => {
     setImageList(images);
   }, []);
 
