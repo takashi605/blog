@@ -1,7 +1,7 @@
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-import TopTechPickPostSelectModalWithOpenButton from '../../../controllers/blogPost/topTechPick/select/TopTechPickSelectModal';
-import TopTechPickPostList from '../../../controllers/blogPost/topTechPick/view/TopTechPickPostView';
-import TopTechPickPostViewProvider from '../../../controllers/blogPost/topTechPick/view/TopTechPickViewProvider';
+import TopTechPickPostSelectModalWithOpenButton from '../../../features/blogPost/topTechPick/select/TopTechPickSelectModal';
+import TopTechPickPostList from '../../../features/blogPost/topTechPick/view/TopTechPickPostView';
+import TopTechPickPostViewProvider from '../../../features/blogPost/topTechPick/view/TopTechPickViewProvider';
 
 export default function TopTechPickManagementPage() {
   return (

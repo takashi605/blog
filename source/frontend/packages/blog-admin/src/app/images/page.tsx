@@ -1,7 +1,7 @@
 import CommonModalProvider from '../../components/modal/CommonModalProvider';
-import ImageList from '../../controllers/images/list/ImageList';
-import ImageListProvider from '../../controllers/images/list/ImageListProvider';
-import ImageUploadModalWithOpenButton from '../../controllers/images/upload/ImageUploadModal';
+import ImageList from '../../features/images/list/ImageList';
+import ImageListProvider from '../../features/images/list/ImageListProvider';
+import ImageUploadModalWithOpenButton from '../../features/images/upload/ImageUploadModal';
 
 export default function ImageManagementPage() {
   return (

@@ -5,7 +5,7 @@ import { extractFirstParagraphText } from 'service/src/blogPostService/dto/blogP
 import { HttpError } from 'shared-interface-adapter/src/error/httpError';
 import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
 import { z } from 'zod';
-import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
+import ViewBlogPostController from '../../../features/blogPost/viewBlogPost/ViewBlogPostController';
 import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
 
 type ViewBlogPostParams = {
