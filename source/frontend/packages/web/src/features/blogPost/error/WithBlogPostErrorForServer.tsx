@@ -1,5 +1,3 @@
-import { UsecaseError } from '@/usecases/error';
-import { EntityError } from 'entities/src/error/error';
 import { HttpError } from 'shared-lib/src/error/httpError';
 
 function WithErrorHandlingServer<T>(
@@ -9,9 +7,6 @@ function WithErrorHandlingServer<T>(
     try {
       return await Component(props);
     } catch (error) {
-      if (error instanceof UsecaseError || error instanceof EntityError) {
-        return <div>記事データを生成できませんでした</div>;
-      }
       if (error instanceof HttpError) {
         if (error.status === 404) {
           return <div>記事が見つかりませんでした</div>;
