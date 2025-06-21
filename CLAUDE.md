@@ -332,21 +332,42 @@ PNPM ワークスペース構成のパッケージ:
 
 **目的**: APIインターフェースはそのままに、フロントエンドを軽量化
 
-**実装計画**:
+**実装計画（ユースケース利用箇所ベース）**:
 1. **shared-libパッケージの構築**
-   - [ ] 既存のAPIレスポンス型を活用するViewModel定義
    - [ ] APIクライアント実装（既存エンドポイント対応）
-   - [ ] 軽量な変換関数実装
+   - [ ] 生成された型（@/generated）を活用
+   - [ ] HTTPリクエストの共通処理
 
-2. **段階的な依存関係の移行**
-   - [ ] 既存のentities/serviceをshared-libで置き換え
-   - [ ] カスタムフックでusecasesを置き換え
-   - [ ] コンポーネントごとに段階的移行
+2. **webパッケージの段階的移行**
+   - [ ] features/blogPost/api/useViewBlogPost.ts の作成 → ViewBlogPostController.tsx を更新
+   - [ ] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → ViewLatestBlogPostsController.tsx を更新
+   - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → ViewPickUpPostsController.tsx を更新
+   - [ ] features/blogPost/api/useViewPopularPosts.ts の作成 → ViewPopularPostsController.tsx を更新
+   - [ ] features/blogPost/api/useViewTopTechPick.ts の作成 → ViewTopTechPickController.tsx を更新
 
-3. **既存パッケージの削除**
+3. **blog-adminパッケージの段階的移行**
+   - [ ] features/blogPost/api/useCreateBlogPost.ts の作成 → CreateBlogPostForm.tsx を更新
+   - [ ] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → useBlogPostList.ts を更新
+   - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → usePickUpPostList.ts を更新
+   - [ ] features/blogPost/api/useSelectPickUpPosts.ts の作成 → PickUpPostSelectModal.tsx を更新
+   - [ ] features/blogPost/api/useViewPopularPosts.ts の作成 → usePopularPostList.ts を更新
+   - [ ] features/blogPost/api/useSelectPopularPosts.ts の作成 → PopularPostSelectModal.tsx を更新
+   - [ ] features/blogPost/api/useSelectTopTechPick.ts の作成 → TopTechPickSelectModal.tsx を更新
+   - [ ] features/blogPost/api/useViewTopTechPick.ts の作成 → useTopTechPickPostView.ts を更新
+   - [ ] features/images/api/useViewImages.ts の作成 → useImageList.tsx を更新
+   - [ ] features/images/api/useCreateImage.ts の作成 → ImageUploadModal.tsx を更新
+
+4. **既存パッケージの削除**
    - [ ] 全ての依存が移行完了後に削除
    - [ ] TypeScriptコンパイルエラーの解消
    - [ ] E2Eテストの継続的パス確認
+
+**移行の基本方針**:
+- 各機能ディレクトリ内にapiディレクトリを作成し、フックを配置
+- shared-libはAPIクライアントの基盤のみ提供
+- API URL の環境変数チェックをフック内で統一処理
+- 既存のAPIレスポンス型をそのまま活用
+- エラーハンドリングの共通化
 
 #### Phase 4: 統合と最適化
 
