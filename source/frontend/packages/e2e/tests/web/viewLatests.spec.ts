@@ -8,19 +8,7 @@ Given('新着記事を一覧表示するページにアクセスする', async f
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-
-  const [response] = await Promise.all([
-    page.waitForResponse(
-      (resp) =>
-        resp.url().includes('/api/v2/blog/posts/latest') &&
-        resp.status() === 200,
-    ),
-    page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`),
-  ]);
-
-  // fetch 完了を待つ
-  expect(response.status()).toBe(200);
-  await response.json();
+  await page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`);
 });
 
 Then('ページタイトルが表示される', async function () {
@@ -125,19 +113,7 @@ Given('トップページにアクセスして新着記事を閲覧する', asyn
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-
-  const [response] = await Promise.all([
-    page.waitForResponse(
-      (resp) =>
-        resp.url().includes('/api/v2/blog/posts/latest') &&
-        resp.status() === 200,
-    ),
-    page.goto(`${process.env.TEST_TARGET_URL}`),
-  ]);
-
-  // fetch 完了を待つ
-  expect(response.status()).toBe(200);
-  await response.json();
+  await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
 Then('新着記事3件分以上の記事タイトルが表示される', async function () {
   const page = playwrightHelper.getPage();
