@@ -71,30 +71,31 @@ make frontend-generate-types # TypeScript型生成
 
 ```typescript
 // 生成された型のインポート
-import type { components, paths } from '@/generated';
+import type { components, paths } from "@/generated";
 
 // スキーマ型の使用
-type BlogPost = components['schemas']['BlogPost'];
-type Image = components['schemas']['Image'];
+type BlogPost = components["schemas"]["BlogPost"];
+type Image = components["schemas"]["Image"];
 
 // APIエンドポイント型の使用
-type GetBlogPostsResponse = 
-  paths['/api/blog/posts/latest']['get']['responses']['200']['content']['application/json'];
+type GetBlogPostsResponse =
+  paths["/api/blog/posts/latest"]["get"]["responses"]["200"]["content"]["application/json"];
 
-type CreateBlogPostRequest = 
-  paths['/api/admin/blog/posts']['post']['requestBody']['content']['application/json'];
+type CreateBlogPostRequest =
+  paths["/api/admin/blog/posts"]["post"]["requestBody"]["content"]["application/json"];
 ```
 
 #### 重要事項
 
 - **自動生成ファイル:** `source/frontend/packages/shared-interface-adapter/src/generated/api-types.ts` は手動編集禁止
-- **Git管理:** 生成ファイルはGit管理対象です。バックエンドAPI変更時は `make generate-types` 実行後にコミット
+- **Git 管理:** 生成ファイルは Git 管理対象です。バックエンド API 変更時は `make generate-types` 実行後にコミット
 - **型更新:** バックエンド API 変更後は必ず `make generate-types` を実行してから変更をコミット
 - **統一エクスポート:** `@/generated` からのインポートを使用し、直接 `api-types.ts` をインポートしない
 
 ## プロジェクト構造
 
 ### バックエンド (`source/backend_v2/`)
+
 詳細な情報は [source/backend_v2/BACKEND.md](source/backend_v2/BACKEND.md) を参照してください。
 
 - **`api_v2/`** - v2 API サービス（Actix-web + OpenAPI + ドメインモデル）
@@ -104,6 +105,7 @@ type CreateBlogPostRequest =
 - **データベースマイグレーション:** `api/migrations/schema/`（構造）と `api/migrations/seeds/`（データ）
 
 ### フロントエンド (`source/frontend/`)
+
 詳細な情報は [source/frontend/FRONTEND.md](source/frontend/FRONTEND.md) を参照してください。
 
 PNPM ワークスペース構成のパッケージ:
@@ -268,53 +270,58 @@ PNPM ワークスペース構成のパッケージ:
   - Kubernetes Ingress による `/api/v2/*` パスルーティング設定
   - フロントエンド全体の v2 API エンドポイント統一
   - v2 API ベースの型生成システム統合
-  - 全 E2E テスト（15/15シナリオ）の通過確認
+  - 全 E2E テスト（15/15 シナリオ）の通過確認
   - v1 API に依存しない完全な v2 環境の実現
 
 これらの変更により、セキュリティ向上、パフォーマンス改善、保守性向上を実現します。
 
 詳細なアーキテクチャ情報については、以下のファイルを参照してください：
+
 - **バックエンド:** [source/backend_v2/BACKEND.md](source/backend_v2/BACKEND.md)
 - **フロントエンド:** [source/frontend/FRONTEND.md](source/frontend/FRONTEND.md)
 
 ## 現在の作業
+
 **重要**: backend と示されているものは backend_v2 ディレクトリを指します。backend ディレクトリは触らず、backend_v2 ディレクトリに対して各作業を行ってください。
 
 ### アーキテクチャ再設計プラン
 
-現在、バックエンドとフロントエンドの大規模なアーキテクチャ再設計を実施中です。APIインターフェースを維持しながら、内部実装を段階的に改善していきます。
+現在、バックエンドとフロントエンドの大規模なアーキテクチャ再設計を実施中です。API インターフェースを維持しながら、内部実装を段階的に改善していきます。
 
 ### 再設計の基本方針
 
-1. **APIインターフェースの維持**: 既存のエンドポイント、リクエスト/レスポンス形式は変更しない
-2. **テストの継続的パス**: E2Eテストとapi_v2_testは常に通過する状態を維持
+1. **API インターフェースの維持**: 既存のエンドポイント、リクエスト/レスポンス形式は変更しない
+2. **テストの継続的パス**: E2E テストと api_v2_test は常に通過する状態を維持
 3. **段階的移行**: 各フェーズで動作確認しながら進める
 
 ### フェーズ定義
 
 #### Phase 1: バックエンドとフロントエンドの境界再構築
 
-**目的**: 既存のAPIインターフェースを維持しながら、内部アーキテクチャの準備を行う
+**目的**: 既存の API インターフェースを維持しながら、内部アーキテクチャの準備を行う
 
 **実装計画**:
-1. **APIレスポンス型の分離と共有化**
-   - [x] 現在のBlogPostResponse等の型定義をcommonクレートに移動
-   - [x] api_v2とapi_v2_testで同じ型を共有
+
+1. **API レスポンス型の分離と共有化**
+
+   - [x] 現在の BlogPostResponse 等の型定義を common クレートに移動
+   - [x] api_v2 と api_v2_test で同じ型を共有
    - [x] 型の互換性テストの作成
 
-2. **3層アーキテクチャのディレクトリ構造作成**
+2. **3 層アーキテクチャのディレクトリ構造作成**
+
    - [x] domain/、application/、infrastructure/ディレクトリの作成
-   - [x] 既存コードはそのまま維持（v1コンテナがロールバック先として機能）
+   - [x] 既存コードはそのまま維持（v1 コンテナがロールバック先として機能）
    - [x] 新アーキテクチャのコードを段階的に追加
 
-3. **アプリケーション層の内部DTO準備**
-   - [x] アプリケーション層に将来のドメイン↔アプリケーション間DTO用モジュール作成
+3. **アプリケーション層の内部 DTO 準備**
+   - [x] アプリケーション層に将来のドメイン ↔ アプリケーション間 DTO 用モジュール作成
    - [x] 変換インターフェース用トレイト定義（将来の拡張に備え）
-   - [x] レスポンス型はcommonクレートに残してAPIインターフェース維持
+   - [x] レスポンス型は common クレートに残して API インターフェース維持
 
 #### Phase 2: バックエンド内部再設計
 
-**目的**: APIインターフェースを変えずに、DDDベースの3層アーキテクチャを実装
+**目的**: API インターフェースを変えずに、DDD ベースの 3 層アーキテクチャを実装
 
 **実装計画（ユースケースベース）**:
 
@@ -330,61 +337,38 @@ PNPM ワークスペース構成のパッケージ:
 
 #### Phase 3: フロントエンド内部再設計
 
-**目的**: APIインターフェースはそのままに、フロントエンドを軽量化
+**目的**: API インターフェースはそのままに、フロントエンドを軽量化
 
 **実装計画（ユースケース利用箇所ベース）**:
-1. **shared-libパッケージの構築**
-   - [x] APIクライアント実装（既存エンドポイント対応）
-   - [x] 生成された型（@/generated）を活用
-   - [x] HTTPリクエストの共通処理
 
-2. **webパッケージの段階的移行**
-   - [x] ViewBlogPostController.tsx を更新
-   - [x] ViewLatestBlogPostsController.tsx を更新
-   - [x] ViewPickUpPostsController.tsx を更新
-   - [x] ViewPopularPostsController.tsx を更新
-   - [x] ViewTopTechPickController.tsx を更新
-
-3. **blog-adminパッケージの段階的移行**
-   - [x] CreateBlogPostForm.tsx を更新
-   - [x] useBlogPostList.ts を更新
-   - [x] usePickUpPostList.ts を更新
-   - [x] usePopularPostList.ts を更新
-   - [x] PickUpPostSelectModal.tsx を更新
-   - [x] PopularPostSelectModal.tsx を更新
-   - [x] TopTechPickSelectModal.tsx を更新
-   - [x] useTopTechPickPostView.ts を更新
-   - [x] useImageList.tsx を更新
-   - [x] ImageUploadModal.tsx を更新
-   - [x] ImageInsertModal.tsx を更新
-   - [x] ThumbnailPickModal.tsx を更新
-   - [x] ImagePicker.tsx を更新
-
-4. **既存パッケージの削除**
-   - [ ] 全ての依存が移行完了後に削除
-   - [ ] TypeScriptコンパイルエラーの解消
-   - [ ] E2Eテストの継続的パス確認
+- [x] shared-lib パッケージの構築
+- [x] web パッケージの段階的移行
+- [x] blog-admin パッケージの段階的移行
+- [x] 既存パッケージの削除
 
 **移行の基本方針**:
-- 各機能ディレクトリ内にapiディレクトリを作成し、フックを配置
-- shared-libはAPIクライアントの基盤のみ提供
+
+- shared-lib は API クライアントの基盤のみ提供
 - API URL の環境変数チェックをフック内で統一処理
-- 既存のAPIレスポンス型をそのまま活用
+- 既存の API レスポンス型をそのまま活用
 - エラーハンドリングの共通化
 
 #### Phase 4: 統合と最適化
 
-**目的**: 必要に応じてAPIインターフェースを最適化し、全体を統合
+**目的**: 必要に応じて API インターフェースを最適化し、全体を統合
 
 **実装計画**:
-1. **APIインターフェースの見直し（オプション）**
+
+1. **API インターフェースの見直し（オプション）**
+
    - [ ] 新アーキテクチャに最適なレスポンス形式の検討
-   - [ ] 必要な場合のみ、APIバージョニングの実施
-   - [ ] E2Eテスト・api_v2_testの更新
+   - [ ] 必要な場合のみ、API バージョニングの実施
+   - [ ] E2E テスト・api_v2_test の更新
 
 2. **パフォーマンス最適化**
+
    - [ ] 不要なデータ変換の削除
-   - [ ] N+1問題の解決
+   - [ ] N+1 問題の解決
    - [ ] キャッシュ戦略の実装
 
 3. **最終的な品質保証**
@@ -394,55 +378,60 @@ PNPM ワークスペース構成のパッケージ:
 
 ### 重要な制約事項
 
-1. **各フェーズでE2Eテストとapi_v2_testが通過すること**
-2. **APIのエンドポイント、リクエスト/レスポンス形式は原則変更しない**
+1. **各フェーズで E2E テストと api_v2_test が通過すること**
+2. **API のエンドポイント、リクエスト/レスポンス形式は原則変更しない**
 3. **破壊的変更は避け、段階的な移行を行う**
 4. **各エンドポイントの切り替え後は必ずテストを実行**
 
 ### 現在のステータス
 
-**現在作業中**: Phase 2-3 完了（双方向変換システム確立） → Phase 2-3 記事投稿ユースケース（CreateBlogPost）のSQLxリポジトリ実装準備完了
+**現在作業中**: Phase 2-3 完了（双方向変換システム確立） → Phase 2-3 記事投稿ユースケース（CreateBlogPost）の SQLx リポジトリ実装準備完了
 
 **Phase 2-1 完了事項**:
-- DDDベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
+
+- DDD ベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
 - 命名規則適用（XxxEntity, XxxVO）
-- mod.rs廃止とmodule_name.rs採用
-- BlogPostEntityとImageEntityの完全実装
-- RichTextVOとその関連値オブジェクトの実装
-- 包括的なテストスイート（12テスト）の成功
+- mod.rs 廃止と module_name.rs 採用
+- BlogPostEntity と ImageEntity の完全実装
+- RichTextVO とその関連値オブジェクトの実装
+- 包括的なテストスイート（12 テスト）の成功
 
 **Phase 2-2 完了事項**:
-- BlogPostRepositoryトレイト定義（全9メソッド実装）
-- async-trait依存関係追加
-- フロントエンドApiBlogPostRepositoryとの完全対応
-- 全APIテスト（25+24件）通過確認
+
+- BlogPostRepository トレイト定義（全 9 メソッド実装）
+- async-trait 依存関係追加
+- フロントエンド ApiBlogPostRepository との完全対応
+- 全 API テスト（25+24 件）通過確認
 
 **Phase 2-3 完了事項**:
+
 - infrastructure/blog_post_sqlx_repository/tables/ にテーブルマッピング型をモジュール化
-- infrastructure/blog_post_sqlx_repository/entity_mapper.rs で型安全なDBレコード→ドメインエンティティ変換システム実装
-- infrastructure/blog_post_sqlx_repository/record_mapper.rs で型安全なドメインエンティティ→DBレコード変換システム実装（逆変換）
-- infrastructure/db_pool.rs でDI対応のDB接続プール管理追加
+- infrastructure/blog_post_sqlx_repository/entity_mapper.rs で型安全な DB レコード → ドメインエンティティ変換システム実装
+- infrastructure/blog_post_sqlx_repository/record_mapper.rs で型安全なドメインエンティティ →DB レコード変換システム実装（逆変換）
+- infrastructure/db_pool.rs で DI 対応の DB 接続プール管理追加
 - BlogPostSqlxRepository::find() メソッドの完全実装（単一記事取得）
 - リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
-- 不要なClone deriveを削除してRustのmove semanticsを適切に活用
+- 不要な Clone derive を削除して Rust の move semantics を適切に活用
 - 包括的なテストスイートとエラーハンドリングの実装
-- 双方向変換システムによる記事保存機能（saveメソッド）実装の基盤確立
+- 双方向変換システムによる記事保存機能（save メソッド）実装の基盤確立
 
 **Phase 2-4 完了事項**:
-- ViewBlogPostDTOの完全実装（記事閲覧用データ転送オブジェクト）
-- ViewBlogPostUseCaseのTDD実装完了（Red-Green-Refactorサイクル）
-- アプリケーション層の再構成（application.rs採用、mod.rs廃止徹底）
-- BlogPostEntityからViewBlogPostDTOへの変換ロジック実装
+
+- ViewBlogPostDTO の完全実装（記事閲覧用データ転送オブジェクト）
+- ViewBlogPostUseCase の TDD 実装完了（Red-Green-Refactor サイクル）
+- アプリケーション層の再構成（application.rs 採用、mod.rs 廃止徹底）
+- BlogPostEntity から ViewBlogPostDTO への変換ロジック実装
 - モックリポジトリを使用した包括的な単体テスト
 - 変換ロジックの分離とコード品質向上（リファクタリング完了）
 
 **Phase 2-3 完了事項（今回追加）**:
-- BlogPostFactoryの完全実装（ファクトリパターン採用）
-- APIレスポンス型を参考にしたドメイン層独自の入力構造体定義（CreateBlogPostInput等）
-- ID自動生成ビジネスロジックの実装（Uuid::new_v4による一意性保証）
-- 包括的なテストスイート（8テストケース）：基本機能・サムネイル・複数コンテンツ・日付指定・リッチテキスト変換・エッジケース・ID生成ロジック
-- 重要なビジネスロジックとしてのID生成の明示的テスト（一意性・予測不可能性・コリジョン回避）
-- Clone traitの適切な実装とコンパイル時型安全性の確保
+
+- BlogPostFactory の完全実装（ファクトリパターン採用）
+- API レスポンス型を参考にしたドメイン層独自の入力構造体定義（CreateBlogPostInput 等）
+- ID 自動生成ビジネスロジックの実装（Uuid::new_v4 による一意性保証）
+- 包括的なテストスイート（8 テストケース）：基本機能・サムネイル・複数コンテンツ・日付指定・リッチテキスト変換・エッジケース・ID 生成ロジック
+- 重要なビジネスロジックとしての ID 生成の明示的テスト（一意性・予測不可能性・コリジョン回避）
+- Clone trait の適切な実装とコンパイル時型安全性の確保
 
 ### 進捗追跡
 
