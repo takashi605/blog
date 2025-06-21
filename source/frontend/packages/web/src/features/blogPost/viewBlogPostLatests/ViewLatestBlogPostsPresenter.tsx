@@ -1,10 +1,8 @@
 import Link from 'next/link';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import BlogPostDate from '../ui/BlogPostDate';
 import styles from './viewLatestBlogPostsPresenter.module.scss';
-
-type BlogPost = components['schemas']['BlogPost'];
 
 type ViewLatestBlogPostsPresenterProps = {
   blogPosts: BlogPost[];
