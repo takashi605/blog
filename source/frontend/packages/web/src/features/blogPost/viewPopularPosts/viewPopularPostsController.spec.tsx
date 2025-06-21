@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import type { BlogPost } from 'shared-lib/src/api/types';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import ViewPopularPostsController from './ViewPopularPostsController';
 
 const mockApiForServer = setupMockApiForServer(

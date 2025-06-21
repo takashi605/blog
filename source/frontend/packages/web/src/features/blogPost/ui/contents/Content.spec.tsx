@@ -1,8 +1,25 @@
 import '@testing-library/jest-dom';
 import { render, screen, within } from '@testing-library/react';
-import { ContentType } from 'entities/src/blogPost/postContents/content';
-import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import ContentRenderer from './Content';
+
+type RichText = components['schemas']['RichText'];
+
+// テスト用のモックデータ
+const mockRichText: RichText[] = [
+  {
+    text: 'これは',
+    styles: { bold: false, inlineCode: false },
+  },
+  {
+    text: 'テストテキスト',
+    styles: { bold: false, inlineCode: false },
+  },
+  {
+    text: 'です',
+    styles: { bold: false, inlineCode: false },
+  },
+];
 
 describe('コンポーネント: viewBlogPostController', () => {
   it('type に h2 を渡したとき、h2 タグを表示する', async () => {
@@ -10,7 +27,7 @@ describe('コンポーネント: viewBlogPostController', () => {
       <ContentRenderer
         content={{
           id: '1',
-          type: ContentType.H2,
+          type: 'h2',
           text: 'h2見出し',
         }}
       />,
@@ -25,7 +42,7 @@ describe('コンポーネント: viewBlogPostController', () => {
       <ContentRenderer
         content={{
           id: '1',
-          type: ContentType.H3,
+          type: 'h3',
           text: 'h3見出し',
         }}
       />,
@@ -40,8 +57,8 @@ describe('コンポーネント: viewBlogPostController', () => {
       <ContentRenderer
         content={{
           id: '1',
-          type: ContentType.Paragraph,
-          text: mockRichTextDTO(),
+          type: 'paragraph',
+          text: mockRichText,
         }}
       />,
     );
@@ -55,7 +72,7 @@ describe('コンポーネント: viewBlogPostController', () => {
       <ContentRenderer
         content={{
           id: '1',
-          type: ContentType.Image,
+          type: 'image',
           path: 'path/to/image',
         }}
       />,
@@ -70,7 +87,7 @@ describe('コンポーネント: viewBlogPostController', () => {
       <ContentRenderer
         content={{
           id: '1',
-          type: ContentType.CodeBlock,
+          type: 'codeBlock',
           title: 'サンプルコード',
           code: 'console.log("Hello, world!")',
           language: 'javascript',

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import type { BlogPost } from 'shared-lib/src/api/types';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import ViewTopTechPickController from './ViewTopTechPickController';
 
 const mockApiForServer = setupMockApiForServer(
@@ -22,12 +22,7 @@ const renderController = async () => render(await ViewTopTechPickController());
 describe('ViewTopTechPickController', () => {
   it('props に記事データが渡されたコンポーネントを返却する', async () => {
     const { props } = await ViewTopTechPickController();
-    const {
-      title,
-      thumbnail,
-      postDate,
-      contents,
-    }: BlogPost = props.blogPost;
+    const { title, thumbnail, postDate, contents }: BlogPost = props.blogPost;
     expect(title).toBeDefined();
     expect(thumbnail).toBeDefined();
     expect(postDate).toBeDefined();

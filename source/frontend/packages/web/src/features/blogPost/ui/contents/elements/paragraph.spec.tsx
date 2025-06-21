@@ -1,11 +1,29 @@
 import '@testing-library/jest-dom';
 import { render, screen, within } from '@testing-library/react';
-import { mockRichTextDTO } from 'service/src/mockData/mockBlogPostDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import Paragraph from './Paragraph';
+
+type RichText = components['schemas']['RichText'];
+
+// テスト用のモックデータ
+const mockRichText: RichText[] = [
+  {
+    text: 'これは',
+    styles: { bold: false, inlineCode: false },
+  },
+  {
+    text: 'テストテキスト',
+    styles: { bold: false, inlineCode: false },
+  },
+  {
+    text: 'です',
+    styles: { bold: false, inlineCode: false },
+  },
+];
 
 describe('コンポーネント： Paragraph', () => {
   it('RichText 配列が連結された文字列を表示する', async () => {
-    render(<Paragraph richText={mockRichTextDTO()} />);
+    render(<Paragraph richText={mockRichText} />);
 
     const p = screen.getByRole('paragraph');
     expect(p).toHaveTextContent('これはテストテキストです');
