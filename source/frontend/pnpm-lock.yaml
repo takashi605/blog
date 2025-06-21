@@ -99,9 +99,6 @@ importers:
       destyle.css:
         specifier: ^4.0.1
         version: 4.0.1
-      entities:
-        specifier: workspace:*
-        version: link:../entities
       lexical:
         specifier: ^0.21.0
         version: 0.21.0
@@ -135,9 +132,6 @@ importers:
       react-modal:
         specifier: ^3.16.3
         version: 3.16.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      service:
-        specifier: workspace:*
-        version: link:../service
       shared-lib:
         specifier: workspace:*
         version: link:../shared-lib
@@ -207,32 +201,11 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.10.1)(typescript@5.5.4)
 
-  packages/entities: {}
-
-  packages/service:
-    dependencies:
-      entities:
-        specifier: workspace:*
-        version: link:../entities
-      uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
-    devDependencies:
-      timezone-mock:
-        specifier: ^1.3.6
-        version: 1.3.6
-
   packages/shared-lib:
     dependencies:
-      entities:
-        specifier: workspace:*
-        version: link:../entities
       msw:
         specifier: ^2.4.3
         version: 2.6.6(@types/node@22.10.1)(typescript@5.5.4)
-      service:
-        specifier: workspace:*
-        version: link:../service
       shared-test-data:
         specifier: workspace:*
         version: link:../shared-test-data
@@ -287,9 +260,6 @@ importers:
       react-syntax-highlighter:
         specifier: ^15.6.1
         version: 15.6.1(react@18.3.1)
-      service:
-        specifier: workspace:*
-        version: link:../service
       shared-lib:
         specifier: workspace:*
         version: link:../shared-lib
