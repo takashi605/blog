@@ -53,6 +53,7 @@ function extractFirstParagraphText(blogPost: BlogPost): string {
   const firstParagraph = blogPost.contents.find(
     (content) => content.type === 'paragraph',
   );
-  const excerptedText = firstParagraph?.text?.map((text) => text.text).join('') ?? '';
+  const excerptedText =
+    firstParagraph?.text?.map((text) => text.text).join('') ?? '';
   return excerptedText;
 }
