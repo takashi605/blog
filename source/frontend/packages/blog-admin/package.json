@@ -55,7 +55,7 @@
     "react-icons": "^5.5.0",
     "react-modal": "^3.16.3",
     "service": "workspace:*",
-    "shared-interface-adapter": "workspace:*",
+    "shared-lib": "workspace:*",
     "shared-ui": "workspace:*",
     "tailwindcss": "^3.4.1",
     "zod": "^3.23.8"

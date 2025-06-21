@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import ViewLatestBlogPostsController from './ViewLatestBlogPostsController';
 
 const mockApiForServer = setupMockApiForServer(

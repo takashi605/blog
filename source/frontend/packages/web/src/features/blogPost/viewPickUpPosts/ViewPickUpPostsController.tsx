@@ -1,4 +1,4 @@
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
 import { ViewPickUpPostUseCase } from '../../../usecases/view/viewPickUpPost';
 import ViewPickUpPostsPresenter from './ViewPickUpPostsPresenter';
 

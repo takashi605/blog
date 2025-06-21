@@ -4,7 +4,7 @@ import type { BlogPostRepository } from 'service/src/blogPostService/repository/
 import { mockBlogPostDTO } from 'service/src/mockData/mockBlogPostDTO';
 import { mockBlogPostRepository } from 'service/src/testUtils/blogPostRepositoryMock';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import { SelectTopTechPickPostUseCase } from './selectTopTechPickPost';
 
 const mockApiForServer = setupMockApiForServer(

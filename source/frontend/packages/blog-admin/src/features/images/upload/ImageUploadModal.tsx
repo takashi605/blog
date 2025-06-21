@@ -3,7 +3,7 @@ import process from 'process';
 import React from 'react';
 import type { ImageDTO } from 'service/src/imageService/dto/imageDTO';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
+import { ApiImageRepository } from 'shared-lib/src/repositories/apiImageRepository';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';

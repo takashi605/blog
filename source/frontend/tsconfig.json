@@ -29,8 +29,8 @@
     // パスマッピング設定
     "baseUrl": ".",
     "paths": {
-      "@/generated": ["./packages/shared-interface-adapter/src/generated"],
-      "@/generated/*": ["./packages/shared-interface-adapter/src/generated/*"]
+      "@/generated": ["./packages/shared-lib/src/generated"],
+      "@/generated/*": ["./packages/shared-lib/src/generated/*"]
     }
   },
   // プログラムに含めるファイル

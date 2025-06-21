@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import ViewPickUpPostsController from './ViewPickUpPostsController';
 
 const mockApiForServer = setupMockApiForServer(

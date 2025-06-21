@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
 import { ViewPopularPostUseCase } from '../../../../usecases/view/viewPopularPost';
 import { usePopularPostListContext } from './PopularPostListProvider';
 

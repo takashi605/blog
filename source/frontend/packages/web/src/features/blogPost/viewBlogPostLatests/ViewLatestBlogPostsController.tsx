@@ -1,4 +1,4 @@
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
 import { ViewLatestBlogPostsUseCase } from '../../../usecases/view/viewLatestBlogPosts';
 import ViewLatestBlogPostsPresenter from './ViewLatestBlogPostsPresenter';
 

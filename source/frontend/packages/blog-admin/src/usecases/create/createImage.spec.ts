@@ -1,7 +1,7 @@
 import type { ImageRepository } from 'service/src/imageService/repository/imageRepository';
 import { mockImageDTO1 } from 'service/src/mockData/mockImageDTO';
 import { mockImageRepository } from 'service/src/mockData/mockImageRepository';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import { CreateImageUseCase } from './createImage';
 
 const mockApiForServer = setupMockApiForServer(

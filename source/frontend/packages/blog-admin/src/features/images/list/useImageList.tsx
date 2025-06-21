@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { ApiImageRepository } from 'shared-interface-adapter/src/repositories/apiImageRepository';
+import { ApiImageRepository } from 'shared-lib/src/repositories/apiImageRepository';
 import { ViewImagesUseCase } from '../../../usecases/view/viewImages';
 import { useImageListContext } from './ImageListProvider';
 

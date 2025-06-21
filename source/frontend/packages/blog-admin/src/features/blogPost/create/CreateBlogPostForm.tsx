@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import {

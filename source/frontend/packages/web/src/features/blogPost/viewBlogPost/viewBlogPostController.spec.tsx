@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import { UUIDList } from 'shared-test-data';
 import ViewBlogPostController from './ViewBlogPostController';
 

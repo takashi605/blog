@@ -5,8 +5,8 @@ import {
   formatDate2DigitString,
   toISOStringWithTimezone,
 } from 'service/src/utils/date';
-import { setupMockApiForServer } from 'shared-interface-adapter/src/apiMocks/serverForNode';
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
+import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
 import { CreateBlogPostUseCase } from './createBlogPost';
 
 const mockApiForServer = setupMockApiForServer(
