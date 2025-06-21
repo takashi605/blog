@@ -1,12 +1,10 @@
 import { memo } from 'react';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPostContent } from 'shared-lib/src/api/types';
 import CodeBlock from './elements/CodeBlock';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
 import ImageContent from './elements/ImageContent';
 import Paragraph from './elements/Paragraph';
-
-type BlogPostContent = components['schemas']['BlogPostContent'];
 
 export type BlogPostContentProps = {
   content: BlogPostContent;

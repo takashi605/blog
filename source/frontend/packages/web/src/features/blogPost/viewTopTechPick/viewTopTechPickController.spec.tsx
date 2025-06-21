@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api/types';
 import ViewTopTechPickController from './ViewTopTechPickController';
 
 const mockApiForServer = setupMockApiForServer(
@@ -27,7 +27,7 @@ describe('ViewTopTechPickController', () => {
       thumbnail,
       postDate,
       contents,
-    }: components['schemas']['BlogPost'] = props.blogPost;
+    }: BlogPost = props.blogPost;
     expect(title).toBeDefined();
     expect(thumbnail).toBeDefined();
     expect(postDate).toBeDefined();

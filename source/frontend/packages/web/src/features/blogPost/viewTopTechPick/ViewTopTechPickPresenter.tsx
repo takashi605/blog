@@ -1,11 +1,9 @@
 import Link from 'next/link';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api/types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import { Paragraph } from '../ui/contents/elements/Paragraph';
 import styles from './viewTopTechPick.module.scss';
-
-type BlogPost = components['schemas']['BlogPost'];
 
 type ViewTopTechPickPresenterProps = {
   blogPost: BlogPost;

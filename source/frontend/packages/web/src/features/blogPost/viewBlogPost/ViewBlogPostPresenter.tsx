@@ -1,12 +1,10 @@
 import React from 'react';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api/types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import ContentRenderer from '../ui/contents/Content';
-
-type BlogPost = components['schemas']['BlogPost'];
 
 type ViewBlogPostPresenterProps = {
   blogPost: BlogPost;

@@ -1,9 +1,7 @@
 import Link from 'next/link';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api/types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from './viewPopularPostsPresenter.module.scss';
-
-type BlogPost = components['schemas']['BlogPost'];
 
 type ViewPopularPostsPresenterProps = {
   blogPosts: BlogPost[];

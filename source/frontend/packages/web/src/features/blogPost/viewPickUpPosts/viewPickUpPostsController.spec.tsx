@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
-import type { components } from 'shared-lib/src/generated/api-types';
+import type { BlogPost } from 'shared-lib/src/api/types';
 import ViewPickUpPostsController from './ViewPickUpPostsController';
 
 const mockApiForServer = setupMockApiForServer(
@@ -21,7 +21,7 @@ const renderController = async () => render(await ViewPickUpPostsController());
 describe('viewPickUpPosts', () => {
   it('props に3件分の記事データが渡されたコンポーネントを返却する', async () => {
     const { props } = await ViewPickUpPostsController();
-    const blogPosts: components['schemas']['BlogPost'][] = props.blogPosts;
+    const blogPosts: BlogPost[] = props.blogPosts;
     expect(blogPosts).toHaveLength(3);
     blogPosts.forEach((blogPost) => {
       expect(blogPost.title).toBeDefined();
