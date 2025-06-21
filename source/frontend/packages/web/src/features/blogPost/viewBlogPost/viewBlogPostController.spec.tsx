@@ -17,13 +17,13 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
-const renderPresenter = async () =>
-  render(await ViewBlogPostController({ postId: UUIDList.UUID1 }));
+const renderPresenter = () =>
+  render(<ViewBlogPostController postId={UUIDList.UUID1} />);
 
 describe('コンポーネント: ViewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {
-    await renderPresenter();
-    const title = screen.getByRole('heading', { level: 1 });
+    renderPresenter();
+    const title = await screen.findByRole('heading', { level: 1 });
     expect(title).toBeInTheDocument();
 
     // タイトルが取得できるまで待機し、空文字でないことを確認
@@ -33,10 +33,10 @@ describe('コンポーネント: ViewBlogPostController', () => {
   });
 
   it('サムネイル画像が表示されている', async () => {
-    await renderPresenter();
-    const mainVisual = screen.getByRole('img', {
+    renderPresenter();
+    const mainVisual = (await screen.findByRole('img', {
       name: 'サムネイル画像',
-    }) as HTMLImageElement;
+    })) as HTMLImageElement;
     expect(mainVisual).toBeInTheDocument();
 
     // サムネイル画像が取得できるまで待機し、path が空文字でないことを確認
@@ -47,9 +47,9 @@ describe('コンポーネント: ViewBlogPostController', () => {
   });
 
   it('投稿日,更新日が表示されている', async () => {
-    await renderPresenter();
+    renderPresenter();
 
-    const postDateSection = screen.getByText('投稿日:');
+    const postDateSection = await screen.findByText('投稿日:');
 
     if (postDateSection) {
       const { findByText } = within(postDateSection);
@@ -57,7 +57,7 @@ describe('コンポーネント: ViewBlogPostController', () => {
       expect(await findByText(/\d{4}\/\d{1,2}\/\d{1,2}/)).toBeInTheDocument();
     }
 
-    const updateDateSection = screen.getByText('更新日:');
+    const updateDateSection = await screen.findByText('更新日:');
 
     if (updateDateSection) {
       const { findByText } = within(updateDateSection);
@@ -68,35 +68,35 @@ describe('コンポーネント: ViewBlogPostController', () => {
 
   describe('コンテンツ', () => {
     it('h2 が表示されている', async () => {
-      await renderPresenter();
+      renderPresenter();
 
       const h2 = await screen.findAllByRole('heading', { level: 2 });
       expect(h2).not.toHaveLength(0);
     });
 
     it('h3 が表示されている', async () => {
-      await renderPresenter();
+      renderPresenter();
 
       const h3 = await screen.findAllByRole('heading', { level: 3 });
       expect(h3).not.toHaveLength(0);
     });
 
     it('p が表示されている', async () => {
-      await renderPresenter();
+      renderPresenter();
 
       const p = await screen.findAllByRole('paragraph');
       expect(p).not.toHaveLength(0);
     });
 
     it('画像が表示されている', async () => {
-      await renderPresenter();
+      renderPresenter();
 
       const img = await screen.findAllByRole('img', { name: '画像コンテンツ' });
       expect(img).not.toHaveLength(0);
     });
 
     it('コードブロックが表示されている', async () => {
-      await renderPresenter();
+      renderPresenter();
 
       const codeBlock = await screen.findAllByRole('code');
       expect(codeBlock).not.toHaveLength(0);

@@ -1,10 +1,12 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import type { ImageContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import styles from './imageContent.module.scss';
 
+type ImageBlock = components['schemas']['ImageBlock'];
+
 type ImageContentProps = {
-  imageContent: ImageContentDTO;
+  imageContent: ImageBlock;
 };
 
 function ImageContent({ imageContent }: ImageContentProps) {

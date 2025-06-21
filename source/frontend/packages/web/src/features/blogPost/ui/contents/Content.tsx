@@ -1,13 +1,15 @@
 import { memo } from 'react';
-import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import CodeBlock from './elements/CodeBlock';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
 import ImageContent from './elements/ImageContent';
 import Paragraph from './elements/Paragraph';
 
+type BlogPostContent = components['schemas']['BlogPostContent'];
+
 export type BlogPostContentProps = {
-  content: ContentDTO;
+  content: BlogPostContent;
 };
 
 function ContentRenderer({ content }: BlogPostContentProps) {

@@ -1,13 +1,15 @@
 import React from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { components } from 'shared-lib/src/generated/api-types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import BlogPostDate from '../ui/BlogPostDate';
 import BlogPostTitle from '../ui/BlogPostTitle';
 import ContentRenderer from '../ui/contents/Content';
 
+type BlogPost = components['schemas']['BlogPost'];
+
 type ViewBlogPostPresenterProps = {
-  blogPost: BlogPostDTO;
+  blogPost: BlogPost;
 };
 
 export function ViewBlogPostPresenter({
