@@ -353,7 +353,7 @@ PNPM ワークスペース構成のパッケージ:
    - [x] PickUpPostSelectModal.tsx を更新
    - [x] PopularPostSelectModal.tsx を更新
    - [x] TopTechPickSelectModal.tsx を更新
-   - [ ] useTopTechPickPostView.ts を更新
+   - [x] useTopTechPickPostView.ts を更新
    - [ ] useImageList.tsx を更新
    - [ ] ImageUploadModal.tsx を更新
 

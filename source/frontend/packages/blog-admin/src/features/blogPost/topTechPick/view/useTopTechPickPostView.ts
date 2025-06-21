@@ -1,7 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
-import { ViewTopTechPickUseCase } from '../../../../usecases/view/viewTopTechPick';
+import { api, HttpError } from 'shared-lib/src/api';
 import { useTopTechPickPostViewContext } from './TopTechPickViewProvider';
 
 export function useTopTechPickPostList() {
@@ -9,15 +7,20 @@ export function useTopTechPickPostList() {
     useTopTechPickPostViewContext();
 
   const fetchTopTechPickPost = useCallback(async () => {
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
+    try {
+      const response = await api.get('/api/v2/blog/posts/top-tech-pick');
+      updateTopTechPickPost(response);
+    } catch (error) {
+      console.error('トップテックピック記事の取得に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        // 必要に応じて、より詳細なエラーハンドリングを追加
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
+      // エラー時は undefined を設定（空状態）
+      updateTopTechPickPost(undefined);
     }
-    const repository = new ApiBlogPostRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-    const usecase = new ViewTopTechPickUseCase(repository);
-    const postDTO: BlogPostDTO = await usecase.execute();
-    updateTopTechPickPost(postDTO);
   }, [updateTopTechPickPost]);
 
   useEffect(() => {

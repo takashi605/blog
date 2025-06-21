@@ -1,10 +1,10 @@
 'use client';
 import { createContext, useCallback, useContext, useState } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { BlogPost } from 'shared-lib/src/api';
 
 type TopTechPickPostViewState = {
-  getTopTechPickPost: () => BlogPostDTO | undefined;
-  updateTopTechPickPost: (topTechPickPost: BlogPostDTO) => void;
+  getTopTechPickPost: () => BlogPost | undefined;
+  updateTopTechPickPost: (topTechPickPost: BlogPost | undefined) => void;
 };
 
 const TopTechPickPostViewContext =
@@ -15,11 +15,11 @@ export default function TopTechPickPostViewProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [topTechPickPostView, setTopTechPickPostView] = useState<BlogPostDTO>();
+  const [topTechPickPostView, setTopTechPickPostView] = useState<BlogPost | undefined>();
   const getTopTechPickPost = useCallback(() => {
     return topTechPickPostView;
   }, [topTechPickPostView]);
-  const updateTopTechPickPost = useCallback((topTechPickPost: BlogPostDTO) => {
+  const updateTopTechPickPost = useCallback((topTechPickPost: BlogPost | undefined) => {
     setTopTechPickPostView(topTechPickPost);
   }, []);
 
