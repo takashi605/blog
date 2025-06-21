@@ -4,16 +4,15 @@ import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
+import { toISOStringWithTimezone } from 'service/src/utils/date';
+import { createUUIDv4 } from 'service/src/utils/uuid';
+import type { BlogPost } from 'shared-lib/src/api';
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-import {
-  CreateBlogPostUseCase,
-  type BlogPostDTOForCreate,
-} from '../../../usecases/create/createBlogPost';
+import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
-import { formDataToDTO } from './helper/formDataToDTO';
+import { contentDTOToBlogPostContent } from './helper/contentDTOToBlogPostContent';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
 
@@ -36,7 +35,7 @@ function CreateBlogPostForm() {
     },
   });
   const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const { createBlogPost, error } = useCreateBlogPost();
 
   const { register, handleSubmit } = form;
 
@@ -44,27 +43,26 @@ function CreateBlogPostForm() {
 
   const onSubmit = async () => {
     const formValues = form.getValues();
-    const blogPostDTO: BlogPostDTOForCreate = {
-      ...formDataToDTO(formValues),
-      contents: contentsDTO,
+    // 日付の生成
+    const today = toISOStringWithTimezone(new Date())
+      .split('T')[0]
+      .replace('/', '-');
+
+    // BlogPost型に合わせてデータを構築
+    const blogPost: BlogPost = {
+      id: createUUIDv4(),
+      title: formValues.title,
+      thumbnail: formValues.thumbnail,
+      postDate: today,
+      lastUpdateDate: today,
+      contents: contentDTOToBlogPostContent(contentsDTO),
     };
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
-    }
-    const repository = new ApiBlogPostRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-    const createBlogPostUseCase = new CreateBlogPostUseCase(
-      blogPostDTO,
-      repository,
-    );
+
     try {
-      const createdBlogPost = await createBlogPostUseCase.execute();
+      const createdBlogPost = await createBlogPost(blogPost);
       router.push(`/posts/create/success?id=${createdBlogPost.id}`);
     } catch (e) {
-      if (e instanceof Error) {
-        setErrorMessage(`記事の投稿に失敗しました。${e.message}`);
-      }
+      // エラーメッセージはフック内で設定されるため、ここでは何もしない
     }
   };
 
@@ -85,7 +83,7 @@ function CreateBlogPostForm() {
               <ThumbnailPickModalWithOpenButton />
             </CommonModalProvider>
           </div>
-          {errorMessage && <p role="alert">{errorMessage}</p>}
+          {error && <p role="alert">{error}</p>}
 
           <div className={styles.title}>
             <label htmlFor="title">タイトル</label>
