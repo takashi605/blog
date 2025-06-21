@@ -1,10 +1,10 @@
 'use client';
 import { createContext, useCallback, useContext, useState } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import type { BlogPost } from 'shared-lib/src/api';
 
 type PickUpPostListState = {
-  getAllPickUpPosts: () => BlogPostDTO[];
-  updatePickUpPosts: (PickUpPosts: BlogPostDTO[]) => void;
+  getAllPickUpPosts: () => BlogPost[];
+  updatePickUpPosts: (PickUpPosts: BlogPost[]) => void;
 };
 
 const PickUpPostListContext = createContext<PickUpPostListState | null>(null);
@@ -14,11 +14,11 @@ export default function PickUpPostListProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [pickUpPostList, setPickUpPostList] = useState<BlogPostDTO[]>([]);
+  const [pickUpPostList, setPickUpPostList] = useState<BlogPost[]>([]);
   const getAllPickUpPosts = useCallback(() => {
     return pickUpPostList;
   }, [pickUpPostList]);
-  const updatePickUpPosts = useCallback((PickUpPosts: BlogPostDTO[]) => {
+  const updatePickUpPosts = useCallback((PickUpPosts: BlogPost[]) => {
     setPickUpPostList(PickUpPosts);
   }, []);
 
