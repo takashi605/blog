@@ -1,7 +1,7 @@
 import type { DefaultBodyType, HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
 import { UUIDList } from 'shared-test-data';
+import type { BlogPost } from '../../../api/types';
 import { blogPostResponseSchema } from '../../../repositories/apiBlogPostRepository/jsonMapper/blogPostSchema';
 import {
   blogPostResponses,
@@ -9,7 +9,7 @@ import {
   popularBlogPostResponses,
 } from './blogPostHandlerResponse';
 
-export const createdBlogPosts: BlogPostDTO[] = [];
+export const createdBlogPosts: BlogPost[] = [];
 export const clearCreatedBlogPosts = () => {
   createdBlogPosts.splice(0, createdBlogPosts.length);
 };
