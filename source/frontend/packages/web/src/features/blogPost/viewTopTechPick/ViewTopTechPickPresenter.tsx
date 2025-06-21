@@ -15,6 +15,12 @@ function ViewTopTechPickPresenter({
 }: ViewTopTechPickPresenterProps) {
   // TODO Presenter にロジックが混入しているため、フロントエンドの構造を変更する
   const excerpted = extractFirstParagraph(blogPostDTO);
+  
+  // YYYY-MM-DD 形式を YYYY/M/D 形式に変換
+  const formatDate = (dateString: string): string => {
+    const [year, month, day] = dateString.split('-');
+    return `${year}/${parseInt(month, 10)}/${parseInt(day, 10)}`;
+  };
 
   return (
     <div>
@@ -29,7 +35,7 @@ function ViewTopTechPickPresenter({
         <div className={styles.contentSummaryTexts}>
           <Paragraph richText={excerpted} />
           <div className={styles.contentSummaryMeta}>
-            <time className={styles.postDate}>{blogPostDTO.postDate}</time>
+            <time className={styles.postDate}>{formatDate(blogPostDTO.postDate)}</time>
             <Link
               className={styles.linkToPost}
               href={`/posts/${blogPostDTO.id}`}

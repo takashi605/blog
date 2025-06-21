@@ -1,18 +1,16 @@
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
-import { ViewTopTechPickUseCase } from '../../../usecases/view/viewTopTechPick';
+import { api } from 'shared-lib/src/api';
 import ViewTopTechPickPresenter from './ViewTopTechPickPresenter';
 
 async function ViewTopTechPickController() {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error('API URL が設定されていません');
-  }
-  const blogPostRepository = new ApiBlogPostRepository(
-    process.env.NEXT_PUBLIC_API_URL,
-  );
-  const usecase = new ViewTopTechPickUseCase(blogPostRepository);
-  const dto = await usecase.execute();
+  try {
+    // サーバーサイドで直接APIを呼び出し
+    const blogPostDTO = await api.get('/api/v2/blog/posts/top-tech-pick');
 
-  return <ViewTopTechPickPresenter blogPostDTO={dto} />;
+    return <ViewTopTechPickPresenter blogPostDTO={blogPostDTO} />;
+  } catch (error) {
+    console.error('トップテック記事の取得に失敗しました:', error);
+    return <div>トップテック記事の読み込みに失敗しました</div>;
+  }
 }
 
 export default ViewTopTechPickController;
