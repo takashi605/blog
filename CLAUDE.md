@@ -334,9 +334,9 @@ PNPM ワークスペース構成のパッケージ:
 
 **実装計画（ユースケース利用箇所ベース）**:
 1. **shared-libパッケージの構築**
-   - [ ] APIクライアント実装（既存エンドポイント対応）
-   - [ ] 生成された型（@/generated）を活用
-   - [ ] HTTPリクエストの共通処理
+   - [x] APIクライアント実装（既存エンドポイント対応）
+   - [x] 生成された型（@/generated）を活用
+   - [x] HTTPリクエストの共通処理
 
 2. **webパッケージの段階的移行**
    - [ ] features/blogPost/api/useViewBlogPost.ts の作成 → ViewBlogPostController.tsx を更新
