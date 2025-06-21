@@ -11,6 +11,7 @@ import {
   RETRY_CONFIG,
   defaultFetchOptions,
   getApiUrl,
+  normalizeApiPath,
 } from './config';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
@@ -170,7 +171,8 @@ export async function apiClient<
     options;
 
   const baseUrl = getApiUrl();
-  const pathWithParams = buildUrlWithPathParams(path as string, pathParams);
+  const normalizedPath = normalizeApiPath(path as string);
+  const pathWithParams = buildUrlWithPathParams(normalizedPath, pathParams);
   const url = buildUrlWithQuery(`${baseUrl}${pathWithParams}`, query);
 
   const fetchOptions: RequestInit = {
