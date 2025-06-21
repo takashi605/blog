@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "entities": "workspace:*",
-    "service": "workspace:*",
     "shared-test-data": "workspace:*",
     "zod": "^3.23.8",
     "msw": "^2.4.3",
