@@ -1,24 +1,27 @@
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
-import { ViewLatestBlogPostsUseCase } from '../../../usecases/view/viewLatestBlogPosts';
+'use client';
+
+import { useViewLatestBlogPosts } from '../api/useViewLatestBlogPosts';
 import ViewLatestBlogPostsPresenter from './ViewLatestBlogPostsPresenter';
 
 type ViewLatestBlogPostsControllerProps = {
   quantity?: number;
 };
 
-async function ViewLatestBlogPostsController({
+function ViewLatestBlogPostsController({
   quantity,
 }: ViewLatestBlogPostsControllerProps) {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error('API URL が設定されていません');
+  const { blogPosts, loading, error } = useViewLatestBlogPosts({
+    quantity,
+  });
+
+  if (error) {
+    throw new Error(error);
   }
-  const blogPostRepository = new ApiBlogPostRepository(
-    process.env.NEXT_PUBLIC_API_URL,
-  );
-  const viewLatestsUseCase = new ViewLatestBlogPostsUseCase(
-    blogPostRepository,
-  ).setQuantity(quantity);
-  const blogPosts = await viewLatestsUseCase.execute();
+
+  if (loading) {
+    return <div>読み込み中...</div>;
+  }
+
   return <ViewLatestBlogPostsPresenter blogPosts={blogPosts} />;
 }
 

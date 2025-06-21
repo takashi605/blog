@@ -1,5 +1,5 @@
-import type { ReactElement } from 'react';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
+import '@testing-library/jest-dom';
+import { render, screen, waitFor } from '@testing-library/react';
 import { setupMockApiForServer } from 'shared-lib/src/apiMocks/serverForNode';
 import ViewLatestBlogPostsController from './ViewLatestBlogPostsController';
 
@@ -16,39 +16,54 @@ afterAll(() => {
   mockApiForServer.close();
 });
 
-describe('viewLatestBlogPostsController', () => {
-  it('レンダリングするコンポーネントに記事データの DTO 配列が渡されている', async () => {
-    const { props } = (await ViewLatestBlogPostsController({})) as ReactElement;
-    const dtoList = props.blogPosts as BlogPostDTO[];
-    expect(dtoList).toBeDefined();
-    expect(dtoList.length).toBeGreaterThan(0);
-    dtoList.forEach((dto) => {
-      expect(dto.id).toBeDefined();
-      expect(dto.title).toBeDefined();
-      expect(dto.postDate).toBeDefined();
-      expect(dto.lastUpdateDate).toBeDefined();
-      expect(dto.thumbnail.path).toBeDefined();
-      dto.contents.forEach((content) => {
-        expect(content.id).toBeDefined();
-        expect(content.type).toBeDefined();
+const renderController = (quantity?: number) =>
+  render(<ViewLatestBlogPostsController quantity={quantity} />);
 
-        if (content.type === 'image') {
-          expect(content.path).toBeDefined();
-        } else if (content.type === 'codeBlock') {
-          expect(content.code).toBeDefined();
-        } else {
-          expect(content.text).toBeDefined();
-        }
-      });
+describe('コンポーネント: ViewLatestBlogPostsController', () => {
+  it('新着記事のタイトルが表示されている', async () => {
+    renderController();
+    const sectionTitle = await screen.findByText('新着記事');
+    expect(sectionTitle).toBeInTheDocument();
+  });
+
+  it('記事データが表示されている', async () => {
+    renderController();
+
+    // 記事リンクが表示されるまで待機
+    const postLinks = await screen.findAllByRole('link');
+    expect(postLinks.length).toBeGreaterThan(0);
+
+    // 最初の記事のタイトルが表示されるまで待機
+    await waitFor(() => {
+      const titles = screen.getAllByRole('heading', { level: 3 });
+      expect(titles.length).toBeGreaterThan(0);
+      expect(titles[0].textContent).not.toBe('');
     });
   });
 
-  it('取得するデータ数を指定した場合、その数だけの記事データが取得される', async () => {
-    const { props } = (await ViewLatestBlogPostsController({
-      quantity: 3,
-    })) as ReactElement;
-    const dtoList = props.blogPosts as BlogPostDTO[];
-    expect(dtoList).toBeDefined();
-    expect(dtoList.length).toBe(3);
+  it('取得するデータ数を指定した場合、その数だけの記事データが表示される', async () => {
+    renderController(2);
+
+    // 記事が表示されるまで待機
+    await waitFor(async () => {
+      const postLinks = await screen.findAllByRole('link');
+      expect(postLinks).toHaveLength(2);
+    });
+  });
+
+  it('サムネイル画像が表示されている', async () => {
+    renderController();
+
+    const thumbnails = await screen.findAllByRole('img', {
+      name: 'サムネイル画像',
+    });
+    expect(thumbnails.length).toBeGreaterThan(0);
+  });
+
+  it('投稿日が表示されている', async () => {
+    renderController();
+
+    const postDates = await screen.findAllByText(/投稿日:/);
+    expect(postDates.length).toBeGreaterThan(0);
   });
 });
