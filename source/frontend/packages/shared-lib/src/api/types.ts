@@ -10,6 +10,7 @@ import type { components, paths } from '../generated/api-types';
 // よく使用されるエンティティ型
 export type BlogPost = components['schemas']['BlogPost'];
 export type Image = components['schemas']['Image'];
+export type BlogPostContent = components['schemas']['BlogPostContent'];
 
 // よく使用されるリクエスト型
 export type CreateBlogPostRequest =

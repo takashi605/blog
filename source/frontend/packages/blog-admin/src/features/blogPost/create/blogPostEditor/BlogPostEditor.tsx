@@ -7,8 +7,8 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
-import { ContentsDTOSetterContext } from '../CreateBlogPostForm';
-import { postContentAsFormDataToDTO } from '../helper/postContentAsFormDataToDTO';
+import { BlogPostContentsSetterContext } from '../CreateBlogPostForm';
+import { lexicalNodeToBlogPostContent } from '../helper/lexicalNodeToBlogPostContent';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { validateUrl } from './helper/url';
@@ -19,12 +19,14 @@ import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 function BlogPostEditor() {
-  const setContentsDTO = useContext(ContentsDTOSetterContext);
+  const setBlogPostContents = useContext(BlogPostContentsSetterContext);
   const onChange = (editor: EditorState) => {
     editor.read(() => {
       const root = $getRoot();
       const nodes = root.getChildren();
-      setContentsDTO(postContentAsFormDataToDTO(nodes));
+      // Lexicalエディタのコンテキスト内でLexicalNodeからBlogPostContentに変換
+      const blogPostContents = lexicalNodeToBlogPostContent(nodes);
+      setBlogPostContents(blogPostContents);
     });
   };
 

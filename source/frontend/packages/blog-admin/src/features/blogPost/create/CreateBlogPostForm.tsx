@@ -3,16 +3,14 @@ import { useRouter } from 'next/navigation';
 import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import type { ContentDTO } from 'service/src/blogPostService/dto/contentDTO';
 import { toISOStringWithTimezone } from 'service/src/utils/date';
 import { createUUIDv4 } from 'service/src/utils/uuid';
-import type { BlogPost } from 'shared-lib/src/api';
+import type { BlogPost, BlogPostContent } from 'shared-lib/src/api';
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
-import { contentDTOToBlogPostContent } from './helper/contentDTOToBlogPostContent';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
 
@@ -34,7 +32,9 @@ function CreateBlogPostForm() {
       },
     },
   });
-  const [contentsDTO, setContentsDTO] = useState<ContentDTO[]>([]);
+  const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
+    [],
+  );
   const { createBlogPost, error } = useCreateBlogPost();
 
   const { register, handleSubmit } = form;
@@ -55,7 +55,7 @@ function CreateBlogPostForm() {
       thumbnail: formValues.thumbnail,
       postDate: today,
       lastUpdateDate: today,
-      contents: contentDTOToBlogPostContent(contentsDTO),
+      contents: blogPostContents,
     };
 
     try {
@@ -99,9 +99,9 @@ function CreateBlogPostForm() {
 
         <div>
           <h2>内容</h2>
-          <ContentsDTOSetterContext.Provider value={setContentsDTO}>
+          <BlogPostContentsSetterContext.Provider value={setBlogPostContents}>
             <BlogPostEditor />
-          </ContentsDTOSetterContext.Provider>
+          </BlogPostContentsSetterContext.Provider>
         </div>
       </FormProvider>
     </>
@@ -110,8 +110,8 @@ function CreateBlogPostForm() {
 
 export default CreateBlogPostForm;
 
-export const ContentsDTOSetterContext = createContext<
-  Dispatch<SetStateAction<ContentDTO[]>>
+export const BlogPostContentsSetterContext = createContext<
+  Dispatch<SetStateAction<BlogPostContent[]>>
 >(() => {
-  throw new Error('ContentsDTOSetterContext の設定が完了していません');
+  throw new Error('BlogPostContentsSetterContext の設定が完了していません');
 });
