@@ -9,7 +9,18 @@ Given('正常な記事が取得できるページにアクセスする', async f
   }
   const page = playwrightHelper.getPage();
 
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID1}`);
+  const [response] = await Promise.all([
+    page.waitForResponse(
+      (resp) =>
+        resp.url().includes(`/api/v2/blog/posts/${UUIDList.UUID1}`) &&
+        resp.status() === 200,
+    ),
+    page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID1}`),
+  ]);
+
+  // fetch 完了を待つ
+  expect(response.status()).toBe(200);
+  await response.json();
 });
 
 Then('記事サムネイル が表示される', async function () {
@@ -112,7 +123,16 @@ Given('対応する記事データが存在しないページにアクセスす�
   }
   const page = playwrightHelper.getPage();
 
-  await page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID4}`);
+  await Promise.all([
+    page.waitForResponse(
+      (resp) =>
+        // このパターンではクライアントサイドで api 通信が起こらないので、
+        // 現在のページの URL を確認している
+        resp.url().includes(`${UUIDList.UUID4}`) &&
+        resp.status() === 404,
+    ),
+    page.goto(`${process.env.TEST_TARGET_URL}/posts/${UUIDList.UUID4}`),
+  ]);
 });
 
 Then(

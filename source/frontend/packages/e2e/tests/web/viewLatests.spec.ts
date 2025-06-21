@@ -18,7 +18,7 @@ Given('新着記事を一覧表示するページにアクセスする', async f
     page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`),
   ]);
 
-  // 画像一覧取得 API の fetch 完了を待つ
+  // fetch 完了を待つ
   expect(response.status()).toBe(200);
   await response.json();
 });
@@ -135,7 +135,7 @@ Given('トップページにアクセスして新着記事を閲覧する', asyn
     page.goto(`${process.env.TEST_TARGET_URL}`),
   ]);
 
-  // 画像一覧取得 API の fetch 完了を待つ
+  // fetch 完了を待つ
   expect(response.status()).toBe(200);
   await response.json();
 });
