@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import { ApiBlogPostRepository } from 'shared-lib/src/repositories/apiBlogPostRepository';
+import { api, HttpError } from 'shared-lib/src/api';
 import CommonModal from '../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import { SelectPickUpPostsUseCase } from '../../../../usecases/select/selectPickUpPosts';
 import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
 import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
@@ -27,22 +26,21 @@ function Modal() {
   const { selectedBlogPosts } = usePostsCheckboxes();
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error('API の URL が設定されていません');
-    }
-    const blogPostRepository = new ApiBlogPostRepository(
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-    const selectPickUpPostsUseCase = new SelectPickUpPostsUseCase(
-      selectedBlogPosts(data.checkedPosts),
-      blogPostRepository,
-    );
     try {
-      const updatedPickUpPosts = await selectPickUpPostsUseCase.execute();
-      updatePickUpPosts(updatedPickUpPosts);
+      // 選択されたブログ記事を取得
+      const selectedPosts = selectedBlogPosts(data.checkedPosts);
+      
+      // ピックアップ記事を更新
+      const response = await api.put('/api/v2/admin/blog/posts/pickup', selectedPosts);
+      updatePickUpPosts(response);
       setIsUploadSuccess(true);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('ピックアップ記事の更新に失敗しました:', error);
+      
+      if (error instanceof HttpError) {
+        console.error(`HTTPエラー: ${error.status}`);
+      }
+      
       alert('ピックアップ記事の更新に失敗しました。ログを確認してください。');
     }
   };
