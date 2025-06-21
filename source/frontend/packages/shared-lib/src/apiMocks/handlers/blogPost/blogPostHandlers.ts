@@ -16,6 +16,117 @@ export const clearCreatedBlogPosts = () => {
 
 export const createBlogPostHandlers = (baseUrl: string): HttpHandler[] => {
   const blogPostHandlers = [
+    // v2 API endpoints
+    http.get(`${baseUrl}/api/v2/blog/posts/latest`, ({ request }) => {
+      const sortedBlogPosts = blogPostResponses.sort((a, b) => {
+        return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
+      });
+      const filteredBlogPosts = sortedBlogPosts.filter((blogPost) => {
+        return blogPost.postDate !== '' && blogPost.lastUpdateDate != '';
+      });
+
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (quantity) {
+        return HttpResponse.json(filteredBlogPosts.slice(0, Number(quantity)));
+      }
+      return HttpResponse.json(filteredBlogPosts);
+    }),
+    http.get(`${baseUrl}/api/v2/blog/posts/top-tech-pick`, () => {
+      return HttpResponse.json(
+        blogPostResponses.find((post) => post.id === UUIDList.UUID1),
+      );
+    }),
+    http.get(`${baseUrl}/api/v2/blog/posts/pickup`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(pickupBlogPostResponses);
+      }
+      const blogPosts = pickupBlogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
+    }),
+    http.get(`${baseUrl}/api/v2/blog/posts/popular`, ({ request }) => {
+      const url = new URL(request.url);
+      const quantity = url.searchParams.get('quantity');
+      if (!quantity) {
+        return HttpResponse.json(popularBlogPostResponses);
+      }
+      const blogPosts = popularBlogPostResponses.slice(0, Number(quantity));
+      return HttpResponse.json(blogPosts);
+    }),
+    http.get(`${baseUrl}/api/v2/blog/posts/:uuid`, ({ params }) => {
+      const uuid = params.uuid?.toString();
+      const blogPost = blogPostResponses.find((post) => post.id === uuid);
+      if (blogPost === undefined) {
+        return new HttpResponse('Not found', {
+          status: 404,
+        });
+      }
+      return HttpResponse.json(blogPost);
+    }),
+    http.post(`${baseUrl}/api/v2/admin/blog/posts`, async ({ request }) => {
+      let newPost: DefaultBodyType;
+      try {
+        newPost = await request.json();
+      } catch {
+        return HttpResponse.json(
+          { message: 'リクエストを json に変換できませんでした。' },
+          { status: 400 },
+        );
+      }
+      createdBlogPosts.push(blogPostResponseSchema.parse(newPost));
+      return HttpResponse.json(newPost, { status: 200 });
+    }),
+    http.put(
+      `${baseUrl}/api/v2/admin/blog/posts/top-tech-pick`,
+      async ({ request }) => {
+        let updatedPost: DefaultBodyType;
+        try {
+          updatedPost = await request.json();
+        } catch {
+          return HttpResponse.json(
+            { message: 'リクエストを json に変換できませんでした。' },
+            { status: 400 },
+          );
+        }
+
+        return HttpResponse.json(updatedPost, { status: 200 });
+      },
+    ),
+    http.put(
+      `${baseUrl}/api/v2/admin/blog/posts/pickup`,
+      async ({ request }) => {
+        let updatedPosts: DefaultBodyType;
+        try {
+          updatedPosts = await request.json();
+        } catch {
+          return HttpResponse.json(
+            { message: 'リクエストを json に変換できませんでした。' },
+            { status: 400 },
+          );
+        }
+
+        return HttpResponse.json(updatedPosts, { status: 200 });
+      },
+    ),
+    http.put(
+      `${baseUrl}/api/v2/admin/blog/posts/popular`,
+      async ({ request }) => {
+        let updatedPosts: DefaultBodyType;
+        try {
+          updatedPosts = await request.json();
+        } catch {
+          return HttpResponse.json(
+            { message: 'リクエストを json に変換できませんでした。' },
+            { status: 400 },
+          );
+        }
+
+        return HttpResponse.json(updatedPosts, { status: 200 });
+      },
+    ),
+    // v1 API endpoints (kept for backward compatibility)
     http.get(`${baseUrl}/blog/posts/latest`, ({ request }) => {
       const sortedBlogPosts = blogPostResponses.sort((a, b) => {
         return new Date(b.postDate).getTime() - new Date(a.postDate).getTime();
