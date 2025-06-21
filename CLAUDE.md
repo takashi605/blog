@@ -346,7 +346,7 @@ PNPM ワークスペース構成のパッケージ:
    - [ ] features/blogPost/api/useViewTopTechPick.ts の作成 → ViewTopTechPickController.tsx を更新
 
 3. **blog-adminパッケージの段階的移行**
-   - [ ] features/blogPost/api/useCreateBlogPost.ts の作成 → CreateBlogPostForm.tsx を更新
+   - [x] features/blogPost/api/useCreateBlogPost.ts の作成 → CreateBlogPostForm.tsx を更新
    - [ ] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → useBlogPostList.ts を更新
    - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → usePickUpPostList.ts を更新
    - [ ] features/blogPost/api/useSelectPickUpPosts.ts の作成 → PickUpPostSelectModal.tsx を更新
