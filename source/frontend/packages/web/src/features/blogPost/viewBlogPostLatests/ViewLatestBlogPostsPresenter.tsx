@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { components } from 'shared-lib/src/generated/api-types';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
+import BlogPostDate from '../ui/BlogPostDate';
 import styles from './viewLatestBlogPostsPresenter.module.scss';
 
 type BlogPost = components['schemas']['BlogPost'];
@@ -24,7 +25,9 @@ function ViewLatestBlogPostsPresenter({
           >
             <div className={styles.thumbnail}>
               <Thumbnail path={blogPost.thumbnail.path} />
-              <p className={styles.postDate}>投稿日:{blogPost.postDate}</p>
+              <p className={styles.postDate}>
+                <BlogPostDate label="投稿日" date={blogPost.postDate} />
+              </p>
             </div>
             <h3 className={styles.blogPostTitle}>{blogPost.title}</h3>
           </Link>
