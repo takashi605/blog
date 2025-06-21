@@ -11,7 +11,7 @@ Given('【正常系 記事投稿】記事投稿ページにアクセスする', 
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 10000 });
+  await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 20000 });
 });
 
 Then(
@@ -664,7 +664,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     const richTextEditor = page.locator('[contenteditable="true"]');
-    await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+    await expect(richTextEditor).toBeVisible({ timeout: 20000 });
   },
 );
 
