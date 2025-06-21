@@ -339,23 +339,23 @@ PNPM ワークスペース構成のパッケージ:
    - [x] HTTPリクエストの共通処理
 
 2. **webパッケージの段階的移行**
-   - [x] features/blogPost/api/useViewBlogPost.ts の作成 → ViewBlogPostController.tsx を更新
-   - [x] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → ViewLatestBlogPostsController.tsx を更新
-   - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → ViewPickUpPostsController.tsx を更新
-   - [ ] features/blogPost/api/useViewPopularPosts.ts の作成 → ViewPopularPostsController.tsx を更新
-   - [ ] features/blogPost/api/useViewTopTechPick.ts の作成 → ViewTopTechPickController.tsx を更新
+   - [x] ViewBlogPostController.tsx を更新
+   - [x] ViewLatestBlogPostsController.tsx を更新
+   - [x] ViewPickUpPostsController.tsx を更新
+   - [ ] ViewPopularPostsController.tsx を更新
+   - [ ] ViewTopTechPickController.tsx を更新
 
 3. **blog-adminパッケージの段階的移行**
-   - [x] features/blogPost/api/useCreateBlogPost.ts の作成 → CreateBlogPostForm.tsx を更新
-   - [ ] features/blogPost/api/useViewLatestBlogPosts.ts の作成 → useBlogPostList.ts を更新
-   - [ ] features/blogPost/api/useViewPickUpPosts.ts の作成 → usePickUpPostList.ts を更新
-   - [ ] features/blogPost/api/useSelectPickUpPosts.ts の作成 → PickUpPostSelectModal.tsx を更新
-   - [ ] features/blogPost/api/useViewPopularPosts.ts の作成 → usePopularPostList.ts を更新
-   - [ ] features/blogPost/api/useSelectPopularPosts.ts の作成 → PopularPostSelectModal.tsx を更新
-   - [ ] features/blogPost/api/useSelectTopTechPick.ts の作成 → TopTechPickSelectModal.tsx を更新
-   - [ ] features/blogPost/api/useViewTopTechPick.ts の作成 → useTopTechPickPostView.ts を更新
-   - [ ] features/images/api/useViewImages.ts の作成 → useImageList.tsx を更新
-   - [ ] features/images/api/useCreateImage.ts の作成 → ImageUploadModal.tsx を更新
+   - [x] CreateBlogPostForm.tsx を更新
+   - [ ] useBlogPostList.ts を更新
+   - [ ] usePickUpPostList.ts を更新
+   - [ ] PickUpPostSelectModal.tsx を更新
+   - [ ] usePopularPostList.ts を更新
+   - [ ] PopularPostSelectModal.tsx を更新
+   - [ ] TopTechPickSelectModal.tsx を更新
+   - [ ] useTopTechPickPostView.ts を更新
+   - [ ] useImageList.tsx を更新
+   - [ ] ImageUploadModal.tsx を更新
 
 4. **既存パッケージの削除**
    - [ ] 全ての依存が移行完了後に削除
