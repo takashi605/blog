@@ -30,18 +30,21 @@ function Modal() {
     try {
       // 選択されたブログ記事を取得
       const selectedPosts = selectedBlogPosts(data.checkedPosts);
-      
+
       // 人気記事を更新
-      const response = await api.put('/api/v2/admin/blog/posts/popular', selectedPosts);
+      const response = await api.put(
+        '/api/v2/admin/blog/posts/popular',
+        selectedPosts,
+      );
       updatePopularPosts(response);
       setIsUploadSuccess(true);
     } catch (error) {
       console.error('人気記事の更新に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       alert('人気記事の更新に失敗しました。ログを確認してください。');
     }
   };

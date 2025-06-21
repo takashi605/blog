@@ -29,18 +29,21 @@ function Modal() {
     try {
       // 選択されたブログ記事を取得
       const selectedPosts = selectedBlogPosts(data.checkedPosts);
-      
+
       // ピックアップ記事を更新
-      const response = await api.put('/api/v2/admin/blog/posts/pickup', selectedPosts);
+      const response = await api.put(
+        '/api/v2/admin/blog/posts/pickup',
+        selectedPosts,
+      );
       updatePickUpPosts(response);
       setIsUploadSuccess(true);
     } catch (error) {
       console.error('ピックアップ記事の更新に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       alert('ピックアップ記事の更新に失敗しました。ログを確認してください。');
     }
   };

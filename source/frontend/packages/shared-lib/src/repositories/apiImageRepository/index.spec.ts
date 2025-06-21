@@ -1,8 +1,8 @@
 import { Image } from 'entities/src/blogPost/image';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { ApiImageRepository } from '.';
 import { createdImages } from '../../apiMocks/handlers/image/imageHandlerReponse';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
+import { createUUIDv4 } from '../../utils/uuid';
 
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');
 beforeAll(() => {

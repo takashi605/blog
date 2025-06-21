@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { memo } from 'react';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import type { components } from 'shared-lib/src/generated/api-types';
+import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 type RichText = components['schemas']['RichText'];

@@ -5,10 +5,7 @@ import { useImageList } from '../list/useImageList';
 import styles from './imagePicker.module.scss';
 
 type ImagePickerProps = {
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    image: Image,
-  ) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>, image: Image) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
   ref?: React.Ref<HTMLInputElement>;

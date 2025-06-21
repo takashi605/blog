@@ -11,12 +11,12 @@ export function useImageList() {
       updateImages(response);
     } catch (error) {
       console.error('画像一覧の取得に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         // 必要に応じて、より詳細なエラーハンドリングを追加
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       // エラー時は空配列を設定
       updateImages([]);
     }

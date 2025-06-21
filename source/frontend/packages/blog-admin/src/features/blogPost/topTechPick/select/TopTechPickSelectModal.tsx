@@ -38,18 +38,21 @@ function Modal() {
 
       // 選択された記事（単一）を取得
       const selectedPost = selectedTopTechPickBlogPosts[0];
-      
+
       // トップテックピック記事を更新
-      const response = await api.put('/api/v2/admin/blog/posts/top-tech-pick', selectedPost);
+      const response = await api.put(
+        '/api/v2/admin/blog/posts/top-tech-pick',
+        selectedPost,
+      );
       updateTopTechPickPost(response);
       setIsUploadSuccess(true);
     } catch (error) {
       console.error('トップテックピック記事の更新に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       alert(
         'トップテックピック記事の更新に失敗しました。ログを確認してください。',
       );

@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { api, HttpError } from 'shared-lib/src/api';
+import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
@@ -38,15 +38,15 @@ function Modal() {
         id: createUUIDv4(),
         path: data.imagePath,
       };
-      
+
       await api.post('/api/v2/admin/blog/images', imageData);
     } catch (error) {
       console.error('データベースへのアップロードに失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       setErrorMessage('データベースへのアップロードに失敗しました。');
       // ここで return すると画像の再取得が行われず、e2e テストが適切な結果を返さない
     }
@@ -57,11 +57,11 @@ function Modal() {
       updateImages(fetchedImages);
     } catch (error) {
       console.error('画像一覧の再取得に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       // エラー時は空配列を設定
       updateImages([]);
     }

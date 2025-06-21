@@ -15,13 +15,18 @@ export default function TopTechPickPostViewProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [topTechPickPostView, setTopTechPickPostView] = useState<BlogPost | undefined>();
+  const [topTechPickPostView, setTopTechPickPostView] = useState<
+    BlogPost | undefined
+  >();
   const getTopTechPickPost = useCallback(() => {
     return topTechPickPostView;
   }, [topTechPickPostView]);
-  const updateTopTechPickPost = useCallback((topTechPickPost: BlogPost | undefined) => {
-    setTopTechPickPostView(topTechPickPost);
-  }, []);
+  const updateTopTechPickPost = useCallback(
+    (topTechPickPost: BlogPost | undefined) => {
+      setTopTechPickPostView(topTechPickPost);
+    },
+    [],
+  );
 
   return (
     <TopTechPickPostViewContext.Provider

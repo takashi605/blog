@@ -1,11 +1,11 @@
 import type { BlogPost } from 'entities/src/blogPost';
 import { MockBlogPost } from 'entities/src/mockData/blogPost/mockBlogPost';
 import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
 import { ApiBlogPostRepository } from '.';
 import { setupMockApiForServer } from '../../apiMocks/serverForNode';
 import { HttpError } from '../../error/httpError';
+import { createUUIDv4 } from '../../utils/uuid';
 
 // TODO このパッケージ内で setupMockApiForServer の利用箇所が増えたら共通化する
 const mockApiForServer = setupMockApiForServer('http://localhost:8000');

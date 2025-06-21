@@ -12,12 +12,12 @@ export function useTopTechPickPostList() {
       updateTopTechPickPost(response);
     } catch (error) {
       console.error('トップテックピック記事の取得に失敗しました:', error);
-      
+
       if (error instanceof HttpError) {
         // 必要に応じて、より詳細なエラーハンドリングを追加
         console.error(`HTTPエラー: ${error.status}`);
       }
-      
+
       // エラー時は undefined を設定（空状態）
       updateTopTechPickPost(undefined);
     }

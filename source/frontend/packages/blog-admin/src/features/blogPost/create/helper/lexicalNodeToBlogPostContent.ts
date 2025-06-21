@@ -8,8 +8,8 @@
 import type { LinkNode } from '@lexical/link';
 import type { HeadingNode } from '@lexical/rich-text';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import type { BlogPostContent } from 'shared-lib/src/api';
+import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import type { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
 import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
 

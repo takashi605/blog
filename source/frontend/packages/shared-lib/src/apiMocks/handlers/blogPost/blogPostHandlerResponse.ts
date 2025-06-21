@@ -1,5 +1,5 @@
-import { createUUIDv4 } from 'service/src/utils/uuid';
 import { UUIDList } from 'shared-test-data';
+import { createUUIDv4 } from '../../../utils/uuid';
 
 export const blogPostResponses = [
   // 正常データ1
