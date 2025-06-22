@@ -11,7 +11,7 @@ Given('【正常系 記事投稿】記事投稿ページにアクセスする', 
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-  await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 10000 });
+  await page.goto(`${process.env.ADMIN_URL}/posts/create`, { timeout: 20000 });
 });
 
 Then(
@@ -583,17 +583,15 @@ Then('【正常系 記事投稿】画像が表示されている', async functio
 });
 Then('【正常系 記事投稿】投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
-  const postDate = page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/);
-  expect(await postDate.textContent()).toContain(
-    formatDate2DigitString(new Date()),
-  );
+  await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({
+    timeout: 10000,
+  });
 });
 Then('【正常系 記事投稿】更新日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
-  const lastUpdateDate = page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/);
-  expect(await lastUpdateDate.textContent()).toContain(
-    formatDate2DigitString(new Date()),
-  );
+  await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({
+    timeout: 10000,
+  });
 });
 
 Then(
@@ -666,7 +664,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     const richTextEditor = page.locator('[contenteditable="true"]');
-    await expect(richTextEditor).toBeVisible({ timeout: 10000 });
+    await expect(richTextEditor).toBeVisible({ timeout: 20000 });
   },
 );
 

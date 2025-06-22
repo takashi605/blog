@@ -153,23 +153,23 @@ frontend-test:
 	$(MAKE) frontend-check
 frontend-check:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
+	printf "web\n blog-admin\n shared-lib\n" shared-test-data | \
 	xargs -n 1 -P 5 -I {} pnpm {} run check
 frontend-fix:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
+	printf "web\n blog-admin\n shared-lib\n" shared-test-data | \
 	xargs -n 1 -P 5 -I {} pnpm {} run fix
 
 # 結果が見づらいけど並列実行するのでめちゃくちゃはやい
 frontend-test-unit:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
+	printf "web\n blog-admin\n shared-lib\n" shared-test-data | \
 	xargs -n 1 -P 5 -I {} pnpm {} run test
 
 # 直接実行するので見やすい
 frontend-test-unit-serialize:
 	cd source/frontend/ && \
-	printf "web\n entities\n blog-admin\n service\n shared-interface-adapter\n" shared-test-data | \
+	printf "web\n blog-admin\n shared-lib\n" shared-test-data | \
 	xargs -n 1 -P 1 -I {} pnpm {} run test
 
 frontend-tsc:
@@ -209,40 +209,25 @@ web-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep web
 web-sh:
 	kubectl exec -it $(shell $(MAKE) web-pod-name) -c web -- bash
-###
-## api 系
-###
-api-run:
-	docker container run --rm api:v0.0.0
-api-sh:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) /bin/bash
-api-pod-name:
-	@kubectl get pods -o custom-columns=:metadata.name | grep api
-api-create-db:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx database create"
-api-drop-db:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx database drop -y"
-api-migrate-run:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate run --source ./migrations/schema"
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate run --source ./migrations/seeds --ignore-missing"
-api-migrate-revert:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- sh -c "cd ./api_v2 && sqlx migrate revert --source ./migrations/schema"
 
 # usage:
 #   make api-migrate-add name=xxxxx
 api-migrate-add-schema:
-	cd source/backend_v2/api_v2 && sqlx migrate add $(name) --source ./migrations/schema
+	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/schema
 api-migrate-add-seeds:
-	cd source/backend_v2/api_v2 && sqlx migrate add $(name) --source ./migrations/seeds
+	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/seeds
 
 # OpenAPI仕様書生成
 api-generate-openapi:
-	kubectl exec $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- curl -s http://localhost:8001/openapi.json > source/frontend/openapi.json
+	kubectl exec $(shell $(MAKE) api-pod-name) -c api -- curl -s http://localhost:8001/openapi.json > source/frontend/openapi.json
 
 ###
-## api テスト系
-## Pod「api」内に api テスト用コンテナがある
+## api  系
 ###
+api-sh:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) /bin/bash
+api-pod-name:
+	@kubectl get pods -o custom-columns=:metadata.name | grep api
 api-test-sh:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
 api-test-run:
@@ -253,28 +238,28 @@ api-test-run:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
-api-test-unit:
-	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- cargo test
-
-###
-## api v2 系
-###
-api-v2-sh:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) /bin/bash
-api-v2-pod-name:
-	@kubectl get pods -o custom-columns=:metadata.name | grep api-v2
-api-v2-test-sh:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2-test -- bash
-api-v2-test-run:
+api-test-run-include-ignored:
 	$(MAKE) api-create-db
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- cargo test
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2-test -- cargo test
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- cargo test -- --include-ignored
 	$(MAKE) postgres-recreate-schema
 	$(MAKE) api-migrate-run
-api-v2-test-unit:
-	kubectl exec -it $(shell $(MAKE) api-v2-pod-name) -c api-v2 -- cargo test
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- cargo test -- --include-ignored
+	$(MAKE) postgres-recreate-schema
+	$(MAKE) api-migrate-run
+api-test-unit:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- cargo test
+api-create-db:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database create"
+api-drop-db:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx database drop -y"
+api-migrate-run:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run --source ./migrations/schema"
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate run --source ./migrations/seeds --ignore-missing"
+api-migrate-revert:
+	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api -- sh -c "cd ./api && sqlx migrate revert --source ./migrations/schema"
+
 
 ###
 ## blog-admin 系

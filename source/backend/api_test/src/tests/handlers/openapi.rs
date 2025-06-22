@@ -5,7 +5,7 @@ use serde_json::Value;
 #[tokio::test]
 async fn test_get_openapi_spec() -> Result<()> {
     // OpenAPI仕様書のエンドポイントをテスト
-    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
     let response = request.send().await?;
 
     // レスポンスステータスの確認
@@ -30,7 +30,7 @@ async fn test_get_openapi_spec() -> Result<()> {
     let paths = &openapi_spec["paths"];
     assert!(paths.is_object());
 
-    // 主要なエンドポイントが含まれていることを確認
+    // 主要なエンドポイントが含まれていることを確認（プレフィックス）
     assert!(paths.get("/api/blog/posts/latest").is_some());
     assert!(paths.get("/api/blog/posts/{uuid}").is_some());
     assert!(paths.get("/api/admin/blog/posts").is_some());
@@ -56,7 +56,7 @@ async fn test_get_openapi_spec() -> Result<()> {
 #[tokio::test]
 async fn test_openapi_spec_blog_post_schema() -> Result<()> {
     // BlogPostスキーマの詳細をテスト
-    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
     let response = request.send().await?;
 
     let body_text = response.text().await?;
@@ -86,7 +86,7 @@ async fn test_openapi_spec_blog_post_schema() -> Result<()> {
 #[tokio::test]
 async fn test_openapi_spec_endpoints_methods() -> Result<()> {
     // エンドポイントのHTTPメソッドが正しく定義されていることをテスト
-    let request = Request::new(Methods::GET, "http://localhost:8000/openapi.json");
+    let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
     let response = request.send().await?;
 
     let body_text = response.text().await?;

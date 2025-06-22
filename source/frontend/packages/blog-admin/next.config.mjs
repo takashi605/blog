@@ -31,12 +31,7 @@ const nextConfig = {
     instrumentationHook: true,
     serverComponentsExternalPackages: ['@vercel/otel'],
   },
-  transpilePackages: [
-    'entities',
-    'service',
-    'shared-interface-adapter',
-    'shared-test-data',
-  ],
+  transpilePackages: ['shared-lib', 'shared-test-data'],
 };
 
 export default nextConfig;

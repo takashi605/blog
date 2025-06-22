@@ -4,12 +4,12 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::response::BlogPost;
+  use common::types::api::BlogPost;
   use uuid::Uuid;
 
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_blog_post() -> Result<()> {
-    let url = "http://localhost:8000/admin/blog/posts";
+    let url = "http://localhost:8001/admin/blog/posts";
 
     // テスト用のブログ記事 json を作成
     let blog_post_for_req: BlogPost = helper::create_blog_post_for_req(Uuid::new_v4(), "テスト記事").await.unwrap();
@@ -28,7 +28,7 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::response::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
+  use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
   use uuid::Uuid;
 
   pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {

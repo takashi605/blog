@@ -8,7 +8,6 @@ Given('新着記事を一覧表示するページにアクセスする', async f
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-
   await page.goto(`${process.env.TEST_TARGET_URL}/posts/latest`);
 });
 
@@ -114,7 +113,6 @@ Given('トップページにアクセスして新着記事を閲覧する', asyn
     throw new Error('TEST_TARGET_URL 環境変数が設定されていません');
   }
   const page = playwrightHelper.getPage();
-
   await page.goto(`${process.env.TEST_TARGET_URL}`);
 });
 Then('新着記事3件分以上の記事タイトルが表示される', async function () {

@@ -19,7 +19,7 @@ web:
     cpuRequest: "100m"
     containerPort: 3000
     env:
-      NEXT_PUBLIC_API_URL: "http://blog.example/api/v2"
+      NEXT_PUBLIC_API_URL: "http://blog.example/api"
   service:
     type: ClusterIP
     port: 80
@@ -50,7 +50,7 @@ admin:
     cpuRequest: "100m"
     containerPort: 3000
     env:
-      NEXT_PUBLIC_API_URL: "http://admin.blog.example/api/v2"
+      NEXT_PUBLIC_API_URL: "http://admin.blog.example/api"
       NEXT_PUBLIC_WEB_URL: "http://blog.example"
   service:
     type: ClusterIP
@@ -75,37 +75,9 @@ api:
     cpuLimit: "750m"
     memoryRequest: "250Mi"
     cpuRequest: "100m"
-    containerPort: 8000
-    apiTest:
-      imageRepository: "api-test"
-      imageTag: "v0.0.0"
-      imagePullPolicy: Never
-  service:
-    type: ClusterIP
-    port: 80
-    targetPort: 8000
-    # ここから下の設定は type:ClusterIP の場合は関係ないが、
-    # 一応デフォルト値は入れておく
-    nodePort: 30080
-    loadBalancerIP: "127.0.0.100"
-    externalTrafficPolicy: Local
-api_v2:
-  deployment:
-    replicas: 1
-  pod:
-    imageRepository: "api-v2"
-    imageTag: "v0.0.0"
-    imagePullSecret: ""
-    # Always だとリモートから pull してしまう
-    # 今回はローカルのイメージを使うために Never にしている
-    imagePullPolicy: Never
-    memoryLimit: "1500Mi"
-    cpuLimit: "750m"
-    memoryRequest: "250Mi"
-    cpuRequest: "100m"
     containerPort: 8001
     apiTest:
-      imageRepository: "api-v2-test"
+      imageRepository: "api-test"
       imageTag: "v0.0.0"
       imagePullPolicy: Never
   service:

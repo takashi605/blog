@@ -3,11 +3,11 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::response::BlogPost;
+  use common::types::api::BlogPost;
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_top_tech_pick_post() -> Result<()> {
-    let url = "http://localhost:8000/admin/blog/posts/top-tech-pick";
+    let url = "http://localhost:8001/admin/blog/posts/top-tech-pick";
 
     let top_tech_pick_post_for_req: BlogPost =test_helper::minimal_blog_post1().unwrap();
     let top_tech_pick_post_json_for_req: String = serde_json::to_string(&top_tech_pick_post_for_req).context("JSON データに変換できませんでした").unwrap();
@@ -28,7 +28,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_pickup_posts() -> Result<()> {
-    let url = "http://localhost:8000/admin/blog/posts/pickup";
+    let url = "http://localhost:8001/admin/blog/posts/pickup";
 
     let pickup_posts_for_req: Vec<BlogPost> = helper::create_pickup_posts_for_req().await.unwrap();
     let pickup_posts_json_for_req: String = serde_json::to_string(&pickup_posts_for_req).context("JSON データに変換できませんでした").unwrap();
@@ -51,7 +51,7 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_popular_posts() -> Result<()> {
-    let url = "http://localhost:8000/admin/blog/posts/popular";
+    let url = "http://localhost:8001/admin/blog/posts/popular";
 
     let popular_posts_for_req: Vec<BlogPost> = helper::create_popular_posts_for_req().await.unwrap();
     let popular_posts_json_for_req: String = serde_json::to_string(&popular_posts_for_req).context("JSON データに変換できませんでした").unwrap();

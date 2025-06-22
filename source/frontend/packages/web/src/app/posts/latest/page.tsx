@@ -1,4 +1,4 @@
-import ViewLatestBlogPostsController from '../../../controllers/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
+import ViewLatestBlogPostsController from '../../../features/blogPost/viewBlogPostLatests/ViewLatestBlogPostsController';
 import styles from './page.module.scss';
 
 // ビルド時ではなく、リクエスト時にレンダリングを行う

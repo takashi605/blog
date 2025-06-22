@@ -66,57 +66,19 @@ custom_build(
 custom_build(
   'api-test:v0.0.0',
   '''
-    docker image build -f containers/backend/api-test/Dockerfile -t $EXPECTED_REF .;
+    docker image build -f containers/backend/api_test/Dockerfile -t $EXPECTED_REF .;
     make mk8s-import-image image_name=$EXPECTED_REF;
   ''',
   deps=[
     'source/backend/api_test',
     'source/backend/common',
-    'containers/backend/api-test',
+    'containers/backend/api_test',
     'source/backend/bacon.toml'
   ],
   live_update=[
     sync('source/backend/api_test', '/source/backend/api_test'),
     sync('source/backend/common', '/source/backend/common'),
     sync('source/backend/bacon.toml', '/source/backend/bacon.toml'),
-  ]
-)
-
-custom_build(
-  'api-v2:v0.0.0',
-  '''
-    docker image build --target dev -f containers/backend/api_v2/Dockerfile -t $EXPECTED_REF .;
-    make mk8s-import-image image_name=$EXPECTED_REF;
-  ''',
-  deps=[
-    'source/backend_v2/api_v2',
-    'source/backend_v2/common',
-    'containers/backend/api_v2',
-    'source/backend_v2/bacon.toml'
-  ],
-  live_update=[
-    sync('source/backend_v2/api_v2', '/source/backend_v2/api_v2'),
-    sync('source/backend_v2/common', '/source/backend_v2/common'),
-    sync('source/backend_v2/bacon.toml', '/source/backend_v2/bacon.toml'),
-  ]
-)
-
-custom_build(
-  'api-v2-test:v0.0.0',
-  '''
-    docker image build -f containers/backend/api_v2_test/Dockerfile -t $EXPECTED_REF .;
-    make mk8s-import-image image_name=$EXPECTED_REF;
-  ''',
-  deps=[
-    'source/backend_v2/api_v2_test',
-    'source/backend_v2/common',
-    'containers/backend/api_v2_test',
-    'source/backend_v2/bacon.toml'
-  ],
-  live_update=[
-    sync('source/backend_v2/api_v2_test', '/source/backend_v2/api_v2_test'),
-    sync('source/backend_v2/common', '/source/backend_v2/common'),
-    sync('source/backend_v2/bacon.toml', '/source/backend_v2/bacon.toml'),
   ]
 )
 

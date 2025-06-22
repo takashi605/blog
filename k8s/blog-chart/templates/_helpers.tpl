@@ -96,13 +96,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- /*
-アプリケーション「api_v2」の名前を取得
-*/ -}}
-{{- define "api_v2.appname" -}}
-{{- "api-v2" }}
-{{- end }}
-
-{{- /*
 アプリケーション「postgres」の名前を取得
 */ -}}
 {{- define "postgres.appname" -}}

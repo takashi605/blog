@@ -11,10 +11,8 @@
   "scripts": {
     "web": "pnpm -F web",
     "e2e": "pnpm -F e2e",
-    "entities": "pnpm -F entities",
     "blog-admin": "pnpm -F blog-admin",
-    "service": "pnpm -F service",
-    "shared-interface-adapter": "pnpm -F shared-interface-adapter",
+    "shared-lib": "pnpm -F shared-lib",
     "shared-test-data": "pnpm -F shared-test-data",
     "e2e-test": "pnpm tsc && pnpm e2e e2e-test",
     "e2e-ui": "pnpm tsc && pnpm e2e e2e-ui",
@@ -22,7 +20,7 @@
     "web-dev": "pnpm -F web exec next dev",
     "admin-dev": "pnpm -F blog-admin exec next dev",
     "tsc": "pnpm shared-test-data tsc",
-    "generate-types": "openapi-typescript ./openapi.json -o ./packages/shared-interface-adapter/src/generated/api-types.ts"
+    "generate-types": "openapi-typescript ./openapi.json -o ./packages/shared-lib/src/generated/api-types.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

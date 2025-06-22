@@ -1,12 +1,8 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
-import type { BlogPostDTO } from 'service/src/blogPostService/dto/blogPostDTO';
-import { extractFirstParagraphText } from 'service/src/blogPostService/dto/blogPostDTOProcessor/excerptedBlogPostDTO';
-import { HttpError } from 'shared-interface-adapter/src/error/httpError';
-import { ApiBlogPostRepository } from 'shared-interface-adapter/src/repositories/apiBlogPostRepository';
+import { api, HttpError, type BlogPost } from 'shared-lib/src/api';
 import { z } from 'zod';
-import ViewBlogPostController from '../../../controllers/blogPost/viewBlogPost/ViewBlogPostController';
-import { ViewBlogPostUseCase } from '../../../usecases/view/viewBlogPost';
+import ViewBlogPostController from '../../../features/blogPost/viewBlogPost/ViewBlogPostController';
 
 type ViewBlogPostParams = {
   params: {
@@ -18,25 +14,20 @@ export async function generateMetadata(
   { params }: ViewBlogPostParams,
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error('API URL が設定されていません');
-  }
-  const blogPostRepository = new ApiBlogPostRepository(
-    process.env.NEXT_PUBLIC_API_URL,
-  );
-  let blogPostDTO: BlogPostDTO;
+  let blogPost: BlogPost;
   try {
-    blogPostDTO = await new ViewBlogPostUseCase(blogPostRepository).execute(
-      params.id,
-    );
+    // APIクライアントを直接使用して記事を取得
+    blogPost = await api.get('/api/blog/posts/{uuid}', {
+      pathParams: { uuid: params.id },
+    });
   } catch (e) {
     if (e instanceof HttpError || e instanceof z.ZodError) notFound();
     throw e;
   }
-  const excerptedText = extractFirstParagraphText(blogPostDTO);
+  const excerptedText = extractFirstParagraphText(blogPost);
 
   return {
-    title: blogPostDTO.title,
+    title: blogPost.title,
     description: excerptedText,
   };
 }
@@ -52,3 +43,17 @@ async function ViewBlogPost({ params }: ViewBlogPostParams) {
 }
 
 export default ViewBlogPost;
+
+/**
+ * BlogPostから最初の段落のテキストを抜粋する
+ * @param blogPost 記事データ
+ * @returns 抜粋されたテキスト
+ */
+function extractFirstParagraphText(blogPost: BlogPost): string {
+  const firstParagraph = blogPost.contents.find(
+    (content) => content.type === 'paragraph',
+  );
+  const excerptedText =
+    firstParagraph?.text?.map((text) => text.text).join('') ?? '';
+  return excerptedText;
+}
