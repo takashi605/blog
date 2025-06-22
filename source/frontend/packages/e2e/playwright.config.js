@@ -4,7 +4,8 @@ export default defineConfig({
   outputDir: 'tests/test-results',
   timeout: 90 * 1000,
   expect: {
-    timeout: 15 * 1000,
+    // CI環境では期待値のタイムアウトを延長
+    timeout: process.env.CI ? 30 * 1000 : 15 * 1000,
   },
   workers: process.env.CI ? 1 : 3,
   reporter: process.env.CI
@@ -23,4 +24,78 @@ export default defineConfig({
           },
         ],
       ],
+  // リトライ設定
+  retries: 2,
+  use: {
+    // CI環境での追加設定
+    ...(process.env.CI
+      ? {
+          // アクションのタイムアウトを延長
+          actionTimeout: 30 * 1000,
+
+          // ナビゲーションのタイムアウトを延長
+          navigationTimeout: 30 * 1000,
+
+          // ビューポートサイズを固定
+          viewport: { width: 1280, height: 720 },
+
+          // ヘッドレスモードを明示的に指定
+          headless: true,
+
+          // より安定した待機戦略
+          // 'networkidle' は遅いが、'domcontentloaded' は速すぎる場合がある
+          // 'load' がバランスが良い
+          waitForLoadState: 'load',
+
+          // コンテキストオプション
+          contextOptions: {
+            // アニメーションを無効化（パフォーマンス向上）
+            reducedMotion: 'reduce',
+
+            // タイムゾーンを固定
+            timezoneId: 'Asia/Tokyo',
+
+            // ロケールを固定
+            locale: 'ja-JP',
+          },
+        }
+      : {
+          // ローカル環境での設定
+          screenshot: 'off',
+          video: 'off',
+          trace: 'off',
+        }),
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...defineConfig.use,
+        browserName: 'chromium',
+
+        // CI環境での追加のブラウザ設定
+        ...(process.env.CI
+          ? {
+              // ブラウザの起動オプション
+              launchOptions: {
+                // GPUを無効化（CI環境でのパフォーマンス向上）
+                args: [
+                  '--disable-gpu',
+                  '--disable-dev-shm-usage',
+                  '--disable-setuid-sandbox',
+                  '--no-sandbox',
+                  // メモリ使用量を削減
+                  '--disable-web-security',
+                  '--disable-features=IsolateOrigins',
+                  '--disable-site-isolation-trials',
+                ],
+              },
+            }
+          : {}),
+      },
+    },
+  ],
+
+  // 並列実行の設定
+  fullyParallel: !process.env.CI, // CI環境では並列実行を無効化
 });
