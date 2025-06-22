@@ -1,8 +1,6 @@
-mod db;
-
 //  3層アーキテクチャモジュール
-mod domain;
 mod application;
+mod domain;
 mod infrastructure;
 
 use anyhow::Result;
