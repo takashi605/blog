@@ -3,6 +3,7 @@ use anyhow::Result;
 use serde_json::Value;
 
 #[tokio::test]
+#[ignore] // このテストは開発環境でのみ実行することを想定
 async fn test_get_openapi_spec() -> Result<()> {
     // OpenAPI仕様書のエンドポイントをテスト
     let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
@@ -54,6 +55,7 @@ async fn test_get_openapi_spec() -> Result<()> {
 }
 
 #[tokio::test]
+#[ignore] // このテストは開発環境でのみ実行することを想定
 async fn test_openapi_spec_blog_post_schema() -> Result<()> {
     // BlogPostスキーマの詳細をテスト
     let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
@@ -84,6 +86,7 @@ async fn test_openapi_spec_blog_post_schema() -> Result<()> {
 }
 
 #[tokio::test]
+#[ignore] // このテストは開発環境でのみ実行することを想定
 async fn test_openapi_spec_endpoints_methods() -> Result<()> {
     // エンドポイントのHTTPメソッドが正しく定義されていることをテスト
     let request = Request::new(Methods::GET, "http://localhost:8001/openapi.json");
