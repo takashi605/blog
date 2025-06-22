@@ -55,7 +55,7 @@ const renderController = async (quantity?: number) => {
 describe('コンポーネント: ViewLatestBlogPostsController', () => {
   it('新着記事のタイトルが表示されている', async () => {
     await renderController();
-    expect(mockGet).toHaveBeenCalledWith('/api/v2/blog/posts/latest');
+    expect(mockGet).toHaveBeenCalledWith('/api/blog/posts/latest');
 
     const sectionTitle = screen.getByText('新着記事');
     expect(sectionTitle).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('コンポーネント: ViewLatestBlogPostsController', () => {
   it('取得するデータ数を指定した場合、その数だけの記事データが表示される', async () => {
     await renderController(2);
 
-    expect(mockGet).toHaveBeenCalledWith('/api/v2/blog/posts/latest');
+    expect(mockGet).toHaveBeenCalledWith('/api/blog/posts/latest');
 
     // 2件の記事リンクが表示されることを確認
     const postLinks = screen.getAllByRole('link');
@@ -113,7 +113,7 @@ describe('コンポーネント: ViewLatestBlogPostsController', () => {
   it('quantityが未指定の場合は全件を表示する', async () => {
     await renderController();
 
-    expect(mockGet).toHaveBeenCalledWith('/api/v2/blog/posts/latest');
+    expect(mockGet).toHaveBeenCalledWith('/api/blog/posts/latest');
 
     // 全3件の記事リンクが表示されることを確認
     const postLinks = screen.getAllByRole('link');

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  '/api/v2/admin/blog/images': {
+  '/api/admin/blog/images': {
     parameters: {
       query?: never;
       header?: never;
@@ -20,7 +20,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/admin/blog/posts': {
+  '/api/admin/blog/posts': {
     parameters: {
       query?: never;
       header?: never;
@@ -36,7 +36,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/admin/blog/posts/pickup': {
+  '/api/admin/blog/posts/pickup': {
     parameters: {
       query?: never;
       header?: never;
@@ -52,7 +52,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/admin/blog/posts/popular': {
+  '/api/admin/blog/posts/popular': {
     parameters: {
       query?: never;
       header?: never;
@@ -68,7 +68,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/admin/blog/posts/top-tech-pick': {
+  '/api/admin/blog/posts/top-tech-pick': {
     parameters: {
       query?: never;
       header?: never;
@@ -84,7 +84,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/images': {
+  '/api/blog/images': {
     parameters: {
       query?: never;
       header?: never;
@@ -100,7 +100,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/posts/latest': {
+  '/api/blog/posts/latest': {
     parameters: {
       query?: never;
       header?: never;
@@ -116,7 +116,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/posts/pickup': {
+  '/api/blog/posts/pickup': {
     parameters: {
       query?: never;
       header?: never;
@@ -132,7 +132,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/posts/popular': {
+  '/api/blog/posts/popular': {
     parameters: {
       query?: never;
       header?: never;
@@ -148,7 +148,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/posts/top-tech-pick': {
+  '/api/blog/posts/top-tech-pick': {
     parameters: {
       query?: never;
       header?: never;
@@ -164,7 +164,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/v2/blog/posts/{uuid}': {
+  '/api/blog/posts/{uuid}': {
     parameters: {
       query?: never;
       header?: never;

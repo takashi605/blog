@@ -4,7 +4,7 @@ import ViewTopTechPickPresenter from './ViewTopTechPickPresenter';
 async function ViewTopTechPickController() {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const blogPost = await api.get('/api/v2/blog/posts/top-tech-pick');
+    const blogPost = await api.get('/api/blog/posts/top-tech-pick');
 
     return <ViewTopTechPickPresenter blogPost={blogPost} />;
   } catch (error) {

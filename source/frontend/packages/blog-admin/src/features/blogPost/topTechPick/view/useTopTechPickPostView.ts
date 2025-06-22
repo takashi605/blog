@@ -8,7 +8,7 @@ export function useTopTechPickPostList() {
 
   const fetchTopTechPickPost = useCallback(async () => {
     try {
-      const response = await api.get('/api/v2/blog/posts/top-tech-pick');
+      const response = await api.get('/api/blog/posts/top-tech-pick');
       updateTopTechPickPost(response);
     } catch (error) {
       console.error('トップテックピック記事の取得に失敗しました:', error);

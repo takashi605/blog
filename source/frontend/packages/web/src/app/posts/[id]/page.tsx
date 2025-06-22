@@ -17,7 +17,7 @@ export async function generateMetadata(
   let blogPost: BlogPost;
   try {
     // APIクライアントを直接使用して記事を取得
-    blogPost = await api.get('/api/v2/blog/posts/{uuid}', {
+    blogPost = await api.get('/api/blog/posts/{uuid}', {
       pathParams: { uuid: params.id },
     });
   } catch (e) {

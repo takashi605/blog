@@ -8,7 +8,7 @@ export function usePopularPostList() {
 
   const fetchPopularPosts = useCallback(async () => {
     try {
-      const response = await api.get('/api/v2/blog/posts/popular');
+      const response = await api.get('/api/blog/posts/popular');
       updatePopularPosts(response);
     } catch (error) {
       console.error('人気記事の取得に失敗しました:', error);

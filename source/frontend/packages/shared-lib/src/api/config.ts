@@ -24,7 +24,7 @@ export function getApiUrl(): string {
  * @returns 正規化されたパス
  */
 export function normalizeApiPath(path: string): string {
-  return path.replace(/^\/api\/v2/, '');
+  return path.replace(/^\/api/, '');
 }
 
 /**

@@ -1,8 +1,13 @@
-mod server;
-mod db;
+//  3層アーキテクチャモジュール
+mod application;
+mod domain;
+mod infrastructure;
 
 use anyhow::Result;
-use server::start_api_server;
+use infrastructure::server::start_api_server;
+
+#[cfg(test)]
+mod tests;
 
 #[actix_web::main]
 async fn main() -> Result<()> {

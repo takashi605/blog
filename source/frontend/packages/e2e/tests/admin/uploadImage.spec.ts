@@ -21,7 +21,7 @@ Given(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/v2/blog/images') && resp.status() === 200,
+          resp.url().includes('/api/blog/images') && resp.status() === 200,
       ),
       page.goto(`${process.env.ADMIN_URL}/images`),
     ]);
@@ -110,7 +110,7 @@ Given(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/v2/blog/images') && resp.status() === 200,
+          resp.url().includes('/api/blog/images') && resp.status() === 200,
       ),
       page.goto(`${process.env.ADMIN_URL}/images`),
     ]);
@@ -153,10 +153,13 @@ When('【重複パス画像アップロード】画像名を入力する', async
   const nameInput = getImageNameInput();
   await nameInput.fill('test-image2');
 });
-When('【重複パス画像アップロード】正常系アップロードで入力したものと同じパスを入力する', async function () {
-  const pathInput = getImagePathInput();
-  await pathInput.fill('test-image.jpg');
-});
+When(
+  '【重複パス画像アップロード】正常系アップロードで入力したものと同じパスを入力する',
+  async function () {
+    const pathInput = getImagePathInput();
+    await pathInput.fill('test-image.jpg');
+  },
+);
 When(
   '【重複パス画像アップロード】モーダル内の「アップロード」ボタンを押下する',
   async function () {
