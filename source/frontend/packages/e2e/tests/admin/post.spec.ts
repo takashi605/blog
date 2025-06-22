@@ -382,12 +382,19 @@ When(
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
 
-    // エディタの更新が完了するまで少し待機
-    // 本来アンチパターンだがここで落ちることがある原因が特定できないので応急処置
-    await page.waitForTimeout(500);
-
     const openModalButton = page.getByRole('button', { name: '画像を挿入' });
     await openModalButton.click();
+
+    // APIレスポンスを待ちながらクリック
+    const [imagesResponse] = await Promise.all([
+      // 画像一覧を取得するAPIのレスポンスを待つ
+      page.waitForResponse(
+        (resp) => resp.url().includes('/blog/images') && resp.status() === 200,
+        { timeout: 20000 },
+      ),
+      openModalButton.click(),
+    ]);
+    await imagesResponse.json();
 
     const modal = page.getByRole('dialog');
     await modal.waitFor({ state: 'visible', timeout: 10000 });
@@ -430,9 +437,19 @@ Then(
 
 When('【正常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
-
   const publishButton = page.getByRole('button', { name: '投稿' });
-  await publishButton.click();
+  // 投稿APIのレスポンスを待ちながらクリック
+  const [postResponse] = await Promise.all([
+    page.waitForResponse(
+      (resp) =>
+        resp.url().includes('/blog/posts') &&
+        (resp.status() === 200 || resp.status() === 201),
+      { timeout: 30000 },
+    ),
+    publishButton.click(),
+  ]);
+
+  await postResponse.json();
 });
 Then(
   '【正常系 記事投稿】記事が投稿され、投稿完了ページに遷移する',
