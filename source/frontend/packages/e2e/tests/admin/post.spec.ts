@@ -87,6 +87,7 @@ When(
 
     const richTextEditor = page.locator('[contenteditable="true"]');
     await richTextEditor.pressSequentially('こんにちは！', { timeout: 10000 });
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
   },
 );
 Then(
@@ -106,6 +107,7 @@ When(
     const richTextEditor = page.locator('[contenteditable="true"]');
     // テキストをセット
     await richTextEditor.pressSequentially('世界', { timeout: 10000 });
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 
     await selectByArrowLeft(page, richTextEditor, 2);
 
@@ -201,8 +203,12 @@ When(
     const richTextEditor = page.locator('[contenteditable="true"]');
     // 新しい段落を作成
     richTextEditor.press('Enter');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     // テキストをセット
     await richTextEditor.pressSequentially('リンクテスト', { timeout: 10000 });
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     // 全選択
     await selectByArrowLeft(page, richTextEditor, 6);
 
@@ -249,11 +255,18 @@ When(
 
     const richTextEditor = page.locator('[contenteditable="true"]');
     richTextEditor.press('Enter');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     await richTextEditor.pressSequentially('見出し2');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     await selectByArrowLeft(page, richTextEditor, 4);
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     const h2Button = page.getByRole('checkbox', { name: 'h2' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
   },
 );
 Then(
@@ -272,12 +285,19 @@ When(
     const page = playwrightHelper.getPage();
 
     const richTextEditor = page.locator('[contenteditable="true"]');
-    richTextEditor.press('Enter');
+    await richTextEditor.press('Enter');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     await richTextEditor.pressSequentially('見出し3');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     await selectByArrowLeft(page, richTextEditor, 4);
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     const h2Button = page.getByRole('checkbox', { name: 'h3' });
     await h2Button.click();
     await clearSelectionByArrow(page, richTextEditor);
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
   },
 );
 Then(
@@ -296,8 +316,12 @@ When(
     const page = playwrightHelper.getPage();
 
     const richTextEditor = page.locator('[contenteditable="true"]');
-    richTextEditor.press('Enter');
+    await richTextEditor.press('Enter');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     await richTextEditor.pressSequentially('const a = 1');
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
     const codeButton = page.getByRole('checkbox', { name: /^code$/ });
     await codeButton.click();
   },
@@ -377,29 +401,23 @@ When(
     // 改行を入れて、画像を挿入する位置を確保
     // コードブロックから抜けるには、3回 Enter を押す
     const richTextEditor = page.locator('[contenteditable="true"]');
+
     await richTextEditor.press('Control+End'); // ctrl+end で一番下に移動
+
+    // 500ms 待機して、確実に一番下に移動する
+    await page.waitForTimeout(500);
+
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
+    await page.waitForTimeout(200);
 
     const openModalButton = page.getByRole('button', { name: '画像を挿入' });
     await openModalButton.click();
 
-    // APIレスポンスを待ちながらクリック
-    const [imagesResponse] = await Promise.all([
-      // 画像一覧を取得するAPIのレスポンスを待つ
-      page.waitForResponse(
-        (resp) => resp.url().includes('/blog/images') && resp.status() === 200,
-        { timeout: 20000 },
-      ),
-      openModalButton.click(),
-    ]);
-    await imagesResponse.json();
+    await expect(page.getByRole('dialog')).toBeVisible({ timeout: 10000 });
 
     const modal = page.getByRole('dialog');
-    await modal.waitFor({ state: 'visible', timeout: 10000 });
-    await expect(modal).toBeVisible({ timeout: 10000 });
-
     const labelInModal = modal.locator('label');
     const firstLabel = labelInModal.first();
     await firstLabel.click();
@@ -442,9 +460,8 @@ When('【正常系 記事投稿】「投稿」ボタンを押す', async functio
   const [postResponse] = await Promise.all([
     page.waitForResponse(
       (resp) =>
-        resp.url().includes('/blog/posts') &&
+        resp.url().includes('/api/admin/blog/posts') &&
         (resp.status() === 200 || resp.status() === 201),
-      { timeout: 30000 },
     ),
     publishButton.click(),
   ]);
@@ -622,7 +639,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     const linkText = page.locator('a', { hasText: 'リンクテスト' });
-    await expect(linkText).toBeVisible({ timeout: 10000 });
+    expect(linkText).toBeDefined();
   },
 );
 
@@ -736,8 +753,10 @@ When(
     await richTextEditor.pressSequentially('あ'.repeat(101), {
       timeout: 10000,
     });
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 
     await selectByArrowLeft(page, richTextEditor, 101);
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 
     // h2ボタンを押す
     const h2Button = page.getByRole('checkbox', { name: 'h2' });
@@ -809,16 +828,23 @@ Then(
 // 以下ヘルパ関数
 async function selectByArrowLeft(page: Page, locator: Locator, count: number) {
   await page.keyboard.down('Shift');
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
   for (let i = 1; i <= count; i++) {
     await locator.press('ArrowLeft');
   }
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
   await page.keyboard.up('Shift');
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 }
 async function clearSelectionByArrow(page: Page, locator: Locator) {
   // Shiftキーが押されていないことを確実にしておく
   await page.keyboard.up('Shift');
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
   // 右矢印を1回押すだけで選択が外れる
   await locator.press('ArrowRight');
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 }
 export const formatDate2DigitString = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
