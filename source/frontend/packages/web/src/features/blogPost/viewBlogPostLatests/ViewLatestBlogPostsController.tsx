@@ -10,7 +10,7 @@ async function ViewLatestBlogPostsController({
 }: ViewLatestBlogPostsControllerProps) {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const allBlogPosts = await api.get('/api/v2/blog/posts/latest');
+    const allBlogPosts = await api.get('/api/blog/posts/latest');
 
     // quantityが指定されている場合は、その数だけ制限
     const blogPosts =

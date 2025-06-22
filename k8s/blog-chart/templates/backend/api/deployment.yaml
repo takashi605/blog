@@ -39,6 +39,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: database_url
+          {{- if not .Values.production }}
+          volumeMounts:
+            - name: rust-target-cache
+              mountPath: /source/backend/target
+          {{- end }}
         {{- if not .Values.production }}
         - name: "{{ include "api.appname" . }}-test"
           image: "{{ .Values.api.pod.apiTest.imageRepository }}:{{ .Values.api.pod.apiTest.imageTag }}"
@@ -51,3 +56,8 @@ spec:
               memory: "400Mi"
               cpu: "250m"
         {{- end }}
+      {{- if not .Values.production }}
+      volumes:
+        - name: rust-target-cache
+          emptyDir: {}
+      {{- end }}

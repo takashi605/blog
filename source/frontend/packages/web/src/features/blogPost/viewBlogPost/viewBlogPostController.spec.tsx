@@ -81,7 +81,7 @@ const renderController = async (postId: string = UUIDList.UUID1) => {
 describe('コンポーネント: ViewBlogPostController', () => {
   it('記事タイトルが表示されている', async () => {
     await renderController();
-    expect(mockGet).toHaveBeenCalledWith('/api/v2/blog/posts/{uuid}', {
+    expect(mockGet).toHaveBeenCalledWith('/api/blog/posts/{uuid}', {
       pathParams: { uuid: UUIDList.UUID1 },
     });
 

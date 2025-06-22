@@ -7,7 +7,7 @@ export function useImageList() {
 
   const fetchImages = useCallback(async () => {
     try {
-      const response = await api.get('/api/v2/blog/images');
+      const response = await api.get('/api/blog/images');
       updateImages(response);
     } catch (error) {
       console.error('画像一覧の取得に失敗しました:', error);

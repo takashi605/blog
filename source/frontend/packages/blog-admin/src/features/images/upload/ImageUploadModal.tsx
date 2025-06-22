@@ -39,7 +39,7 @@ function Modal() {
         path: data.imagePath,
       };
 
-      await api.post('/api/v2/admin/blog/images', imageData);
+      await api.post('/api/admin/blog/images', imageData);
     } catch (error) {
       console.error('データベースへのアップロードに失敗しました:', error);
 
@@ -53,7 +53,7 @@ function Modal() {
 
     try {
       // 画像一覧を再取得
-      const fetchedImages = await api.get('/api/v2/blog/images');
+      const fetchedImages = await api.get('/api/blog/images');
       updateImages(fetchedImages);
     } catch (error) {
       console.error('画像一覧の再取得に失敗しました:', error);

@@ -76,7 +76,7 @@ describe('useCreateBlogPost', () => {
     });
 
     expect(mockPost).toHaveBeenCalledWith(
-      '/api/v2/admin/blog/posts',
+      '/api/admin/blog/posts',
       mockBlogPost,
     );
     expect(createdPost).toEqual(mockBlogPost);

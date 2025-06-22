@@ -4,7 +4,7 @@ import ViewPopularPostsPresenter from './ViewPopularPostsPresenter';
 async function ViewPopularPostsController() {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const allBlogPosts = await api.get('/api/v2/blog/posts/popular');
+    const allBlogPosts = await api.get('/api/blog/posts/popular');
     // 3件に制限
     const blogPosts = allBlogPosts.slice(0, 3);
 

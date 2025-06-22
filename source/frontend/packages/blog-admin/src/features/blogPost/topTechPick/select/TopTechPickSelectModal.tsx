@@ -41,7 +41,7 @@ function Modal() {
 
       // トップテックピック記事を更新
       const response = await api.put(
-        '/api/v2/admin/blog/posts/top-tech-pick',
+        '/api/admin/blog/posts/top-tech-pick',
         selectedPost,
       );
       updateTopTechPickPost(response);

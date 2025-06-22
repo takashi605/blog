@@ -4,7 +4,7 @@ import ViewPickUpPostsPresenter from './ViewPickUpPostsPresenter';
 async function ViewPickUpPostsController() {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const allBlogPosts = await api.get('/api/v2/blog/posts/pickup');
+    const allBlogPosts = await api.get('/api/blog/posts/pickup');
     // 3件に制限
     const blogPosts = allBlogPosts.slice(0, 3);
 

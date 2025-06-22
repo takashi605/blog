@@ -1,7 +1,0 @@
-[workspace]
-members = [
-    "api_v2",
-    "api_v2_test",
-    "common"
-]
-resolver = "2"

@@ -7,7 +7,7 @@ export function usePickUpPostList() {
 
   const fetchPickUpPosts = useCallback(async () => {
     try {
-      const response = await api.get('/api/v2/blog/posts/pickup');
+      const response = await api.get('/api/blog/posts/pickup');
       updatePickUpPosts(response);
     } catch (error) {
       console.error('ピックアップ記事の取得に失敗しました:', error);

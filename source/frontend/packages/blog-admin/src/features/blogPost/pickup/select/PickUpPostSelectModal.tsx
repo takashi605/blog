@@ -32,7 +32,7 @@ function Modal() {
 
       // ピックアップ記事を更新
       const response = await api.put(
-        '/api/v2/admin/blog/posts/pickup',
+        '/api/admin/blog/posts/pickup',
         selectedPosts,
       );
       updatePickUpPosts(response);

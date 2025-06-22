@@ -33,7 +33,7 @@ function Modal() {
 
       // 人気記事を更新
       const response = await api.put(
-        '/api/v2/admin/blog/posts/popular',
+        '/api/admin/blog/posts/popular',
         selectedPosts,
       );
       updatePopularPosts(response);

@@ -8,7 +8,7 @@ type ViewBlogPostControllerProps = {
 async function ViewBlogPostController({ postId }: ViewBlogPostControllerProps) {
   try {
     // サーバーサイドで直接APIを呼び出し
-    const blogPost = await api.get('/api/v2/blog/posts/{uuid}', {
+    const blogPost = await api.get('/api/blog/posts/{uuid}', {
       pathParams: { uuid: postId },
     });
 

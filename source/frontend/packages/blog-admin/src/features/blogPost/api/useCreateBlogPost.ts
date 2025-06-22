@@ -31,7 +31,7 @@ export function useCreateBlogPost() {
 
       try {
         const createdBlogPost = await api.post(
-          '/api/v2/admin/blog/posts',
+          '/api/admin/blog/posts',
           blogPost,
         );
         setState({

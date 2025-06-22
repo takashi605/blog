@@ -16,7 +16,8 @@ Given(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/v2/blog/posts/pickup') && resp.status() === 200,
+          resp.url().includes('/api/blog/posts/pickup') &&
+          resp.status() === 200,
       ),
       page.goto(`${process.env.ADMIN_URL}/posts/pickup`),
     ]);
@@ -45,7 +46,7 @@ When(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/v2/blog/posts/latest') &&
+          resp.url().includes('/api/blog/posts/latest') &&
           resp.status() === 200,
       ),
       getOpenModalButton().click(),
