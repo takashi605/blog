@@ -382,10 +382,15 @@ When(
     await richTextEditor.press('Enter');
     await richTextEditor.press('Enter');
 
+    // エディタの更新が完了するまで少し待機
+    // 本来アンチパターンだがここで落ちることがある原因が特定できないので応急処置
+    await page.waitForTimeout(500);
+
     const openModalButton = page.getByRole('button', { name: '画像を挿入' });
     await openModalButton.click();
 
     const modal = page.getByRole('dialog');
+    await modal.waitFor({ state: 'visible', timeout: 10000 });
     await expect(modal).toBeVisible({ timeout: 10000 });
 
     const labelInModal = modal.locator('label');
