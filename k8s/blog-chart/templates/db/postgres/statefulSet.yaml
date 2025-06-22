@@ -22,26 +22,11 @@ spec:
         fsGroup: 999
         runAsUser: 999
         runAsGroup: 999
-        runAsNonRoot: true
+        fsGroupChangePolicy: "OnRootMismatch"
       imagePullSecrets:
         {{- if .Values.postgres.pod.imagePullSecret }}
         - name: {{ .Values.postgres.pod.imagePullSecret }}
         {{- end }}
-      initContainers:
-        - name: fix-permissions
-          image: busybox:latest
-          command:
-            - sh
-            - -c
-            - |
-              mkdir -p /var/lib/postgresql/data
-              chown -R 999:999 /var/lib/postgresql/data
-              chmod 700 /var/lib/postgresql/data
-          securityContext:
-            runAsUser: 0 # root で実行
-          volumeMounts:
-            - name: {{ include "postgres.appname" . }}-data
-              mountPath: /var/lib/postgresql/data
       containers:
         - name: {{ include "postgres.appname" . }}
           image: "{{ .Values.postgres.pod.imageRepository }}:{{ .Values.postgres.pod.imageTag }}"
