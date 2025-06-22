@@ -27,8 +27,6 @@ spec:
         {{- if .Values.postgres.pod.imagePullSecret }}
         - name: {{ .Values.postgres.pod.imagePullSecret }}
         {{- end }}
-      securityContext:
-        fsGroup: 999
       initContainers:
         - name: fix-permissions
           image: busybox:latest
