@@ -43,8 +43,7 @@ make e2e-sh         # E2Eコンテナシェル
 
 # 全テストスイート
 make frontend-test    # フロントエンドテスト
-make api-test-run     # v1 バックエンドテスト + APIテスト
-make api-v2-test-run-include-ignored  # v2 バックエンドテスト + APIテスト
+make api-test-run     # バックエンドテスト + APIテスト
 make e2e-run          # E2Eテスト
 ```
 
@@ -87,33 +86,38 @@ type CreateBlogPostRequest =
 
 #### 重要事項
 
-- **自動生成ファイル:** `source/frontend/packages/shared-interface-adapter/src/generated/api-types.ts` は手動編集禁止
+- **自動生成ファイル:** `source/frontend/packages/shared-lib/src/generated/api-types.ts` は手動編集禁止
 - **Git 管理:** 生成ファイルは Git 管理対象です。バックエンド API 変更時は `make generate-types` 実行後にコミット
 - **型更新:** バックエンド API 変更後は必ず `make generate-types` を実行してから変更をコミット
 - **統一エクスポート:** `@/generated` からのインポートを使用し、直接 `api-types.ts` をインポートしない
 
 ## プロジェクト構造
 
-### バックエンド (`source/backend_v2/`)
+### バックエンド (`source/backend/`)
 
-詳細な情報は [source/backend_v2/BACKEND.md](source/backend_v2/BACKEND.md) を参照してください。
+詳細な情報は [source/backend/BACKEND.md](source/backend/BACKEND.md) を参照してください。
 
-- **`api_v2/`** - v2 API サービス（Actix-web + OpenAPI + ドメインモデル）
-- **`api_v2_test/`** - v2 API 統合テスト
+**DDD（ドメイン駆動設計）3層アーキテクチャ:**
+
+- **`api/`** - API サービス（Actix-web + OpenAPI + DDD）
+  - `src/domain/` - ドメインモデル（エンティティ、値オブジェクト、ドメインサービス）
+  - `src/application/` - アプリケーションサービス（ユースケース）
+  - `src/infrastructure/` - インフラストラクチャ（データベース、外部サービス）
+- **`api_test/`** - API 統合テスト
 - **`common/`** - 共有型とユーティリティ
-- **`domain/`** - ドメインモデルとビジネスロジック（v2 用）
 - **データベースマイグレーション:** `api/migrations/schema/`（構造）と `api/migrations/seeds/`（データ）
 
 ### フロントエンド (`source/frontend/`)
 
 詳細な情報は [source/frontend/FRONTEND.md](source/frontend/FRONTEND.md) を参照してください。
 
-PNPM ワークスペース構成のパッケージ:
+**PNPM ワークスペース構成のパッケージ:**
 
 - **`web/`** - 公開ブログインターフェース（Next.js）
 - **`blog-admin/`** - コンテンツ管理用管理画面（Next.js）
 - **`e2e/`** - Playwright E2E テスト
-- **`entities/`, `service/`, `shared-interface-adapter/`** - ドメインロジックパッケージ
+- **`shared-lib/`** - 共有ライブラリ（API クライアント、型定義、MSW モック）
+- **`shared-ui/`** - 共有 UI コンポーネント
 - **`shared-test-data/`** - テストユーティリティ
 
 ### インフラ
@@ -200,9 +204,9 @@ PNPM ワークスペース構成のパッケージ:
 
 2. **API 統合テスト実装**
 
-   - **配置場所:** `source/backend_v2/api_v2_test/src/tests/handlers/[リソース名]/[操作名].rs`
-   - 例: `source/backend_v2/api_v2_test/src/tests/handlers/blog_posts/get.rs`
-   - `make api-v2-test-run-include-ignored` でテスト実行し、失敗確認（Red 状態）
+   - **配置場所:** `source/backend/api_test/src/tests/handlers/[リソース名]/[操作名].rs`
+   - 例: `source/backend/api_test/src/tests/handlers/blog_posts/get.rs`
+   - `make api-test-run` でテスト実行し、失敗確認（Red 状態）
 
 3. **TDD サイクル実行**
    - 各モジュールで以下を繰り返し:
@@ -229,210 +233,3 @@ PNPM ワークスペース構成のパッケージ:
 - リファクタリング時は既存テストの通過を維持
 - E2E テストが開発の完了基準となる
 - コメントやログに出力する内容は日本語で記載する
-
-## アーキテクチャ変更計画
-
-現在進行中のアーキテクチャ改善により、以下の変更を実施します：
-
-### 1. エンティティ層のバックエンド移行
-
-- **現状の問題**: フロントエンドにドメインロジックが配置され、データ変換が最大 6 回発生
-- **対応策**: Rust 側にドメインモデルを集約し、データ変換回数を削減
-- **実装方針**:
-  - バックエンドに`domain/`モジュールを新設
-  - エンティティとビジネスルールを Rust で実装
-  - フロントエンドは軽量な ViewModel のみ保持
-
-### 2. 画像アップロードの Proxy 化
-
-- **現状の問題**: フロントエンドから直接 Cloudinary に接続、セキュリティリスク
-- **対応策**: バックエンド経由での署名付きアップロード実装
-- **実装方針**:
-  - `/api/images/upload-signature` エンドポイントで署名生成
-  - バックエンドで Cloudinary 署名付きアップロード制御
-  - フロントエンドからの直接アクセス廃止
-
-### 3. 型安全性の向上 (✅ 完了)
-
-- **対応済み**: OpenAPI 仕様書ベースの型自動生成システム構築
-- **実装済み**:
-  - OpenAPI 仕様書から TypeScript 型を自動生成
-  - Rust の構造体と TypeScript 型の一元管理
-  - `make generate-types` でワンコマンド型生成
-  - 既存 DTO と生成型の完全互換性確保
-  - Discriminated Union の正常動作確認
-
-### 4. v2 API への完全移行 (✅ 完了)
-
-- **対応済み**: v1 API から v2 API への段階的移行を完了
-- **実装済み**:
-  - backend_v2 ディレクトリによる v1/v2 分離アーキテクチャ構築
-  - Kubernetes Ingress による `/api/v2/*` パスルーティング設定
-  - フロントエンド全体の v2 API エンドポイント統一
-  - v2 API ベースの型生成システム統合
-  - 全 E2E テスト（15/15 シナリオ）の通過確認
-  - v1 API に依存しない完全な v2 環境の実現
-
-これらの変更により、セキュリティ向上、パフォーマンス改善、保守性向上を実現します。
-
-詳細なアーキテクチャ情報については、以下のファイルを参照してください：
-
-- **バックエンド:** [source/backend_v2/BACKEND.md](source/backend_v2/BACKEND.md)
-- **フロントエンド:** [source/frontend/FRONTEND.md](source/frontend/FRONTEND.md)
-
-## 現在の作業
-
-**重要**: backend と示されているものは backend_v2 ディレクトリを指します。backend ディレクトリは触らず、backend_v2 ディレクトリに対して各作業を行ってください。
-
-### アーキテクチャ再設計プラン
-
-現在、バックエンドとフロントエンドの大規模なアーキテクチャ再設計を実施中です。API インターフェースを維持しながら、内部実装を段階的に改善していきます。
-
-### 再設計の基本方針
-
-1. **API インターフェースの維持**: 既存のエンドポイント、リクエスト/レスポンス形式は変更しない
-2. **テストの継続的パス**: E2E テストと api_v2_test は常に通過する状態を維持
-3. **段階的移行**: 各フェーズで動作確認しながら進める
-
-### フェーズ定義
-
-#### Phase 1: バックエンドとフロントエンドの境界再構築
-
-**目的**: 既存の API インターフェースを維持しながら、内部アーキテクチャの準備を行う
-
-**実装計画**:
-
-1. **API レスポンス型の分離と共有化**
-
-   - [x] 現在の BlogPostResponse 等の型定義を common クレートに移動
-   - [x] api_v2 と api_v2_test で同じ型を共有
-   - [x] 型の互換性テストの作成
-
-2. **3 層アーキテクチャのディレクトリ構造作成**
-
-   - [x] domain/、application/、infrastructure/ディレクトリの作成
-   - [x] 既存コードはそのまま維持（v1 コンテナがロールバック先として機能）
-   - [x] 新アーキテクチャのコードを段階的に追加
-
-3. **アプリケーション層の内部 DTO 準備**
-   - [x] アプリケーション層に将来のドメイン ↔ アプリケーション間 DTO 用モジュール作成
-   - [x] 変換インターフェース用トレイト定義（将来の拡張に備え）
-   - [x] レスポンス型は common クレートに残して API インターフェース維持
-
-#### Phase 2: バックエンド内部再設計
-
-**目的**: API インターフェースを変えずに、DDD ベースの 3 層アーキテクチャを実装
-
-**実装計画（ユースケースベース）**:
-
-- [x] 記事閲覧ユースケース（ViewBlogPost）
-- [x] 新着記事一覧取得ユースケース（ViewLatestBlogPosts）
-- [x] 記事投稿ユースケース（CreateBlogPost）
-- [x] 画像登録ユースケース（RegisterImage）
-- [x] 全画像取得ユースケース（ViewImages）
-- [x] 人気記事関連ユースケース（ViewPopularBlogPosts/SelectPopularPosts）
-- [x] ピックアップ記事ユースケース（ViewPickUpPost）
-- [x] トップテック記事関連ユースケース（ViewTopTechPick/SelectTopTechPickPost）
-- [x] 共通基盤の整備
-
-#### Phase 3: フロントエンド内部再設計
-
-**目的**: API インターフェースはそのままに、フロントエンドを軽量化
-
-**実装計画（ユースケース利用箇所ベース）**:
-
-- [x] shared-lib パッケージの構築
-- [x] web パッケージの段階的移行
-- [x] blog-admin パッケージの段階的移行
-- [x] 既存パッケージの削除
-
-**移行の基本方針**:
-
-- shared-lib は API クライアントの基盤のみ提供
-- API URL の環境変数チェックをフック内で統一処理
-- 既存の API レスポンス型をそのまま活用
-- エラーハンドリングの共通化
-
-#### Phase 4: 統合と最適化
-
-**目的**: 必要に応じて API インターフェースを最適化し、全体を統合
-
-**実装計画**:
-
-1. **API インターフェースの見直し（オプション）**
-
-   - [ ] 新アーキテクチャに最適なレスポンス形式の検討
-   - [ ] 必要な場合のみ、API バージョニングの実施
-   - [ ] E2E テスト・api_v2_test の更新
-
-2. **パフォーマンス最適化**
-
-   - [ ] 不要なデータ変換の削除
-   - [ ] N+1 問題の解決
-   - [ ] キャッシュ戦略の実装
-
-3. **最終的な品質保証**
-   - [ ] 全テストスイートの通過確認
-   - [ ] パフォーマンステスト
-   - [ ] セキュリティレビュー
-
-### 重要な制約事項
-
-1. **各フェーズで E2E テストと api_v2_test が通過すること**
-2. **API のエンドポイント、リクエスト/レスポンス形式は原則変更しない**
-3. **破壊的変更は避け、段階的な移行を行う**
-4. **各エンドポイントの切り替え後は必ずテストを実行**
-
-### 現在のステータス
-
-**現在作業中**: Phase 2-3 完了（双方向変換システム確立） → Phase 2-3 記事投稿ユースケース（CreateBlogPost）の SQLx リポジトリ実装準備完了
-
-**Phase 2-1 完了事項**:
-
-- DDD ベースのドメイン構造実装（blog_domain.rs, image_domain.rs）
-- 命名規則適用（XxxEntity, XxxVO）
-- mod.rs 廃止と module_name.rs 採用
-- BlogPostEntity と ImageEntity の完全実装
-- RichTextVO とその関連値オブジェクトの実装
-- 包括的なテストスイート（12 テスト）の成功
-
-**Phase 2-2 完了事項**:
-
-- BlogPostRepository トレイト定義（全 9 メソッド実装）
-- async-trait 依存関係追加
-- フロントエンド ApiBlogPostRepository との完全対応
-- 全 API テスト（25+24 件）通過確認
-
-**Phase 2-3 完了事項**:
-
-- infrastructure/blog_post_sqlx_repository/tables/ にテーブルマッピング型をモジュール化
-- infrastructure/blog_post_sqlx_repository/entity_mapper.rs で型安全な DB レコード → ドメインエンティティ変換システム実装
-- infrastructure/blog_post_sqlx_repository/record_mapper.rs で型安全なドメインエンティティ →DB レコード変換システム実装（逆変換）
-- infrastructure/db_pool.rs で DI 対応の DB 接続プール管理追加
-- BlogPostSqlxRepository::find() メソッドの完全実装（単一記事取得）
-- リッチテキスト、スタイル、リンク情報を含む複雑なコンテンツ構造の適切な変換
-- 不要な Clone derive を削除して Rust の move semantics を適切に活用
-- 包括的なテストスイートとエラーハンドリングの実装
-- 双方向変換システムによる記事保存機能（save メソッド）実装の基盤確立
-
-**Phase 2-4 完了事項**:
-
-- ViewBlogPostDTO の完全実装（記事閲覧用データ転送オブジェクト）
-- ViewBlogPostUseCase の TDD 実装完了（Red-Green-Refactor サイクル）
-- アプリケーション層の再構成（application.rs 採用、mod.rs 廃止徹底）
-- BlogPostEntity から ViewBlogPostDTO への変換ロジック実装
-- モックリポジトリを使用した包括的な単体テスト
-- 変換ロジックの分離とコード品質向上（リファクタリング完了）
-
-**Phase 2-3 完了事項（今回追加）**:
-
-- BlogPostFactory の完全実装（ファクトリパターン採用）
-- API レスポンス型を参考にしたドメイン層独自の入力構造体定義（CreateBlogPostInput 等）
-- ID 自動生成ビジネスロジックの実装（Uuid::new_v4 による一意性保証）
-- 包括的なテストスイート（8 テストケース）：基本機能・サムネイル・複数コンテンツ・日付指定・リッチテキスト変換・エッジケース・ID 生成ロジック
-- 重要なビジネスロジックとしての ID 生成の明示的テスト（一意性・予測不可能性・コリジョン回避）
-- Clone trait の適切な実装とコンパイル時型安全性の確保
-
-### 進捗追跡
-
-作業の進捗は、各タスク完了時にチェックボックスを更新します。各フェーズの完了時には、全てのテストが通過することを確認してから次のフェーズに進みます。
