@@ -28,6 +28,7 @@ const theme = {
     h3: styles.h3,
   },
   paragraph: styles.paragraph,
+  link: styles.linkText,
   text: {
     code: styles.inlineCodeText,
   },
@@ -88,7 +89,6 @@ function CustomizedLexicalComposer({
       HorizontalRuleNode,
       CodeHighlightNode,
       HeadingNode,
-      LinkNode,
       ListNode,
       ListItemNode,
       QuoteNode,
