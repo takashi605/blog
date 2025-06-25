@@ -8,7 +8,7 @@ import type {
 } from 'lexical';
 
 import { $applyNodeReplacement, DecoratorNode } from 'lexical';
-import { CldImage } from 'next-cloudinary';
+import ImageContent from 'shared-ui/src/blogPost/components/ImageContent';
 
 // ImageNode の生成時に渡す引数の型
 export interface ImagePayload {
@@ -76,15 +76,15 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
         format=""
         nodeKey={this.__key}
         className={{
-          base: 'relative',
-          focus: 'relative outline outline-indigo-300',
+          base: '',
+          focus: 'outline outline-indigo-300',
         }}
       >
-        <CldImage
-          src={this.__src}
-          height={this.__height}
-          width={this.__width}
-          alt={this.__altText}
+        <ImageContent
+          imageContent={{
+            id: this.__key || '',
+            path: this.__src,
+          }}
         />
       </BlockWithAlignableContents>
     );
