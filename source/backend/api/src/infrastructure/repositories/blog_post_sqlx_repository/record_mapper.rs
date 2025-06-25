@@ -332,7 +332,6 @@ pub fn convert_popular_post_set_to_records(popular_post_set: &PopularPostSetEnti
   popular_post_set.get_all_posts()
     .iter()
     .map(|post| PopularPostRecord {
-      id: Uuid::new_v4(), // 新規UUID生成
       post_id: post.get_id(),
     })
     .collect()

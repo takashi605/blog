@@ -549,7 +549,6 @@ mod tests {
     let popular_post_records: Vec<popular_posts_table::PopularPostRecord> = test_posts
       .iter()
       .map(|post| popular_posts_table::PopularPostRecord {
-        id: Uuid::new_v4(),
         post_id: post.get_id(),
       })
       .collect();
