@@ -1,3 +1,4 @@
+import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -47,6 +48,7 @@ function BlogPostEditor() {
       <CodeLanguageClassPlugin />
       <TreeViewPlugin />
       <LexicalLinkPlugin validateUrl={validateUrl} />
+      <ClickableLinkPlugin />
     </CustomizedLexicalComposer>
   );
 }
