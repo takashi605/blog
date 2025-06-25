@@ -79,11 +79,6 @@ mod tests {
       self.find_results.insert(id, title);
       self
     }
-
-    fn with_update_failure(mut self) -> Self {
-      self.should_update_succeed = false;
-      self
-    }
   }
 
   #[async_trait]
@@ -139,11 +134,6 @@ mod tests {
     async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
       unimplemented!()
     }
-  }
-
-  fn create_test_blog_post(id: &str, title: &str) -> BlogPostEntity {
-    let uuid = Uuid::parse_str(id).unwrap();
-    BlogPostEntity::new(uuid, title.to_string())
   }
 
   #[tokio::test]
