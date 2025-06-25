@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "next-cloudinary": "^6.16.0"
+    "next-cloudinary": "^6.16.0",
+    "shared-lib": "workspace:*"
   }
 }

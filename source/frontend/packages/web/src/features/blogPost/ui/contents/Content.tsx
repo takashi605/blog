@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import type { BlogPostContent } from 'shared-lib/src/api/types';
+import ImageContent from 'shared-ui/src/blogPost/components/ImageContent';
 import CodeBlock from './elements/CodeBlock';
 import H2 from './elements/H2';
 import H3 from './elements/H3';
-import ImageContent from './elements/ImageContent';
 import Paragraph from './elements/Paragraph';
 
 export type BlogPostContentProps = {
