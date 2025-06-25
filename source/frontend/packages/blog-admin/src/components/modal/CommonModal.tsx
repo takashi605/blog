@@ -9,7 +9,11 @@ type CommonModalProps = {
 function CommonModal({ children }: CommonModalProps) {
   const { isOpen, closeModal } = useCommonModalContext();
   return (
-    <Modal isOpen={isOpen} onRequestClose={closeModal}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={closeModal}
+      style={{ overlay: { zIndex: 1000 } }}
+    >
       {children}
     </Modal>
   );
