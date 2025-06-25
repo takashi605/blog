@@ -105,7 +105,7 @@ pub struct ErrResponse {
 #[serde(rename_all = "camelCase")]
 pub struct CreateBlogPostRequest {
   pub title: String,
-  pub thumbnail: CreateImageRequest,
+  pub thumbnail: CreateImageContentRequest,
   pub post_date: NaiveDate,
   pub last_update_date: NaiveDate,
   pub contents: Vec<CreateBlogPostContentRequest>,
@@ -113,7 +113,7 @@ pub struct CreateBlogPostRequest {
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct CreateImageRequest {
+pub struct CreateImageContentRequest {
   pub id: Option<Uuid>,
   pub path: String,
 }

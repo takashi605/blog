@@ -32,7 +32,7 @@ mod helper {
   use anyhow::Result;
   use common::types::api::{
     CreateBlogPostContentRequest, CreateBlogPostRequest, CreateCodeBlockRequest, CreateH2BlockRequest, CreateH3BlockRequest, CreateImageBlockRequest,
-    CreateImageRequest, CreateParagraphBlockRequest, Link, RichText, Style,
+    CreateImageContentRequest, CreateParagraphBlockRequest, Link, RichText, Style,
   };
 
   pub async fn create_blog_post_request_for_req(title: &str) -> Result<CreateBlogPostRequest> {
@@ -40,7 +40,7 @@ mod helper {
     let any_image = test_helper::fetch_any_image().await?;
     let blog_post_request = CreateBlogPostRequest {
       title: title.to_string(),
-      thumbnail: CreateImageRequest {
+      thumbnail: CreateImageContentRequest {
         id: Some(any_image.id), // 既存画像のIDを指定
         path: any_image.path.clone(),
       },

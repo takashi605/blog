@@ -15,7 +15,7 @@ pub fn api_create_blog_post_request_to_create_dto(request: api::CreateBlogPostRe
   }
 }
 
-fn api_create_image_request_to_create_dto(request: api::CreateImageRequest) -> CreateImageDTO {
+fn api_create_image_request_to_create_dto(request: api::CreateImageContentRequest) -> CreateImageDTO {
   CreateImageDTO {
     id: request.id.unwrap_or_else(|| Uuid::new_v4()), // IDが指定されていれば使用、なければ新規生成
     path: request.path,
