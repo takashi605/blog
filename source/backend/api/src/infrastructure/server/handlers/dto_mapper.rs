@@ -4,4 +4,4 @@
 pub mod api_image_to_register_dto_mapper;
 pub mod create_blog_post_mapper;
 
-pub use api_image_to_register_dto_mapper::api_image_to_register_dto;
+pub use api_image_to_register_dto_mapper::{api_create_image_request_to_register_dto, api_image_to_register_dto};

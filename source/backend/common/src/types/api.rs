@@ -113,6 +113,12 @@ pub struct CreateBlogPostRequest {
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
 #[serde(rename_all = "camelCase")]
+pub struct CreateImageRequest {
+  pub path: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CreateImageContentRequest {
   pub id: Option<Uuid>,
   pub path: String,
