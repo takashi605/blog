@@ -2,7 +2,7 @@ import { CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import type { LexicalNode } from 'lexical';
+import type { LexicalNode, RangeSelection } from 'lexical';
 import {
   $createParagraphNode,
   $createTextNode,
@@ -38,24 +38,20 @@ export function useUpdateBlockType() {
       return;
     }
 
+    // 以下の処理は、複数行の選択範囲を単一のコードブロックに変換するために多少複雑になっています。
+    // 1. 選択範囲内のテキストを全て取得
+    // 2. 選択範囲内のノードを最初のものだけ残して削除
+    // 3. 最初のノードに 1 で取得したテキストを持つコードブロックに置き換え
+
     // 選択範囲内のテキストを全て取得（改行も含む）
-    const selectedText = selection.getTextContent();
+    const selectedText = $getSelectedText(selection);
 
     // 選択範囲内のノードを取得
-    const nodes = selection.getNodes();
+    const selectedNodes = $getSelectedNodes(selection);
+    const topLevelNodes = $getUniqueTopLevelElements(selectedNodes);
 
-    if (nodes.length === 0) {
-      return;
-    }
-
-    // 選択範囲内の全てのトップレベルノードを取得
-    const topLevelNodes = new Set(
-      nodes.map((node) => node.getTopLevelElementOrThrow()),
-    );
-
-    // 最初のノードを残し、他のノードを削除
-    const [firstNode, ...restNodes] = Array.from(topLevelNodes);
-    restNodes.forEach((node) => node.remove());
+    // 最初のノード以外を削除して、最初のノードを取得
+    const firstNode = $removeExtraNodesAndReturnFirst(topLevelNodes);
 
     // 単一のコードブロックを作成し、選択されたテキストを設定
     const codeNode = $createCustomCodeNode();
@@ -69,6 +65,32 @@ export function useUpdateBlockType() {
     $setParagraphInSelection,
     $setCodeInSelection,
   } as const;
+
+  // 複数ノードから最初のノード以外を削除し、最初のノードを返す
+  function $removeExtraNodesAndReturnFirst(nodes: LexicalNode[]): LexicalNode {
+    const [firstNode, ...restNodes] = nodes;
+    restNodes.forEach((node) => node.remove());
+    return firstNode;
+  }
+
+  // 全てのトップレベルノードを取得
+  // 同じエレメントノードが複数選択されている場合もあるため、Set を使用して重複を排除
+  function $getUniqueTopLevelElements(nodes: LexicalNode[]): LexicalNode[] {
+    const topLevelElements = new Set<LexicalNode>();
+    nodes.forEach((node) => {
+      const topLevelElement = node.getTopLevelElementOrThrow();
+      topLevelElements.add(topLevelElement);
+    });
+    return Array.from(topLevelElements);
+  }
+
+  function $getSelectedNodes(selection: RangeSelection): LexicalNode[] {
+    return Array.from(selection.getNodes());
+  }
+
+  function $getSelectedText(selection: RangeSelection): string {
+    return selection.getTextContent();
+  }
 }
 
 export function useSelectedNode() {
@@ -82,7 +104,7 @@ export function useSelectedNode() {
     return selectedElementType;
   };
   function $getSelectionTopLevelElement() {
-    const selectedNode = $getSelectedNode();
+    const selectedNode = $getFocusedNode();
     if (!selectedNode) {
       return null;
     }
@@ -91,7 +113,7 @@ export function useSelectedNode() {
     return targetNode;
   }
   function $isParagraphNodeInSelection(): boolean {
-    const selectedNode = $getSelectedNode();
+    const selectedNode = $getFocusedNode();
     if ($isParagraphNode(selectedNode)) {
       return true;
     }
@@ -105,7 +127,7 @@ export function useSelectedNode() {
   } as const;
 
   /* 以下ヘルパー関数 */
-  function $getSelectedNode() {
+  function $getFocusedNode() {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
       return null;
