@@ -1,4 +1,5 @@
 import { CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -168,6 +169,7 @@ export function useSelectedNode() {
 export function useSelectedTextStyle() {
   const [isBoldSelected, setIsBoldSelected] = useState(false);
   const [isInlineCodeSelected, setIsInlineCodeSelected] = useState(false);
+  const [isLinkSelected, setIsLinkSelected] = useState(false);
   const [editor] = useLexicalComposerContext();
 
   const $storeSelectedTextStyle = () => {
@@ -175,6 +177,17 @@ export function useSelectedTextStyle() {
     if ($isRangeSelection(selection)) {
       setIsBoldSelected(selection.hasFormat('bold'));
       setIsInlineCodeSelected(selection.hasFormat('code'));
+
+      // リンク状態の検知
+      const selectedNodes = selection.getNodes();
+      const hasLink = selectedNodes.some((node) => {
+        // ノード自体がLinkNodeの場合
+        if ($isLinkNode(node)) return true;
+        // 親ノードがLinkNodeの場合
+        const parent = node.getParent();
+        return parent && $isLinkNode(parent);
+      });
+      setIsLinkSelected(hasLink);
     }
   };
 
@@ -186,11 +199,18 @@ export function useSelectedTextStyle() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
   };
 
+  const $removeLinkInSelection = () => {
+    // リンクが選択されている場合は削除（null を渡すとリンク削除）
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+  };
+
   return {
     isBoldSelected,
     isInlineCodeSelected,
+    isLinkSelected,
     $toggleBoldToSelection,
     $toggleInlineCodeInSelection,
+    $removeLinkInSelection,
     $storeSelectedTextStyle,
   } as const;
 }

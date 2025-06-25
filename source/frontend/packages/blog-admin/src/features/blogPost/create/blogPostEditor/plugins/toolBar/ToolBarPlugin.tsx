@@ -31,8 +31,10 @@ function ToolBarPlugin() {
   const {
     isBoldSelected,
     isInlineCodeSelected,
+    isLinkSelected,
     $toggleBoldToSelection,
     $toggleInlineCodeInSelection,
+    $removeLinkInSelection,
     $storeSelectedTextStyle,
   } = useSelectedTextStyle();
   const { codeLanguage, setCodeLanguage, codeLanguagesOptions } =
@@ -242,10 +244,14 @@ function ToolBarPlugin() {
         </ToolBarButton>
         <CommonModalProvider>
           <CommonModalOpenButton
-            isModalOpenable={true} // TODO テキストノードが選択されているときのみに変更
+            isModalOpenable={!isLinkSelected} // リンクが選択されていない場合のみモーダル表示可能
             openFailMessage="リンクを挿入できるノードを選択してください"
             renderButton={({ onClick, children }) => (
-              <ToolBarButton onClick={onClick} checked={false} ariaLabel="link">
+              <ToolBarButton
+                onClick={isLinkSelected ? $removeLinkInSelection : onClick}
+                checked={isLinkSelected}
+                ariaLabel="link"
+              >
                 {children}
               </ToolBarButton>
             )}
