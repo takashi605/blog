@@ -46,8 +46,6 @@ function generateContentClass(type: string): string | undefined {
       return styles.h3;
     case 'codeBlock':
       return styles.codeBlockContent;
-    case 'image':
-      return styles.imageContent;
     default:
       return undefined;
   }

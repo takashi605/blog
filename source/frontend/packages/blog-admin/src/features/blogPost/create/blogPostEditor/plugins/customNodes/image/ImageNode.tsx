@@ -9,7 +9,6 @@ import type {
 
 import { $applyNodeReplacement, DecoratorNode } from 'lexical';
 import ImageContent from 'shared-ui/src/blogPost/components/ImageContent';
-import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 // ImageNode の生成時に渡す引数の型
 export interface ImagePayload {
@@ -77,8 +76,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
         format=""
         nodeKey={this.__key}
         className={{
-          base: styles.imageContent,
-          focus: `${styles.imageContent} outline outline-indigo-300`,
+          base: '',
+          focus: 'outline outline-indigo-300',
         }}
       >
         <ImageContent
