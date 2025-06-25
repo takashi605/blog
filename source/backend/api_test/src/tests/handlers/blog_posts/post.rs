@@ -2,17 +2,16 @@
 mod tests {
   use crate::tests::handlers::blog_posts::post::helper;
   use crate::tests::helper::http::request::Request;
-  use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
+  use crate::tests::helper::http::methods::Methods;
   use anyhow::{Context, Result};
-  use common::types::api::BlogPost;
-  use uuid::Uuid;
+  use common::types::api::{BlogPost, CreateBlogPostRequest};
 
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_blog_post() -> Result<()> {
     let url = "http://localhost:8001/admin/blog/posts";
 
     // テスト用のブログ記事 json を作成
-    let blog_post_for_req: BlogPost = helper::create_blog_post_for_req(Uuid::new_v4(), "テスト記事").await.unwrap();
+    let blog_post_for_req: CreateBlogPostRequest = helper::create_blog_post_request_for_req("テスト記事").await.unwrap();
     let blog_post_json_for_req: String = serde_json::to_string(&blog_post_for_req).context("JSON データに変換できませんでした").unwrap();
 
     // POST リクエストを送信 -> レスポンスを取得 -> JSON データを構造体にパース
@@ -20,7 +19,10 @@ mod tests {
     let resp = post_request.send().await.unwrap().text().await.unwrap();
     let blog_post_by_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
 
-    test_helper::assert_blog_post_without_uuid(&blog_post_by_resp, &blog_post_for_req);
+    // レスポンスのBlogPostとリクエストのCreateBlogPostRequestの内容を比較
+    assert_eq!(blog_post_by_resp.title, blog_post_for_req.title);
+    assert_eq!(blog_post_by_resp.post_date, blog_post_for_req.post_date);
+    assert_eq!(blog_post_by_resp.last_update_date, blog_post_for_req.last_update_date);
     Ok(())
   }
 }
@@ -28,21 +30,21 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, ImageBlock, Link, ParagraphBlock, RichText, Style};
-  use uuid::Uuid;
+  use common::types::api::{CreateBlogPostRequest, CreateBlogPostContentRequest, CreateH2BlockRequest, CreateH3BlockRequest, CreateParagraphBlockRequest, CreateImageBlockRequest, CreateCodeBlockRequest, CreateImageRequest, RichText, Style, Link};
 
-  pub async fn create_blog_post_for_req(id: Uuid, title: &str) -> Result<BlogPost> {
+  pub async fn create_blog_post_request_for_req(title: &str) -> Result<CreateBlogPostRequest> {
     // DB 上に存在する画像を使わないとエラーするので、適当な画像を取得する
     let any_image = test_helper::fetch_any_image().await?;
-    let blog_post = BlogPost {
-      id,
+    let blog_post_request = CreateBlogPostRequest {
       title: title.to_string(),
-      thumbnail: any_image.clone(),
+      thumbnail: CreateImageRequest {
+        id: Some(any_image.id), // 既存画像のIDを指定
+        path: any_image.path.clone(),
+      },
       post_date: "2021-01-01".parse()?,
       last_update_date: "2021-01-02".parse()?,
       contents: vec![
-        BlogPostContent::Paragraph(ParagraphBlock {
-          id: Uuid::new_v4(),
+        CreateBlogPostContentRequest::Paragraph(CreateParagraphBlockRequest {
           text: vec![
             RichText {
               text: "これはテスト用の文字列です。".to_string(),
@@ -64,20 +66,16 @@ mod helper {
             },
           ],
         }),
-        BlogPostContent::H2(H2Block {
-          id: Uuid::new_v4(),
+        CreateBlogPostContentRequest::H2(CreateH2BlockRequest {
           text: "見出しレベル2".to_string(),
         }),
-        BlogPostContent::H3(H3Block {
-          id: Uuid::new_v4(),
+        CreateBlogPostContentRequest::H3(CreateH3BlockRequest {
           text: "見出しレベル3".to_string(),
         }),
-        BlogPostContent::Image(ImageBlock {
-          id: any_image.id,
-          path: any_image.path,
+        CreateBlogPostContentRequest::Image(CreateImageBlockRequest {
+          path: any_image.path.clone(),
         }),
-        BlogPostContent::Code(CodeBlock {
-          id: Uuid::new_v4(),
+        CreateBlogPostContentRequest::Code(CreateCodeBlockRequest {
           title: "サンプルコード".to_string(),
           code: "console.log('Hello, World!')".to_string(),
           language: "javascript".to_string(),
@@ -85,6 +83,6 @@ mod helper {
       ],
     };
 
-    Ok(blog_post)
+    Ok(blog_post_request)
   }
 }
