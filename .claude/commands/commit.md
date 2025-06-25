@@ -18,10 +18,10 @@
 
 ## このコマンドの機能
 
-1. --no-verify で指定されていない限り、自動的にプリコミットチェックを実行します：
-   - api 仕様(@source/backend/api_test)を変更した場合、　`make generate-types` を実行して api 型を更新
-   - バックエンドコード(@source/backend)を変更した場合、`make api-fix` -> `make api-test-run-include-ignored` を実行してコード品質を確保
-   - フロントエンドコード(@source/frontend)を変更した場合、`make frontend-fix` → `make frontend-test` を実行してコード品質を確保
+1. **プリコミットチェック** - `--no-verify` オプションが指定されていない限り、以下のチェックを実行する：
+   - api 仕様( @source/backend/api_test )を変更した場合、　`make generate-types` を実行して api 型を更新
+   - バックエンドコード( @source/backend )を変更した場合、`make api-fix` -> `make api-test-run-include-ignored` を実行してコード品質を確保
+   - フロントエンドコード( @source/frontend )を変更した場合、`make frontend-fix` → `make frontend-test` を実行してコード品質を確保
    - `make e2e-run` を実行してコード品質を確保
 2. `git status`でステージングされたファイルをチェック
 3. ステージングされたファイルが 0 の場合、`git add`で変更されたファイルと新しいファイルをすべて自動的に追加
