@@ -257,8 +257,8 @@ mod tests {
     entity.add_content(paragraph_content);
 
     // Imageコンテンツ
-    use crate::domain::image_domain::image_entity::ImageEntity;
     use crate::domain::blog_domain::blog_post_entity::image_content_entity::ImageContentEntity;
+    use crate::domain::image_domain::image_entity::ImageEntity;
     let image_entity = ImageEntity::new(uuid::Uuid::new_v4(), "test-image.jpg".to_string());
     let image_content_entity = ImageContentEntity::new(image_id, image_entity);
     let image_content = ContentEntity::image_from_entity(image_content_entity);

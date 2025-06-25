@@ -20,7 +20,6 @@ impl ImageEntity {
   }
 }
 
-
 #[cfg(test)]
 mod tests {
   use super::*;
@@ -52,5 +51,4 @@ mod tests {
 
     assert_ne!(image1, image2);
   }
-
 }

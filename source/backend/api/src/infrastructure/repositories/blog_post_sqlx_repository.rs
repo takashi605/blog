@@ -14,11 +14,8 @@ use uuid::Uuid;
 use crate::{
   domain::{
     blog_domain::{
-      blog_post_entity::BlogPostEntity,
-      blog_post_repository::BlogPostRepository,
-      pick_up_post_set_entity::PickUpPostSetEntity,
-      popular_post_set_entity::PopularPostSetEntity,
-      top_tech_pick_entity::TopTechPickEntity,
+      blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository, pick_up_post_set_entity::PickUpPostSetEntity,
+      popular_post_set_entity::PopularPostSetEntity, top_tech_pick_entity::TopTechPickEntity,
     },
     image_domain::image_repository::ImageRepository,
   },
@@ -197,14 +194,11 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     use self::tables::top_tech_pick_table::fetch_top_tech_pick_blog_post;
 
     // トップテック記事レコードを取得
-    let top_tech_pick_record = fetch_top_tech_pick_blog_post(&self.pool)
-      .await
-      .context("トップテック記事レコードの取得に失敗しました")?;
+    let top_tech_pick_record = fetch_top_tech_pick_blog_post(&self.pool).await.context("トップテック記事レコードの取得に失敗しました")?;
 
     // 記事IDからBlogPostEntityを取得
-    let blog_post = self.find(&top_tech_pick_record.post_id.to_string())
-      .await
-      .context(format!("トップテック記事ID {}の取得に失敗しました", top_tech_pick_record.post_id))?;
+    let blog_post =
+      self.find(&top_tech_pick_record.post_id.to_string()).await.context(format!("トップテック記事ID {}の取得に失敗しました", top_tech_pick_record.post_id))?;
 
     // TopTechPickEntityを作成して返す
     Ok(TopTechPickEntity::new(blog_post))
@@ -217,14 +211,11 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     let post_uuid = top_tech_pick.get_post().get_id();
 
     // トップテック記事を更新
-    update_top_tech_pick_post(&self.pool, post_uuid)
-      .await
-      .context("トップテック記事の更新に失敗しました")?;
+    update_top_tech_pick_post(&self.pool, post_uuid).await.context("トップテック記事の更新に失敗しました")?;
 
     // 更新後のトップテック記事を再取得して返す
     self.find_top_tech_pick().await
   }
-
 
   async fn find_popular_posts(&self) -> Result<PopularPostSetEntity> {
     use self::tables::popular_posts_table::fetch_all_popular_blog_posts;
@@ -314,7 +305,8 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     tx.commit().await.context("トランザクションのコミットに失敗しました")?;
 
     // 更新後のデータを取得してPickUpPostSetEntityとして返す
-    let updated_records = self::tables::pickup_posts_table::fetch_all_pickup_blog_posts(&self.pool).await.context("更新後のピックアップ記事取得に失敗しました")?;
+    let updated_records =
+      self::tables::pickup_posts_table::fetch_all_pickup_blog_posts(&self.pool).await.context("更新後のピックアップ記事取得に失敗しました")?;
 
     // 各記事を取得
     let mut blog_posts = Vec::new();
@@ -546,12 +538,8 @@ mod tests {
     }
 
     // 人気記事テーブルに挿入
-    let popular_post_records: Vec<popular_posts_table::PopularPostRecord> = test_posts
-      .iter()
-      .map(|post| popular_posts_table::PopularPostRecord {
-        post_id: post.get_id(),
-      })
-      .collect();
+    let popular_post_records: Vec<popular_posts_table::PopularPostRecord> =
+      test_posts.iter().map(|post| popular_posts_table::PopularPostRecord { post_id: post.get_id() }).collect();
 
     use self::tables::popular_posts_table::update_popular_blog_posts;
     let mut tx = pool.begin().await.expect("トランザクションの開始に失敗しました");
@@ -646,12 +634,8 @@ mod tests {
     }
 
     // ピックアップ記事テーブルに挿入
-    let pickup_post_records: Vec<pickup_posts_table::PickUpPostRecord> = test_posts
-      .iter()
-      .map(|post| pickup_posts_table::PickUpPostRecord {
-        post_id: post.get_id(),
-      })
-      .collect();
+    let pickup_post_records: Vec<pickup_posts_table::PickUpPostRecord> =
+      test_posts.iter().map(|post| pickup_posts_table::PickUpPostRecord { post_id: post.get_id() }).collect();
 
     use self::tables::pickup_posts_table::update_pickup_blog_posts;
     let mut tx = pool.begin().await.expect("トランザクションの開始に失敗しました");
@@ -660,11 +644,7 @@ mod tests {
 
     // find_pick_up_postsをテスト
     let result = repository.find_pick_up_posts().await;
-    assert!(
-      result.is_ok(),
-      "find_pick_up_posts操作が失敗しました: {:?}",
-      result.err()
-    );
+    assert!(result.is_ok(), "find_pick_up_posts操作が失敗しました: {:?}", result.err());
 
     let pick_up_posts = result.unwrap();
     let posts = pick_up_posts.get_all_posts();

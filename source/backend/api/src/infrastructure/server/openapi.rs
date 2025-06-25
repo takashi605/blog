@@ -1,6 +1,6 @@
 use actix_web::{HttpResponse, Responder};
+use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 use utoipa::OpenApi;
-use common::types::api::{BlogPost, Image, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, ImageBlock, CodeBlock, Style, Link};
 
 #[derive(OpenApi)]
 #[openapi(

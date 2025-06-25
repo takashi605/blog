@@ -9,7 +9,7 @@ mod tests {
   async fn put_top_tech_pick_post() -> Result<()> {
     let url = "http://localhost:8001/admin/blog/posts/top-tech-pick";
 
-    let top_tech_pick_post_for_req: BlogPost =test_helper::minimal_blog_post1().unwrap();
+    let top_tech_pick_post_for_req: BlogPost = test_helper::minimal_blog_post1().unwrap();
     let top_tech_pick_post_json_for_req: String = serde_json::to_string(&top_tech_pick_post_for_req).context("JSON データに変換できませんでした").unwrap();
 
     let put_request = Request::new(

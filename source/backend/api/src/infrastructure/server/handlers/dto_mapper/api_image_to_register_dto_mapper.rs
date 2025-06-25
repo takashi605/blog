@@ -1,13 +1,11 @@
-use common::types::api::Image;
 use crate::application::usecase::register_image::dto::RegisterImageDTO;
+use common::types::api::Image;
 
 /// APIのImage型からRegisterImageDTOに変換
-/// 
+///
 /// この変換により、APIリクエストからアプリケーション層のDTOへの変換が可能になります。
 pub fn api_image_to_register_dto(image: Image) -> RegisterImageDTO {
-  RegisterImageDTO {
-    path: image.path,
-  }
+  RegisterImageDTO { path: image.path }
 }
 
 #[cfg(test)]

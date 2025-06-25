@@ -248,7 +248,10 @@ pub mod handle_funcs {
       (status = 200, description = "Blog post created", body = BlogPost)
     )
   )]
-  pub async fn create_blog_post(blog_post_req: web::Json<CreateBlogPostRequest>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn create_blog_post(
+    blog_post_req: web::Json<CreateBlogPostRequest>,
+    di_container: web::Data<DiContainer>,
+  ) -> Result<impl Responder, ApiCustomError> {
     let blog_post_req = blog_post_req.into_inner();
 
     // API型をDTO型に変換

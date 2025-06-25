@@ -83,39 +83,31 @@ mod tests {
     let post3_id = "00000000-0000-0000-0000-000000000003";
 
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // findメソッドの期待設定
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq(post1_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "ピックアップ記事1".to_string()))
-      });
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq(post2_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "ピックアップ記事2".to_string()))
-      });
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq(post3_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "ピックアップ記事3".to_string()))
-      });
+    mock_repo.expect_find().with(mockall::predicate::eq(post1_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "ピックアップ記事1".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq(post2_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "ピックアップ記事2".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq(post3_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "ピックアップ記事3".to_string()))
+    });
 
     // update_pick_up_postsメソッドの期待設定
-    mock_repo.expect_update_pick_up_posts()
-      .times(1)
-      .returning(|pick_up_post_set| {
-        let posts = pick_up_post_set.get_all_posts();
-        let new_posts = [
-          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
-          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
-          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
-        ];
-        Ok(PickUpPostSetEntity::new(new_posts))
-      });
+    mock_repo.expect_update_pick_up_posts().times(1).returning(|pick_up_post_set| {
+      let posts = pick_up_post_set.get_all_posts();
+      let new_posts = [
+        BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
+        BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
+        BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
+      ];
+      Ok(PickUpPostSetEntity::new(new_posts))
+    });
 
     let usecase = SelectPickUpPostsUseCase::new(Arc::new(mock_repo));
 
@@ -178,23 +170,20 @@ mod tests {
   async fn test_returns_error_when_non_existent_article_id_is_specified() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // 1番目と2番目の記事は正常に返す
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
-      });
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
-      });
-    
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+
     // 3番目の記事はエラーを返す
-    mock_repo.expect_find()
+    mock_repo
+      .expect_find()
       .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000003"))
       .returning(|id| Err(anyhow::anyhow!("記事が見つかりません: {}", id)));
 
@@ -232,31 +221,23 @@ mod tests {
   async fn test_returns_error_when_repository_update_fails() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // findメソッドの設定
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
-      });
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
-      });
-    mock_repo.expect_find()
-      .with(mockall::predicate::eq("00000000-0000-0000-0000-000000000003"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
-      });
-    
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000003")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
+    });
+
     // update_pick_up_postsメソッドは失敗を返す
-    mock_repo.expect_update_pick_up_posts()
-      .times(1)
-      .returning(|_| Err(anyhow::anyhow!("更新に失敗しました")));
+    mock_repo.expect_update_pick_up_posts().times(1).returning(|_| Err(anyhow::anyhow!("更新に失敗しました")));
 
     let usecase = SelectPickUpPostsUseCase::new(Arc::new(mock_repo));
 

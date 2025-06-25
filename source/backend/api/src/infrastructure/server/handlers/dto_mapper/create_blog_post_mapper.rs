@@ -67,4 +67,3 @@ fn api_create_style_request_to_create_dto(api_style: api::Style) -> CreateStyleD
 fn api_create_link_request_to_create_dto(api_link: api::Link) -> CreateLinkDTO {
   CreateLinkDTO { url: api_link.url }
 }
-

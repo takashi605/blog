@@ -3,19 +3,15 @@ use std::sync::Arc;
 
 use crate::{
   application::usecase::{
-    create_blog_post::CreateBlogPostUseCase,
-    register_image::RegisterImageUseCase,
-    select_pick_up_posts::SelectPickUpPostsUseCase,
-    select_popular_posts::SelectPopularPostsUseCase,
-    select_top_tech_pick_post::SelectTopTechPickPostUseCase,
-    view_blog_post::ViewBlogPostUseCase,
-    view_images::ViewImagesUseCase,
-    view_latest_blog_posts::ViewLatestBlogPostsUseCase,
-    view_pick_up_posts::ViewPickUpPostsUseCase,
-    view_popular_blog_posts::ViewPopularBlogPostsUseCase,
-    view_top_tech_pick::ViewTopTechPickUseCase,
+    create_blog_post::CreateBlogPostUseCase, register_image::RegisterImageUseCase, select_pick_up_posts::SelectPickUpPostsUseCase,
+    select_popular_posts::SelectPopularPostsUseCase, select_top_tech_pick_post::SelectTopTechPickPostUseCase, view_blog_post::ViewBlogPostUseCase,
+    view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase, view_pick_up_posts::ViewPickUpPostsUseCase,
+    view_popular_blog_posts::ViewPopularBlogPostsUseCase, view_top_tech_pick::ViewTopTechPickUseCase,
   },
-  domain::{blog_domain::{blog_post_repository::BlogPostRepository, blog_post_factory::BlogPostFactory, image_content_factory::ImageContentFactory}, image_domain::image_repository::ImageRepository},
+  domain::{
+    blog_domain::{blog_post_factory::BlogPostFactory, blog_post_repository::BlogPostRepository, image_content_factory::ImageContentFactory},
+    image_domain::image_repository::ImageRepository,
+  },
   infrastructure::repositories::{blog_post_sqlx_repository::BlogPostSqlxRepository, db_pool::create_db_pool, image_sqlx_repository::ImageSqlxRepository},
 };
 

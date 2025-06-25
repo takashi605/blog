@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
   use crate::tests::handlers::blog_posts::post::helper;
-  use crate::tests::helper::http::request::Request;
   use crate::tests::helper::http::methods::Methods;
+  use crate::tests::helper::http::request::Request;
   use anyhow::{Context, Result};
   use common::types::api::{BlogPost, CreateBlogPostRequest};
 
@@ -30,7 +30,10 @@ mod tests {
 mod helper {
   use crate::tests::handlers::blog_posts::test_helper;
   use anyhow::Result;
-  use common::types::api::{CreateBlogPostRequest, CreateBlogPostContentRequest, CreateH2BlockRequest, CreateH3BlockRequest, CreateParagraphBlockRequest, CreateImageBlockRequest, CreateCodeBlockRequest, CreateImageRequest, RichText, Style, Link};
+  use common::types::api::{
+    CreateBlogPostContentRequest, CreateBlogPostRequest, CreateCodeBlockRequest, CreateH2BlockRequest, CreateH3BlockRequest, CreateImageBlockRequest,
+    CreateImageRequest, CreateParagraphBlockRequest, Link, RichText, Style,
+  };
 
   pub async fn create_blog_post_request_for_req(title: &str) -> Result<CreateBlogPostRequest> {
     // DB 上に存在する画像を使わないとエラーするので、適当な画像を取得する
@@ -48,10 +51,7 @@ mod helper {
           text: vec![
             RichText {
               text: "これはテスト用の文字列です。".to_string(),
-              styles: Style {
-                bold: true,
-                inline_code: true,
-              },
+              styles: Style { bold: true, inline_code: true },
               link: Option::None,
             },
             RichText {
@@ -61,7 +61,7 @@ mod helper {
                 inline_code: false,
               },
               link: Option::Some(Link {
-                url: "https://example.com".to_string()
+                url: "https://example.com".to_string(),
               }),
             },
           ],
@@ -72,9 +72,7 @@ mod helper {
         CreateBlogPostContentRequest::H3(CreateH3BlockRequest {
           text: "見出しレベル3".to_string(),
         }),
-        CreateBlogPostContentRequest::Image(CreateImageBlockRequest {
-          path: any_image.path.clone(),
-        }),
+        CreateBlogPostContentRequest::Image(CreateImageBlockRequest { path: any_image.path.clone() }),
         CreateBlogPostContentRequest::Code(CreateCodeBlockRequest {
           title: "サンプルコード".to_string(),
           code: "console.log('Hello, World!')".to_string(),

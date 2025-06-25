@@ -104,7 +104,10 @@ mod tests {
       unimplemented!()
     }
 
-    async fn update_top_tech_pick_post(&self, _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
+    async fn update_top_tech_pick_post(
+      &self,
+      _top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity,
+    ) -> Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity> {
       unimplemented!()
     }
 
@@ -146,7 +149,7 @@ mod tests {
       MockBlogPostRepository::new()
         .with_find_result(post1_id.to_string(), "ピックアップ記事1".to_string())
         .with_find_result(post2_id.to_string(), "ピックアップ記事2".to_string())
-        .with_find_result(post3_id.to_string(), "ピックアップ記事3".to_string())
+        .with_find_result(post3_id.to_string(), "ピックアップ記事3".to_string()),
     );
 
     let service = PickUpPostSelectorService::new(mock_repo);
@@ -202,8 +205,7 @@ mod tests {
     let mock_repo = Arc::new(
       MockBlogPostRepository::new()
         .with_find_result("00000000-0000-0000-0000-000000000001".to_string(), "記事1".to_string())
-        .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string())
-      // 3番目の記事は設定しない（存在しない）
+        .with_find_result("00000000-0000-0000-0000-000000000002".to_string(), "記事2".to_string()), // 3番目の記事は設定しない（存在しない）
     );
 
     let service = PickUpPostSelectorService::new(mock_repo);

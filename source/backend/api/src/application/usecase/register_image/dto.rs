@@ -2,5 +2,5 @@
 
 #[derive(Debug, Clone)]
 pub struct RegisterImageDTO {
-    pub path: String,
+  pub path: String,
 }

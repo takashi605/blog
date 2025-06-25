@@ -29,9 +29,7 @@ pub async fn update_pickup_blog_posts(tx: &mut Transaction<'_, Postgres>, pickup
 
 impl From<BlogPost> for PickUpPostRecord {
   fn from(post: BlogPost) -> Self {
-    Self {
-      post_id: post.id,
-    }
+    Self { post_id: post.id }
   }
 }
 

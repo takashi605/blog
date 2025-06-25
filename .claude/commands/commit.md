@@ -20,7 +20,7 @@
 
 1. --no-verify で指定されていない限り、自動的にプリコミットチェックを実行します：
    - api 仕様を変更した場合、　`make generate-types` で api 型を更新
-   - バックエンドコードを変更した場合、`make api-test-run-include-ignored` でコード品質を確保
+   - バックエンドコードを変更した場合、`make api-fix` -> `make api-test-run-include-ignored` でコード品質を確保
    - フロントエンドコードを変更した場合、`make frontend-fix` → `make frontend-test` を実行し、コード品質を確保
    - あらゆる変更後に `make e2e-run` を実行し、コード品質を確保
 2. `git status`でステージングされたファイルをチェック

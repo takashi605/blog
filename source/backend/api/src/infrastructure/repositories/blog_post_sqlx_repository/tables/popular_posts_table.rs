@@ -28,9 +28,7 @@ pub async fn update_popular_blog_posts(tx: &mut Transaction<'_, Postgres>, popul
 
 impl From<BlogPost> for PopularPostRecord {
   fn from(post: BlogPost) -> Self {
-    Self {
-      post_id: post.id,
-    }
+    Self { post_id: post.id }
   }
 }
 
