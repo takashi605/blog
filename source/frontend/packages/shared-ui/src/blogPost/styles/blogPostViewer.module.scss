@@ -118,3 +118,10 @@
     text-decoration: underline;
   }
 }
+
+.imageContent {
+  position: relative;
+  margin: 15px auto;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}

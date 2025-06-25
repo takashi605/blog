@@ -1,7 +1,6 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
 import type { components } from 'shared-lib/src/generated/api-types';
-import styles from './imageContent.module.scss';
 
 type ImageBlock = components['schemas']['ImageBlock'];
 
@@ -13,11 +12,16 @@ function ImageContent({ imageContent }: ImageContentProps) {
   return (
     <>
       <CldImage
-        className={styles.image}
         src={imageContent.path}
-        width={500}
-        height={500}
         alt="画像コンテンツ"
+        // Cloudinary に画質自動最適化を依頼
+        quality="auto"
+        // 端末ごとの物理ピクセル密度に応じて画像を最適化
+        dpr="auto"
+        // Next.js の fill モードを有効化
+        fill
+        sizes="100%"
+        style={{ objectFit: 'contain' }}
       />
     </>
   );
