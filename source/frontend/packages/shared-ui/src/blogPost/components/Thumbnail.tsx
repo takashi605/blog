@@ -10,12 +10,14 @@ function Thumbnail({ path }: ThumbnailProps) {
     <CldImage
       src={path}
       alt="サムネイル画像"
-      width={100}
-      height={100}
-      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
+      // Cloudinary に画質自動最適化を依頼
+      quality="auto"
+      // 端末ごとの物理ピクセル密度に応じて画像を最適化
+      dpr="auto"
+      // Next.js の fill モードを有効化
+      fill
+      style={{ objectFit: 'cover' }}
+      sizes="100%"
     />
   );
 }
