@@ -5,6 +5,7 @@ import { $setBlocksType } from '@lexical/selection';
 import type { LexicalNode } from 'lexical';
 import {
   $createParagraphNode,
+  $createTextNode,
   $getSelection,
   $isParagraphNode,
   $isRangeSelection,
@@ -33,9 +34,35 @@ export function useUpdateBlockType() {
   };
   const $setCodeInSelection = () => {
     const selection = $getSelection();
-    if ($isRangeSelection(selection)) {
-      $setBlocksType(selection, () => $createCustomCodeNode());
+    if (!$isRangeSelection(selection)) {
+      return;
     }
+
+    // 選択範囲内のテキストを全て取得（改行も含む）
+    const selectedText = selection.getTextContent();
+
+    // 選択範囲内のノードを取得
+    const nodes = selection.getNodes();
+
+    if (nodes.length === 0) {
+      return;
+    }
+
+    // 選択範囲内の全てのトップレベルノードを取得
+    const topLevelNodes = new Set(
+      nodes.map((node) => node.getTopLevelElementOrThrow()),
+    );
+
+    // 最初のノードを残し、他のノードを削除
+    const [firstNode, ...restNodes] = Array.from(topLevelNodes);
+    restNodes.forEach((node) => node.remove());
+
+    // 単一のコードブロックを作成し、選択されたテキストを設定
+    const codeNode = $createCustomCodeNode();
+    codeNode.append($createTextNode(selectedText));
+
+    // 最初のノードをコードブロックに置き換え
+    firstNode.replace(codeNode);
   };
   return {
     $setHeadingInSelection,
