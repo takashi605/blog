@@ -1,4 +1,21 @@
 .contentEditable {
+  position: relative;
   padding: 5px;
-  border: 2px solid #e0e0e0;
+  outline: 2px solid #e0e0e0;
+  margin: 0;
+
+  &:focus {
+    // 標準のフォーカススタイルを上書きして、何も変化しないようにする
+    outline: 2px solid #e0e0e0;
+  }
+
+  margin-bottom: 10px;
+}
+
+.toolBarWrapper {
+  position: sticky;
+  top: 0;
+  outline: 2px solid #e0e0e0;
+  z-index: 10;
+  background-color: #f8f8f8;
 }
