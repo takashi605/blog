@@ -1,24 +1,25 @@
 use anyhow::{Context, Result};
 
-use crate::{domain::{
-  blog_domain::{
-    blog_post_entity::{
-      content_entity::ContentEntity,
-      image_content_entity::ImageContentEntity,
-      rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
-      BlogPostEntity,
+use crate::{
+  domain::{
+    blog_domain::{
+      blog_post_entity::{
+        content_entity::ContentEntity,
+        image_content_entity::ImageContentEntity,
+        rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
+        BlogPostEntity,
+      },
+      pick_up_post_set_entity::PickUpPostSetEntity,
+      popular_post_set_entity::PopularPostSetEntity,
     },
-    pick_up_post_set_entity::PickUpPostSetEntity,
-    popular_post_set_entity::PopularPostSetEntity,
+    image_domain::ImageEntity,
   },
-  image_domain::ImageEntity,
-}, infrastructure::repositories::image_sqlx_repository::ImageRecord};
+  infrastructure::repositories::image_sqlx_repository::ImageRecord,
+};
 
 use super::tables::{
-  AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord, ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations,
-  PostContentRecord, RichTextRecordWithRelations,
-  pickup_posts_table::PickUpPostRecord,
-  popular_posts_table::PopularPostRecord,
+  pickup_posts_table::PickUpPostRecord, popular_posts_table::PopularPostRecord, AnyContentBlockRecord, BlogPostRecord, CodeBlockRecord, HeadingBlockRecord,
+  ImageBlockRecordWithRelations, ParagraphBlockRecordWithRelations, PostContentRecord, RichTextRecordWithRelations,
 };
 
 /// BlogPostRecordとその関連データからBlogPostEntityを作成する
@@ -79,10 +80,10 @@ fn convert_paragraph_to_content_entity(paragraph: ParagraphBlockRecordWithRelati
 fn convert_image_block_to_content_entity(image_block: ImageBlockRecordWithRelations) -> Result<ContentEntity> {
   // ImageEntityを作成
   let image_entity = ImageEntity::new(image_block.image_record.id, image_block.image_record.file_path);
-  
+
   // ImageContentEntityを作成
   let image_content_entity = ImageContentEntity::new(image_block.image_block_record.id, image_entity);
-  
+
   // ContentEntityとして返す
   Ok(ContentEntity::image_from_entity(image_content_entity))
 }
@@ -139,7 +140,7 @@ fn convert_styles_to_vo(style_records: &[super::tables::TextStyleRecord]) -> Ric
 mod tests {
   use uuid::Uuid;
 
-use super::*;
+  use super::*;
 
   #[test]
   fn test_convert_styles_to_vo() {
@@ -207,11 +208,11 @@ use super::*;
 }
 
 /// PopularPostRecordのVecからPopularPostSetEntityに変換する（記事取得には外部リポジトリが必要）
-/// 
+///
 /// # Arguments
 /// * `records` - PopularPostRecordのVec
 /// * `blog_posts` - 取得済みのBlogPostEntityのVec
-/// 
+///
 /// # Returns
 /// * `Ok(PopularPostSetEntity)` - 変換されたPopularPostSetEntity
 /// * `Err` - レコード数が3件でない場合
@@ -224,8 +225,7 @@ pub fn convert_popular_records_to_entity(records: Vec<PopularPostRecord>, blog_p
     return Err(anyhow::anyhow!("ブログ記事は必ず3件である必要があります。取得件数: {}", blog_posts.len()));
   }
 
-  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into()
-    .map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
+  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into().map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
 
   Ok(PopularPostSetEntity::new(posts_array))
 }
@@ -240,8 +240,7 @@ pub fn convert_pickup_records_to_entity(records: Vec<PickUpPostRecord>, blog_pos
     return Err(anyhow::anyhow!("ブログ記事は必ず3件である必要があります。取得件数: {}", blog_posts.len()));
   }
 
-  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into()
-    .map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
+  let posts_array: [BlogPostEntity; 3] = blog_posts.try_into().map_err(|_| anyhow::anyhow!("記事配列の変換に失敗しました"))?;
 
   Ok(PickUpPostSetEntity::new(posts_array))
 }

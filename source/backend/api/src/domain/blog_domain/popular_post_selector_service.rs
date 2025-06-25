@@ -1,7 +1,6 @@
 use crate::domain::blog_domain::{blog_post_entity::BlogPostEntity, blog_post_repository::BlogPostRepository, popular_post_set_entity::PopularPostSetEntity};
 use anyhow::{bail, Result};
 use std::sync::Arc;
-use uuid::Uuid;
 
 /// 人気記事選択ドメインサービス
 ///
@@ -59,6 +58,7 @@ mod tests {
   use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
   use anyhow::anyhow;
   use async_trait::async_trait;
+  use uuid::Uuid;
 
   // テスト用のモックリポジトリ
   struct MockBlogPostRepository {
@@ -77,11 +77,6 @@ mod tests {
 
     fn with_find_result(mut self, id: String, title: String) -> Self {
       self.find_results.insert(id, title);
-      self
-    }
-
-    fn with_update_failure(mut self) -> Self {
-      self.should_update_succeed = false;
       self
     }
   }
@@ -142,11 +137,6 @@ mod tests {
         Err(anyhow!("更新に失敗しました"))
       }
     }
-  }
-
-  fn create_test_blog_post(id: &str, title: &str) -> BlogPostEntity {
-    let uuid = Uuid::parse_str(id).unwrap();
-    BlogPostEntity::new(uuid, title.to_string())
   }
 
   #[tokio::test]

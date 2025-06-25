@@ -5,11 +5,11 @@ mod tests {
     helper::http::{methods::Methods, request::Request},
   };
   use anyhow::{Context, Result};
-  use common::types::api::Image;
+  use common::types::api::{CreateImageRequest, Image};
 
   #[tokio::test(flavor = "current_thread")]
   async fn post_single_image() -> Result<()> {
-    let image_for_req: Image = helper::create_image_for_req();
+    let image_for_req: CreateImageRequest = helper::create_image_for_req();
     let blog_post_json_for_req: String = serde_json::to_string(&image_for_req).context("JSON データに変換できませんでした").unwrap();
 
     let url = "http://localhost:8001/admin/blog/images";
@@ -31,13 +31,10 @@ mod tests {
 }
 
 mod helper {
-  use common::types::api::Image;
-  use uuid::Uuid;
+  use common::types::api::{CreateImageRequest, Image};
 
-  pub fn create_image_for_req() -> Image {
-    // uuid は適当に生成
-    let image = Image {
-      id: Uuid::new_v4(),
+  pub fn create_image_for_req() -> CreateImageRequest {
+    let image = CreateImageRequest {
       path: "test-image".to_string(),
     };
     image

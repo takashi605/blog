@@ -53,18 +53,18 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity;
+  use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use anyhow::Result;
   use async_trait::async_trait;
+  use mockall::{mock, predicate::eq};
   use std::sync::Arc;
   use uuid::Uuid;
-  use mockall::{mock, predicate::eq};
 
   // mockallによるモックリポジトリ
   mock! {
     BlogPostRepo {}
-    
+
     #[async_trait]
     impl BlogPostRepository for BlogPostRepo {
       async fn find(&self, id: &str) -> Result<BlogPostEntity>;
@@ -87,42 +87,31 @@ mod tests {
     let post3_id = "00000000-0000-0000-0000-000000000003";
 
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // findメソッドの期待値設定
-    mock_repo
-      .expect_find()
-      .with(eq(post1_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "人気記事1".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq(post2_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "人気記事2".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq(post3_id))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "人気記事3".to_string()))
-      });
-    
+    mock_repo.expect_find().with(eq(post1_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "人気記事1".to_string()))
+    });
+    mock_repo.expect_find().with(eq(post2_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "人気記事2".to_string()))
+    });
+    mock_repo.expect_find().with(eq(post3_id)).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "人気記事3".to_string()))
+    });
+
     // update_popular_postsメソッドの期待値設定
-    mock_repo
-      .expect_update_popular_posts()
-      .returning(|popular_post_set| {
-        let posts = popular_post_set.get_all_posts();
-        let new_posts = [
-          BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
-          BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
-          BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
-        ];
-        Ok(PopularPostSetEntity::new(new_posts))
-      });
+    mock_repo.expect_update_popular_posts().returning(|popular_post_set| {
+      let posts = popular_post_set.get_all_posts();
+      let new_posts = [
+        BlogPostEntity::new(posts[0].get_id(), posts[0].get_title_text().to_string()),
+        BlogPostEntity::new(posts[1].get_id(), posts[1].get_title_text().to_string()),
+        BlogPostEntity::new(posts[2].get_id(), posts[2].get_title_text().to_string()),
+      ];
+      Ok(PopularPostSetEntity::new(new_posts))
+    });
 
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
@@ -185,26 +174,17 @@ mod tests {
   async fn test_returns_error_when_non_existent_article_id_is_specified() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // 最初の2件は成功、3件目は失敗
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000001"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000002"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000003"))
-      .returning(|id| Err(anyhow::anyhow!("記事が見つかりません: {}", id)));
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000003")).returning(|id| Err(anyhow::anyhow!("記事が見つかりません: {}", id)));
 
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 
@@ -240,34 +220,23 @@ mod tests {
   async fn test_returns_error_when_repository_update_fails() {
     // Arrange
     let mut mock_repo = MockBlogPostRepo::new();
-    
+
     // findメソッドの期待値設定
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000001"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000002"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
-      });
-    mock_repo
-      .expect_find()
-      .with(eq("00000000-0000-0000-0000-000000000003"))
-      .returning(|id| {
-        let uuid = Uuid::parse_str(id).unwrap();
-        Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
-      });
-    
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+    mock_repo.expect_find().with(eq("00000000-0000-0000-0000-000000000003")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
+    });
+
     // update_popular_postsメソッドでエラーを返す
-    mock_repo
-      .expect_update_popular_posts()
-      .returning(|_| Err(anyhow::anyhow!("更新に失敗しました")));
+    mock_repo.expect_update_popular_posts().returning(|_| Err(anyhow::anyhow!("更新に失敗しました")));
 
     let usecase = SelectPopularPostsUseCase::new(Arc::new(mock_repo));
 

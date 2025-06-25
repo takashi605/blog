@@ -1,6 +1,6 @@
 use chrono::NaiveDate;
-use uuid::Uuid;
 use std::sync::Arc;
+use uuid::Uuid;
 
 use super::{
   blog_post_entity::{
@@ -158,11 +158,11 @@ impl BlogPostFactory {
 #[cfg(test)]
 mod tests {
   use super::*;
+  use crate::domain::image_domain::{image_entity::ImageEntity, image_repository::ImageRepository, image_repository::ImageRepositoryError};
+  use async_trait::async_trait;
   use chrono::Local;
-  use crate::domain::image_domain::{image_repository::ImageRepository, image_repository::ImageRepositoryError, image_entity::ImageEntity};
   use std::collections::HashMap;
   use std::sync::Arc;
-  use async_trait::async_trait;
 
   // テスト用のモックリポジトリ
   pub struct MockImageRepository {
@@ -171,9 +171,7 @@ mod tests {
 
   impl MockImageRepository {
     pub fn new() -> Self {
-      Self {
-        images: HashMap::new(),
-      }
+      Self { images: HashMap::new() }
     }
 
     pub fn add_image(&mut self, path: String, image: ImageEntity) {
@@ -221,7 +219,7 @@ mod tests {
 
     assert!(result.is_ok());
     let blog_post = result.unwrap();
-    
+
     assert_eq!(blog_post.get_title_text(), "テスト記事");
     assert!(blog_post.get_thumbnail().is_none());
     assert_eq!(blog_post.get_contents().len(), 0);
@@ -250,7 +248,7 @@ mod tests {
 
     assert!(result.is_ok());
     let blog_post = result.unwrap();
-    
+
     let thumbnail = blog_post.get_thumbnail().unwrap();
     assert_eq!(thumbnail.get_id(), thumbnail_id);
     assert_eq!(thumbnail.get_path(), "path/to/thumbnail.jpg");
@@ -263,7 +261,7 @@ mod tests {
     let image_path = "path/to/image.jpg".to_string();
     let image_entity = ImageEntity::new(image_entity_id, image_path.clone());
     mock_repo.add_image(image_path.clone(), image_entity);
-    
+
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
 
@@ -298,10 +296,7 @@ mod tests {
             link: None,
           }],
         },
-        CreateContentInput::Image {
-          id: img_id,
-          path: image_path,
-        },
+        CreateContentInput::Image { id: img_id, path: image_path },
         CreateContentInput::CodeBlock {
           id: code_id,
           title: "サンプルコード".to_string(),
@@ -368,7 +363,7 @@ mod tests {
 
     assert!(result.is_ok());
     let blog_post = result.unwrap();
-    
+
     assert_eq!(blog_post.get_post_date(), specified_date);
   }
 
@@ -430,7 +425,7 @@ mod tests {
 
     assert!(result.is_ok());
     let blog_post = result.unwrap();
-    
+
     let contents = blog_post.get_contents();
     match &contents[0] {
       ContentEntity::Paragraph(para) => {
@@ -481,7 +476,7 @@ mod tests {
 
     assert!(result.is_ok());
     let blog_post = result.unwrap();
-    
+
     assert_eq!(blog_post.get_contents().len(), 0);
     assert_eq!(blog_post.get_title_text(), "空の記事");
   }
@@ -513,7 +508,7 @@ mod tests {
 
     assert!(result1.is_ok());
     assert!(result2.is_ok());
-    
+
     let blog_post1 = result1.unwrap();
     let blog_post2 = result2.unwrap();
 
@@ -538,13 +533,15 @@ mod tests {
     // 同じ入力で10回記事を生成
     let mut generated_ids = std::collections::HashSet::new();
     for _ in 0..10 {
-      let result = factory.create(CreateBlogPostInput {
-        title: "テスト記事".to_string(),
-        thumbnail: None,
-        post_date: None,
-        last_update_date: None,
-        contents: vec![],
-      }).await;
+      let result = factory
+        .create(CreateBlogPostInput {
+          title: "テスト記事".to_string(),
+          thumbnail: None,
+          post_date: None,
+          last_update_date: None,
+          contents: vec![],
+        })
+        .await;
 
       assert!(result.is_ok());
       let blog_post = result.unwrap();

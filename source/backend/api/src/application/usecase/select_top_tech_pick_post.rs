@@ -57,11 +57,11 @@ mod tests {
     blog_post_factory::{BlogPostFactory, CreateBlogPostInput, CreateImageInput},
     image_content_factory::ImageContentFactory,
   };
-  use crate::domain::image_domain::{image_repository::ImageRepository, image_repository::ImageRepositoryError, image_entity::ImageEntity};
-  use mockall::mock;
-  use std::sync::Arc;
-  use std::collections::HashMap;
+  use crate::domain::image_domain::{image_entity::ImageEntity, image_repository::ImageRepository, image_repository::ImageRepositoryError};
   use async_trait::async_trait;
+  use mockall::mock;
+  use std::collections::HashMap;
+  use std::sync::Arc;
 
   // モックリポジトリの定義
   mock! {
@@ -88,9 +88,7 @@ mod tests {
 
   impl MockImageRepository {
     pub fn new() -> Self {
-      Self {
-        images: HashMap::new(),
-      }
+      Self { images: HashMap::new() }
     }
 
     pub fn add_image(&mut self, path: String, image: ImageEntity) {
@@ -123,7 +121,7 @@ mod tests {
   // テスト用のファクトリ作成ヘルパー
   async fn create_test_factory_and_blog_post(title: &str, thumbnail_path: Option<&str>) -> (Arc<BlogPostFactory>, BlogPostEntity) {
     let mut mock_image_repo = MockImageRepository::new();
-    
+
     // テスト用の画像を追加
     if let Some(path) = thumbnail_path {
       let image_id = uuid::Uuid::new_v4();

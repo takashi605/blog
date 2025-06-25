@@ -27,7 +27,6 @@ pub async fn fetch_blog_post_by_id(executor: impl Executor<'_, Database = Postgr
   Ok(post)
 }
 
-
 pub async fn fetch_latest_blog_posts_records_with_limit(executor: impl Executor<'_, Database = Postgres>, limit: Option<u32>) -> Result<Vec<BlogPostRecord>> {
   let mut query = sqlx::QueryBuilder::new(
     "select id, title, thumbnail_image_id, post_date, last_update_date from blog_posts where published_at < CURRENT_TIMESTAMP order by post_date desc",
@@ -42,7 +41,11 @@ pub async fn fetch_latest_blog_posts_records_with_limit(executor: impl Executor<
   Ok(posts)
 }
 
-pub async fn insert_blog_post_with_published_at(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord, published_at: chrono::NaiveDateTime) -> Result<()> {
+pub async fn insert_blog_post_with_published_at(
+  executor: impl Executor<'_, Database = Postgres>,
+  post: BlogPostRecord,
+  published_at: chrono::NaiveDateTime,
+) -> Result<()> {
   sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")
     .bind(post.id)
     .bind(post.title)

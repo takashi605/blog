@@ -230,6 +230,8 @@ api-pod-name:
 	@kubectl get pods -o custom-columns=:metadata.name | grep api
 api-test-sh:
 	kubectl exec -it $(shell $(MAKE) api-pod-name) -c api-test -- bash
+api-fix:
+	cd source/backend && cargo fmt --all
 api-test-run:
 	$(MAKE) api-create-db
 	$(MAKE) postgres-recreate-schema

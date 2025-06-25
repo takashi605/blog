@@ -5,12 +5,11 @@ use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
 pub struct PickUpPostRecord {
-  pub id: Uuid,
   pub post_id: Uuid,
 }
 
 pub async fn fetch_all_pickup_blog_posts(executor: impl Executor<'_, Database = Postgres>) -> Result<Vec<PickUpPostRecord>> {
-  let post = sqlx::query_as::<_, PickUpPostRecord>("select id, post_id from pickup_posts order by updated_at asc limit 3").fetch_all(executor).await?;
+  let post = sqlx::query_as::<_, PickUpPostRecord>("select post_id from pickup_posts order by updated_at asc limit 3").fetch_all(executor).await?;
   Ok(post)
 }
 
@@ -21,7 +20,7 @@ pub async fn update_pickup_blog_posts(tx: &mut Transaction<'_, Postgres>, pickup
 
   // 挿入
   for post in pickup_blog_posts {
-    sqlx::query("insert into pickup_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut **tx).await?;
+    sqlx::query("insert into pickup_posts (post_id) values ($1)").bind(post.post_id).execute(&mut **tx).await?;
   }
   println!("insert into pickup_posts");
 
@@ -30,11 +29,7 @@ pub async fn update_pickup_blog_posts(tx: &mut Transaction<'_, Postgres>, pickup
 
 impl From<BlogPost> for PickUpPostRecord {
   fn from(post: BlogPost) -> Self {
-    Self {
-      // TODO ここで id を生成しているが、本来はエンティティに責任があるべき
-      id: Uuid::new_v4(),
-      post_id: post.id,
-    }
+    Self { post_id: post.id }
   }
 }
 

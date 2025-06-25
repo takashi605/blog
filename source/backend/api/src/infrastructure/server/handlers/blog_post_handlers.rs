@@ -35,13 +35,13 @@ pub mod handle_funcs {
     di_container::DiContainer,
     server::handlers::{
       api_mapper::{blog_post_response_mapper, view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
-      dto_mapper::create_blog_post_mapper::api_blog_post_to_create_dto,
+      dto_mapper::create_blog_post_mapper::api_create_blog_post_request_to_create_dto,
       response::err::ApiCustomError,
     },
   };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
-  use common::types::api::BlogPost;
+  use common::types::api::{BlogPost, CreateBlogPostRequest};
 
   #[utoipa::path(
     get,
@@ -243,17 +243,19 @@ pub mod handle_funcs {
   #[utoipa::path(
     post,
     path = "/api/admin/blog/posts",
-    request_body = BlogPost,
+    request_body = CreateBlogPostRequest,
     responses(
       (status = 200, description = "Blog post created", body = BlogPost)
     )
   )]
-  pub async fn create_blog_post(blog_post_req: web::Json<BlogPost>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
-    println!("create_blog_post");
+  pub async fn create_blog_post(
+    blog_post_req: web::Json<CreateBlogPostRequest>,
+    di_container: web::Data<DiContainer>,
+  ) -> Result<impl Responder, ApiCustomError> {
     let blog_post_req = blog_post_req.into_inner();
 
     // API型をDTO型に変換
-    let create_dto = api_blog_post_to_create_dto(blog_post_req);
+    let create_dto = api_create_blog_post_request_to_create_dto(blog_post_req);
 
     // DIコンテナからユースケースを取得
     let usecase = di_container.create_blog_post_usecase();

@@ -20,10 +20,7 @@ pub async fn fetch_all_images(executor: impl Executor<'_, Database = Postgres>) 
 }
 
 pub async fn fetch_image_by_path(executor: impl Executor<'_, Database = Postgres>, path: &str) -> Result<ImageRecord> {
-  let image = sqlx::query_as::<_, ImageRecord>("select id, file_path from images where file_path = $1")
-    .bind(path)
-    .fetch_one(executor)
-    .await?;
+  let image = sqlx::query_as::<_, ImageRecord>("select id, file_path from images where file_path = $1").bind(path).fetch_one(executor).await?;
   Ok(image)
 }
 

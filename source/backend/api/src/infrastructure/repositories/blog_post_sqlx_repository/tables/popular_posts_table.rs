@@ -5,12 +5,11 @@ use uuid::Uuid;
 
 #[derive(Debug, FromRow)]
 pub struct PopularPostRecord {
-  pub id: Uuid,
   pub post_id: Uuid,
 }
 
 pub async fn fetch_all_popular_blog_posts(executor: impl Executor<'_, Database = Postgres>) -> Result<Vec<PopularPostRecord>> {
-  let post = sqlx::query_as::<_, PopularPostRecord>("select id, post_id from popular_posts order by updated_at asc limit 3").fetch_all(executor).await?;
+  let post = sqlx::query_as::<_, PopularPostRecord>("select post_id from popular_posts order by updated_at asc limit 3").fetch_all(executor).await?;
   Ok(post)
 }
 
@@ -20,7 +19,7 @@ pub async fn update_popular_blog_posts(tx: &mut Transaction<'_, Postgres>, popul
 
   // 挿入
   for post in popular_blog_posts {
-    sqlx::query("insert into popular_posts (id, post_id) values ($1, $2)").bind(post.id).bind(post.post_id).execute(&mut **tx).await?;
+    sqlx::query("insert into popular_posts (post_id) values ($1)").bind(post.post_id).execute(&mut **tx).await?;
   }
   println!("insert into popular_posts");
 
@@ -29,11 +28,7 @@ pub async fn update_popular_blog_posts(tx: &mut Transaction<'_, Postgres>, popul
 
 impl From<BlogPost> for PopularPostRecord {
   fn from(post: BlogPost) -> Self {
-    Self {
-      // TODO ここで id を生成しているが、本来はエンティティに責任があるべき
-      id: Uuid::new_v4(),
-      post_id: post.id,
-    }
+    Self { post_id: post.id }
   }
 }
 

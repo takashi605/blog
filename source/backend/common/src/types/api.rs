@@ -99,3 +99,74 @@ pub struct CodeBlock {
 pub struct ErrResponse {
   pub message: String,
 }
+
+// リクエスト用の型（IDを含まない）
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateBlogPostRequest {
+  pub title: String,
+  pub thumbnail: CreateImageContentRequest,
+  pub post_date: NaiveDate,
+  pub last_update_date: NaiveDate,
+  pub contents: Vec<CreateBlogPostContentRequest>,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateImageRequest {
+  pub path: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateImageContentRequest {
+  pub id: Option<Uuid>,
+  pub path: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(tag = "type", rename_all = "camelCase")]
+pub enum CreateBlogPostContentRequest {
+  #[serde(rename = "h2")]
+  H2(CreateH2BlockRequest),
+  #[serde(rename = "h3")]
+  H3(CreateH3BlockRequest),
+  #[serde(rename = "paragraph")]
+  Paragraph(CreateParagraphBlockRequest),
+  #[serde(rename = "image")]
+  Image(CreateImageBlockRequest),
+  #[serde(rename = "codeBlock")]
+  Code(CreateCodeBlockRequest),
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateH2BlockRequest {
+  pub text: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateH3BlockRequest {
+  pub text: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateParagraphBlockRequest {
+  pub text: Vec<RichText>,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateImageBlockRequest {
+  pub path: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateCodeBlockRequest {
+  pub title: String,
+  pub code: String,
+  pub language: String,
+}

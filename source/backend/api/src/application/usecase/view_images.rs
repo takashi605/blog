@@ -1,6 +1,6 @@
 use crate::{
-  domain::image_domain::image_repository::{ImageRepository, ImageRepositoryError},
   application::{dto::ImageDTO, dto_mapper::image_dto_mapper::convert_to_image_dto},
+  domain::image_domain::image_repository::{ImageRepository, ImageRepositoryError},
 };
 use std::sync::Arc;
 
@@ -24,10 +24,7 @@ impl ViewImagesUseCase {
     })?;
 
     // ImageEntityをImageDTOに変換
-    let image_dtos = image_entities
-      .into_iter()
-      .map(convert_to_image_dto)
-      .collect();
+    let image_dtos = image_entities.into_iter().map(convert_to_image_dto).collect();
 
     Ok(image_dtos)
   }
@@ -45,11 +42,9 @@ pub enum ViewImagesError {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::{
-    domain::image_domain::{
-      image_entity::ImageEntity,
-      image_repository::{ImageRepository, ImageRepositoryError},
-    },
+  use crate::domain::image_domain::{
+    image_entity::ImageEntity,
+    image_repository::{ImageRepository, ImageRepositoryError},
   };
   use mockall::mock;
   use uuid::Uuid;
@@ -70,10 +65,7 @@ mod tests {
   async fn test_execute_success_empty_list() {
     // 空のリポジトリでユースケースを作成
     let mut repository = MockImageRepo::new();
-    repository
-      .expect_find_all()
-      .times(1)
-      .returning(|| Ok(vec![]));
+    repository.expect_find_all().times(1).returning(|| Ok(vec![]));
 
     let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
@@ -101,20 +93,11 @@ mod tests {
 
     // モックリポジトリにテスト画像を設定
     let mut repository = MockImageRepo::new();
-    repository
-      .expect_find_all()
-      .times(1)
-      .returning(|| {
-        let image1 = ImageEntity::new(
-          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440001").unwrap(),
-          "images/test1.jpg".to_string(),
-        );
-        let image2 = ImageEntity::new(
-          Uuid::parse_str("550e8400-e29b-41d4-a716-446655440002").unwrap(),
-          "images/test2.jpg".to_string(),
-        );
-        Ok(vec![image1, image2])
-      });
+    repository.expect_find_all().times(1).returning(|| {
+      let image1 = ImageEntity::new(Uuid::parse_str("550e8400-e29b-41d4-a716-446655440001").unwrap(), "images/test1.jpg".to_string());
+      let image2 = ImageEntity::new(Uuid::parse_str("550e8400-e29b-41d4-a716-446655440002").unwrap(), "images/test2.jpg".to_string());
+      Ok(vec![image1, image2])
+    });
 
     let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
@@ -141,10 +124,7 @@ mod tests {
   async fn test_execute_repository_error() {
     // エラーを返すモックリポジトリでユースケースを作成
     let mut repository = MockImageRepo::new();
-    repository
-      .expect_find_all()
-      .times(1)
-      .returning(|| Err(ImageRepositoryError::FindAllFailed("テスト用のエラーです".to_string())));
+    repository.expect_find_all().times(1).returning(|| Err(ImageRepositoryError::FindAllFailed("テスト用のエラーです".to_string())));
 
     let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
@@ -169,10 +149,7 @@ mod tests {
     let expected_path = image_path.clone();
 
     let mut repository = MockImageRepo::new();
-    repository
-      .expect_find_all()
-      .times(1)
-      .returning(move || Ok(vec![ImageEntity::new(image_id, image_path.clone())]));
+    repository.expect_find_all().times(1).returning(move || Ok(vec![ImageEntity::new(image_id, image_path.clone())]));
 
     let usecase = ViewImagesUseCase::new(Arc::new(repository));
 
@@ -193,10 +170,7 @@ mod tests {
   async fn test_usecase_new() {
     // ViewImagesUseCaseの作成をテスト
     let mut repository = MockImageRepo::new();
-    repository
-      .expect_find_all()
-      .times(1)
-      .returning(|| Ok(vec![]));
+    repository.expect_find_all().times(1).returning(|| Ok(vec![]));
 
     let usecase = ViewImagesUseCase::new(Arc::new(repository));
 

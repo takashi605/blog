@@ -72,9 +72,7 @@ mod tests {
     let mut sorted_data = titles_and_dates;
     sorted_data.sort_by(|a, b| b.1.cmp(&a.1));
 
-    sorted_data.into_iter().map(|(title, date)| {
-      create_test_blog_post(&title, date)
-    }).collect()
+    sorted_data.into_iter().map(|(title, date)| create_test_blog_post(&title, date)).collect()
   }
 
   #[tokio::test]
@@ -93,21 +91,17 @@ mod tests {
     let _posts = create_sorted_posts(test_data);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_latests()
-      .with(mockall::predicate::eq(None))
-      .times(1)
-      .returning(|_| {
-        let old_date = NaiveDate::from_ymd_opt(2024, 1, 10).unwrap();
-        let middle_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
-        let new_date = NaiveDate::from_ymd_opt(2024, 1, 20).unwrap();
-        let test_data = vec![
-          ("新しい記事".to_string(), new_date),
-          ("中間の記事".to_string(), middle_date),
-          ("古い記事".to_string(), old_date),
-        ];
-        Ok(create_sorted_posts(test_data))
-      });
+    mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(|_| {
+      let old_date = NaiveDate::from_ymd_opt(2024, 1, 10).unwrap();
+      let middle_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
+      let new_date = NaiveDate::from_ymd_opt(2024, 1, 20).unwrap();
+      let test_data = vec![
+        ("新しい記事".to_string(), new_date),
+        ("中間の記事".to_string(), middle_date),
+        ("古い記事".to_string(), old_date),
+      ];
+      Ok(create_sorted_posts(test_data))
+    });
 
     let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
@@ -145,21 +139,17 @@ mod tests {
     let _posts = create_sorted_posts(test_data);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_latests()
-      .with(mockall::predicate::eq(None))
-      .times(1)
-      .returning(|_| {
-        let old_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
-        let middle_date = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap();
-        let new_date = NaiveDate::from_ymd_opt(2024, 1, 3).unwrap();
-        let test_data = vec![
-          ("新しい記事".to_string(), new_date),
-          ("中間の記事".to_string(), middle_date),
-          ("古い記事".to_string(), old_date),
-        ];
-        Ok(create_sorted_posts(test_data))
-      });
+    mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(|_| {
+      let old_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+      let middle_date = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap();
+      let new_date = NaiveDate::from_ymd_opt(2024, 1, 3).unwrap();
+      let test_data = vec![
+        ("新しい記事".to_string(), new_date),
+        ("中間の記事".to_string(), middle_date),
+        ("古い記事".to_string(), old_date),
+      ];
+      Ok(create_sorted_posts(test_data))
+    });
 
     let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
@@ -183,11 +173,7 @@ mod tests {
   async fn test_empty_article_list_does_not_cause_error() {
     // Arrange
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_latests()
-      .with(mockall::predicate::eq(None))
-      .times(1)
-      .returning(|_| Ok(vec![]));
+    mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(|_| Ok(vec![]));
 
     let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
@@ -207,33 +193,25 @@ mod tests {
     let _posts = create_sorted_posts(test_data);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    
+
     // quantityありのケース
-    mock_repository
-      .expect_find_latests()
-      .with(mockall::predicate::eq(Some(10)))
-      .times(1)
-      .returning(|_| {
-        let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
-        Ok(create_sorted_posts(test_data))
-      });
+    mock_repository.expect_find_latests().with(mockall::predicate::eq(Some(10))).times(1).returning(|_| {
+      let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
+      Ok(create_sorted_posts(test_data))
+    });
 
     // quantityなしのケース
-    mock_repository
-      .expect_find_latests()
-      .with(mockall::predicate::eq(None))
-      .times(1)
-      .returning(|_| {
-        let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
-        Ok(create_sorted_posts(test_data))
-      });
+    mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(|_| {
+      let test_data = vec![("記事1".to_string(), NaiveDate::from_ymd_opt(2024, 1, 1).unwrap())];
+      Ok(create_sorted_posts(test_data))
+    });
 
     let usecase = ViewLatestBlogPostsUseCase::new(Arc::new(mock_repository));
 
     // Act - quantityパラメータありのケース
     let result_with_quantity = usecase.execute(Some(10)).await;
 
-    // Act - quantityパラメータなしのケース  
+    // Act - quantityパラメータなしのケース
     let result_without_quantity = usecase.execute(None).await;
 
     // Assert

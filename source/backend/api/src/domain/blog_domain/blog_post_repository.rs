@@ -1,7 +1,5 @@
 use crate::domain::blog_domain::{
-  blog_post_entity::BlogPostEntity, 
-  pick_up_post_set_entity::PickUpPostSetEntity, 
-  popular_post_set_entity::PopularPostSetEntity,
+  blog_post_entity::BlogPostEntity, pick_up_post_set_entity::PickUpPostSetEntity, popular_post_set_entity::PopularPostSetEntity,
   top_tech_pick_entity::TopTechPickEntity,
 };
 use anyhow::Result;

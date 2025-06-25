@@ -13,12 +13,12 @@ pub mod handle_funcs {
     di_container::DiContainer,
     server::handlers::{
       api_mapper::image_response_mapper::{image_dto_list_to_response, image_dto_to_response},
-      dto_mapper::api_image_to_register_dto,
+      dto_mapper::api_create_image_request_to_register_dto,
       response::err::ApiCustomError,
     },
   };
   use actix_web::{web, HttpResponse, Responder};
-  use common::types::api::Image;
+  use common::types::api::{CreateImageRequest, Image};
 
   #[utoipa::path(
     get,
@@ -43,15 +43,15 @@ pub mod handle_funcs {
   #[utoipa::path(
     post,
     path = "/api/admin/blog/images",
-    request_body = Image,
+    request_body = CreateImageRequest,
     responses(
       (status = 200, description = "Image created", body = Image)
     )
   )]
-  pub async fn create_image(image_by_req: web::Json<Image>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn create_image(image_by_req: web::Json<CreateImageRequest>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
     // 1. APIリクエストをRegisterImageDTOに変換
-    let image_by_req: Image = image_by_req.into_inner();
-    let register_dto = api_image_to_register_dto(image_by_req);
+    let image_by_req: CreateImageRequest = image_by_req.into_inner();
+    let register_dto = api_create_image_request_to_register_dto(image_by_req);
 
     // 2. DIコンテナからRegisterImageUseCaseを取得
     let usecase = di_container.register_image_usecase();

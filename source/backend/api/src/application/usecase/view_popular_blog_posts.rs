@@ -52,14 +52,14 @@ mod tests {
   use crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity;
   use anyhow::Result;
   use async_trait::async_trait;
+  use mockall::mock;
   use std::sync::Arc;
   use uuid::Uuid;
-  use mockall::mock;
 
   // mockallによるモックリポジトリ
   mock! {
     BlogPostRepo {}
-    
+
     #[async_trait]
     impl BlogPostRepository for BlogPostRepo {
       async fn find(&self, id: &str) -> Result<BlogPostEntity>;
@@ -90,16 +90,14 @@ mod tests {
     let _popular_post_set = PopularPostSetEntity::new(popular_posts);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_popular_posts()
-      .returning(move || {
-        let posts = [
-          create_test_blog_post("00000000-0000-0000-0000-000000000001", "人気記事1"),
-          create_test_blog_post("00000000-0000-0000-0000-000000000002", "人気記事2"),
-          create_test_blog_post("00000000-0000-0000-0000-000000000003", "人気記事3"),
-        ];
-        Ok(PopularPostSetEntity::new(posts))
-      });
+    mock_repository.expect_find_popular_posts().returning(move || {
+      let posts = [
+        create_test_blog_post("00000000-0000-0000-0000-000000000001", "人気記事1"),
+        create_test_blog_post("00000000-0000-0000-0000-000000000002", "人気記事2"),
+        create_test_blog_post("00000000-0000-0000-0000-000000000003", "人気記事3"),
+      ];
+      Ok(PopularPostSetEntity::new(posts))
+    });
 
     let usecase = ViewPopularBlogPostsUseCase::new(Arc::new(mock_repository));
 
@@ -123,16 +121,14 @@ mod tests {
     let expected_id3 = "00000000-0000-0000-0000-000000000003";
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_popular_posts()
-      .returning(move || {
-        let posts = [
-          create_test_blog_post(expected_id1, "テスト記事1"),
-          create_test_blog_post(expected_id2, "テスト記事2"),
-          create_test_blog_post(expected_id3, "テスト記事3"),
-        ];
-        Ok(PopularPostSetEntity::new(posts))
-      });
+    mock_repository.expect_find_popular_posts().returning(move || {
+      let posts = [
+        create_test_blog_post(expected_id1, "テスト記事1"),
+        create_test_blog_post(expected_id2, "テスト記事2"),
+        create_test_blog_post(expected_id3, "テスト記事3"),
+      ];
+      Ok(PopularPostSetEntity::new(posts))
+    });
 
     let usecase = ViewPopularBlogPostsUseCase::new(Arc::new(mock_repository));
 
@@ -155,9 +151,7 @@ mod tests {
   async fn test_returns_error_when_repository_has_invalid_count() {
     // Arrange: リポジトリでエラーを返すように設定
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find_popular_posts()
-      .returning(|| Err(anyhow::anyhow!("人気記事は3件である必要があります。実際の件数: 2")));
+    mock_repository.expect_find_popular_posts().returning(|| Err(anyhow::anyhow!("人気記事は3件である必要があります。実際の件数: 2")));
 
     let usecase = ViewPopularBlogPostsUseCase::new(Arc::new(mock_repository));
 

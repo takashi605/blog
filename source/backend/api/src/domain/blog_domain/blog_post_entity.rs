@@ -1,6 +1,5 @@
 pub mod code_block_entity;
 pub mod content_entity;
-pub mod content_type;
 pub mod h2_entity;
 pub mod h3_entity;
 pub mod image_content_entity;
@@ -83,10 +82,7 @@ impl BlogPostEntity {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::domain::blog_domain::{
-    blog_post_entity::content_type::ContentType,
-    blog_post_entity::rich_text_vo::{RichTextPartVO, RichTextVO},
-  };
+  use crate::domain::blog_domain::blog_post_entity::rich_text_vo::{RichTextPartVO, RichTextVO};
 
   #[test]
   fn can_generate_blog_post_data_with_id_and_title() {
@@ -141,7 +137,6 @@ mod tests {
     match &contents[0] {
       ContentEntity::H2(h2) => {
         assert_eq!(h2.get_value(), "h2見出し");
-        assert_eq!(h2.get_type(), ContentType::H2);
         assert_eq!(h2.get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap());
       }
       _ => panic!("期待されるコンテンツタイプはH2です"),
@@ -151,7 +146,6 @@ mod tests {
     match &contents[1] {
       ContentEntity::H3(h3) => {
         assert_eq!(h3.get_value(), "h3見出し");
-        assert_eq!(h3.get_type(), ContentType::H3);
         assert_eq!(h3.get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000002").unwrap());
       }
       _ => panic!("期待されるコンテンツタイプはH3です"),
@@ -160,7 +154,6 @@ mod tests {
     // 段落コンテンツの検証
     match &contents[2] {
       ContentEntity::Paragraph(p) => {
-        assert_eq!(p.get_type(), ContentType::Paragraph);
         assert_eq!(p.get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000003").unwrap());
         let expected_rich_text = RichTextVO::new(vec![RichTextPartVO::new("段落".to_string(), None, None)]);
         assert_eq!(p.get_value(), &expected_rich_text);

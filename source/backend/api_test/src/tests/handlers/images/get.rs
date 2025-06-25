@@ -1,8 +1,6 @@
 #[cfg(test)]
 mod tests {
-  use crate::tests::{
-    helper::http::{methods::Methods, request::Request},
-  };
+  use crate::tests::helper::http::{methods::Methods, request::Request};
   use anyhow::{Context, Result};
   use common::types::api::Image;
   use uuid::Uuid;

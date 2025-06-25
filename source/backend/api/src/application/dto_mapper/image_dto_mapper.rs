@@ -82,11 +82,7 @@ mod tests {
 
   #[test]
   fn test_convert_multiple_images() {
-    let images = vec![
-      (Uuid::new_v4(), "image1.jpg"),
-      (Uuid::new_v4(), "image2.png"),
-      (Uuid::new_v4(), "image3.gif"),
-    ];
+    let images = vec![(Uuid::new_v4(), "image1.jpg"), (Uuid::new_v4(), "image2.png"), (Uuid::new_v4(), "image3.gif")];
 
     let dtos: Vec<ImageDTO> = images
       .into_iter()
@@ -100,7 +96,7 @@ mod tests {
     assert_eq!(dtos[0].path, "image1.jpg");
     assert_eq!(dtos[1].path, "image2.png");
     assert_eq!(dtos[2].path, "image3.gif");
-    
+
     // 各DTOが異なるIDを持つことを確認
     assert_ne!(dtos[0].id, dtos[1].id);
     assert_ne!(dtos[1].id, dtos[2].id);
