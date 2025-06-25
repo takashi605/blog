@@ -650,7 +650,6 @@ mod tests {
     let pickup_post_records: Vec<pickup_posts_table::PickUpPostRecord> = test_posts
       .iter()
       .map(|post| pickup_posts_table::PickUpPostRecord {
-        id: Uuid::new_v4(),
         post_id: post.get_id(),
       })
       .collect();

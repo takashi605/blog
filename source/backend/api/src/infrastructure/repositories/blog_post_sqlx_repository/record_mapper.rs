@@ -343,7 +343,6 @@ pub fn convert_pickup_post_set_to_records(pickup_post_set: &PickUpPostSetEntity)
   pickup_post_set.get_all_posts()
     .iter()
     .map(|post| PickUpPostRecord {
-      id: Uuid::new_v4(), // 新規UUID生成
       post_id: post.get_id(),
     })
     .collect()
