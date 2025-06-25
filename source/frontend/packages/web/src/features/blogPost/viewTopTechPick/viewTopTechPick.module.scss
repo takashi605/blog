@@ -23,8 +23,19 @@
 }
 
 .thumbnail {
+  position: relative;
   flex-basis: 50%;
   height: auto;
+
+  min-height: 400px;
+
+  @include vars.breakPoint("tablet") {
+    min-height: 250px;
+  }
+
+  @include vars.breakPoint("sp") {
+    min-height: 150px;
+  }
 
   img {
     aspect-ratio: 5 / 3;
