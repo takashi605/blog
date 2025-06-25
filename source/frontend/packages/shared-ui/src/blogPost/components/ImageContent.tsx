@@ -1,6 +1,7 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
 import type { components } from 'shared-lib/src/generated/api-types';
+import styles from '../styles/blogPostViewer.module.scss';
 
 type ImageBlock = components['schemas']['ImageBlock'];
 
@@ -10,7 +11,7 @@ type ImageContentProps = {
 
 function ImageContent({ imageContent }: ImageContentProps) {
   return (
-    <>
+    <div className={styles.imageContent}>
       <CldImage
         src={imageContent.path}
         alt="画像コンテンツ"
@@ -23,7 +24,7 @@ function ImageContent({ imageContent }: ImageContentProps) {
         sizes="100%"
         style={{ objectFit: 'contain' }}
       />
-    </>
+    </div>
   );
 }
 
