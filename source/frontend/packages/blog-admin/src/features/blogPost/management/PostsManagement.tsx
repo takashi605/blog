@@ -1,4 +1,5 @@
 'use client';
+import { CldImage } from 'next-cloudinary';
 import Link from 'next/link';
 import { useBlogPostList } from '../list/useBlogPostList';
 import styles from './PostsManagement.module.scss';
@@ -38,8 +39,10 @@ export default function PostsManagement() {
               </span>
             </div>
             {post.thumbnail && (
-              <img
+              <CldImage
                 src={post.thumbnail.path}
+                width={120}
+                height={80}
                 alt="サムネイル画像"
                 className={styles.thumbnail}
               />
