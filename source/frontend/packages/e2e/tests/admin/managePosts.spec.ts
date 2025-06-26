@@ -23,7 +23,6 @@ Given('【記事管理 一覧】記事管理ページにアクセスする', asy
 Then(
   '【記事管理 一覧】記事が3件以上表示されている',
   async function () {
-    const page = playwrightHelper.getPage();
     const postsSection = new PostsManageSection();
     const postCards = postsSection.getPostCards();
     const count = await postCards.count();
@@ -34,7 +33,6 @@ Then(
 Then(
   '【記事管理 一覧】各記事のタイトルが表示されている',
   async function () {
-    const page = playwrightHelper.getPage();
     const postsSection = new PostsManageSection();
     const postTitles = postsSection.getPostTitles();
     const count = await postTitles.count();
@@ -53,7 +51,6 @@ Then(
 Then(
   '【記事管理 一覧】各記事の投稿日が表示されている',
   async function () {
-    const page = playwrightHelper.getPage();
     const postsSection = new PostsManageSection();
     const postDates = postsSection.getPostDates();
     const count = await postDates.count();
@@ -72,7 +69,6 @@ Then(
 Then(
   '【記事管理 一覧】各記事のサムネイル画像が表示されている',
   async function () {
-    const page = playwrightHelper.getPage();
     const postsSection = new PostsManageSection();
     const thumbnailImages = postsSection.getThumbnailImages();
     const count = await thumbnailImages.count();
