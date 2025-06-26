@@ -90,6 +90,18 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     );
   }
 
+  // Lexical のエディタ更新時に都度呼ばれるメソッド
+  // ほぼ必須のオーバーライドで、オーバーライドしておかないと継承元の引数なし clone が呼ばれてしまう
+  static clone(node: ImageNode): ImageNode {
+    return new ImageNode(
+      node.__src,
+      node.__altText,
+      node.__width,
+      node.__height,
+      node.__key, // 元の key を維持
+    );
+  }
+
   static getType(): string {
     return 'image';
   }

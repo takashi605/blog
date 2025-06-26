@@ -311,7 +311,7 @@ Then(
   },
 );
 When(
-  '【正常系 記事投稿】「const a = 1」入力し、「code」ボタンを押す',
+  '【正常系 記事投稿】数行のコードを入力し、「code」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
 
@@ -320,7 +320,13 @@ When(
     await page.waitForTimeout(200); // 入力後の安定性のために少し待機
 
     await richTextEditor.pressSequentially('const a = 1');
+    await richTextEditor.press('Enter');
+    await richTextEditor.pressSequentially('const b = 3');
     await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+
+    // 入力したテキストを選択
+    const textLength = 23; // 「const a = 1\nconst b = 3」の文字数
+    await selectByArrowLeft(page, richTextEditor, textLength);
 
     const codeButton = page.getByRole('checkbox', { name: /^code$/ });
     await codeButton.click();
@@ -331,13 +337,17 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    const richTextEditor = page.locator('[contenteditable="true"]').filter({
+    const codeBlock = page.getByRole('code').filter({
       hasText: 'const a = 1',
     });
 
-    // class 属性に language-js が含まれているかで判別
-    const codeBlock = richTextEditor.locator('.language-js');
-    await expect(codeBlock).toBeVisible({ timeout: 10000 });
+    await expect(codeBlock).toHaveText('const a = 1const b = 3', {
+      timeout: 10000,
+    });
+
+    // brタグが1つ含まれていることを確認
+    const brElements = codeBlock.locator('br');
+    await expect(brElements).toHaveCount(1);
   },
 );
 
@@ -450,6 +460,25 @@ Then(
     const src = await imageContent.getAttribute('src');
 
     expectMatchImageResourceByCloudinary(src);
+  },
+);
+
+When('【正常系 記事投稿】「画像の直後」という文字列を入力する', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await richTextEditor.pressSequentially('画像の直後', { timeout: 10000 });
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+});
+Then(
+  '【正常系 記事投稿】リッチテキストエディタに「画像の直後」という文字列が表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toContainText('画像の直後', {
+      timeout: 10000,
+    });
   },
 );
 
@@ -592,14 +621,16 @@ Then(
 );
 
 Then(
-  '【正常系 記事投稿】コードブロック内に「const a = 1」が表示されている',
+  '【正常系 記事投稿】コードブロック内に入力した内容が表示されている',
   async function () {
     const page = playwrightHelper.getPage();
 
     const codeBlock = page.getByRole('code').filter({
       hasText: 'const a = 1',
     });
-    await expect(codeBlock).toBeVisible({ timeout: 10000 });
+    await expect(codeBlock).toHaveText('const a = 1\nconst b = 3', {
+      timeout: 10000,
+    });
   },
 );
 Then(
@@ -619,6 +650,12 @@ Then('【正常系 記事投稿】画像が表示されている', async functio
   const src = await thumbnailImage.getAttribute('src');
 
   expectMatchImageResourceByCloudinary(src);
+});
+Then('【正常系 記事投稿】画像の直後に「画像の直後」という文字列が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const textAfterImage = page.getByText('画像の直後');
+  await expect(textAfterImage).toBeVisible({ timeout: 10000 });
 });
 Then('【正常系 記事投稿】投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();

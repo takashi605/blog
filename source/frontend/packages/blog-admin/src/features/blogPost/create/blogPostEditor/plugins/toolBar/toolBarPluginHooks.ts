@@ -1,12 +1,13 @@
 import { CODE_LANGUAGE_FRIENDLY_NAME_MAP } from '@lexical/code';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import type { LexicalNode } from 'lexical';
+import type { LexicalNode, RangeSelection } from 'lexical';
 import {
   $createParagraphNode,
+  $createTextNode,
   $getSelection,
-  $isParagraphNode,
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
@@ -33,15 +34,63 @@ export function useUpdateBlockType() {
   };
   const $setCodeInSelection = () => {
     const selection = $getSelection();
-    if ($isRangeSelection(selection)) {
-      $setBlocksType(selection, () => $createCustomCodeNode());
+    if (!$isRangeSelection(selection)) {
+      return;
     }
+
+    // 以下の処理は、複数行の選択範囲を単一のコードブロックに変換するために多少複雑になっています。
+    // 1. 選択範囲内のテキストを全て取得
+    // 2. 選択範囲内のノードを最初のものだけ残して削除
+    // 3. 最初のノードに 1 で取得したテキストを持つコードブロックに置き換え
+
+    // 選択範囲内のテキストを全て取得（改行も含む）
+    const selectedText = $getSelectedText(selection);
+
+    // 選択範囲内のノードを取得
+    const selectedNodes = $getSelectedNodes(selection);
+    const topLevelNodes = $getUniqueTopLevelElements(selectedNodes);
+
+    // 最初のノード以外を削除して、最初のノードを取得
+    const firstNode = $removeExtraNodesAndReturnFirst(topLevelNodes);
+
+    // 単一のコードブロックを作成し、選択されたテキストを設定
+    const codeNode = $createCustomCodeNode();
+    codeNode.append($createTextNode(selectedText));
+
+    // 最初のノードをコードブロックに置き換え
+    firstNode.replace(codeNode);
   };
   return {
     $setHeadingInSelection,
     $setParagraphInSelection,
     $setCodeInSelection,
   } as const;
+
+  // 複数ノードから最初のノード以外を削除し、最初のノードを返す
+  function $removeExtraNodesAndReturnFirst(nodes: LexicalNode[]): LexicalNode {
+    const [firstNode, ...restNodes] = nodes;
+    restNodes.forEach((node) => node.remove());
+    return firstNode;
+  }
+
+  // 全てのトップレベルノードを取得
+  // 同じエレメントノードが複数選択されている場合もあるため、Set を使用して重複を排除
+  function $getUniqueTopLevelElements(nodes: LexicalNode[]): LexicalNode[] {
+    const topLevelElements = new Set<LexicalNode>();
+    nodes.forEach((node) => {
+      const topLevelElement = node.getTopLevelElementOrThrow();
+      topLevelElements.add(topLevelElement);
+    });
+    return Array.from(topLevelElements);
+  }
+
+  function $getSelectedNodes(selection: RangeSelection): LexicalNode[] {
+    return Array.from(selection.getNodes());
+  }
+
+  function $getSelectedText(selection: RangeSelection): string {
+    return selection.getTextContent();
+  }
 }
 
 export function useSelectedNode() {
@@ -55,7 +104,7 @@ export function useSelectedNode() {
     return selectedElementType;
   };
   function $getSelectionTopLevelElement() {
-    const selectedNode = $getSelectedNode();
+    const selectedNode = $getFocusedNode();
     if (!selectedNode) {
       return null;
     }
@@ -63,22 +112,14 @@ export function useSelectedNode() {
 
     return targetNode;
   }
-  function $isParagraphNodeInSelection(): boolean {
-    const selectedNode = $getSelectedNode();
-    if ($isParagraphNode(selectedNode)) {
-      return true;
-    }
-    return false;
-  }
 
   return {
     $getElementTypeOfSelected,
     $getSelectionTopLevelElement,
-    $isParagraphNodeInSelection,
   } as const;
 
   /* 以下ヘルパー関数 */
-  function $getSelectedNode() {
+  function $getFocusedNode() {
     const selection = $getSelection();
     if (!$isRangeSelection(selection)) {
       return null;
@@ -119,6 +160,7 @@ export function useSelectedNode() {
 export function useSelectedTextStyle() {
   const [isBoldSelected, setIsBoldSelected] = useState(false);
   const [isInlineCodeSelected, setIsInlineCodeSelected] = useState(false);
+  const [isLinkSelected, setIsLinkSelected] = useState(false);
   const [editor] = useLexicalComposerContext();
 
   const $storeSelectedTextStyle = () => {
@@ -126,6 +168,17 @@ export function useSelectedTextStyle() {
     if ($isRangeSelection(selection)) {
       setIsBoldSelected(selection.hasFormat('bold'));
       setIsInlineCodeSelected(selection.hasFormat('code'));
+
+      // リンク状態の検知
+      const selectedNodes = selection.getNodes();
+      const hasLink = selectedNodes.some((node) => {
+        // ノード自体がLinkNodeの場合
+        if ($isLinkNode(node)) return true;
+        // 親ノードがLinkNodeの場合
+        const parent = node.getParent();
+        return parent && $isLinkNode(parent);
+      });
+      setIsLinkSelected(hasLink);
     }
   };
 
@@ -137,11 +190,18 @@ export function useSelectedTextStyle() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
   };
 
+  const $removeLinkInSelection = () => {
+    // リンクが選択されている場合は削除（null を渡すとリンク削除）
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+  };
+
   return {
     isBoldSelected,
     isInlineCodeSelected,
+    isLinkSelected,
     $toggleBoldToSelection,
     $toggleInlineCodeInSelection,
+    $removeLinkInSelection,
     $storeSelectedTextStyle,
   } as const;
 }
