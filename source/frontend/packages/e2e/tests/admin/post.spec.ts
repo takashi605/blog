@@ -463,6 +463,25 @@ Then(
   },
 );
 
+When('【正常系 記事投稿】「画像の直後」という文字列を入力する', async function () {
+  const page = playwrightHelper.getPage();
+
+  const richTextEditor = page.locator('[contenteditable="true"]');
+  await richTextEditor.pressSequentially('画像の直後', { timeout: 10000 });
+  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+});
+Then(
+  '【正常系 記事投稿】リッチテキストエディタに「画像の直後」という文字列が表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await expect(richTextEditor).toContainText('画像の直後', {
+      timeout: 10000,
+    });
+  },
+);
+
 When('【正常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
   const publishButton = page.getByRole('button', { name: '投稿' });
@@ -631,6 +650,12 @@ Then('【正常系 記事投稿】画像が表示されている', async functio
   const src = await thumbnailImage.getAttribute('src');
 
   expectMatchImageResourceByCloudinary(src);
+});
+Then('【正常系 記事投稿】画像の直後に「画像の直後」という文字列が表示されている', async function () {
+  const page = playwrightHelper.getPage();
+
+  const textAfterImage = page.getByText('画像の直後');
+  await expect(textAfterImage).toBeVisible({ timeout: 10000 });
 });
 Then('【正常系 記事投稿】投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
