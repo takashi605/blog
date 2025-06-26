@@ -82,6 +82,14 @@ function CreateBlogPostForm() {
             <CommonModalProvider>
               <ThumbnailPickModalWithOpenButton />
             </CommonModalProvider>
+
+            <button
+              type="button"
+              onClick={() => router.push('/posts')}
+              className={styles.backButton}
+            >
+              記事管理画面に戻る
+            </button>
           </div>
           {error && <p role="alert">{error}</p>}
 

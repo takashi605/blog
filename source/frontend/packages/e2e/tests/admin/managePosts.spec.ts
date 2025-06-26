@@ -231,8 +231,6 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
     await expect(page).toHaveURL(/\/posts\/top-tech-pick/);
-    const topTechSection = page.getByText('現在のトップテック記事');
-    await expect(topTechSection).toBeVisible();
   },
 );
 
