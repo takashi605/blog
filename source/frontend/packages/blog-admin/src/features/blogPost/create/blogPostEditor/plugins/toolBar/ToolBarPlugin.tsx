@@ -25,8 +25,6 @@ function ToolBarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [selectedNodeType, setSelectedNodeType] =
     useState<SupportedNodeType | null>(null);
-  const [isSelectedParagraphNode, setIsSelectedParagraphNode] =
-    useState<boolean>(false);
   const { codeTitle, setCodeTitle } = useCodeTitle();
   const {
     isBoldSelected,
@@ -46,11 +44,8 @@ function ToolBarPlugin() {
     $setCodeInSelection,
   } = useUpdateBlockType();
 
-  const {
-    $getElementTypeOfSelected,
-    $getSelectionTopLevelElement,
-    $isParagraphNodeInSelection,
-  } = useSelectedNode();
+  const { $getElementTypeOfSelected, $getSelectionTopLevelElement } =
+    useSelectedNode();
 
   // Lexical の Node を source of truth にするため、
   // エディタの状態が変化するタイミングで Node をチェックして各種ステートを更新する
@@ -60,9 +55,6 @@ function ToolBarPlugin() {
         // 選択中のノードの種類を取得して、selectedNodeType に保持
         const selectedNodeType = $getElementTypeOfSelected();
         setSelectedNodeType(selectedNodeType);
-
-        // 選択中のノードが paragraph かどうかを取得して、isSelectedParagraphNode に保持
-        setIsSelectedParagraphNode($isParagraphNodeInSelection());
 
         // 選択中のテキストスタイルを取得して isBoldSelected に保持
         $storeSelectedTextStyle();
@@ -89,7 +81,6 @@ function ToolBarPlugin() {
     $storeSelectedTextStyle,
     $getSelectionTopLevelElement,
     setCodeLanguage,
-    $isParagraphNodeInSelection,
     codeLanguage,
     codeTitle,
     setCodeTitle,
@@ -264,12 +255,7 @@ function ToolBarPlugin() {
       </div>
       <div className={styles.toolBarButtons}>
         <CommonModalProvider>
-          <CommonModalOpenButton
-            isModalOpenable={isSelectedParagraphNode}
-            openFailMessage="画像を挿入できるノードを選択してください"
-          >
-            画像を挿入
-          </CommonModalOpenButton>
+          <CommonModalOpenButton>画像を挿入</CommonModalOpenButton>
           <ImageInsertModal />
         </CommonModalProvider>
       </div>

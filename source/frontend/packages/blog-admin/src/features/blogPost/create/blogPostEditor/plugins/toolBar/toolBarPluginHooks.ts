@@ -8,7 +8,6 @@ import {
   $createParagraphNode,
   $createTextNode,
   $getSelection,
-  $isParagraphNode,
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
 } from 'lexical';
@@ -113,18 +112,10 @@ export function useSelectedNode() {
 
     return targetNode;
   }
-  function $isParagraphNodeInSelection(): boolean {
-    const selectedNode = $getFocusedNode();
-    if ($isParagraphNode(selectedNode)) {
-      return true;
-    }
-    return false;
-  }
 
   return {
     $getElementTypeOfSelected,
     $getSelectionTopLevelElement,
-    $isParagraphNodeInSelection,
   } as const;
 
   /* 以下ヘルパー関数 */
