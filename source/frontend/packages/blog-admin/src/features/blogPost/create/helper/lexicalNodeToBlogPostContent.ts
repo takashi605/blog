@@ -145,20 +145,8 @@ function processParagraphWithMixedContent(
   children.forEach((child) => {
     if (child.getType() === 'image') {
       // テキストノードが蓄積されている場合は、まずParagraphBlockを作成
-      if (currentTextNodes.length > 0) {
-        const textContent = currentTextNodes
-          .map((node) => node.getTextContent())
-          .join('')
-          .trim();
-        if (textContent) {
-          blogPostContents.push({
-            type: 'paragraph' as const,
-            id: createUUIDv4(),
-            text: textNodeToRichText(currentTextNodes),
-          });
-        }
-        currentTextNodes = [];
-      }
+      addParagraphBlockFromTextNodes(currentTextNodes, blogPostContents);
+      currentTextNodes = [];
 
       // ImageBlockを作成
       const imageNode = child as ImageNode;
@@ -170,8 +158,18 @@ function processParagraphWithMixedContent(
   });
 
   // 残りのテキストノードがある場合はParagraphBlockを作成
-  if (currentTextNodes.length > 0) {
-    const textContent = currentTextNodes
+  addParagraphBlockFromTextNodes(currentTextNodes, blogPostContents);
+}
+
+/**
+ * テキストノード配列から空でないParagraphBlockを作成してblogPostContentsに追加
+ */
+function addParagraphBlockFromTextNodes(
+  textNodes: (TextNode | LinkNode)[],
+  blogPostContents: BlogPostContent[],
+): void {
+  if (textNodes.length > 0) {
+    const textContent = textNodes
       .map((node) => node.getTextContent())
       .join('')
       .trim();
@@ -179,7 +177,7 @@ function processParagraphWithMixedContent(
       blogPostContents.push({
         type: 'paragraph' as const,
         id: createUUIDv4(),
-        text: textNodeToRichText(currentTextNodes),
+        text: textNodeToRichText(textNodes),
       });
     }
   }
