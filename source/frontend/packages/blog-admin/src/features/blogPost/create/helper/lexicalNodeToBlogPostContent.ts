@@ -159,7 +159,7 @@ function processParagraphWithMixedContent(
         }
         currentTextNodes = [];
       }
-      
+
       // ImageBlockを作成
       const imageNode = child as ImageNode;
       blogPostContents.push(imageNodeToBlogPostContent(imageNode));
