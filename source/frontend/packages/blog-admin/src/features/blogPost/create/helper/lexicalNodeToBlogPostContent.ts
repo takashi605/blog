@@ -140,6 +140,7 @@ function processParagraphWithMixedContent(
   blogPostContents: BlogPostContent[],
 ): void {
   const children = elementNode.getChildren();
+  // 連続したテキストノード群を一つにまとめるためのバッファ
   let currentTextNodes: (TextNode | LinkNode)[] = [];
 
   children.forEach((child) => {
