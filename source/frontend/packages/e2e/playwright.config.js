@@ -37,15 +37,10 @@ export default defineConfig({
           navigationTimeout: 30 * 1000,
 
           // ビューポートサイズを固定
-          viewport: { width: 1280, height: 720 },
+          viewport: { width: 1280, height: 900 },
 
           // ヘッドレスモードを明示的に指定
           headless: true,
-
-          // より安定した待機戦略
-          // 'networkidle' は遅いが、'domcontentloaded' は速すぎる場合がある
-          // 'load' がバランスが良い
-          waitForLoadState: 'load',
 
           // コンテキストオプション
           contextOptions: {
