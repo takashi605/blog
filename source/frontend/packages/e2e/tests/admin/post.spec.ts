@@ -104,6 +104,18 @@ When(
   async function () {
     const page = playwrightHelper.getPage();
 
+    // デバッグ用処理
+    const img = page.locator('img[alt="サムネイル画像"]').first();
+    // 中心の命中要素を調べる
+    const hit = await img.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const x = r.left + r.width / 2;
+      const y = r.top + r.height / 2;
+      return document.elementFromPoint(x, y)?.outerHTML;
+    });
+    console.log('elementFromPoint at img center:\n', hit);
+    console.log(await page.innerHTML('body'));
+
     const richTextEditor = page.locator('[contenteditable="true"]');
     // テキストをセット
     await richTextEditor.pressSequentially('世界', { timeout: 10000 });
