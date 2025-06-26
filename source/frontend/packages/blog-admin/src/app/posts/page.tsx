@@ -1,9 +1,10 @@
+import PageTitle from '../../components/ui/pageTitle';
 import PostsManagement from '../../features/blogPost/management/PostsManagement';
 
 export default function PostsManagementPage() {
   return (
     <div>
-      <h1>記事管理</h1>
+      <PageTitle>記事管理</PageTitle>
       <PostsManagement />
     </div>
   );
