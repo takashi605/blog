@@ -146,7 +146,7 @@ function processParagraphWithMixedContent(
     if (child.getType() === 'image') {
       // テキストノードが蓄積されている場合は、まずParagraphBlockを作成
       addParagraphBlockFromTextNodes(currentTextNodes, blogPostContents);
-      currentTextNodes = [];
+      currentTextNodes = []; // 蓄積をリセット
 
       // ImageBlockを作成
       const imageNode = child as ImageNode;
