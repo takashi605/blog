@@ -1,10 +1,10 @@
+import PageTitle from '@/components/ui/pageTitle';
 import CreateBlogPostForm from '@/features/blogPost/create/CreateBlogPostForm';
-import styles from './page.module.scss';
 
 export default function CreateBlogPostPage() {
   return (
     <div>
-      <h1 className={styles.pageTitle}>記事投稿ページ</h1>
+      <PageTitle>記事投稿ページ</PageTitle>
       <CreateBlogPostForm />
     </div>
   );
