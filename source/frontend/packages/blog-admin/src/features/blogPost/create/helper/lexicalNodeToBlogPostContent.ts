@@ -109,7 +109,7 @@ function paragraphNodeToBlogPostContent(
  */
 function codeNodeToBlogPostContent(codeNode: CustomCodeNode): BlogPostContent {
   const lang = codeNode.getLanguage() ? codeNode.getLanguage() : '';
-  const title = codeNode.getTitle();
+  const title = codeNode.getTitle() || 'サンプルコード';
 
   return {
     type: 'codeBlock' as const,
