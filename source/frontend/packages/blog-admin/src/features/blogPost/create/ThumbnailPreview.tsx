@@ -1,7 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
-import sharedStyles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
-import styles from './thumbnailPreview.module.scss';
+import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 
 function ThumbnailPreview() {
   const form = useFormContext();
@@ -9,7 +8,7 @@ function ThumbnailPreview() {
   return (
     <>
       {path && (
-        <div className={`${sharedStyles.thumbnail} ${styles.thumbnailPreview}`}>
+        <div className={styles.thumbnail}>
           <Thumbnail path={path} />
         </div>
       )}
