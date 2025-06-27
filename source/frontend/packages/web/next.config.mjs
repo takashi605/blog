@@ -30,7 +30,7 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
-  transpilePackages: ['service', 'shared-lib', 'shared-test-data'],
+  transpilePackages: ['service', 'shared-lib', 'shared-test-data', 'shared-ui'],
 };
 
 export default nextConfig;
