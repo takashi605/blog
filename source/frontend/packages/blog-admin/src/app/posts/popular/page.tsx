@@ -1,7 +1,7 @@
 'use client';
+import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import BackButton from '../../../components/ui/backButton';
 import PageTitle from '../../../components/ui/pageTitle';
-import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import PopularPostList from '../../../features/blogPost/popular/list/PopularPostList';
 import PopularPostListProvider from '../../../features/blogPost/popular/list/PopularPostListProvider';
 import PopularPostSelectModalWithOpenButton from '../../../features/blogPost/popular/select/PopularPostSelectModal';
