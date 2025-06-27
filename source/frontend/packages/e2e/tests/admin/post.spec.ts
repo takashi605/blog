@@ -488,8 +488,11 @@ Then(
 When('【正常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
   const publishButton = page.getByRole('button', { name: '投稿' });
-  await publishButton.click();
-  console.log(await page.innerHTML('body')); // デバッグ用にページの内容を出力
+
+  await Promise.all([
+    page.waitForURL('**/posts/create/success**'),
+    publishButton.click(),
+  ]);
 });
 Then(
   '【正常系 記事投稿】記事が投稿され、投稿完了ページに遷移する',
