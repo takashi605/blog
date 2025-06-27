@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.linkContainer {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  min-width: 120px;
+}
+
+.link:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.postsLink {
+  background-color: #2563eb;
+}
+
+.postsLink:hover {
+  background-color: #1d4ed8;
+}
+
+.imagesLink {
+  background-color: #16a34a;
+}
+
+.imagesLink:hover {
+  background-color: #15803d;
+}
