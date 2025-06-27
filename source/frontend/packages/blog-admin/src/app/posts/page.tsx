@@ -1,15 +1,14 @@
-import BackButton from '../../components/ui/backButton';
-import HorizontalStack from '../../components/ui/HorizontalStack';
-import PageTitle from '../../components/ui/pageTitle';
+import PageHeader from '../../components/ui/PageHeader';
 import PostsManagement from '../../features/blogPost/management/PostsManagement';
 
 export default function PostsManagementPage() {
   return (
     <div>
-      <HorizontalStack>
-        <PageTitle>記事管理</PageTitle>
-        <BackButton to="/">ダッシュボードに戻る</BackButton>
-      </HorizontalStack>
+      <PageHeader
+        title="記事管理"
+        backButtonTo="/"
+        backButtonText="ダッシュボードに戻る"
+      />
       <PostsManagement />
     </div>
   );
