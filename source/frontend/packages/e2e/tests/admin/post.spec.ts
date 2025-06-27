@@ -463,13 +463,16 @@ Then(
   },
 );
 
-When('【正常系 記事投稿】「画像の直後」という文字列を入力する', async function () {
-  const page = playwrightHelper.getPage();
+When(
+  '【正常系 記事投稿】「画像の直後」という文字列を入力する',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const richTextEditor = page.locator('[contenteditable="true"]');
-  await richTextEditor.pressSequentially('画像の直後', { timeout: 10000 });
-  await page.waitForTimeout(200); // 入力後の安定性のために少し待機
-});
+    const richTextEditor = page.locator('[contenteditable="true"]');
+    await richTextEditor.pressSequentially('画像の直後', { timeout: 10000 });
+    await page.waitForTimeout(200); // 入力後の安定性のために少し待機
+  },
+);
 Then(
   '【正常系 記事投稿】リッチテキストエディタに「画像の直後」という文字列が表示されている',
   async function () {
@@ -485,17 +488,11 @@ Then(
 When('【正常系 記事投稿】「投稿」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
   const publishButton = page.getByRole('button', { name: '投稿' });
-  // 投稿APIのレスポンスを待ちながらクリック
-  const [postResponse] = await Promise.all([
-    page.waitForResponse(
-      (resp) =>
-        resp.url().includes('/api/admin/blog/posts') &&
-        (resp.status() === 200 || resp.status() === 201),
-    ),
+
+  await Promise.all([
+    page.waitForURL('**\/posts\/create\/success**'),
     publishButton.click(),
   ]);
-
-  await postResponse.json();
 });
 Then(
   '【正常系 記事投稿】記事が投稿され、投稿完了ページに遷移する',
@@ -523,7 +520,8 @@ When(
     const page = playwrightHelper.getPage();
 
     const postedPageLink = page.locator('a', { hasText: '投稿した記事を見る' });
-    await postedPageLink.click();
+
+    await Promise.all([page.waitForURL('**/posts/**'), postedPageLink.click()]);
   },
 );
 Then(
@@ -651,12 +649,15 @@ Then('【正常系 記事投稿】画像が表示されている', async functio
 
   expectMatchImageResourceByCloudinary(src);
 });
-Then('【正常系 記事投稿】画像の直後に「画像の直後」という文字列が表示されている', async function () {
-  const page = playwrightHelper.getPage();
+Then(
+  '【正常系 記事投稿】画像の直後に「画像の直後」という文字列が表示されている',
+  async function () {
+    const page = playwrightHelper.getPage();
 
-  const textAfterImage = page.getByText('画像の直後');
-  await expect(textAfterImage).toBeVisible({ timeout: 10000 });
-});
+    const textAfterImage = page.getByText('画像の直後');
+    await expect(textAfterImage).toBeVisible({ timeout: 10000 });
+  },
+);
 Then('【正常系 記事投稿】投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toBeVisible({
