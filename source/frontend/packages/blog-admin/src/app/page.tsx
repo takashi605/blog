@@ -7,7 +7,7 @@ export default function Dashboard() {
       <PageTitle>管理者ダッシュボード</PageTitle>
       <div className="flex flex-col gap-4">
         <div className="rounded-md border p-6">
-          <h2 className="text-xl font-semibold mb-4">コンテンツ管理</h2>
+          <h2 className="mb-4 text-xl font-semibold">コンテンツ管理</h2>
           <div className="flex flex-col gap-3">
             <Link
               href="/posts"
