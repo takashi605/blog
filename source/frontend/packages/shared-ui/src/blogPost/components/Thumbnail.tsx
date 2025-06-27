@@ -16,7 +16,10 @@ function Thumbnail({ path }: ThumbnailProps) {
       dpr="auto"
       // Next.js の fill モードを有効化
       fill
-      style={{ objectFit: 'cover' }}
+      // ci テスト環境で fill モード Image を使った場合、画像要素が他の要素に覆いかぶさってしまう
+      // この問題に対処するため、 pointer-events を none に設定
+      // なお、ci 環境以外だと問題なく、再現も難しいため根本的な原因は不明
+      style={{ objectFit: 'contain', pointerEvents: 'none' }}
       sizes="100%"
     />
   );
