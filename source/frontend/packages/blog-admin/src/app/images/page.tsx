@@ -1,3 +1,4 @@
+import BackButton from '../../components/ui/backButton';
 import CommonModalProvider from '../../components/modal/CommonModalProvider';
 import PageTitle from '../../components/ui/pageTitle';
 import ImageList from '../../features/images/list/ImageList';
@@ -8,6 +9,7 @@ export default function ImageManagementPage() {
   return (
     <div>
       <CommonModalProvider>
+        <BackButton to="/">ダッシュボードに戻る</BackButton>
         <PageTitle>画像の管理</PageTitle>
         <ImageListProvider>
           <ImageUploadModalWithOpenButton />

@@ -24,8 +24,8 @@ Then('【ダッシュボード リンク】記事管理ページに遷移する'
 
 When('【ダッシュボード リンク】記事管理ページ内の「ダッシュボードに戻る」リンクをクリックする', async function () {
   const page = playwrightHelper.getPage();
-  const link = page.getByRole('link', { name: 'ダッシュボードに戻る' });
-  await link.click();
+  const button = page.getByRole('button', { name: 'ダッシュボードに戻る' });
+  await button.click();
 });
 
 Then('【ダッシュボード リンク】記事管理ページからダッシュボードページに遷移する', async function () {
@@ -46,8 +46,8 @@ Then('【ダッシュボード リンク】画像管理ページに遷移する'
 
 When('【ダッシュボード リンク】画像管理ページ内の「ダッシュボードに戻る」リンクをクリックする', async function () {
   const page = playwrightHelper.getPage();
-  const link = page.getByRole('link', { name: 'ダッシュボードに戻る' });
-  await link.click();
+  const button = page.getByRole('button', { name: 'ダッシュボードに戻る' });
+  await button.click();
 });
 
 Then('【ダッシュボード リンク】画像管理ページからダッシュボードページに遷移する', async function () {
