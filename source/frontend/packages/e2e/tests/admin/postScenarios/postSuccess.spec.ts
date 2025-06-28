@@ -24,6 +24,20 @@ Then(
   },
 );
 
+Then(
+  '【正常系 記事投稿】公開日に今日の日付が設定されていることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    // 今日の日付を YYYY-MM-DD 形式で取得
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+
+    const publishDateInput = page.getByRole('combobox', { name: '公開日' });
+    await expect(publishDateInput).toHaveValue(todayString);
+  },
+);
+
 When(
   '【正常系 記事投稿】タイトルに「テスト記事」と入力する',
   async function () {
