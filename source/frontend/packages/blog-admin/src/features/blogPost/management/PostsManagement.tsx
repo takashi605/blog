@@ -34,14 +34,12 @@ export default function PostsManagement() {
             className={styles.postCard}
           >
             <div className={styles.postContent}>
+              <span data-testid="post-date" className={styles.postDate}>
+                {formatDate(post.postDate)}
+              </span>
               <h3>{post.title}</h3>
 
-              <div className={styles.postMeta}>
-                <span data-testid="post-date" className={styles.postDate}>
-                  {formatDate(post.postDate)}
-                </span>
-                <PostEditLinkButton postId={post.id}>編集</PostEditLinkButton>
-              </div>
+              <PostEditLinkButton postId={post.id}>編集</PostEditLinkButton>
             </div>
             {post.thumbnail && (
               <CldImage
