@@ -29,7 +29,7 @@ export type CreateBlogPostFormData = {
 
 function CreateBlogPostForm() {
   // 今日の日付をYYYY-MM-DD形式で取得
-  const todayForForm = new Date().toISOString().split('T')[0];
+  const todayHyphenDelimited = new Date().toISOString().split('T')[0];
 
   const form = useForm<CreateBlogPostFormData>({
     defaultValues: {
@@ -38,7 +38,7 @@ function CreateBlogPostForm() {
         id: '',
         path: '',
       },
-      publishedDate: todayForForm,
+      publishedDate: todayHyphenDelimited,
     },
   });
   const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
@@ -53,7 +53,7 @@ function CreateBlogPostForm() {
   const onSubmit = async () => {
     const formValues = form.getValues();
     // 日付の生成
-    const todayForPost = toISOStringWithTimezone(new Date())
+    const todaySlashDelimited = toISOStringWithTimezone(new Date())
       .split('T')[0]
       .replace('/', '-');
 
@@ -61,8 +61,8 @@ function CreateBlogPostForm() {
     const blogPost: CreateBlogPostRequest = {
       title: formValues.title,
       thumbnail: formValues.thumbnail,
-      postDate: todayForPost,
-      lastUpdateDate: todayForPost,
+      postDate: todaySlashDelimited,
+      lastUpdateDate: todaySlashDelimited,
       contents: blogPostContents,
       publishedDate: formValues.publishedDate,
     };
