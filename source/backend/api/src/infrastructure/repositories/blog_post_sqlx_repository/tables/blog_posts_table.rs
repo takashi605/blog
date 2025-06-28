@@ -20,7 +20,7 @@ pub struct BlogPostRecord {
  */
 pub async fn fetch_blog_post_by_id(executor: impl Executor<'_, Database = Postgres>, id: Uuid) -> Result<BlogPostRecord> {
   let post = sqlx::query_as::<_, BlogPostRecord>(
-    "select id, title, thumbnail_image_id, post_date, last_update_date, published_at::date as published_at from blog_posts where id = $1 and published_at < CURRENT_TIMESTAMP",
+    "select id, title, thumbnail_image_id, post_date, last_update_date, published_at::date as published_at from blog_posts where id = $1",
   )
   .bind(id)
   .fetch_one(executor)
@@ -30,7 +30,7 @@ pub async fn fetch_blog_post_by_id(executor: impl Executor<'_, Database = Postgr
 
 pub async fn fetch_latest_blog_posts_records_with_limit(executor: impl Executor<'_, Database = Postgres>, limit: Option<u32>) -> Result<Vec<BlogPostRecord>> {
   let mut query = sqlx::QueryBuilder::new(
-    "select id, title, thumbnail_image_id, post_date, last_update_date, published_at::date as published_at from blog_posts where published_at < CURRENT_TIMESTAMP order by post_date desc",
+    "select id, title, thumbnail_image_id, post_date, last_update_date, published_at::date as published_at from blog_posts order by post_date desc",
   );
 
   if let Some(limit_value) = limit {
