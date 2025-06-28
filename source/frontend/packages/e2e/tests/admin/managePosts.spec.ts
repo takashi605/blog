@@ -129,7 +129,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「記事を投稿」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const createPostButton = page.getByRole('button', { name: '記事を投稿' });
+    const createPostButton = page.getByRole('link', { name: '記事を投稿' });
     await createPostButton.click();
   },
 );
@@ -166,7 +166,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「ピックアップ記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const pickupButton = page.getByRole('button', { name: 'ピックアップ記事を選択' });
+    const pickupButton = page.getByRole('link', { name: 'ピックアップ記事を選択' });
     await pickupButton.click();
   },
 );
@@ -203,7 +203,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「人気記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const popularButton = page.getByRole('button', { name: '人気記事を選択' });
+    const popularButton = page.getByRole('link', { name: '人気記事を選択' });
     await popularButton.click();
   },
 );
@@ -240,7 +240,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「トップテック記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const topTechButton = page.getByRole('button', { name: 'トップテック記事を選択' });
+    const topTechButton = page.getByRole('link', { name: 'トップテック記事を選択' });
     await topTechButton.click();
   },
 );
@@ -340,6 +340,6 @@ class PostsManageSection {
 
   getEditButtons() {
     const postCards = this.getPostCards();
-    return postCards.locator('button:has-text("編集")');
+    return postCards.locator('a:has-text("編集")');
   }
 }

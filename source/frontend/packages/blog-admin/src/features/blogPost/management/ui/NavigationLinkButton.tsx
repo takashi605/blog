@@ -11,10 +11,8 @@ export default function NavigationLinkButton({
   children,
 }: NavigationLinkButtonProps) {
   return (
-    <Link href={href}>
-      <button type="button" className={styles.button}>
-        {children}
-      </button>
+    <Link href={href} className={styles.button}>
+      {children}
     </Link>
   );
 }

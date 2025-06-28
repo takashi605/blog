@@ -11,10 +11,8 @@ export default function PostEditLinkButton({
   children,
 }: PostEditLinkButtonProps) {
   return (
-    <Link href={`/posts/${postId}/edit`}>
-      <button type="button" className={styles.button}>
-        {children}
-      </button>
+    <Link href={`/posts/${postId}/edit`} className={styles.button}>
+      {children}
     </Link>
   );
 }
