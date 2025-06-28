@@ -19,6 +19,7 @@ pub struct BlogPostEntity {
   thumbnail: Option<ImageEntity>,
   post_date: NaiveDate,
   last_update_date: NaiveDate,
+  published_date: NaiveDate,
 }
 
 impl BlogPostEntity {
@@ -31,6 +32,7 @@ impl BlogPostEntity {
       thumbnail: None,
       post_date: today,
       last_update_date: today,
+      published_date: today,
     }
   }
 
@@ -76,6 +78,20 @@ impl BlogPostEntity {
 
   pub fn get_last_update_date(&self) -> NaiveDate {
     self.last_update_date
+  }
+
+  pub fn set_published_date(&mut self, date: NaiveDate) -> &mut Self {
+    self.published_date = date;
+    self
+  }
+
+  pub fn get_published_date(&self) -> NaiveDate {
+    self.published_date
+  }
+
+  pub fn is_published(&self) -> bool {
+    let today = Local::now().date_naive();
+    self.published_date <= today
   }
 }
 
@@ -222,5 +238,46 @@ mod tests {
     // デフォルトでは本日の日付が設定される
     assert_eq!(blog_post.get_post_date(), today);
     assert_eq!(blog_post.get_last_update_date(), today);
+  }
+
+  #[test]
+  fn is_published_returns_true_when_published_date_is_today_or_past() {
+    use chrono::NaiveDate;
+
+    let id = Uuid::new_v4();
+    let mut blog_post = BlogPostEntity::new(id, "過去日付で公開する記事".to_string());
+
+    // 昨日の日付で公開日を設定
+    let yesterday = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+    blog_post.set_published_date(yesterday);
+
+    assert!(blog_post.is_published());
+  }
+
+  #[test]
+  fn is_published_returns_false_when_published_date_is_future() {
+    use chrono::NaiveDate;
+
+    let id = Uuid::new_v4();
+    let mut blog_post = BlogPostEntity::new(id, "未来日付で公開予定の記事".to_string());
+
+    // 未来の日付で公開日を設定
+    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap();
+    blog_post.set_published_date(future_date);
+
+    assert!(!blog_post.is_published());
+  }
+
+  #[test]
+  fn can_set_and_get_published_date() {
+    use chrono::NaiveDate;
+
+    let id = Uuid::new_v4();
+    let mut blog_post = BlogPostEntity::new(id, "公開日設定記事".to_string());
+
+    let published_date = NaiveDate::from_ymd_opt(2024, 6, 15).unwrap();
+    blog_post.set_published_date(published_date);
+
+    assert_eq!(blog_post.get_published_date(), published_date);
   }
 }
