@@ -58,8 +58,7 @@ Then(
   async function () {
     const modal = new SelectPopularPostsModal().getLocator();
     const postTitles = modal.locator('h3');
-
-    expect(await postTitles.count()).toBeGreaterThan(0);
+    await expect(postTitles.first()).toBeVisible({ timeout: 10_000 });
   },
 );
 Then(
