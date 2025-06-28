@@ -47,7 +47,7 @@ mod helper {
       },
       post_date: "2021-01-01".parse()?,
       last_update_date: "2021-01-02".parse()?,
-      published_date: "2025-06-28".parse()?,
+      published_date: "2021-01-03".parse()?,
       contents: vec![
         CreateBlogPostContentRequest::Paragraph(CreateParagraphBlockRequest {
           text: vec![
