@@ -23,6 +23,7 @@ mod tests {
     assert_eq!(blog_post_by_resp.title, blog_post_for_req.title);
     assert_eq!(blog_post_by_resp.post_date, blog_post_for_req.post_date);
     assert_eq!(blog_post_by_resp.last_update_date, blog_post_for_req.last_update_date);
+    assert_eq!(blog_post_by_resp.published_date, blog_post_for_req.published_date);
     Ok(())
   }
 }
@@ -46,6 +47,7 @@ mod helper {
       },
       post_date: "2021-01-01".parse()?,
       last_update_date: "2021-01-02".parse()?,
+      published_date: "2025-06-28".parse()?,
       contents: vec![
         CreateBlogPostContentRequest::Paragraph(CreateParagraphBlockRequest {
           text: vec![
