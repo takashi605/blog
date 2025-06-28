@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-use crate::domain::blog_domain::popular_post_selector_service::PopularPostSelectorService;
+use crate::domain::blog_domain::services::popular_post_selector_service::PopularPostSelectorService;
 
 /// 人気記事選択ユースケース
 ///

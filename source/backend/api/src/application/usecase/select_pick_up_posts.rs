@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-use crate::domain::blog_domain::pick_up_post_selector_service::PickUpPostSelectorService;
+use crate::domain::blog_domain::services::pick_up_post_selector_service::PickUpPostSelectorService;
 
 /// ピックアップ記事選択ユースケース
 ///

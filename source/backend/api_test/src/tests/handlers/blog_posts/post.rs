@@ -46,7 +46,7 @@ mod tests {
     assert_eq!(blog_post_by_resp.post_date, blog_post_for_req.post_date);
     assert_eq!(blog_post_by_resp.last_update_date, blog_post_for_req.last_update_date);
     assert_eq!(blog_post_by_resp.published_date, blog_post_for_req.published_date);
-    
+
     // 未来の公開日が正しく設定されていることを確認
     let future_date = chrono::NaiveDate::from_ymd_opt(2025, 12, 31).unwrap();
     assert_eq!(blog_post_by_resp.published_date, future_date);
@@ -124,17 +124,16 @@ mod helper {
       post_date: "2021-01-01".parse()?,
       last_update_date: "2021-01-02".parse()?,
       published_date: "2025-12-31".parse()?, // 未来の公開日を設定
-      contents: vec![
-        CreateBlogPostContentRequest::Paragraph(CreateParagraphBlockRequest {
-          text: vec![
-            RichText {
-              text: "これは未来に公開される記事です。".to_string(),
-              styles: Style { bold: false, inline_code: false },
-              link: Option::None,
-            },
-          ],
-        }),
-      ],
+      contents: vec![CreateBlogPostContentRequest::Paragraph(CreateParagraphBlockRequest {
+        text: vec![RichText {
+          text: "これは未来に公開される記事です。".to_string(),
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
+          link: Option::None,
+        }],
+      })],
     };
 
     Ok(blog_post_request)
