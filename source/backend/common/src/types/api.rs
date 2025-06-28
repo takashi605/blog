@@ -12,6 +12,7 @@ pub struct BlogPost {
   pub thumbnail: Image,
   pub post_date: NaiveDate,
   pub last_update_date: NaiveDate,
+  pub published_date: NaiveDate,
   pub contents: Vec<BlogPostContent>,
 }
 
@@ -108,6 +109,7 @@ pub struct CreateBlogPostRequest {
   pub thumbnail: CreateImageContentRequest,
   pub post_date: NaiveDate,
   pub last_update_date: NaiveDate,
+  pub published_date: NaiveDate,
   pub contents: Vec<CreateBlogPostContentRequest>,
 }
 

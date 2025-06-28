@@ -5,6 +5,7 @@
  */
 
 import { useCallback, useState } from 'react';
+import type { CreateBlogPostRequest } from 'shared-lib/src/api';
 import { api, HttpError, type BlogPost } from 'shared-lib/src/api';
 
 interface UseCreateBlogPostState {
@@ -26,7 +27,7 @@ export function useCreateBlogPost() {
   });
 
   const createBlogPost = useCallback(
-    async (blogPost: BlogPost): Promise<BlogPost> => {
+    async (blogPost: CreateBlogPostRequest): Promise<BlogPost> => {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
       try {

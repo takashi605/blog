@@ -1,0 +1,16 @@
+.title {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.titleInput {
+  width: 100%;
+  padding: 2px;
+  border-bottom: 1px solid #dcdcdc;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #333;
+  }
+}

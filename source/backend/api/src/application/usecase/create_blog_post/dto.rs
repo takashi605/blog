@@ -9,6 +9,7 @@ pub struct CreateBlogPostDTO {
   pub thumbnail: CreateImageDTO,
   pub post_date: Option<NaiveDate>,
   pub last_update_date: Option<NaiveDate>,
+  pub published_date: Option<NaiveDate>,
   pub contents: Vec<CreateContentDTO>,
 }
 

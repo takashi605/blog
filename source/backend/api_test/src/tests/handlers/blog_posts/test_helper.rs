@@ -93,6 +93,7 @@ pub fn minimal_blog_post1() -> Result<BlogPost> {
     },
     post_date: "2025-01-01".parse()?,
     last_update_date: "2025-01-01".parse()?,
+    published_date: "1900-01-01".parse()?,
     contents: vec![
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),
@@ -124,6 +125,7 @@ pub fn minimal_blog_post2() -> Result<BlogPost> {
     },
     post_date: "2025-02-01".parse()?,
     last_update_date: "2025-02-01".parse()?,
+    published_date: "1900-01-01".parse()?,
     contents: vec![
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),
@@ -155,6 +157,7 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
     },
     post_date: "2025-03-01".parse()?,
     last_update_date: "2025-03-01".parse()?,
+    published_date: "1900-01-01".parse()?,
     contents: vec![
       BlogPostContent::H2(H2Block {
         id: Uuid::new_v4(),

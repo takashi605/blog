@@ -11,6 +11,7 @@ pub fn api_create_blog_post_request_to_create_dto(request: api::CreateBlogPostRe
     thumbnail: api_create_image_request_to_create_dto(request.thumbnail),
     post_date: Some(request.post_date),
     last_update_date: Some(request.last_update_date),
+    published_date: Some(request.published_date),
     contents: request.contents.into_iter().map(api_create_content_request_to_create_dto).collect(),
   }
 }

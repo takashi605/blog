@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use chrono::NaiveDate;
 use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
@@ -31,6 +32,7 @@ fn convert_view_latest_blog_post_item_dto_to_blog_post(dto: ViewLatestBlogPostIt
     thumbnail: convert_view_latest_image_dto_to_api(dto.thumbnail),
     post_date: dto.post_date,
     last_update_date: dto.last_update_date,
+    published_date: NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(),
     contents: convert_view_latest_contents_dto_to_api(dto.contents),
   })
 }

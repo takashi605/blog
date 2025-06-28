@@ -17,6 +17,7 @@ pub fn view_blog_post_dto_to_response(dto: BlogPostDTO) -> Result<BlogPost> {
     thumbnail: convert_image_dto_to_api(dto.thumbnail),
     post_date: dto.post_date,
     last_update_date: dto.last_update_date,
+    published_date: dto.published_date.date_naive(),
     contents: convert_contents_dto_to_api(dto.contents),
   })
 }

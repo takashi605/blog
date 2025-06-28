@@ -28,6 +28,7 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
     thumbnail_image_id: thumbnail.get_id(),
     post_date: entity.get_post_date(),
     last_update_date: entity.get_last_update_date(),
+    published_at: entity.get_published_date(),
   };
 
   // ContentRecordを作成
@@ -204,8 +205,10 @@ mod tests {
 
     // 日付を設定
     let post_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+    let published_date = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap();
     blog_post.set_post_date(post_date);
     blog_post.set_last_update_date(post_date);
+    blog_post.set_published_date(published_date);
 
     // H2見出しを追加
     let h2_content = ContentEntity::h2(Uuid::new_v4(), "見出し2".to_string());
@@ -245,6 +248,7 @@ mod tests {
     assert_eq!(blog_post_record.title, "テスト記事");
     assert_eq!(blog_post_record.post_date, post_date);
     assert_eq!(blog_post_record.last_update_date, post_date);
+    assert_eq!(blog_post_record.published_at, published_date);
     assert_eq!(blog_post_record.thumbnail_image_id, thumbnail_id);
 
     // ContentRecordsの検証（3つのコンテンツ）

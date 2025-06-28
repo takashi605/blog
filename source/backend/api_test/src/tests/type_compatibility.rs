@@ -41,6 +41,7 @@ mod tests {
             },
             "postDate": "2024-01-01",
             "lastUpdateDate": "2024-01-01",
+            "publishedDate": "1900-01-01",
             "contents": [
                 {
                     "type": "paragraph",
@@ -210,6 +211,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![],
     };
 
@@ -287,6 +289,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![BlogPostContent::Code(CodeBlock {
         id: Uuid::new_v4(),
         title: "Rustのサンプル".to_string(),
@@ -320,6 +323,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![
         BlogPostContent::H2(H2Block {
           id: Uuid::new_v4(),

@@ -255,7 +255,9 @@ function ToolBarPlugin() {
       </div>
       <div className={styles.toolBarButtons}>
         <CommonModalProvider>
-          <CommonModalOpenButton>画像を挿入</CommonModalOpenButton>
+          <CommonModalOpenButton buttonClassName={styles.compactButton}>
+            画像を挿入
+          </CommonModalOpenButton>
           <ImageInsertModal />
         </CommonModalProvider>
       </div>

@@ -3,9 +3,10 @@ import { CldImage } from 'next-cloudinary';
 type CldFillImageProps = {
   path: string;
   alt: string;
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
 };
 
-function CldFillImage({ path, alt }: CldFillImageProps) {
+function CldFillImage({ path, alt, objectFit }: CldFillImageProps) {
   return (
     <CldImage
       src={path}
@@ -19,7 +20,7 @@ function CldFillImage({ path, alt }: CldFillImageProps) {
       // ci テスト環境で fill モード Image を使った場合、画像要素が他の要素に覆いかぶさってしまう
       // この問題に対処するため、 pointer-events を none に設定
       // なお、ci 環境以外だと問題なく、再現も難しいため根本的な原因は不明
-      style={{ objectFit: 'contain', pointerEvents: 'none' }}
+      style={{ objectFit: objectFit || 'contain', pointerEvents: 'none' }}
       sizes="100%"
     />
   );

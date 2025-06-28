@@ -3,25 +3,28 @@ pub mod dto_mapper;
 
 use std::sync::Arc;
 
+use crate::application::services::latest_blog_posts_service::LatestBlogPostsService;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 use dto::ViewLatestBlogPostsDTO;
 use dto_mapper::blog_post_entities_to_view_latest_dto;
 
 pub struct ViewLatestBlogPostsUseCase {
-  repository: Arc<dyn BlogPostRepository>,
+  latest_blog_posts_service: LatestBlogPostsService,
 }
 
 impl ViewLatestBlogPostsUseCase {
   pub fn new(repository: Arc<dyn BlogPostRepository>) -> Self {
-    Self { repository }
+    Self {
+      latest_blog_posts_service: LatestBlogPostsService::new(repository),
+    }
   }
 
   pub async fn execute(&self, quantity: Option<u32>) -> anyhow::Result<ViewLatestBlogPostsDTO> {
-    // リポジトリから最新記事を取得
-    let blog_post_entities = self.repository.find_latests(quantity).await?;
+    // サービスから公開済み新着記事を取得
+    let published_entities = self.latest_blog_posts_service.get_published_latest_posts(quantity).await?;
 
     // エンティティをDTOに変換
-    let dto = blog_post_entities_to_view_latest_dto(blog_post_entities)?;
+    let dto = blog_post_entities_to_view_latest_dto(published_entities)?;
 
     Ok(dto)
   }

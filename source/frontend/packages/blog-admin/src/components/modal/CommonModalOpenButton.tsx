@@ -14,6 +14,8 @@ type CommonModalOpenButtonProps = {
   openFailMessage?: string;
   // render props でボタンをカスタマイズする関数
   renderButton?: (props: RenderButtonProps) => React.ReactNode;
+  // ボタンに追加するクラス名
+  buttonClassName?: string;
 };
 
 function CommonModalOpenButton({
@@ -21,6 +23,7 @@ function CommonModalOpenButton({
   openFailMessage = 'モーダルを開けませんでした',
   children,
   renderButton,
+  buttonClassName,
 }: CommonModalOpenButtonProps) {
   const [failOpen, setFailOpen] = useState(false);
   const { openModal } = useCommonModalContext();
@@ -41,7 +44,7 @@ function CommonModalOpenButton({
         renderButton({ onClick: openModalHandler, children })
       ) : (
         <button
-          className={styles.button}
+          className={`${styles.button}${buttonClassName ? ` ${buttonClassName}` : ''}`}
           type="button"
           onClick={openModalHandler}
         >

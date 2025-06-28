@@ -129,6 +129,7 @@ mod tests {
       },
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     }
   }

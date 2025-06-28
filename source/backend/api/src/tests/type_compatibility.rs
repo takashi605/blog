@@ -18,6 +18,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![],
     };
 
@@ -60,6 +61,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents,
     };
 
@@ -130,6 +132,7 @@ mod tests {
       },
       post_date: db_post_date,
       last_update_date: db_update_date,
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![],
     };
 
@@ -183,6 +186,7 @@ mod tests {
       },
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
+      published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
       contents: vec![],
     };
 

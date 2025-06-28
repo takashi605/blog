@@ -192,6 +192,8 @@ export interface components {
             lastUpdateDate: string;
             /** Format: date */
             postDate: string;
+            /** Format: date */
+            publishedDate: string;
             thumbnail: components["schemas"]["Image"];
             title: string;
         };
@@ -240,7 +242,9 @@ export interface components {
             lastUpdateDate: string;
             /** Format: date */
             postDate: string;
-            thumbnail: components["schemas"]["CreateImageRequest"];
+            /** Format: date */
+            publishedDate: string;
+            thumbnail: components["schemas"]["CreateImageContentRequest"];
             title: string;
         };
         CreateCodeBlockRequest: {
@@ -257,9 +261,12 @@ export interface components {
         CreateImageBlockRequest: {
             path: string;
         };
-        CreateImageRequest: {
+        CreateImageContentRequest: {
             /** Format: uuid */
             id?: string | null;
+            path: string;
+        };
+        CreateImageRequest: {
             path: string;
         };
         CreateParagraphBlockRequest: {
@@ -320,7 +327,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Image"];
+                "application/json": components["schemas"]["CreateImageRequest"];
             };
         };
         responses: {

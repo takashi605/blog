@@ -37,6 +37,15 @@ impl PopularPostSetEntity {
   }
 }
 
+impl TryFrom<Vec<BlogPostEntity>> for PopularPostSetEntity {
+  type Error = anyhow::Error;
+
+  fn try_from(value: Vec<BlogPostEntity>) -> Result<Self, Self::Error> {
+    let arr: [BlogPostEntity; 3] = value.try_into().map_err(|_| anyhow::anyhow!("人気記事は必ず3件です"))?;
+    Ok(Self::new(arr))
+  }
+}
+
 #[cfg(test)]
 mod tests {
   use super::*;
@@ -95,5 +104,61 @@ mod tests {
     assert_eq!(retrieved_posts[0].get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap());
     assert_eq!(retrieved_posts[1].get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000002").unwrap());
     assert_eq!(retrieved_posts[2].get_id(), Uuid::parse_str("00000000-0000-0000-0000-000000000003").unwrap());
+  }
+
+  #[test]
+  fn can_create_popular_post_set_from_vec_with_three_posts() {
+    let posts = vec![
+      create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000003", "記事3"),
+    ];
+
+    let result = PopularPostSetEntity::try_from(posts);
+
+    assert!(result.is_ok());
+    let popular_post_set = result.unwrap();
+    let all_posts = popular_post_set.get_all_posts();
+    assert_eq!(all_posts[0].get_title_text(), "記事1");
+    assert_eq!(all_posts[1].get_title_text(), "記事2");
+    assert_eq!(all_posts[2].get_title_text(), "記事3");
+  }
+
+  #[test]
+  fn error_when_creating_popular_post_set_from_vec_with_two_posts() {
+    let posts = vec![
+      create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
+    ];
+
+    let result = PopularPostSetEntity::try_from(posts);
+
+    assert!(result.is_err());
+    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件です"));
+  }
+
+  #[test]
+  fn error_when_creating_popular_post_set_from_vec_with_four_posts() {
+    let posts = vec![
+      create_test_blog_post("00000000-0000-0000-0000-000000000001", "記事1"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000002", "記事2"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000003", "記事3"),
+      create_test_blog_post("00000000-0000-0000-0000-000000000004", "記事4"),
+    ];
+
+    let result = PopularPostSetEntity::try_from(posts);
+
+    assert!(result.is_err());
+    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件です"));
+  }
+
+  #[test]
+  fn error_when_creating_popular_post_set_from_empty_vec() {
+    let posts = vec![];
+
+    let result = PopularPostSetEntity::try_from(posts);
+
+    assert!(result.is_err());
+    assert!(result.unwrap_err().to_string().contains("人気記事は必ず3件です"));
   }
 }

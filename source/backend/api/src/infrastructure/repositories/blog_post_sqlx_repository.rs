@@ -98,7 +98,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
     // 1. ブログ記事の挿入
-    insert_blog_post_with_published_at(&mut *tx, blog_post_record, chrono::Utc::now().naive_utc()).await.context("ブログ記事の挿入に失敗しました")?;
+    insert_blog_post_with_published_at(&mut *tx, blog_post_record).await.context("ブログ記事の挿入に失敗しました")?;
 
     // 2. コンテンツの挿入
     for (post_content_record, content_block_record) in content_records {
@@ -377,8 +377,10 @@ mod tests {
 
     // 日付を設定
     let post_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
+    let published_date = NaiveDate::from_ymd_opt(2024, 1, 16).unwrap();
     blog_post.set_post_date(post_date);
     blog_post.set_last_update_date(post_date);
+    blog_post.set_published_date(published_date);
 
     // H2見出しを追加
     let h2_content = ContentEntity::h2(uuid::Uuid::new_v4(), "テスト見出し".to_string());
@@ -506,6 +508,7 @@ mod tests {
     assert_eq!(found_blog_post.get_title_text(), original_blog_post.get_title_text());
     assert_eq!(found_blog_post.get_post_date(), original_blog_post.get_post_date());
     assert_eq!(found_blog_post.get_last_update_date(), original_blog_post.get_last_update_date());
+    assert_eq!(found_blog_post.get_published_date(), original_blog_post.get_published_date());
 
     // コンテンツ数が一致することを確認
     assert_eq!(found_blog_post.get_contents().len(), original_blog_post.get_contents().len());

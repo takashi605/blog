@@ -61,6 +61,7 @@ mod tests {
         },
         post_date: NaiveDate::from_ymd_opt(2025, 3, 1).unwrap(),
         last_update_date: NaiveDate::from_ymd_opt(2025, 3, 2).unwrap(),
+        published_date: NaiveDate::from_ymd_opt(1900, 1, 1).unwrap(),
         contents: vec![],
       }
     }
