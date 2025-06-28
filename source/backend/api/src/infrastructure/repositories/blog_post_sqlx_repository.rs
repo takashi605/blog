@@ -98,7 +98,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
     // 1. ブログ記事の挿入
-    insert_blog_post_with_published_at(&mut *tx, blog_post_record, chrono::Utc::now().naive_utc()).await.context("ブログ記事の挿入に失敗しました")?;
+    insert_blog_post_with_published_at(&mut *tx, blog_post_record).await.context("ブログ記事の挿入に失敗しました")?;
 
     // 2. コンテンツの挿入
     for (post_content_record, content_block_record) in content_records {
