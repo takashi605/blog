@@ -1,4 +1,5 @@
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+use crate::domain::blog_domain::errors::blog_domain_error::BlogDomainError;
 
 /// 公開記事閲覧サービス
 ///
@@ -17,13 +18,15 @@ impl PublishedPostViewerService {
   /// * `blog_post` - 閲覧対象のブログ記事エンティティ
   ///
   /// # Returns
-  /// * `Some(BlogPostEntity)` - 記事が公開済みの場合、記事エンティティを返却
-  /// * `None` - 記事が未公開の場合、Noneを返却
-  pub fn view_published_post(&self, blog_post: BlogPostEntity) -> Option<BlogPostEntity> {
+  /// * `Ok(BlogPostEntity)` - 記事が公開済みの場合、記事エンティティを返却
+  /// * `Err(BlogDomainError::UnpublishedPostAccess)` - 記事が未公開の場合、エラーを返却
+  pub fn view_published_post(&self, blog_post: BlogPostEntity) -> Result<BlogPostEntity, BlogDomainError> {
     if blog_post.is_published() {
-      Some(blog_post)
+      Ok(blog_post)
     } else {
-      None
+      Err(BlogDomainError::UnpublishedPostAccess {
+        post_title: blog_post.get_title_text().to_string(),
+      })
     }
   }
 }
@@ -40,11 +43,11 @@ mod tests {
   }
 
   #[test]
-  fn returns_some_when_post_is_published() {
+  fn returns_ok_when_post_is_published() {
     // Arrange
     let service = PublishedPostViewerService::new();
     let mut blog_post = create_test_blog_post("00000000-0000-0000-0000-000000000001", "公開済み記事");
-    
+
     // 過去の日付で公開日を設定（公開済み状態）
     let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
     blog_post.set_published_date(past_date);
@@ -53,17 +56,17 @@ mod tests {
     let result = service.view_published_post(blog_post);
 
     // Assert
-    assert!(result.is_some());
+    assert!(result.is_ok());
     let returned_post = result.unwrap();
     assert_eq!(returned_post.get_title_text(), "公開済み記事");
   }
 
   #[test]
-  fn returns_none_when_post_is_not_published() {
+  fn returns_error_when_post_is_not_published() {
     // Arrange
     let service = PublishedPostViewerService::new();
     let mut blog_post = create_test_blog_post("00000000-0000-0000-0000-000000000002", "未公開記事");
-    
+
     // 未来の日付で公開日を設定（未公開状態）
     let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap();
     blog_post.set_published_date(future_date);
@@ -72,15 +75,23 @@ mod tests {
     let result = service.view_published_post(blog_post);
 
     // Assert
-    assert!(result.is_none());
+    assert!(result.is_err());
+    let error = result.unwrap_err();
+    assert_eq!(
+      error,
+      BlogDomainError::UnpublishedPostAccess {
+        post_title: "未公開記事".to_string(),
+      }
+    );
+    assert_eq!(error.to_string(), "未公開記事「未公開記事」にアクセスすることはできません");
   }
 
   #[test]
-  fn returns_some_when_post_is_published_today() {
+  fn returns_ok_when_post_is_published_today() {
     // Arrange
     let service = PublishedPostViewerService::new();
     let blog_post = create_test_blog_post("00000000-0000-0000-0000-000000000003", "今日公開記事");
-    
+
     // 今日の日付はデフォルトで設定されるため、そのままテスト
     // new()で作成した記事は published_date が今日に設定される
 
@@ -88,7 +99,7 @@ mod tests {
     let result = service.view_published_post(blog_post);
 
     // Assert
-    assert!(result.is_some());
+    assert!(result.is_ok());
     let returned_post = result.unwrap();
     assert_eq!(returned_post.get_title_text(), "今日公開記事");
   }
@@ -105,7 +116,7 @@ mod tests {
     let result = service.view_published_post(blog_post);
 
     // Assert
-    assert!(result.is_some());
+    assert!(result.is_ok());
     let returned_post = result.unwrap();
     assert_eq!(returned_post.get_id(), original_id);
     assert_eq!(returned_post.get_title_text(), original_title);
