@@ -36,15 +36,7 @@ impl LatestBlogPostsService {
 
         // 公開記事閲覧サービスで公開済み記事のみをフィルタ
         let published_post_viewer = PublishedPostViewerService::new();
-        let mut published_posts = Vec::new();
-
-        for blog_post in blog_post_entities {
-            // 公開状態をチェックし、公開済みの記事のみを収集
-            if let Ok(published_post) = published_post_viewer.view_published_post(blog_post) {
-                published_posts.push(published_post);
-            }
-            // 未公開記事の場合はエラーが返されるが、スキップして続行
-        }
+        let published_posts = published_post_viewer.filter_published_posts(blog_post_entities);
 
         Ok(published_posts)
     }
