@@ -13,6 +13,7 @@ import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
+import PublishedDatePicker from './form/PublishedDatePicker';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
 
@@ -82,18 +83,7 @@ function CreateBlogPostForm() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className={styles.buttons}>
-            <div className={styles.publishedDate}>
-              <label htmlFor="publishedDate">公開日</label>
-              <input
-                type="date"
-                id="publishedDate"
-                role="combobox"
-                aria-label="公開日"
-                aria-expanded="false"
-                aria-controls="publishedDate"
-                {...register('publishedDate')}
-              />
-            </div>
+            <PublishedDatePicker />
 
             <CommonModalProvider>
               <ThumbnailPickModalWithOpenButton />

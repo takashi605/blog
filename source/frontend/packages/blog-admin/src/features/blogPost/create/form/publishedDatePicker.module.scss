@@ -1,0 +1,69 @@
+.publishedDate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+  label {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: #ffffff;
+    padding: 0 6px;
+    font-weight: 600;
+    font-size: 11px;
+    color: #2c3e50;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 2;
+    transition: all 0.3s ease;
+  }
+  
+  input[type="date"] {
+    padding: 10px 14px;
+    border: 2px solid #e3e8ef;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 160px;
+    position: relative;
+    
+    &:hover {
+      border-color: #3498db;
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1), 0 4px 16px rgba(52, 152, 219, 0.2);
+      transform: translateY(-1px);
+    }
+  }
+  
+  &:focus-within {
+    label {
+      color: #2980b9;
+    }
+  }
+  
+  // カレンダーアイコンのスタイリング
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%233498db'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd' /%3e%3c/svg%3e");
+    background-size: 18px 18px;
+    background-position: center;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
