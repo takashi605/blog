@@ -5,7 +5,7 @@ import { useBlogPostList } from '../list/useBlogPostList';
 import styles from './PostsManagement.module.scss';
 
 export default function PostsManagement() {
-  const { getAllBlogPosts } = useBlogPostList();
+  const { getAllBlogPosts } = useBlogPostList({ includeUnpublished: true });
   const posts = getAllBlogPosts();
 
   return (

@@ -10,7 +10,7 @@ type PostsCheckboxesProps = {
 };
 
 function PostCheckboxes({ onSubmit, validate }: PostsCheckboxesProps) {
-  const { getAllBlogPosts } = useBlogPostList();
+  const { getAllBlogPosts } = useBlogPostList({ includeUnpublished: false });
   const {
     register,
     handleSubmit,

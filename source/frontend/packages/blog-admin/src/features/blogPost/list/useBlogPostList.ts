@@ -2,7 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import type { BlogPost } from 'shared-lib/src/api';
 import { api, HttpError } from 'shared-lib/src/api';
 
-export function useBlogPostList() {
+interface UseBlogPostListOptions {
+  includeUnpublished?: boolean;
+}
+
+export function useBlogPostList(options: UseBlogPostListOptions = {}) {
+  const { includeUnpublished = true } = options;
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   const getAllBlogPosts = useCallback(() => {
@@ -18,7 +23,11 @@ export function useBlogPostList() {
 
   const fetchBlogPosts = useCallback(async () => {
     try {
-      const response = await api.get('/api/admin/blog/posts');
+      const response = await api.get('/api/admin/blog/posts', {
+        query: {
+          include_unpublished: includeUnpublished,
+        },
+      });
       updateBlogPosts(response);
     } catch (error) {
       console.error('記事一覧の取得に失敗しました:', error);
@@ -31,7 +40,7 @@ export function useBlogPostList() {
       // エラー時は空配列を設定
       updateBlogPosts([]);
     }
-  }, [updateBlogPosts]);
+  }, [updateBlogPosts, includeUnpublished]);
 
   useEffect(() => {
     fetchBlogPosts();

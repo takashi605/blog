@@ -14,6 +14,7 @@ use utoipa::OpenApi;
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::get_popular_blog_posts,
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::put_popular_blog_posts,
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::create_blog_post,
+    crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::get_admin_blog_posts,
     crate::infrastructure::server::handlers::image_handlers::handle_funcs::get_images,
     crate::infrastructure::server::handlers::image_handlers::handle_funcs::create_image,
   ),
