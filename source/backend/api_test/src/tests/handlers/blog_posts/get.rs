@@ -90,6 +90,27 @@ mod tests {
     Ok(())
   }
 
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_blog_posts() -> Result<()> {
+    let url = "http://localhost:8001/admin/blog/posts";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_posts: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    
+    // 50年後記事が含まれていることを確認
+    let future_post_exists = actual_blog_posts.iter().any(|post| post.title == "50年後記事1");
+    assert!(future_post_exists, "50年後記事1が取得結果に含まれていません");
+    
+    // 既存の公開記事も含まれていることを確認
+    let regular_post_exists = actual_blog_posts.iter().any(|post| post.title == "初めての技術スタックへの挑戦");
+    assert!(regular_post_exists, "通常の記事が取得結果に含まれていません");
+    
+    // 複数の記事が取得されることを確認
+    assert!(actual_blog_posts.len() >= 4, "4件以上の記事が取得されるべきです。実際: {}", actual_blog_posts.len());
+
+    Ok(())
+  }
+
   mod helper {
     use common::types::api::{CodeBlock, H3Block, Link};
 
