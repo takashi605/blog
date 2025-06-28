@@ -33,9 +33,10 @@ pub fn convert_to_blog_post_entity(
   // サムネイル画像を設定
   blog_post.set_thumbnail(thumbnail_record.id, thumbnail_record.file_path);
 
-  // 投稿日と最終更新日を設定
+  // 投稿日と最終更新日、公開日を設定
   blog_post.set_post_date(blog_post_record.post_date);
   blog_post.set_last_update_date(blog_post_record.last_update_date);
+  blog_post.set_published_date(blog_post_record.published_at);
 
   // コンテンツを順番通りに変換・追加
   let mut sorted_contents = content_records;
