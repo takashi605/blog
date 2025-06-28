@@ -9,7 +9,9 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
 import { BlogPostContentsSetterContext } from '../CreateBlogPostForm';
+import { blogPostContentsToLexicalNodes } from '../helper/blogPostContentToLexicalNode';
 import { lexicalNodeToBlogPostContent } from '../helper/lexicalNodeToBlogPostContent';
+import { mockBlogPost } from '../helper/mockBlogPostData';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { validateUrl } from './helper/url';
@@ -31,8 +33,20 @@ function BlogPostEditor() {
     });
   };
 
+  // モックデータからLexicalの初期エディタステートを作成
+  const prepopulatedRichText = () => {
+    const root = $getRoot();
+    if (root.getChildrenSize() === 0) {
+      // モックデータのcontentsをLexicalNodeに変換
+      const nodes = blogPostContentsToLexicalNodes(mockBlogPost.contents);
+      // ルートに直接追加（$insertNodesではなくroot.appendを使用）
+      root.clear();
+      root.append(...nodes);
+    }
+  };
+
   return (
-    <CustomizedLexicalComposer>
+    <CustomizedLexicalComposer initialEditorState={prepopulatedRichText}>
       <div className={styles.toolBarWrapper}>
         <ToolBarPlugin />
       </div>
