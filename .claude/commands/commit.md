@@ -18,7 +18,7 @@
 
 ## このコマンドの機能
 
-1. **プリコミットチェック** - **重要**`--no-verify` オプションが指定されていない限り、以下のチェックを実行する：
+1. **プリコミットチェック** - **重要 このフェーズは必ず実行する**`--no-verify` オプションが指定されていない限り、以下のチェックを実行する：
    - api 仕様( @source/backend/api_test )を変更した場合、　`make generate-types` を実行して api 型を更新
    - バックエンドコード( @source/backend )を変更した場合、`make api-fix` -> `make api-test-run-include-ignored` を実行してコード品質を確保
    - フロントエンドコード( @source/frontend )を変更した場合、`make frontend-fix` → `make frontend-test` を実行してコード品質を確保
