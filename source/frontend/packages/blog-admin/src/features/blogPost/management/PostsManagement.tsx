@@ -37,6 +37,9 @@ export default function PostsManagement() {
               <span data-testid="post-date" className={styles.postDate}>
                 {formatDate(post.postDate)}
               </span>
+              <Link href={`/posts/${post.id}/edit`}>
+                <button type="button">編集</button>
+              </Link>
             </div>
             {post.thumbnail && (
               <CldImage
