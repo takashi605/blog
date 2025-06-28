@@ -1,7 +1,7 @@
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use anyhow::Result;
-use chrono::Utc;
+use chrono::{TimeZone, Utc};
 
 use super::dto::{
   ViewLatestBlogPostCodeBlockDTO, ViewLatestBlogPostContentDTO, ViewLatestBlogPostH2BlockDTO, ViewLatestBlogPostH3BlockDTO, ViewLatestBlogPostImageBlockDTO,
@@ -48,8 +48,10 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
     post_date: entity.get_post_date(),
     last_update_date: entity.get_last_update_date(),
     contents,
-    published_date: Utc::now(), // 現在時刻を設定（実際の実装では適切な値を設定）
-    is_public: true,            // 公開済みの記事のみ取得するため常にtrue
+    published_date: Utc.from_utc_datetime(
+      &entity.get_published_date().and_hms_opt(0, 0, 0).unwrap(),
+    ),
+    is_public: true, // 公開済みの記事のみ取得するため常にtrue
   })
 }
 
