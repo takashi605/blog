@@ -3,9 +3,11 @@ import { useRouter } from 'next/navigation';
 import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import type { BlogPost, BlogPostContent } from 'shared-lib/src/api';
+import type {
+  BlogPostContent,
+  CreateBlogPostRequest,
+} from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
-import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
@@ -49,13 +51,13 @@ function CreateBlogPostForm() {
       .replace('/', '-');
 
     // BlogPost型に合わせてデータを構築
-    const blogPost: BlogPost = {
-      id: createUUIDv4(),
+    const blogPost: CreateBlogPostRequest = {
       title: formValues.title,
       thumbnail: formValues.thumbnail,
       postDate: today,
       lastUpdateDate: today,
       contents: blogPostContents,
+      publishedDate: today,
     };
 
     try {

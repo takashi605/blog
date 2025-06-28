@@ -26,6 +26,7 @@ const mockBlogPosts: BlogPost[] = [
     thumbnail: { id: 'thumb-1', path: 'https://example.com/thumb1.jpg' },
     postDate: '2024-01-01',
     lastUpdateDate: '2024-01-01',
+    publishedDate: '2024-01-01',
     contents: [],
   },
   {
@@ -34,6 +35,7 @@ const mockBlogPosts: BlogPost[] = [
     thumbnail: { id: 'thumb-2', path: 'https://example.com/thumb2.jpg' },
     postDate: '2024-01-02',
     lastUpdateDate: '2024-01-02',
+    publishedDate: '2024-01-02',
     contents: [],
   },
   {
@@ -42,6 +44,7 @@ const mockBlogPosts: BlogPost[] = [
     thumbnail: { id: 'thumb-3', path: 'https://example.com/thumb3.jpg' },
     postDate: '2024-01-03',
     lastUpdateDate: '2024-01-03',
+    publishedDate: '2024-01-03',
     contents: [],
   },
 ];

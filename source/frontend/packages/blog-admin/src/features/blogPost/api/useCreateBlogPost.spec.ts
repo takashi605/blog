@@ -46,6 +46,7 @@ describe('useCreateBlogPost', () => {
     },
     postDate: '2024-01-01',
     lastUpdateDate: '2024-01-01',
+    publishedDate: '2024-01-01',
     contents: [
       {
         type: 'paragraph',
