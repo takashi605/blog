@@ -22,9 +22,13 @@ export type CreateBlogPostFormData = {
     id: string;
     path: string;
   };
+  publishedDate: string;
 };
 
 function CreateBlogPostForm() {
+  // 今日の日付をYYYY-MM-DD形式で取得
+  const today = new Date().toISOString().split('T')[0];
+
   const form = useForm<CreateBlogPostFormData>({
     defaultValues: {
       title: '',
@@ -32,6 +36,7 @@ function CreateBlogPostForm() {
         id: '',
         path: '',
       },
+      publishedDate: today,
     },
   });
   const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
@@ -57,7 +62,7 @@ function CreateBlogPostForm() {
       postDate: today,
       lastUpdateDate: today,
       contents: blogPostContents,
-      publishedDate: today,
+      publishedDate: formValues.publishedDate,
     };
 
     try {
@@ -93,6 +98,19 @@ function CreateBlogPostForm() {
               className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
               id="title"
               {...register('title')}
+            />
+          </div>
+
+          <div className={styles.publishedDate}>
+            <label htmlFor="publishedDate">公開日</label>
+            <input
+              type="date"
+              id="publishedDate"
+              role="combobox"
+              aria-label="公開日"
+              aria-expanded="false"
+              aria-controls="publishedDate"
+              {...register('publishedDate')}
             />
           </div>
         </form>
