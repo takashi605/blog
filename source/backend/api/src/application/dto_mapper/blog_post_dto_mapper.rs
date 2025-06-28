@@ -9,7 +9,7 @@ use chrono::{TimeZone, Utc};
 pub fn convert_to_blog_post_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
   // TODO エンティティに公開状態を追加したら、ここで設定する
   // NaiveDateをDateTime<Utc>に変換（UTC 00:00:00として）
-  let published_date = Utc.from_utc_datetime(&blog_post.get_post_date().and_hms_opt(0, 0, 0).unwrap());
+  let published_date = Utc.from_utc_datetime(&blog_post.get_published_date().and_hms_opt(0, 0, 0).unwrap());
 
   let thumbnail = convert_thumbnail(&blog_post);
   let contents = convert_contents(&blog_post);
