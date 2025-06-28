@@ -82,29 +82,33 @@ function CreateBlogPostForm() {
           role="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className={styles.publishedDateContainer}>
-            <PublishedDatePicker />
-          </div>
-
-          <div className={styles.buttons}>
-            <CommonModalProvider>
-              <ThumbnailPickModalWithOpenButton />
-            </CommonModalProvider>
-
-            <button className={styles.submitButton} type="submit">
-              投稿
-            </button>
-          </div>
-
           {error && <p role="alert">{error}</p>}
 
-          <div className={styles.title}>
-            <label htmlFor="title">タイトル</label>
-            <input
-              className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
-              id="title"
-              {...register('title')}
-            />
+          <div className={styles.formHeader}>
+            <div className={styles.title}>
+              <label htmlFor="title">タイトル</label>
+              <input
+                className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
+                id="title"
+                {...register('title')}
+              />
+            </div>
+
+            <div className={styles.controlsContainer}>
+              <div className={styles.publishedDateContainer}>
+                <PublishedDatePicker />
+              </div>
+
+              <div className={styles.buttons}>
+                <CommonModalProvider>
+                  <ThumbnailPickModalWithOpenButton />
+                </CommonModalProvider>
+
+                <button className={styles.submitButton} type="submit">
+                  投稿
+                </button>
+              </div>
+            </div>
           </div>
         </form>
 
