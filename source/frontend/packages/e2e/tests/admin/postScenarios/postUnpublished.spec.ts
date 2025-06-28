@@ -196,3 +196,139 @@ Then(
     await expect(unpublishedArticleTitle).not.toBeVisible();
   },
 );
+
+When('【正常系 未公開投稿】記事管理ページにアクセスする', async function () {
+  if (!process.env.ADMIN_URL) {
+    throw new Error('ADMIN_URL 環境変数が設定されていません');
+  }
+  const page = playwrightHelper.getPage();
+  await page.goto(`${process.env.ADMIN_URL}/posts`, { timeout: 20000 });
+});
+
+Then(
+  '【正常系 未公開投稿】記事管理ページに未公開の記事が表示されていることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    // 未公開記事のタイトルが表示されていることを確認
+    const unpublishedArticleTitle = page.getByText('テスト未公開記事');
+    await expect(unpublishedArticleTitle).toBeVisible({ timeout: 10000 });
+  },
+);
+
+When(
+  '【正常系 未公開投稿】人気記事選択ページにアクセスし、「人気記事を選択」ボタンを押下する',
+  async function () {
+    if (!process.env.ADMIN_URL) {
+      throw new Error('ADMIN_URL 環境変数が設定されていません');
+    }
+    const page = playwrightHelper.getPage();
+    await page.goto(`${process.env.ADMIN_URL}/posts/popular`, { timeout: 20000 });
+
+    const selectPopularButton = page.getByRole('button', { name: '人気記事を選択' });
+    await selectPopularButton.click();
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】人気記事選択モーダルが表示されることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】未公開の記事が人気記事選択モーダルに表示されていないことを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    const unpublishedArticleTitle = modal.getByText('テスト未公開記事');
+    await expect(unpublishedArticleTitle).not.toBeVisible();
+  },
+);
+
+When(
+  '【正常系 未公開投稿】モーダルを閉じて、ピックアップ記事選択ページにアクセスし、「ピックアップ記事を選択」ボタンを押下する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    // モーダルを閉じる
+    const modal = page.getByRole('dialog');
+    const closeButton = modal.getByRole('button', { name: '閉じる' });
+    await closeButton.click();
+
+    if (!process.env.ADMIN_URL) {
+      throw new Error('ADMIN_URL 環境変数が設定されていません');
+    }
+    await page.goto(`${process.env.ADMIN_URL}/posts/pickup`, { timeout: 20000 });
+
+    const selectPickupButton = page.getByRole('button', { name: 'ピックアップ記事を選択' });
+    await selectPickupButton.click();
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】ピックアップ記事選択モーダルが表示されることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】未公開の記事がピックアップ記事選択モーダルに表示されていないことを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    const unpublishedArticleTitle = modal.getByText('テスト未公開記事');
+    await expect(unpublishedArticleTitle).not.toBeVisible();
+  },
+);
+
+When(
+  '【正常系 未公開投稿】モーダルを閉じて、トップテックピック記事選択ページにアクセスし、「トップテックピック記事を選択」ボタンを押下する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    // モーダルを閉じる
+    const modal = page.getByRole('dialog');
+    const closeButton = modal.getByRole('button', { name: '閉じる' });
+    await closeButton.click();
+
+    if (!process.env.ADMIN_URL) {
+      throw new Error('ADMIN_URL 環境変数が設定されていません');
+    }
+    await page.goto(`${process.env.ADMIN_URL}/posts/top-tech-pick`, { timeout: 20000 });
+
+    const selectTopTechPickButton = page.getByRole('button', { name: 'トップテックピック記事を選択' });
+    await selectTopTechPickButton.click();
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】トップテックピック記事選択モーダルが表示されることを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+  },
+);
+
+Then(
+  '【正常系 未公開投稿】未公開の記事がトップテックピック記事選択モーダルに表示されていないことを確認する',
+  async function () {
+    const page = playwrightHelper.getPage();
+
+    const modal = page.getByRole('dialog');
+    const unpublishedArticleTitle = modal.getByText('テスト未公開記事');
+    await expect(unpublishedArticleTitle).not.toBeVisible();
+  },
+);
