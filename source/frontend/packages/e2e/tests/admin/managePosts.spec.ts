@@ -84,6 +84,29 @@ Then(
   },
 );
 
+Then(
+  '【記事管理 一覧】各記事に対応した編集ボタンが存在する',
+  async function () {
+    const postsSection = new PostsManageSection();
+    const postTitles = postsSection.getPostTitles();
+    const editButtons = postsSection.getEditButtons();
+    
+    const titleCount = await postTitles.count();
+    const editButtonCount = await editButtons.count();
+    
+    // 記事タイトル数と編集ボタン数が等しいことを確認
+    expect(editButtonCount).toBe(titleCount);
+    
+    // 全ての編集ボタンが表示されていることを確認
+    for (let i = 0; i < editButtonCount; i++) {
+      const editButton = editButtons.nth(i);
+      await expect(editButton).toBeVisible();
+      const buttonText = await editButton.textContent();
+      expect(buttonText).toContain('編集');
+    }
+  },
+);
+
 Given('【記事管理 リンク】記事管理 リンクページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
@@ -250,6 +273,44 @@ Then(
   },
 );
 
+When(
+  '【記事管理 リンク】適当な記事の編集ボタンを押す',
+  async function () {
+    const postsSection = new PostsManageSection();
+    const editButtons = postsSection.getEditButtons();
+    const firstEditButton = editButtons.first();
+    await firstEditButton.click();
+  },
+);
+
+Then(
+  '【記事管理 リンク】記事編集ページに遷移する',
+  async function () {
+    const page = playwrightHelper.getPage();
+    await expect(page).toHaveURL(/\/posts\/[a-f0-9-]+\/edit/);
+  },
+);
+
+When(
+  '【記事管理 リンク】記事編集ページ内の「記事管理画面に戻る」ボタンを押す',
+  async function () {
+    const page = playwrightHelper.getPage();
+    const backButton = page.getByRole('button', { name: '記事管理画面に戻る' });
+    await backButton.click();
+  },
+);
+
+Then(
+  '【記事管理 リンク】記事編集ページから記事管理ページに遷移する',
+  async function () {
+    const page = playwrightHelper.getPage();
+    await expect(page).toHaveURL(/\/posts$/);
+    const postsSection = new PostsManageSection();
+    const postCards = postsSection.getPostCards();
+    await expect(postCards.first()).toBeVisible();
+  },
+);
+
 // ヘルパークラス
 class PostsManageSection {
   getLocator() {
@@ -275,5 +336,10 @@ class PostsManageSection {
   getThumbnailImages() {
     const postCards = this.getPostCards();
     return postCards.locator('img[alt="サムネイル画像"]');
+  }
+
+  getEditButtons() {
+    const postCards = this.getPostCards();
+    return postCards.locator('button:has-text("編集")');
   }
 }
