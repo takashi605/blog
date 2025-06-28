@@ -84,6 +84,29 @@ Then(
   },
 );
 
+Then(
+  '【記事管理 一覧】各記事に対応した編集ボタンが存在する',
+  async function () {
+    const postsSection = new PostsManageSection();
+    const postTitles = postsSection.getPostTitles();
+    const editButtons = postsSection.getEditButtons();
+    
+    const titleCount = await postTitles.count();
+    const editButtonCount = await editButtons.count();
+    
+    // 記事タイトル数と編集ボタン数が等しいことを確認
+    expect(editButtonCount).toBe(titleCount);
+    
+    // 全ての編集ボタンが表示されていることを確認
+    for (let i = 0; i < editButtonCount; i++) {
+      const editButton = editButtons.nth(i);
+      await expect(editButton).toBeVisible();
+      const buttonText = await editButton.textContent();
+      expect(buttonText).toContain('編集');
+    }
+  },
+);
+
 Given('【記事管理 リンク】記事管理 リンクページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
@@ -106,7 +129,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「記事を投稿」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const createPostButton = page.getByRole('button', { name: '記事を投稿' });
+    const createPostButton = page.getByRole('link', { name: '記事を投稿' });
     await createPostButton.click();
   },
 );
@@ -143,7 +166,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「ピックアップ記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const pickupButton = page.getByRole('button', { name: 'ピックアップ記事を選択' });
+    const pickupButton = page.getByRole('link', { name: 'ピックアップ記事を選択' });
     await pickupButton.click();
   },
 );
@@ -180,7 +203,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「人気記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const popularButton = page.getByRole('button', { name: '人気記事を選択' });
+    const popularButton = page.getByRole('link', { name: '人気記事を選択' });
     await popularButton.click();
   },
 );
@@ -217,7 +240,7 @@ When(
   '【記事管理 リンク】記事管理ページ内の「トップテック記事を選択」ボタンを押す',
   async function () {
     const page = playwrightHelper.getPage();
-    const topTechButton = page.getByRole('button', { name: 'トップテック記事を選択' });
+    const topTechButton = page.getByRole('link', { name: 'トップテック記事を選択' });
     await topTechButton.click();
   },
 );
@@ -241,6 +264,44 @@ When(
 
 Then(
   '【記事管理 リンク】トップテック記事選択ページから記事管理ページに遷移する',
+  async function () {
+    const page = playwrightHelper.getPage();
+    await expect(page).toHaveURL(/\/posts$/);
+    const postsSection = new PostsManageSection();
+    const postCards = postsSection.getPostCards();
+    await expect(postCards.first()).toBeVisible();
+  },
+);
+
+When(
+  '【記事管理 リンク】適当な記事の編集ボタンを押す',
+  async function () {
+    const postsSection = new PostsManageSection();
+    const editButtons = postsSection.getEditButtons();
+    const firstEditButton = editButtons.first();
+    await firstEditButton.click();
+  },
+);
+
+Then(
+  '【記事管理 リンク】記事編集ページに遷移する',
+  async function () {
+    const page = playwrightHelper.getPage();
+    await expect(page).toHaveURL(/\/posts\/[a-f0-9-]+\/edit/);
+  },
+);
+
+When(
+  '【記事管理 リンク】記事編集ページ内の「記事管理画面に戻る」ボタンを押す',
+  async function () {
+    const page = playwrightHelper.getPage();
+    const backButton = page.getByRole('button', { name: '記事管理画面に戻る' });
+    await backButton.click();
+  },
+);
+
+Then(
+  '【記事管理 リンク】記事編集ページから記事管理ページに遷移する',
   async function () {
     const page = playwrightHelper.getPage();
     await expect(page).toHaveURL(/\/posts$/);
@@ -275,5 +336,10 @@ class PostsManageSection {
   getThumbnailImages() {
     const postCards = this.getPostCards();
     return postCards.locator('img[alt="サムネイル画像"]');
+  }
+
+  getEditButtons() {
+    const postCards = this.getPostCards();
+    return postCards.locator('a:has-text("編集")');
   }
 }
