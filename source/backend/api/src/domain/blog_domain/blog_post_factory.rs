@@ -19,6 +19,7 @@ pub struct CreateBlogPostInput {
   pub thumbnail: Option<CreateImageInput>,
   pub post_date: Option<NaiveDate>,
   pub last_update_date: Option<NaiveDate>,
+  pub published_date: Option<NaiveDate>,
   pub contents: Vec<CreateContentInput>,
 }
 
@@ -104,6 +105,11 @@ impl BlogPostFactory {
       blog_post.set_last_update_date(last_update_date);
     } else if let Some(post_date) = input.post_date {
       blog_post.set_last_update_date(post_date);
+    }
+
+    // 公開日を設定（指定があれば設定、なければデフォルトの今日の日付）
+    if let Some(published_date) = input.published_date {
+      blog_post.set_published_date(published_date);
     }
 
     // サムネイルを設定
@@ -212,6 +218,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     };
 
@@ -241,6 +248,7 @@ mod tests {
       }),
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     };
 
@@ -276,6 +284,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![
         CreateContentInput::H2 {
           id: h2_id,
@@ -356,6 +365,7 @@ mod tests {
       thumbnail: None,
       post_date: Some(specified_date),
       last_update_date: Some(specified_date),
+      published_date: None,
       contents: vec![],
     };
 
@@ -380,6 +390,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![CreateContentInput::Paragraph {
         id: para_id,
         text: vec![
@@ -469,6 +480,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     };
 
@@ -492,6 +504,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     };
 
@@ -500,6 +513,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
+      published_date: None,
       contents: vec![],
     };
 
@@ -539,6 +553,7 @@ mod tests {
           thumbnail: None,
           post_date: None,
           last_update_date: None,
+          published_date: None,
           contents: vec![],
         })
         .await;
@@ -552,5 +567,60 @@ mod tests {
 
     // 10個の異なるIDが生成されたことを確認
     assert_eq!(generated_ids.len(), 10);
+  }
+
+  #[tokio::test]
+  async fn blog_post_creation_with_specified_published_date() {
+    use chrono::NaiveDate;
+
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
+    let specified_published_date = NaiveDate::from_ymd_opt(2024, 7, 20).unwrap();
+    let input = CreateBlogPostInput {
+      title: "公開日指定記事".to_string(),
+      thumbnail: None,
+      post_date: None,
+      last_update_date: None,
+      published_date: Some(specified_published_date),
+      contents: vec![],
+    };
+
+    let result = factory.create(input).await;
+
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+
+    assert_eq!(blog_post.get_published_date(), specified_published_date);
+    assert_eq!(blog_post.get_title_text(), "公開日指定記事");
+  }
+
+  #[tokio::test]
+  async fn blog_post_creation_without_published_date_uses_default() {
+    use chrono::Local;
+
+    let mock_repo = MockImageRepository::new();
+    let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
+    let factory = BlogPostFactory::new(image_factory);
+
+    let input = CreateBlogPostInput {
+      title: "デフォルト公開日記事".to_string(),
+      thumbnail: None,
+      post_date: None,
+      last_update_date: None,
+      published_date: None,
+      contents: vec![],
+    };
+
+    let result = factory.create(input).await;
+
+    assert!(result.is_ok());
+    let blog_post = result.unwrap();
+
+    // デフォルトでは今日の日付が設定される
+    let today = Local::now().date_naive();
+    assert_eq!(blog_post.get_published_date(), today);
+    assert_eq!(blog_post.get_title_text(), "デフォルト公開日記事");
   }
 }

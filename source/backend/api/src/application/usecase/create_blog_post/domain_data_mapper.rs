@@ -13,6 +13,7 @@ pub fn convert_dto_to_domain_input(dto: CreateBlogPostDTO) -> CreateBlogPostInpu
     thumbnail: Some(convert_image_dto_to_domain(dto.thumbnail)),
     post_date: dto.post_date,
     last_update_date: dto.last_update_date,
+    published_date: None,
     contents: dto.contents.into_iter().map(convert_content_dto_to_domain).collect(),
   }
 }
