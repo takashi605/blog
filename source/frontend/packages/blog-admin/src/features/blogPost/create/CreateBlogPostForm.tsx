@@ -8,12 +8,13 @@ import type {
   CreateBlogPostRequest,
 } from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
-import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
 import PublishedDatePicker from './form/PublishedDatePicker';
+import SubmitButton from './form/SubmitButton';
+import TitleInput from './form/TitleInput';
 import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
 import ThumbnailPreview from './ThumbnailPreview';
 
@@ -45,7 +46,7 @@ function CreateBlogPostForm() {
   );
   const { createBlogPost, error } = useCreateBlogPost();
 
-  const { register, handleSubmit } = form;
+  const { handleSubmit } = form;
 
   const router = useRouter();
 
@@ -85,14 +86,7 @@ function CreateBlogPostForm() {
           {error && <p role="alert">{error}</p>}
 
           <div className={styles.formHeader}>
-            <div className={styles.title}>
-              <label htmlFor="title">タイトル</label>
-              <input
-                className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
-                id="title"
-                {...register('title')}
-              />
-            </div>
+            <TitleInput />
 
             <div className={styles.controlsContainer}>
               <div className={styles.publishedDateContainer}>
@@ -104,9 +98,7 @@ function CreateBlogPostForm() {
                   <ThumbnailPickModalWithOpenButton />
                 </CommonModalProvider>
 
-                <button className={styles.submitButton} type="submit">
-                  投稿
-                </button>
+                <SubmitButton />
               </div>
             </div>
           </div>
