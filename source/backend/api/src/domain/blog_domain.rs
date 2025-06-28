@@ -8,7 +8,6 @@ pub mod top_tech_pick_entity;
 
 // Services
 pub mod services {
-  pub mod pick_up_post_selector_service;
   pub mod popular_post_selector_service;
 }
 

@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use crate::application::dto::BlogPostDTO;
 use crate::application::dto_mapper;
+use crate::application::services::pick_up_post_selector_service::PickUpPostSelectorService;
 use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
-use crate::domain::blog_domain::services::pick_up_post_selector_service::PickUpPostSelectorService;
 
 /// ピックアップ記事選択ユースケース
 ///
@@ -129,7 +129,18 @@ mod tests {
   #[tokio::test]
   async fn test_returns_error_when_article_ids_are_not_exactly_three() {
     // Arrange
-    let mock_repo = MockBlogPostRepo::new();
+    let mut mock_repo = MockBlogPostRepo::new();
+
+    // findメソッドの期待設定（2件）
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+
     let usecase = SelectPickUpPostsUseCase::new(Arc::new(mock_repo));
 
     // Act: 2件の場合
@@ -142,13 +153,32 @@ mod tests {
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件です"));
   }
 
   #[tokio::test]
   async fn test_returns_error_when_four_article_ids_are_provided() {
     // Arrange
-    let mock_repo = MockBlogPostRepo::new();
+    let mut mock_repo = MockBlogPostRepo::new();
+
+    // findメソッドの期待設定（4件）
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000001")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事1".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000002")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事2".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000003")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事3".to_string()))
+    });
+    mock_repo.expect_find().with(mockall::predicate::eq("00000000-0000-0000-0000-000000000004")).returning(|id| {
+      let uuid = Uuid::parse_str(id).unwrap();
+      Ok(BlogPostEntity::new(uuid, "記事4".to_string()))
+    });
+
     let usecase = SelectPickUpPostsUseCase::new(Arc::new(mock_repo));
 
     // Act: 4件の場合
@@ -163,7 +193,7 @@ mod tests {
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件です"));
   }
 
   #[tokio::test]
@@ -214,7 +244,7 @@ mod tests {
 
     // Assert
     assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件である必要があります"));
+    assert!(result.unwrap_err().to_string().contains("ピックアップ記事は必ず3件です"));
   }
 
   #[tokio::test]
