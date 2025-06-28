@@ -82,13 +82,26 @@ function CreateBlogPostForm() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className={styles.buttons}>
-            <button className={styles.submitButton} type="submit">
-              投稿
-            </button>
+            <div className={styles.publishedDate}>
+              <label htmlFor="publishedDate">公開日</label>
+              <input
+                type="date"
+                id="publishedDate"
+                role="combobox"
+                aria-label="公開日"
+                aria-expanded="false"
+                aria-controls="publishedDate"
+                {...register('publishedDate')}
+              />
+            </div>
 
             <CommonModalProvider>
               <ThumbnailPickModalWithOpenButton />
             </CommonModalProvider>
+
+            <button className={styles.submitButton} type="submit">
+              投稿
+            </button>
           </div>
           {error && <p role="alert">{error}</p>}
 
@@ -98,19 +111,6 @@ function CreateBlogPostForm() {
               className={`${postTitleStyles.title} ${postTitleStyles.large} ${styles.titleInput}`}
               id="title"
               {...register('title')}
-            />
-          </div>
-
-          <div className={styles.publishedDate}>
-            <label htmlFor="publishedDate">公開日</label>
-            <input
-              type="date"
-              id="publishedDate"
-              role="combobox"
-              aria-label="公開日"
-              aria-expanded="false"
-              aria-controls="publishedDate"
-              {...register('publishedDate')}
             />
           </div>
         </form>
