@@ -27,6 +27,7 @@ pub fn admin_blog_posts_scope() -> Scope {
     .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::put().to(handle_funcs::put_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
+    .route("", web::get().to(handle_funcs::get_admin_blog_posts))
     .route("", web::post().to(handle_funcs::create_blog_post))
 }
 
@@ -238,6 +239,127 @@ pub mod handle_funcs {
     let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
 
     Ok(HttpResponse::Ok().json(blog_posts))
+  }
+
+  #[utoipa::path(
+    get,
+    path = "/api/admin/blog/posts",
+    responses(
+      (status = 200, description = "All blog posts including unpublished ones", body = Vec<BlogPost>)
+    )
+  )]
+  pub async fn get_admin_blog_posts() -> Result<impl Responder, ApiCustomError> {
+    println!("get_admin_blog_posts");
+
+    // ひとまずモックレスポンスを返す
+    use common::types::api::{BlogPost, Image, BlogPostContent, H2Block, ParagraphBlock, RichText, Style};
+    use uuid::Uuid;
+    use chrono::{Utc, Duration};
+
+    let mock_posts = vec![
+      BlogPost {
+        id: Uuid::parse_str("672f2772-72b5-404a-8895-b1fbbf310801").unwrap(),
+        title: "初めての技術スタックへの挑戦".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-coffee".to_string(),
+        },
+        post_date: "2021-01-01".parse().unwrap(),
+        last_update_date: "2021-01-02".parse().unwrap(),
+        published_date: "1900-01-01".parse().unwrap(),
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "最初のステップ".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "新しい技術スタックに挑戦することは、いつも冒険と学びの場です。".to_string(),
+              styles: Style { bold: false, inline_code: false },
+              link: Option::None,
+            }],
+          }),
+        ],
+      },
+      BlogPost {
+        id: Uuid::new_v4(),
+        title: "50年後記事1".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-book".to_string(),
+        },
+        post_date: Utc::now().date_naive(),
+        last_update_date: Utc::now().date_naive(),
+        published_date: (Utc::now() + Duration::days(365 * 50)).date_naive(),
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "50年後記事1の見出し".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これは50年後に公開される予定の記事の段落です。".to_string(),
+              styles: Style { bold: false, inline_code: false },
+              link: Option::None,
+            }],
+          }),
+        ],
+      },
+      BlogPost {
+        id: Uuid::parse_str("20b73825-9a6f-4901-aa42-e104a8d2c4f6").unwrap(),
+        title: "ミニマル記事1".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-book".to_string(),
+        },
+        post_date: "2025-01-01".parse().unwrap(),
+        last_update_date: "2025-01-01".parse().unwrap(),
+        published_date: "1900-01-01".parse().unwrap(),
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "ミニマル記事1の見出し".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはミニマル記事1の段落です。".to_string(),
+              styles: Style { bold: false, inline_code: false },
+              link: Option::None,
+            }],
+          }),
+        ],
+      },
+      BlogPost {
+        id: Uuid::parse_str("91450c47-9845-4398-ad3a-275118d223ea").unwrap(),
+        title: "ミニマル記事2".to_string(),
+        thumbnail: Image {
+          id: Uuid::new_v4(),
+          path: "test-mechanical".to_string(),
+        },
+        post_date: "2025-02-01".parse().unwrap(),
+        last_update_date: "2025-02-01".parse().unwrap(),
+        published_date: "1900-01-01".parse().unwrap(),
+        contents: vec![
+          BlogPostContent::H2(H2Block {
+            id: Uuid::new_v4(),
+            text: "ミニマル記事2の見出し".to_string(),
+          }),
+          BlogPostContent::Paragraph(ParagraphBlock {
+            id: Uuid::new_v4(),
+            text: vec![RichText {
+              text: "これはミニマル記事2の段落です。".to_string(),
+              styles: Style { bold: false, inline_code: false },
+              link: Option::None,
+            }],
+          }),
+        ],
+      },
+    ];
+
+    Ok(HttpResponse::Ok().json(mock_posts))
   }
 
   #[utoipa::path(
