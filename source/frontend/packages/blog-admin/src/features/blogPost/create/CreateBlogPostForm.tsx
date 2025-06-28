@@ -82,9 +82,11 @@ function CreateBlogPostForm() {
           role="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className={styles.buttons}>
+          <div className={styles.publishedDateContainer}>
             <PublishedDatePicker />
+          </div>
 
+          <div className={styles.buttons}>
             <CommonModalProvider>
               <ThumbnailPickModalWithOpenButton />
             </CommonModalProvider>
@@ -93,6 +95,7 @@ function CreateBlogPostForm() {
               投稿
             </button>
           </div>
+
           {error && <p role="alert">{error}</p>}
 
           <div className={styles.title}>
