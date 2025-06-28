@@ -9,7 +9,7 @@ use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 ///
 /// 指定された記事IDをピックアップ記事として選択し、更新する
 pub struct SelectPickUpPostsUseCase {
-  repository: Arc<dyn BlogPostRepository>,
+  pick_up_post_selector_service: PickUpPostSelectorService,
 }
 
 impl SelectPickUpPostsUseCase {
@@ -18,7 +18,9 @@ impl SelectPickUpPostsUseCase {
   /// # Arguments
   /// * `repository` - ブログ記事リポジトリ
   pub fn new(repository: Arc<dyn BlogPostRepository>) -> Self {
-    Self { repository }
+    Self {
+      pick_up_post_selector_service: PickUpPostSelectorService::new(repository),
+    }
   }
 
   /// ピックアップ記事を選択・更新する
@@ -31,8 +33,7 @@ impl SelectPickUpPostsUseCase {
   /// * `Err` - 記事IDが3件でない場合、記事が見つからない場合、更新に失敗した場合
   pub async fn execute(&self, post_ids: Vec<String>) -> anyhow::Result<Vec<BlogPostDTO>> {
     // PickUpPostSelectorServiceを使用してピックアップ記事の選択と更新を行う
-    let service = PickUpPostSelectorService::new(self.repository.clone());
-    let updated_pick_up_post_set = service.select_pick_up_posts(post_ids).await?;
+    let updated_pick_up_post_set = self.pick_up_post_selector_service.select_pick_up_posts(post_ids).await?;
 
     // PickUpPostSetEntity -> Vec<BlogPostDTO>に変換
     let posts = updated_pick_up_post_set.into_all_posts();

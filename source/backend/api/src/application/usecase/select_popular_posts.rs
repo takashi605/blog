@@ -9,7 +9,7 @@ use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
 ///
 /// 指定された記事IDを人気記事として選択し、更新する
 pub struct SelectPopularPostsUseCase {
-  repository: Arc<dyn BlogPostRepository>,
+  popular_post_selector_service: PopularPostSelectorService,
 }
 
 impl SelectPopularPostsUseCase {
@@ -18,7 +18,9 @@ impl SelectPopularPostsUseCase {
   /// # Arguments
   /// * `repository` - ブログ記事リポジトリ
   pub fn new(repository: Arc<dyn BlogPostRepository>) -> Self {
-    Self { repository }
+    Self {
+      popular_post_selector_service: PopularPostSelectorService::new(repository),
+    }
   }
 
   /// 人気記事を選択・更新する
@@ -31,8 +33,7 @@ impl SelectPopularPostsUseCase {
   /// * `Err` - 記事IDが3件でない場合、記事が見つからない場合、更新に失敗した場合
   pub async fn execute(&self, post_ids: Vec<String>) -> anyhow::Result<Vec<BlogPostDTO>> {
     // PopularPostSelectorServiceを使用して人気記事の選択と更新を行う
-    let service = PopularPostSelectorService::new(self.repository.clone());
-    let updated_popular_post_set = service.select_popular_posts(post_ids).await?;
+    let updated_popular_post_set = self.popular_post_selector_service.select_popular_posts(post_ids).await?;
 
     // PopularPostSetEntity -> Vec<BlogPostDTO>に変換
     let posts = updated_popular_post_set.into_all_posts();
