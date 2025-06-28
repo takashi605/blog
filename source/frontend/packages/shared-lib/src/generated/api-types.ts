@@ -27,7 +27,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["get_admin_blog_posts"];
         put?: never;
         post: operations["create_blog_post"];
         delete?: never;
@@ -338,6 +338,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Image"];
+                };
+            };
+        };
+    };
+    get_admin_blog_posts: {
+        parameters: {
+            query?: {
+                /** @description Include unpublished posts (default: true) */
+                include_unpublished?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description All blog posts with optional unpublished filtering */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlogPost"][];
                 };
             };
         };

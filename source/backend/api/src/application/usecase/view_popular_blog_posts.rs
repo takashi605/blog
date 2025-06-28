@@ -71,6 +71,7 @@ mod tests {
       async fn update_pick_up_posts(&self, pickup_posts: &PickUpPostSetEntity) -> Result<PickUpPostSetEntity>;
       async fn find_popular_posts(&self) -> Result<PopularPostSetEntity>;
       async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
+      async fn find_all(&self) -> Result<Vec<BlogPostEntity>>;
     }
   }
 

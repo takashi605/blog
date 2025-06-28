@@ -89,4 +89,11 @@ pub trait BlogPostRepository: Send + Sync {
   /// * `Ok(PopularPostSetEntity)` - 更新に成功した場合、更新された人気記事群を返す
   /// * `Err` - 更新に失敗した場合
   async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
+
+  /// 全記事を取得する
+  ///
+  /// # Returns
+  /// * `Ok(Vec<BlogPostEntity>)` - 全記事リスト
+  /// * `Err` - データベースエラーの場合
+  async fn find_all(&self) -> Result<Vec<BlogPostEntity>>;
 }

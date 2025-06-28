@@ -27,6 +27,7 @@ pub fn admin_blog_posts_scope() -> Scope {
     .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::put().to(handle_funcs::put_popular_blog_posts))
     .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
+    .route("", web::get().to(handle_funcs::get_admin_blog_posts))
     .route("", web::post().to(handle_funcs::create_blog_post))
 }
 
@@ -42,6 +43,12 @@ pub mod handle_funcs {
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::{BlogPost, CreateBlogPostRequest};
+  use serde::Deserialize;
+
+  #[derive(Deserialize)]
+  pub struct AdminBlogPostsQuery {
+    pub include_unpublished: Option<bool>,
+  }
 
   #[utoipa::path(
     get,
@@ -233,6 +240,35 @@ pub mod handle_funcs {
     // DIコンテナからユースケースを取得
     let usecase = di_container.select_popular_posts_usecase();
     let dtos = usecase.execute(post_ids).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_posts))
+  }
+
+  #[utoipa::path(
+    get,
+    path = "/api/admin/blog/posts",
+    responses(
+      (status = 200, description = "All blog posts with optional unpublished filtering", body = Vec<BlogPost>)
+    ),
+    params(
+      ("include_unpublished" = Option<bool>, Query, description = "Include unpublished posts (default: true)")
+    )
+  )]
+  pub async fn get_admin_blog_posts(
+    query: web::Query<AdminBlogPostsQuery>,
+    di_container: web::Data<DiContainer>
+  ) -> Result<impl Responder, ApiCustomError> {
+    println!("get_admin_blog_posts");
+
+    // クエリパラメータを取得（デフォルトはtrue: 未公開記事を含む）
+    let include_unpublished = query.include_unpublished.unwrap_or(true);
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_all_blog_posts_usecase();
+    let dtos = usecase.execute(include_unpublished).await.map_err(|e| ApiCustomError::Other(e))?;
 
     // DTOをAPIレスポンスに変換
     let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;

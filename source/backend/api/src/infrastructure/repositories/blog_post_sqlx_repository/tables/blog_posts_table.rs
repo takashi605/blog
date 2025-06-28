@@ -42,6 +42,15 @@ pub async fn fetch_latest_blog_posts_records_with_limit(executor: impl Executor<
   Ok(posts)
 }
 
+pub async fn fetch_all_blog_posts_records(executor: impl Executor<'_, Database = Postgres>) -> Result<Vec<BlogPostRecord>> {
+  let posts = sqlx::query_as::<_, BlogPostRecord>(
+    "select id, title, thumbnail_image_id, post_date, last_update_date, published_at::date as published_at from blog_posts order by post_date desc",
+  )
+  .fetch_all(executor)
+  .await?;
+  Ok(posts)
+}
+
 pub async fn insert_blog_post_with_published_at(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
   let published_at_timestamp = post.published_at.and_hms_opt(0, 0, 0).unwrap().and_utc();
   sqlx::query("INSERT INTO blog_posts (id, title, thumbnail_image_id, post_date, last_update_date, published_at) VALUES ($1, $2, $3, $4, $5, $6)")

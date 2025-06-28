@@ -317,6 +317,44 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
 
     convert_pickup_records_to_entity(updated_records, blog_posts)
   }
+
+  async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
+    use self::tables::blog_posts_table::fetch_all_blog_posts_records;
+    use self::domain_data_mapper::convert_to_blog_post_entity;
+
+    // 全記事レコードを取得
+    let blog_post_records = fetch_all_blog_posts_records(&self.pool).await.context("全記事の取得に失敗しました")?;
+
+    // 各記事のエンティティを構築
+    let mut blog_post_entities = Vec::new();
+    for blog_post_record in blog_post_records {
+      // サムネイル画像を取得
+      let thumbnail_entity = self
+        .image_repository
+        .find(&blog_post_record.thumbnail_image_id.to_string())
+        .await
+        .map_err(|e| anyhow::anyhow!("サムネイル画像の取得に失敗しました: {:?}", e))?;
+
+      // ImageEntityをImageRecordに変換
+      let thumbnail_record = convert_from_image_entity(&thumbnail_entity);
+
+      // コンテンツ一覧を取得
+      let post_content_records = fetch_post_contents_by_post_id(&self.pool, blog_post_record.id).await.context("コンテンツ一覧の取得に失敗しました")?;
+
+      // 各コンテンツの詳細を取得
+      let mut content_blocks = Vec::new();
+      for post_content_record in post_content_records {
+        let content_block = fetch_any_content_block(&self.pool, post_content_record.clone()).await.context("コンテンツブロックの取得に失敗しました")?;
+        content_blocks.push((post_content_record, content_block));
+      }
+
+      // エンティティに変換
+      let blog_post_entity = convert_to_blog_post_entity(blog_post_record, thumbnail_record, content_blocks).context("BlogPostEntityへの変換に失敗しました")?;
+      blog_post_entities.push(blog_post_entity);
+    }
+
+    Ok(blog_post_entities)
+  }
 }
 
 #[cfg(test)]

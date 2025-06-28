@@ -4,9 +4,9 @@ use std::sync::Arc;
 use crate::{
   application::usecase::{
     create_blog_post::CreateBlogPostUseCase, register_image::RegisterImageUseCase, select_pick_up_posts::SelectPickUpPostsUseCase,
-    select_popular_posts::SelectPopularPostsUseCase, select_top_tech_pick_post::SelectTopTechPickPostUseCase, view_blog_post::ViewBlogPostUseCase,
-    view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase, view_pick_up_posts::ViewPickUpPostsUseCase,
-    view_popular_blog_posts::ViewPopularBlogPostsUseCase, view_top_tech_pick::ViewTopTechPickUseCase,
+    select_popular_posts::SelectPopularPostsUseCase, select_top_tech_pick_post::SelectTopTechPickPostUseCase, view_all_blog_posts::ViewAllBlogPostsUseCase,
+    view_blog_post::ViewBlogPostUseCase, view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase,
+    view_pick_up_posts::ViewPickUpPostsUseCase, view_popular_blog_posts::ViewPopularBlogPostsUseCase, view_top_tech_pick::ViewTopTechPickUseCase,
   },
   domain::{
     blog_domain::{blog_post_factory::BlogPostFactory, blog_post_repository::BlogPostRepository, image_content_factory::ImageContentFactory},
@@ -98,5 +98,10 @@ impl DiContainer {
   /// SelectTopTechPickPostUseCaseを作成する
   pub fn select_top_tech_pick_post_usecase(&self) -> SelectTopTechPickPostUseCase {
     SelectTopTechPickPostUseCase::new(self.blog_post_repository.clone())
+  }
+
+  /// ViewAllBlogPostsUseCaseを作成する
+  pub fn view_all_blog_posts_usecase(&self) -> ViewAllBlogPostsUseCase {
+    ViewAllBlogPostsUseCase::new(self.blog_post_repository.clone())
   }
 }

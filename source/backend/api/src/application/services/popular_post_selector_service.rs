@@ -129,6 +129,10 @@ mod tests {
         Err(anyhow!("更新に失敗しました"))
       }
     }
+
+    async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
+      unimplemented!()
+    }
   }
 
   #[tokio::test]
