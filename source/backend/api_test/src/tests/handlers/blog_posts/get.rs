@@ -106,6 +106,7 @@ mod tests {
         },
         post_date: "2021-01-01".parse()?,
         last_update_date: "2021-01-02".parse()?,
+        published_date: "1900-01-01".parse()?,
         contents: vec![
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),
