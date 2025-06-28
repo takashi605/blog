@@ -11,7 +11,7 @@ Given('【記事管理 一覧】記事管理ページにアクセスする', asy
   const [response] = await Promise.all([
     page.waitForResponse(
       (resp) =>
-        resp.url().includes('/api/blog/posts/latest') &&
+        resp.url().includes('/api/admin/blog/posts') &&
         resp.status() === 200,
     ),
     page.goto(`${process.env.ADMIN_URL}/posts`, { timeout: 20000 }),
@@ -93,7 +93,7 @@ Given('【記事管理 リンク】記事管理 リンクページにアクセ�
   const [response] = await Promise.all([
     page.waitForResponse(
       (resp) =>
-        resp.url().includes('/api/blog/posts/latest') &&
+        resp.url().includes('/api/admin/blog/posts') &&
         resp.status() === 200,
     ),
     page.goto(`${process.env.ADMIN_URL}/posts`, { timeout: 20000 }),

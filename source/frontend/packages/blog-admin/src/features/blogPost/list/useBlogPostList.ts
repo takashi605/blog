@@ -18,7 +18,7 @@ export function useBlogPostList() {
 
   const fetchBlogPosts = useCallback(async () => {
     try {
-      const response = await api.get('/api/blog/posts/latest');
+      const response = await api.get('/api/admin/blog/posts');
       updateBlogPosts(response);
     } catch (error) {
       console.error('記事一覧の取得に失敗しました:', error);
