@@ -29,6 +29,12 @@
   }
 }
 
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .postDate {
   color: #666;
   font-size: 0.9rem;

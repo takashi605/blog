@@ -1,9 +1,9 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
 import { useBlogPostList } from '../list/useBlogPostList';
 import styles from './PostsManagement.module.scss';
 import NavigationLinkButton from './ui/NavigationLinkButton';
+import PostEditLinkButton from './ui/PostEditLinkButton';
 
 export default function PostsManagement() {
   const { getAllBlogPosts } = useBlogPostList({ includeUnpublished: true });
@@ -36,12 +36,12 @@ export default function PostsManagement() {
             <div className={styles.postContent}>
               <h3>{post.title}</h3>
 
-              <span data-testid="post-date" className={styles.postDate}>
-                {formatDate(post.postDate)}
-              </span>
-              <Link href={`/posts/${post.id}/edit`}>
-                <button type="button">編集</button>
-              </Link>
+              <div className={styles.postMeta}>
+                <span data-testid="post-date" className={styles.postDate}>
+                  {formatDate(post.postDate)}
+                </span>
+                <PostEditLinkButton postId={post.id}>編集</PostEditLinkButton>
+              </div>
             </div>
             {post.thumbnail && (
               <CldImage
