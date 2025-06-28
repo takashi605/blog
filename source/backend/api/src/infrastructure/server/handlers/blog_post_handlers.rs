@@ -43,6 +43,12 @@ pub mod handle_funcs {
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
   use common::types::api::{BlogPost, CreateBlogPostRequest};
+  use serde::Deserialize;
+
+  #[derive(Deserialize)]
+  pub struct AdminBlogPostsQuery {
+    pub include_unpublished: Option<bool>,
+  }
 
   #[utoipa::path(
     get,
@@ -245,15 +251,24 @@ pub mod handle_funcs {
     get,
     path = "/api/admin/blog/posts",
     responses(
-      (status = 200, description = "All blog posts including unpublished ones", body = Vec<BlogPost>)
+      (status = 200, description = "All blog posts with optional unpublished filtering", body = Vec<BlogPost>)
+    ),
+    params(
+      ("include_unpublished" = Option<bool>, Query, description = "Include unpublished posts (default: true)")
     )
   )]
-  pub async fn get_admin_blog_posts(di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+  pub async fn get_admin_blog_posts(
+    query: web::Query<AdminBlogPostsQuery>,
+    di_container: web::Data<DiContainer>
+  ) -> Result<impl Responder, ApiCustomError> {
     println!("get_admin_blog_posts");
+
+    // クエリパラメータを取得（デフォルトはtrue: 未公開記事を含む）
+    let include_unpublished = query.include_unpublished.unwrap_or(true);
 
     // DIコンテナからユースケースを取得
     let usecase = di_container.view_all_blog_posts_usecase();
-    let dtos = usecase.execute().await.map_err(|e| ApiCustomError::Other(e))?;
+    let dtos = usecase.execute(include_unpublished).await.map_err(|e| ApiCustomError::Other(e))?;
 
     // DTOをAPIレスポンスに変換
     let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
