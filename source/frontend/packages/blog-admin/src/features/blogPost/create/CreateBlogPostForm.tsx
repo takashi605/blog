@@ -30,6 +30,11 @@ export type CreateBlogPostFormData = {
 function CreateBlogPostForm() {
   // 今日の日付をYYYY-MM-DD形式で取得
   const todayHyphenDelimited = new Date().toISOString().split('T')[0];
+  const router = useRouter();
+
+  const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
+    [],
+  );
 
   const form = useForm<CreateBlogPostFormData>({
     defaultValues: {
@@ -41,15 +46,9 @@ function CreateBlogPostForm() {
       publishedDate: todayHyphenDelimited,
     },
   });
-  const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
-    [],
-  );
-  const { createBlogPost, error } = useCreateBlogPost();
-
   const { handleSubmit } = form;
 
-  const router = useRouter();
-
+  const { createBlogPost, error } = useCreateBlogPost();
   const onSubmit = async () => {
     const formValues = form.getValues();
     // 日付の生成
