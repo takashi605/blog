@@ -4,6 +4,7 @@ pub mod usecase {
   pub mod select_pick_up_posts;
   pub mod select_popular_posts;
   pub mod select_top_tech_pick_post;
+  pub mod view_all_blog_posts;
   pub mod view_blog_post;
   pub mod view_images;
   pub mod view_latest_blog_posts;

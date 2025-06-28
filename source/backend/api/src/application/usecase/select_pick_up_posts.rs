@@ -73,6 +73,7 @@ mod tests {
       async fn update_pick_up_posts(&self, pickup_posts: &PickUpPostSetEntity) -> anyhow::Result<PickUpPostSetEntity>;
       async fn find_popular_posts(&self) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
       async fn update_popular_posts(&self, popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
+      async fn find_all(&self) -> anyhow::Result<Vec<BlogPostEntity>>;
     }
   }
 

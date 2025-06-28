@@ -178,4 +178,3 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
   };
   Ok(blog_post)
 }
-

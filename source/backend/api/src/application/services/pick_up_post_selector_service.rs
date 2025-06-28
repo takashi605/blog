@@ -129,6 +129,10 @@ mod tests {
     async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
       unimplemented!()
     }
+
+    async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
+      unimplemented!()
+    }
   }
 
   #[tokio::test]
