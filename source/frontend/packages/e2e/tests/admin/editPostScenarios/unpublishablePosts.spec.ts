@@ -11,7 +11,7 @@ if (!process.env.TEST_TARGET_URL) {
 }
 
 // テストデータの記事ID（人気記事、ピックアップ記事、トップテックピック記事）
-const popularPostId = '91450c47-9845-4398-ad3a-275118d223ea'; // 人気記事
+const popularPostId = 'f735a7b7-8bbc-4cb5-b6cf-c188734f64d3'; // 人気記事
 const pickupPostId = '20b73825-9a6f-4901-aa42-e104a8d2c4f6'; // ピックアップ記事
 const topTechPickPostId = '672f2772-72b5-404a-8895-b1fbbf310801'; // トップテックピック記事
 

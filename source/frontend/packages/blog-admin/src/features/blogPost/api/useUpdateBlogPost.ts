@@ -47,7 +47,8 @@ export function useUpdateBlogPost() {
 
         if (error instanceof HttpError) {
           if (error.status === 400) {
-            errorMessage = '入力内容に誤りがあります';
+            // バックエンドからの具体的なエラーメッセージを使用
+            errorMessage = error.message || '入力内容に誤りがあります';
           } else if (error.status === 404) {
             errorMessage = '記事が見つかりません';
           } else {
