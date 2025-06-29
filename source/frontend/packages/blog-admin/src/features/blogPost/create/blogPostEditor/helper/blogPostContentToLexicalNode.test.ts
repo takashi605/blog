@@ -6,8 +6,8 @@ import { $createLinkNode } from '@lexical/link';
 import { $createHeadingNode } from '@lexical/rich-text';
 import { $createParagraphNode, $createTextNode } from 'lexical';
 import type { BlogPostContent } from 'shared-lib/src/api';
-import { $createCustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
-import { $createImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
+import { $createCustomCodeNode } from '../plugins/customNodes/codeBlock/CustomCodeNode';
+import { $createImageNode } from '../plugins/customNodes/image/ImageNode';
 import { blogPostContentsToLexicalNodes } from './blogPostContentToLexicalNode';
 import { mockBlogPost } from './mockBlogPostData';
 
@@ -38,7 +38,7 @@ jest.mock('@lexical/link', () => ({
 }));
 
 jest.mock(
-  '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode',
+  '../plugins/customNodes/codeBlock/CustomCodeNode',
   () => ({
     $createCustomCodeNode: jest.fn().mockImplementation(() => ({
       getType: () => 'code',
@@ -47,7 +47,7 @@ jest.mock(
   }),
 );
 
-jest.mock('../blogPostEditor/plugins/customNodes/image/ImageNode', () => ({
+jest.mock('../plugins/customNodes/image/ImageNode', () => ({
   $createImageNode: jest.fn().mockImplementation(() => ({
     getType: () => 'image',
   })),

@@ -10,8 +10,8 @@ import type { HeadingNode } from '@lexical/rich-text';
 import type { ElementNode, LexicalNode, TextNode } from 'lexical';
 import type { BlogPostContent } from 'shared-lib/src/api';
 import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
-import type { CustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
-import type { ImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
+import type { CustomCodeNode } from '../plugins/customNodes/codeBlock/CustomCodeNode';
+import type { ImageNode } from '../plugins/customNodes/image/ImageNode';
 
 /**
  * LexicalNodeの配列をBlogPostContent配列に変換

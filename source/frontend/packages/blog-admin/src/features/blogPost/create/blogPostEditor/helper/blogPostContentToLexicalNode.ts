@@ -13,8 +13,8 @@ import {
   type TextFormatType,
 } from 'lexical';
 import type { BlogPostContent } from 'shared-lib/src/api';
-import { $createCustomCodeNode } from '../blogPostEditor/plugins/customNodes/codeBlock/CustomCodeNode';
-import { $createImageNode } from '../blogPostEditor/plugins/customNodes/image/ImageNode';
+import { $createCustomCodeNode } from '../plugins/customNodes/codeBlock/CustomCodeNode';
+import { $createImageNode } from '../plugins/customNodes/image/ImageNode';
 
 /**
  * BlogPostContent配列をLexicalNode配列に変換
