@@ -8,10 +8,10 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
+import type { BlogPostContent } from 'shared-lib/src/api';
 import { BlogPostContentsSetterContext } from '../CreateBlogPostForm';
 import { blogPostContentsToLexicalNodes } from '../helper/blogPostContentToLexicalNode';
 import { lexicalNodeToBlogPostContent } from '../helper/lexicalNodeToBlogPostContent';
-import { mockBlogPost } from '../helper/mockBlogPostData';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { validateUrl } from './helper/url';
@@ -21,7 +21,11 @@ import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
 
-function BlogPostEditor() {
+type BlogPostEditorProps = {
+  initialContents?: BlogPostContent[];
+};
+
+function BlogPostEditor({ initialContents }: BlogPostEditorProps) {
   const setBlogPostContents = useContext(BlogPostContentsSetterContext);
   const onChange = (editor: EditorState) => {
     editor.read(() => {
@@ -33,12 +37,12 @@ function BlogPostEditor() {
     });
   };
 
-  // モックデータからLexicalの初期エディタステートを作成
+  // 初期コンテンツからLexicalの初期エディタステートを作成
   const prepopulatedRichText = () => {
     const root = $getRoot();
-    if (root.getChildrenSize() === 0) {
-      // モックデータのcontentsをLexicalNodeに変換
-      const nodes = blogPostContentsToLexicalNodes(mockBlogPost.contents);
+    if (root.getChildrenSize() === 0 && initialContents) {
+      // 初期コンテンツをLexicalNodeに変換
+      const nodes = blogPostContentsToLexicalNodes(initialContents);
       // ルートに直接追加（$insertNodesではなくroot.appendを使用）
       root.clear();
       root.append(...nodes);
@@ -46,7 +50,9 @@ function BlogPostEditor() {
   };
 
   return (
-    <CustomizedLexicalComposer initialEditorState={prepopulatedRichText}>
+    <CustomizedLexicalComposer
+      initialEditorState={initialContents ? prepopulatedRichText : undefined}
+    >
       <div className={styles.toolBarWrapper}>
         <ToolBarPlugin />
       </div>
