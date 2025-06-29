@@ -73,7 +73,7 @@ mod tests {
   }
 
   #[tokio::test(flavor = "current_thread")]
-  async fn edit_blog_post_success() -> Result<()> {
+  async fn put_blog_post_success() -> Result<()> {
     // テスト用の画像を取得
     let thumbnail = test_helper::fetch_any_image().await?;
 
@@ -135,7 +135,7 @@ mod tests {
   }
 
   #[tokio::test(flavor = "current_thread")]
-  async fn edit_blog_post_not_found() -> Result<()> {
+  async fn put_blog_post_not_found() -> Result<()> {
     // 存在しない記事IDを使用
     let non_existent_id = uuid::Uuid::new_v4();
     let dummy_post = test_helper::minimal_blog_post1().unwrap();
