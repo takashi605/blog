@@ -6,8 +6,8 @@ if (!process.env.ADMIN_URL) {
   throw new Error('ADMIN_URL 環境変数が設定されていません');
 }
 
-// テストデータの記事ID（既存記事を使用）
-const testPostId = '672f2772-72b5-404a-8895-b1fbbf310801';
+// テストデータの記事ID（E2Eテスト専用記事を使用）
+const testPostId = 'e2e00000-ed17-4000-b000-000000000001';
 
 Given(
   '【正常系 記事編集 更新日】既存記事の記事編集ページにアクセスする',
