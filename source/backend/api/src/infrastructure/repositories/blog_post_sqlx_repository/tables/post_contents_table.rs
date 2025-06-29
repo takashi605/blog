@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sqlx::{Executor, FromRow, Postgres, Transaction, PgConnection};
+use sqlx::{Executor, FromRow, PgConnection, Postgres, Transaction};
 use uuid::Uuid;
 
 use super::{
@@ -169,11 +169,11 @@ pub async fn delete_post_contents_by_post_id(executor: impl Executor<'_, Databas
        DELETE FROM code_blocks WHERE id IN (SELECT id FROM post_contents WHERE post_id = $1)
      )
      -- Step 8: Finally delete post_contents
-     DELETE FROM post_contents WHERE post_id = $1;"
+     DELETE FROM post_contents WHERE post_id = $1;",
   )
   .bind(post_id)
   .execute(executor)
   .await?;
-  
+
   Ok(())
 }
