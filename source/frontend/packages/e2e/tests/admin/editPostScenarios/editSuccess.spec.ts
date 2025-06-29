@@ -436,7 +436,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // 編集完了メッセージの確認
-    await expect(page.getByText('記事を更新しました')).toBeVisible({
+    await expect(page.getByText('記事を編集しました')).toBeVisible({
       timeout: 10000,
     });
   },
