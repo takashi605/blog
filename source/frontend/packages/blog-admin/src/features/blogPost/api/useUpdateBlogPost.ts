@@ -34,7 +34,7 @@ export function useUpdateBlogPost() {
         const updatedBlogPost = (await api.put(
           '/api/admin/blog/posts/{uuid}',
           blogPost,
-          { pathParams: { uuid: id } }
+          { pathParams: { uuid: id } },
         )) as BlogPost;
         setState({
           loading: false,
