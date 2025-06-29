@@ -187,7 +187,8 @@ When('【正常系 記事編集】リッチテキストエディタ内の「編�
   const page = playwrightHelper.getPage();
   const richTextEditor = page.locator('[contenteditable="true"]');
 
-  await selectByArrowLeft(page, richTextEditor, 7); // 「編集前のテスト」の文字数
+  // 全選択
+  await richTextEditor.press('Control+A');
   await page.keyboard.press('Delete');
   await clearSelectionByArrow(page, richTextEditor);
 });

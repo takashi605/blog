@@ -70,11 +70,7 @@ Then(
 
 When('【正常系 記事編集 更新日】「編集確定」ボタンを押す', async function () {
   const page = playwrightHelper.getPage();
-  const updateButton = page
-    .getByRole('button', { name: '投稿' })
-    .or(page.getByRole('button', { name: '編集確定' }))
-    .or(page.getByRole('button', { name: '更新' }))
-    .or(page.getByRole('button', { name: '保存' }));
+  const updateButton = page.getByRole('button', { name: '編集確定' });
   await updateButton.first().click();
 });
 
