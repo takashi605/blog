@@ -58,22 +58,22 @@ Then('【正常系 記事編集 初期値】コンテンツが現在設定中の
   await expect(editorContent).toContainText('新しい技術スタックに挑戦することは、いつも冒険と学びの場です。');
   
   // h2見出しの内容を確認  
-  await expect(editorContent.locator('h2')).toContainText('最初のステップ');
+  await expect(editorContent.locator('h2').filter({ hasText: '最初のステップ' })).toBeVisible();
   
   // h3見出しの内容を確認
-  await expect(editorContent.locator('h3')).toContainText('学習環境の準備');
+  await expect(editorContent.locator('h3').filter({ hasText: '学習環境の準備' })).toBeVisible();
   
   // 太字スタイルのテキストを確認
-  await expect(editorContent.locator('strong')).toContainText('繰り返しの実践が技術力を向上させる鍵です。');
+  await expect(editorContent.locator('strong').filter({ hasText: '繰り返しの実践が技術力を向上させる鍵です。' })).toBeVisible();
   
   // インラインコードスタイルのテキストを確認
-  await expect(editorContent.locator('code')).toContainText('新しいコードを試し、デバッグしながら学ぶことで、単なる理論以上の実践的なスキルを身に付けることができます。');
+  await expect(editorContent.locator('code').filter({ hasText: '新しいコードを試し、デバッグしながら学ぶことで、単なる理論以上の実践的なスキルを身に付けることができます。' })).toBeVisible();
   
   // リンクテキストを確認
-  await expect(editorContent.locator('a')).toContainText('試行錯誤は技術習得において欠かせないプロセスです。');
+  await expect(editorContent.locator('a').filter({ hasText: '試行錯誤は技術習得において欠かせないプロセスです。' })).toBeVisible();
   
   // リンクのhref属性を確認
-  const linkElement = editorContent.locator('a');
+  const linkElement = editorContent.locator('a').filter({ hasText: '試行錯誤は技術習得において欠かせないプロセスです。' });
   const href = await linkElement.getAttribute('href');
   expect(href).toBe('https://example.com');
   

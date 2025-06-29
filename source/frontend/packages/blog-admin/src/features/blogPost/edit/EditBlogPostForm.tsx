@@ -78,7 +78,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
 
       <div>
         <h2>内容</h2>
-        <BlogPostEditor />
+        <BlogPostEditor initialContents={initialData.contents} />
       </div>
     </>
   );
