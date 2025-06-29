@@ -90,6 +90,96 @@ mod tests {
     Ok(())
   }
 
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_blog_posts_include_unpublished() -> Result<()> {
+    let url = "http://localhost:8001/admin/blog/posts?include_unpublished=true";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_posts: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+
+    // 50年後記事（未公開記事）が含まれていることを確認
+    let future_post_exists = actual_blog_posts.iter().any(|post| post.title == "50年後記事1");
+    assert!(future_post_exists, "50年後記事1（未公開記事）が取得結果に含まれていません");
+
+    // 既存の公開記事も含まれていることを確認
+    let regular_post_exists = actual_blog_posts.iter().any(|post| post.title == "初めての技術スタックへの挑戦");
+    assert!(regular_post_exists, "通常の公開記事が取得結果に含まれていません");
+
+    // 複数の記事が取得されることを確認（公開記事 + 未公開記事）
+    assert!(
+      actual_blog_posts.len() >= 4,
+      "4件以上の記事が取得されるべきです。実際: {}",
+      actual_blog_posts.len()
+    );
+
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_blog_posts_exclude_unpublished() -> Result<()> {
+    let url = "http://localhost:8001/admin/blog/posts?include_unpublished=false";
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_posts: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+
+    // 50年後記事（未公開記事）が含まれていないことを確認
+    let future_post_exists = actual_blog_posts.iter().any(|post| post.title == "50年後記事1");
+    assert!(!future_post_exists, "50年後記事1（未公開記事）が取得結果に含まれています");
+
+    // 既存の公開記事は含まれていることを確認
+    let regular_post_exists = actual_blog_posts.iter().any(|post| post.title == "初めての技術スタックへの挑戦");
+    assert!(regular_post_exists, "通常の公開記事が取得結果に含まれていません");
+
+    // 公開記事のみが取得されることを確認
+    assert!(
+      actual_blog_posts.len() >= 3,
+      "3件以上の公開記事が取得されるべきです。実際: {}",
+      actual_blog_posts.len()
+    );
+
+    Ok(())
+  }
+
+  // 管理者用: 単一記事取得（未公開記事も含む）
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_published() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = helper::expected_regular_blog_post().unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+    Ok(())
+  }
+
+  // 管理者用: 単一記事取得（未公開記事）
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_unpublished() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = test_helper::future_post_id().unwrap());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = test_helper::expected_future_blog_post().unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+    Ok(())
+  }
+
+  // 管理者用: 存在しない記事取得で404エラー
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_not_found() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = Uuid::new_v4());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap();
+    let resp_status = resp.status();
+    let resp_body = resp.text().await.unwrap();
+
+    // ステータスが 404 エラーであることを確認
+    assert_eq!(resp_status, 404);
+    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。"), true);
+    Ok(())
+  }
+
   mod helper {
     use common::types::api::{CodeBlock, H3Block, Link};
 
@@ -106,7 +196,7 @@ mod tests {
         },
         post_date: "2021-01-01".parse()?,
         last_update_date: "2021-01-02".parse()?,
-        published_date: "1900-01-01".parse()?,
+        published_date: "2021-01-01".parse()?,
         contents: vec![
           BlogPostContent::Paragraph(ParagraphBlock {
             id: Uuid::new_v4(),

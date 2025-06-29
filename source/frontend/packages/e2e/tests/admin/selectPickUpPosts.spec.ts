@@ -46,7 +46,7 @@ When(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/blog/posts/latest') &&
+          resp.url().includes('/api/admin/blog/posts') &&
           resp.status() === 200,
       ),
       getOpenModalButton().click(),
@@ -70,8 +70,7 @@ Then(
   async function () {
     const modal = new SelectPickUpPostsModal().getLocator();
     const postTitles = modal.locator('h3');
-
-    expect(await postTitles.count()).toBeGreaterThan(0);
+    await expect(postTitles.first()).toBeVisible({ timeout: 10_000 });
   },
 );
 Then(

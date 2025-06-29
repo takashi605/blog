@@ -47,6 +47,7 @@ mod tests {
     impl BlogPostRepository for BlogPostRepo {
       async fn find(&self, id: &str) -> anyhow::Result<BlogPostEntity>;
       async fn save(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
+      async fn update(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
       async fn find_latests(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>>;
       async fn find_top_tech_pick(&self) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
       async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
@@ -54,6 +55,7 @@ mod tests {
       async fn update_pick_up_posts(&self, pickup_posts: &crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::pick_up_post_set_entity::PickUpPostSetEntity>;
       async fn find_popular_posts(&self) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
       async fn update_popular_posts(&self, popular_post_set: &crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity) -> anyhow::Result<crate::domain::blog_domain::popular_post_set_entity::PopularPostSetEntity>;
+      async fn find_all(&self) -> anyhow::Result<Vec<BlogPostEntity>>;
     }
   }
 

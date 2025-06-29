@@ -1,28 +1,30 @@
 'use client';
-import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
 import { useBlogPostList } from '../list/useBlogPostList';
 import styles from './PostsManagement.module.scss';
+import NavigationLinkButton from './ui/NavigationLinkButton';
+import PostDate from './ui/PostDate';
+import PostEditLinkButton from './ui/PostEditLinkButton';
+import PostThumbnail from './ui/PostThumbnail';
 
 export default function PostsManagement() {
-  const { getAllBlogPosts } = useBlogPostList();
+  const { getAllBlogPosts } = useBlogPostList({ includeUnpublished: true });
   const posts = getAllBlogPosts();
 
   return (
     <section data-testid="posts-manage-section">
       <div className={styles.navigationButtons}>
-        <Link href="/posts/create">
-          <button type="button">記事を投稿</button>
-        </Link>
-        <Link href="/posts/pickup">
-          <button type="button">ピックアップ記事を選択</button>
-        </Link>
-        <Link href="/posts/popular">
-          <button type="button">人気記事を選択</button>
-        </Link>
-        <Link href="/posts/top-tech-pick">
-          <button type="button">トップテック記事を選択</button>
-        </Link>
+        <NavigationLinkButton href="/posts/create">
+          記事を投稿
+        </NavigationLinkButton>
+        <NavigationLinkButton href="/posts/pickup">
+          ピックアップ記事を選択
+        </NavigationLinkButton>
+        <NavigationLinkButton href="/posts/popular">
+          人気記事を選択
+        </NavigationLinkButton>
+        <NavigationLinkButton href="/posts/top-tech-pick">
+          トップテック記事を選択
+        </NavigationLinkButton>
       </div>
 
       <div className={styles.postsList}>
@@ -33,31 +35,17 @@ export default function PostsManagement() {
             className={styles.postCard}
           >
             <div className={styles.postContent}>
+              <PostDate dateString={post.postDate} />
               <h3>{post.title}</h3>
-              <span data-testid="post-date" className={styles.postDate}>
-                {formatDate(post.postDate)}
-              </span>
+
+              <PostEditLinkButton postId={post.id}>編集</PostEditLinkButton>
             </div>
             {post.thumbnail && (
-              <CldImage
-                src={post.thumbnail.path}
-                width={120}
-                height={80}
-                alt="サムネイル画像"
-                className={styles.thumbnail}
-              />
+              <PostThumbnail imagePath={post.thumbnail.path} />
             )}
           </div>
         ))}
       </div>
     </section>
   );
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  return `${year}/${month}/${day}`;
 }

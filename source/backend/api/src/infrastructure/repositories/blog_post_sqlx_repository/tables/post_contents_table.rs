@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sqlx::{Executor, FromRow, Postgres};
+use sqlx::{Executor, FromRow, PgConnection, Postgres, Transaction};
 use uuid::Uuid;
 
 use super::{
@@ -124,5 +124,56 @@ pub async fn insert_blog_post_content(executor: impl Executor<'_, Database = Pos
     .bind(content.sort_order)
     .execute(executor)
     .await?;
+  Ok(())
+}
+
+pub async fn delete_post_contents_by_post_id(executor: impl Executor<'_, Database = Postgres>, post_id: Uuid) -> Result<()> {
+  // 外部キー制約のため、関連レコードを一つのクエリで削除する
+  // WITH句を使用して効率的にカスケード削除を実行
+  sqlx::query(
+    "WITH RECURSIVE content_delete AS (
+       -- Step 1: Delete rich_text_links
+       DELETE FROM rich_text_links 
+       WHERE rich_text_id IN (
+         SELECT rt.id FROM rich_texts rt 
+         JOIN paragraph_blocks pb ON rt.paragraph_block_id = pb.id 
+         JOIN post_contents pc ON pb.id = pc.id 
+         WHERE pc.post_id = $1
+       )
+     ), style_delete AS (
+       -- Step 2: Delete rich_text_styles
+       DELETE FROM rich_text_styles 
+       WHERE rich_text_id IN (
+         SELECT rt.id FROM rich_texts rt 
+         JOIN paragraph_blocks pb ON rt.paragraph_block_id = pb.id 
+         JOIN post_contents pc ON pb.id = pc.id 
+         WHERE pc.post_id = $1
+       )
+     ), rich_text_delete AS (
+       -- Step 3: Delete rich_texts
+       DELETE FROM rich_texts 
+       WHERE paragraph_block_id IN (
+         SELECT pc.id FROM post_contents pc WHERE pc.post_id = $1
+       )
+     ), paragraph_delete AS (
+       -- Step 4: Delete paragraph_blocks
+       DELETE FROM paragraph_blocks WHERE id IN (SELECT id FROM post_contents WHERE post_id = $1)
+     ), heading_delete AS (
+       -- Step 5: Delete heading_blocks
+       DELETE FROM heading_blocks WHERE id IN (SELECT id FROM post_contents WHERE post_id = $1)
+     ), image_delete AS (
+       -- Step 6: Delete image_blocks
+       DELETE FROM image_blocks WHERE id IN (SELECT id FROM post_contents WHERE post_id = $1)
+     ), code_delete AS (
+       -- Step 7: Delete code_blocks
+       DELETE FROM code_blocks WHERE id IN (SELECT id FROM post_contents WHERE post_id = $1)
+     )
+     -- Step 8: Finally delete post_contents
+     DELETE FROM post_contents WHERE post_id = $1;",
+  )
+  .bind(post_id)
+  .execute(executor)
+  .await?;
+
   Ok(())
 }

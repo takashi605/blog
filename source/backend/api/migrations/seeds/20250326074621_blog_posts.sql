@@ -21,7 +21,7 @@ VALUES (
     (SELECT id FROM images WHERE file_path = 'test-coffee'),
     DATE '2021-01-01',
     Date '2021-01-02',
-    CURRENT_TIMESTAMP
+    DATE '2021-01-01'
 );
 
 -- 3. post_contents に挿入

@@ -1,22 +1,18 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import type { Dispatch, SetStateAction } from 'react';
-import { createContext, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import type {
-  BlogPostContent,
-  CreateBlogPostRequest,
-} from 'shared-lib/src/api';
+import type { CreateBlogPostRequest } from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
-import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
+import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
+import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
+import PublishedDatePicker from '../editor/form/PublishedDatePicker';
+import SubmitButton from '../editor/form/SubmitButton';
+import TitleInput from '../editor/form/TitleInput';
+import ThumbnailPickModalWithOpenButton from '../editor/ThumbnailPickModal';
+import ThumbnailPreview from '../editor/ThumbnailPreview';
 import styles from './createBlogPostForm.module.scss';
-import PublishedDatePicker from './form/PublishedDatePicker';
-import SubmitButton from './form/SubmitButton';
-import TitleInput from './form/TitleInput';
-import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
-import ThumbnailPreview from './ThumbnailPreview';
 
 export type CreateBlogPostFormData = {
   title: string;
@@ -28,28 +24,13 @@ export type CreateBlogPostFormData = {
 };
 
 function CreateBlogPostForm() {
-  // 今日の日付をYYYY-MM-DD形式で取得
-  const todayHyphenDelimited = new Date().toISOString().split('T')[0];
+  const router = useRouter();
+  const { blogPostContents } = useBlogPostContentsContext();
 
-  const form = useForm<CreateBlogPostFormData>({
-    defaultValues: {
-      title: '',
-      thumbnail: {
-        id: '',
-        path: '',
-      },
-      publishedDate: todayHyphenDelimited,
-    },
-  });
-  const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
-    [],
-  );
-  const { createBlogPost, error } = useCreateBlogPost();
-
+  const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
-  const router = useRouter();
-
+  const { createBlogPost, error } = useCreateBlogPost();
   const onSubmit = async () => {
     const formValues = form.getValues();
     // 日付の生成
@@ -77,50 +58,40 @@ function CreateBlogPostForm() {
 
   return (
     <>
-      <FormProvider {...form}>
-        <form
-          className={styles.form}
-          role="form"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          {error && <p role="alert">{error}</p>}
+      <form
+        className={styles.form}
+        role="form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {error && <p role="alert">{error}</p>}
 
-          <div className={styles.formHeader}>
-            <TitleInput />
+        <div className={styles.formHeader}>
+          <TitleInput />
 
-            <div className={styles.controlsContainer}>
-              <div className={styles.publishedDateContainer}>
-                <PublishedDatePicker />
-              </div>
+          <div className={styles.controlsContainer}>
+            <div className={styles.publishedDateContainer}>
+              <PublishedDatePicker />
+            </div>
 
-              <div className={styles.buttons}>
-                <CommonModalProvider>
-                  <ThumbnailPickModalWithOpenButton />
-                </CommonModalProvider>
+            <div className={styles.buttons}>
+              <CommonModalProvider>
+                <ThumbnailPickModalWithOpenButton />
+              </CommonModalProvider>
 
-                <SubmitButton />
-              </div>
+              <SubmitButton>投稿</SubmitButton>
             </div>
           </div>
-        </form>
-
-        <ThumbnailPreview />
-
-        <div>
-          <h2>内容</h2>
-          <BlogPostContentsSetterContext.Provider value={setBlogPostContents}>
-            <BlogPostEditor />
-          </BlogPostContentsSetterContext.Provider>
         </div>
-      </FormProvider>
+      </form>
+
+      <ThumbnailPreview />
+
+      <div>
+        <h2>内容</h2>
+        <BlogPostEditor />
+      </div>
     </>
   );
 }
 
 export default CreateBlogPostForm;
-
-export const BlogPostContentsSetterContext = createContext<
-  Dispatch<SetStateAction<BlogPostContent[]>>
->(() => {
-  throw new Error('BlogPostContentsSetterContext の設定が完了していません');
-});

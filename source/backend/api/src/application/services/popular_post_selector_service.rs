@@ -88,6 +88,10 @@ mod tests {
       unimplemented!()
     }
 
+    async fn update(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+      unimplemented!()
+    }
+
     async fn find_latests(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
       unimplemented!()
     }
@@ -128,6 +132,10 @@ mod tests {
       } else {
         Err(anyhow!("更新に失敗しました"))
       }
+    }
+
+    async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
+      unimplemented!()
     }
   }
 

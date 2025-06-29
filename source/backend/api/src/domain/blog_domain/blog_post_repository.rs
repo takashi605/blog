@@ -29,6 +29,16 @@ pub trait BlogPostRepository: Send + Sync {
   /// * `Err` - 保存に失敗した場合
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
 
+  /// 既存の記事を更新する
+  ///
+  /// # Arguments
+  /// * `blog_post` - 更新する記事エンティティ
+  ///
+  /// # Returns
+  /// * `Ok(BlogPostEntity)` - 更新に成功した場合、更新された記事を返す
+  /// * `Err` - 更新に失敗した場合
+  async fn update(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
+
   /// 最新の記事を複数取得する
   ///
   /// # Arguments
@@ -89,4 +99,11 @@ pub trait BlogPostRepository: Send + Sync {
   /// * `Ok(PopularPostSetEntity)` - 更新に成功した場合、更新された人気記事群を返す
   /// * `Err` - 更新に失敗した場合
   async fn update_popular_posts(&self, popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity>;
+
+  /// 全記事を取得する
+  ///
+  /// # Returns
+  /// * `Ok(Vec<BlogPostEntity>)` - 全記事リスト
+  /// * `Err` - データベースエラーの場合
+  async fn find_all(&self) -> Result<Vec<BlogPostEntity>>;
 }

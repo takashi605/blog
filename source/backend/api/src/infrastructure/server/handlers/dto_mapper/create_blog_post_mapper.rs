@@ -23,7 +23,7 @@ fn api_create_image_request_to_create_dto(request: api::CreateImageContentReques
   }
 }
 
-fn api_create_content_request_to_create_dto(request: api::CreateBlogPostContentRequest) -> CreateContentDTO {
+pub fn api_create_content_request_to_create_dto(request: api::CreateBlogPostContentRequest) -> CreateContentDTO {
   match request {
     api::CreateBlogPostContentRequest::H2(h2) => CreateContentDTO::H2 {
       id: Uuid::new_v4(), // 新しいIDを生成
@@ -67,4 +67,29 @@ fn api_create_style_request_to_create_dto(api_style: api::Style) -> CreateStyleD
 
 fn api_create_link_request_to_create_dto(api_link: api::Link) -> CreateLinkDTO {
   CreateLinkDTO { url: api_link.url }
+}
+
+pub fn api_create_blog_post_contents_to_create_dto(contents: Vec<api::BlogPostContent>) -> Vec<CreateContentDTO> {
+  contents.into_iter().map(api_blog_post_content_to_create_dto).collect()
+}
+
+fn api_blog_post_content_to_create_dto(content: api::BlogPostContent) -> CreateContentDTO {
+  match content {
+    api::BlogPostContent::H2(h2) => CreateContentDTO::H2 { id: h2.id, text: h2.text },
+    api::BlogPostContent::H3(h3) => CreateContentDTO::H3 { id: h3.id, text: h3.text },
+    api::BlogPostContent::Paragraph(paragraph) => CreateContentDTO::Paragraph {
+      id: paragraph.id,
+      text: paragraph.text.into_iter().map(api_create_rich_text_request_to_create_dto).collect(),
+    },
+    api::BlogPostContent::Image(image) => CreateContentDTO::Image {
+      id: image.id,
+      path: image.path,
+    },
+    api::BlogPostContent::Code(code) => CreateContentDTO::CodeBlock {
+      id: code.id,
+      title: code.title,
+      code: code.code,
+      language: code.language,
+    },
+  }
 }

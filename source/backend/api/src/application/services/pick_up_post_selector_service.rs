@@ -88,6 +88,10 @@ mod tests {
       unimplemented!()
     }
 
+    async fn update(&self, _blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+      unimplemented!()
+    }
+
     async fn find_latests(&self, _quantity: Option<u32>) -> Result<Vec<BlogPostEntity>> {
       unimplemented!()
     }
@@ -127,6 +131,10 @@ mod tests {
     }
 
     async fn update_popular_posts(&self, _popular_post_set: &PopularPostSetEntity) -> Result<PopularPostSetEntity> {
+      unimplemented!()
+    }
+
+    async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
       unimplemented!()
     }
   }

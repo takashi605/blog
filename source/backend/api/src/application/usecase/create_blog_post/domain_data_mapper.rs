@@ -24,7 +24,7 @@ fn convert_image_dto_to_domain(dto: CreateImageDTO) -> CreateImageInput {
 }
 
 /// CreateContentDTOをCreateContentInputに変換する
-fn convert_content_dto_to_domain(dto: CreateContentDTO) -> CreateContentInput {
+pub fn convert_content_dto_to_domain(dto: CreateContentDTO) -> CreateContentInput {
   match dto {
     CreateContentDTO::H2 { id, text } => CreateContentInput::H2 { id, text },
     CreateContentDTO::H3 { id, text } => CreateContentInput::H3 { id, text },

@@ -10,7 +10,7 @@ INSERT INTO blog_posts (
     published_at
 )
 VALUES (
-    gen_random_uuid(),
+    '12345678-90ab-cdef-1234-567890abcdef'::uuid,
     '50年後記事1',
     (SELECT id FROM images WHERE file_path = 'test-book' LIMIT 1),
     CURRENT_DATE,                                            -- 投稿日：マイグレーション実行日

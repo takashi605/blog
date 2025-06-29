@@ -20,10 +20,7 @@ impl PublishedPostViewerService {
   /// # Returns
   /// * `Vec<BlogPostEntity>` - 公開済みの記事のみを含むベクタ
   pub fn filter_published_posts(&self, blog_posts: Vec<BlogPostEntity>) -> Vec<BlogPostEntity> {
-    blog_posts
-      .into_iter()
-      .filter(|post| post.is_published())
-      .collect()
+    blog_posts.into_iter().filter(|post| post.is_published()).collect()
   }
 
   /// アクセス制御用：公開記事を閲覧する

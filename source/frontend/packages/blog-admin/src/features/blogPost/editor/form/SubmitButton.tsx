@@ -1,9 +1,13 @@
 import styles from './submitButton.module.scss';
 
-function SubmitButton() {
+interface SubmitButtonProps {
+  children: React.ReactNode;
+}
+
+function SubmitButton({ children }: SubmitButtonProps) {
   return (
     <button className={styles.submitButton} type="submit">
-      投稿
+      {children}
     </button>
   );
 }

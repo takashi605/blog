@@ -26,7 +26,9 @@ pub fn admin_blog_posts_scope() -> Scope {
     .route("/top-tech-pick", web::put().to(handle_funcs::put_top_tech_pick_blog_post))
     .route("/pickup", web::put().to(handle_funcs::put_pickup_blog_posts))
     .route("/popular", web::put().to(handle_funcs::put_popular_blog_posts))
-    .route("/{uuid}", web::get().to(handle_funcs::get_blog_post))
+    .route("/{uuid}", web::get().to(handle_funcs::get_admin_blog_post))
+    .route("/{uuid}", web::put().to(handle_funcs::update_blog_post))
+    .route("", web::get().to(handle_funcs::get_admin_blog_posts))
     .route("", web::post().to(handle_funcs::create_blog_post))
 }
 
@@ -35,13 +37,19 @@ pub mod handle_funcs {
     di_container::DiContainer,
     server::handlers::{
       api_mapper::{blog_post_response_mapper, view_blog_post_dto_to_response, view_blog_post_dtos_to_response, view_latest_blog_posts_dto_to_response},
-      dto_mapper::create_blog_post_mapper::api_create_blog_post_request_to_create_dto,
+      dto_mapper::{create_blog_post_mapper::api_create_blog_post_request_to_create_dto, update_blog_post_mapper::api_update_blog_post_request_to_update_dto},
       response::err::ApiCustomError,
     },
   };
   use actix_web::{web, HttpResponse, Responder};
   use anyhow::Result;
-  use common::types::api::{BlogPost, CreateBlogPostRequest};
+  use common::types::api::{BlogPost, CreateBlogPostRequest, UpdateBlogPostRequest};
+  use serde::Deserialize;
+
+  #[derive(Deserialize)]
+  pub struct AdminBlogPostsQuery {
+    pub include_unpublished: Option<bool>,
+  }
 
   #[utoipa::path(
     get,
@@ -241,6 +249,32 @@ pub mod handle_funcs {
   }
 
   #[utoipa::path(
+    get,
+    path = "/api/admin/blog/posts",
+    responses(
+      (status = 200, description = "All blog posts with optional unpublished filtering", body = Vec<BlogPost>)
+    ),
+    params(
+      ("include_unpublished" = Option<bool>, Query, description = "Include unpublished posts (default: true)")
+    )
+  )]
+  pub async fn get_admin_blog_posts(query: web::Query<AdminBlogPostsQuery>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+    println!("get_admin_blog_posts");
+
+    // クエリパラメータを取得（デフォルトはtrue: 未公開記事を含む）
+    let include_unpublished = query.include_unpublished.unwrap_or(true);
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_all_blog_posts_usecase();
+    let dtos = usecase.execute(include_unpublished).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_posts = view_blog_post_dtos_to_response(dtos).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_posts))
+  }
+
+  #[utoipa::path(
     post,
     path = "/api/admin/blog/posts",
     request_body = CreateBlogPostRequest,
@@ -260,6 +294,84 @@ pub mod handle_funcs {
     // DIコンテナからユースケースを取得
     let usecase = di_container.create_blog_post_usecase();
     let blog_post_dto = usecase.execute(create_dto).await.map_err(|e| ApiCustomError::Other(e))?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(blog_post_dto).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  #[utoipa::path(
+    get,
+    path = "/api/admin/blog/posts/{uuid}",
+    responses(
+      (status = 200, description = "Blog post found (including unpublished)", body = BlogPost),
+      (status = 404, description = "Blog post not found")
+    ),
+    params(
+      ("uuid" = String, Path, description = "Blog post UUID")
+    )
+  )]
+  pub async fn get_admin_blog_post(path: web::Path<String>, di_container: web::Data<DiContainer>) -> Result<impl Responder, ApiCustomError> {
+    println!("get_admin_blog_post");
+    println!("path: {:?}", path);
+    let post_id = path.into_inner();
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.view_admin_blog_post_usecase();
+    let dto = usecase.execute(&post_id).await.map_err(|e| {
+      // BlogPostNotFound エラーを特別扱い
+      let error_message = e.to_string();
+      if error_message.starts_with("BlogPostNotFound:") {
+        ApiCustomError::BlogPostNotFound(post_id.clone())
+      } else {
+        ApiCustomError::Other(e)
+      }
+    })?;
+
+    // DTOをAPIレスポンスに変換
+    let blog_post = view_blog_post_dto_to_response(dto).map_err(|e| ApiCustomError::Other(e))?;
+
+    Ok(HttpResponse::Ok().json(blog_post))
+  }
+
+  #[utoipa::path(
+    put,
+    path = "/api/admin/blog/posts/{uuid}",
+    request_body = UpdateBlogPostRequest,
+    responses(
+      (status = 200, description = "Blog post updated", body = BlogPost),
+      (status = 404, description = "Blog post not found")
+    ),
+    params(
+      ("uuid" = String, Path, description = "Blog post UUID")
+    )
+  )]
+  pub async fn update_blog_post(
+    path: web::Path<String>,
+    blog_post_req: web::Json<UpdateBlogPostRequest>,
+    di_container: web::Data<DiContainer>,
+  ) -> Result<impl Responder, ApiCustomError> {
+    println!("update_blog_post");
+    let post_id = path.into_inner();
+    let blog_post_req = blog_post_req.into_inner();
+
+    // API型をDTO型に変換
+    let update_dto = api_update_blog_post_request_to_update_dto(blog_post_req);
+
+    // DIコンテナからユースケースを取得
+    let usecase = di_container.update_blog_post_usecase();
+    let blog_post_dto = usecase.execute(&post_id, update_dto).await.map_err(|e| {
+      // エラーメッセージによる分類
+      let error_message = e.to_string();
+      if error_message.contains("非公開にできません") {
+        ApiCustomError::ValidationError(error_message)
+      } else if error_message.starts_with("BlogPostNotFound:") {
+        ApiCustomError::BlogPostNotFound(post_id.clone())
+      } else {
+        ApiCustomError::Other(e)
+      }
+    })?;
 
     // DTOをAPIレスポンスに変換
     let blog_post = view_blog_post_dto_to_response(blog_post_dto).map_err(|e| ApiCustomError::Other(e))?;
