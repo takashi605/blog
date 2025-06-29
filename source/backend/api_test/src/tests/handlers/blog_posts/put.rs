@@ -98,15 +98,24 @@ mod tests {
     let create_resp = create_request_obj.send().await.unwrap().text().await.unwrap();
     let created_post: BlogPost = serde_json::from_str(&create_resp).context("作成レスポンスのパースに失敗")?;
 
+    // 編集用の画像ブロック用画像を取得
+    let image_for_block = test_helper::fetch_any_image().await?;
+
     // 編集リクエストを作成（post_dateとlast_update_dateは含まない）
     let update_request = UpdateBlogPostRequest {
       title: "編集後のタイトル".to_string(),
       thumbnail: thumbnail,
       published_date: created_post.published_date,
-      contents: vec![common::types::api::BlogPostContent::H2(common::types::api::H2Block {
-        id: uuid::Uuid::new_v4(),
-        text: "編集後の見出し".to_string(),
-      })],
+      contents: vec![
+        common::types::api::BlogPostContent::H2(common::types::api::H2Block {
+          id: uuid::Uuid::new_v4(),
+          text: "編集後の見出し".to_string(),
+        }),
+        common::types::api::BlogPostContent::Image(common::types::api::ImageBlock {
+          id: uuid::Uuid::new_v4(),
+          path: image_for_block.path,
+        }),
+      ],
     };
 
     let url = format!("http://localhost:8001/admin/blog/posts/{}", created_post.id);
@@ -114,7 +123,18 @@ mod tests {
 
     let put_request = Request::new(Methods::PUT { body: request_body }, &url);
 
-    let resp = put_request.send().await.unwrap().text().await.unwrap();
+    let response = put_request.send().await.unwrap();
+    let status = response.status();
+    let resp = response.text().await.unwrap();
+    
+    // デバッグ用：レスポンスの内容を出力
+    println!("Response status: {}", status);
+    println!("Response body: {}", resp);
+    
+    if status < 200 || status >= 300 {
+      return Err(anyhow::anyhow!("PUT request failed with status {}: {}", status, resp));
+    }
+    
     let edited_post: BlogPost = serde_json::from_str(&resp).context("編集レスポンスのパースに失敗")?;
 
     // 編集後の記事データを検証
