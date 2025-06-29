@@ -96,7 +96,6 @@ type CreateBlogPostRequest =
 ### バックエンド (`source/backend/`)
 
 詳細な情報は [source/backend/BACKEND.md](source/backend/BACKEND.md) を参照してください。
-@source/backend/BACKEND.md
 
 **DDD（ドメイン駆動設計）3層アーキテクチャ:**
 
@@ -111,7 +110,6 @@ type CreateBlogPostRequest =
 ### フロントエンド (`source/frontend/`)
 
 詳細な情報は [source/frontend/FRONTEND.md](source/frontend/FRONTEND.md) を参照してください。
-@source/frontend/FRONTEND.md
 
 **PNPM ワークスペース構成のパッケージ:**
 

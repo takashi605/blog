@@ -42,7 +42,6 @@ make api-migrate-add-seeds name=seed_name
 ## 開発時の重要事項
 
 - **データベース:** 型安全なデータベース操作に SQLx を使用。マイグレーションは必ず `make api-migrate-run` で実行
-- **モジュールファイル** 最新の rust モジュール構成に従うため、 **mod.rs は絶対に使用しない**
 
 ## API 統合テスト実装
 
