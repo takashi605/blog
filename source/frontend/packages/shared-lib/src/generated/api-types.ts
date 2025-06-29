@@ -92,7 +92,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_admin_blog_post"];
-        put?: never;
+        put: operations["update_blog_post"];
         post?: never;
         delete?: never;
         options?: never;
@@ -325,6 +325,13 @@ export interface components {
             bold: boolean;
             inlineCode: boolean;
         };
+        UpdateBlogPostRequest: {
+            contents: components["schemas"]["BlogPostContent"][];
+            /** Format: date */
+            publishedDate: string;
+            thumbnail: components["schemas"]["Image"];
+            title: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -490,6 +497,40 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Blog post found (including unpublished) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlogPost"];
+                };
+            };
+            /** @description Blog post not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_blog_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Blog post UUID */
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBlogPostRequest"];
+            };
+        };
+        responses: {
+            /** @description Blog post updated */
             200: {
                 headers: {
                     [name: string]: unknown;

@@ -15,6 +15,8 @@ export type BlogPostContent = components['schemas']['BlogPostContent'];
 // よく使用されるリクエスト型
 export type CreateBlogPostRequest =
   paths['/api/admin/blog/posts']['post']['requestBody']['content']['application/json'];
+export type UpdateBlogPostRequest =
+  paths['/api/admin/blog/posts/{id}']['put']['requestBody']['content']['application/json'];
 export type RegisterImageRequest =
   paths['/api/admin/blog/images']['post']['requestBody']['content']['application/json'];
 
