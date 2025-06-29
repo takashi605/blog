@@ -11,9 +11,9 @@ if (!process.env.TEST_TARGET_URL) {
 }
 
 // テストデータの記事ID（人気記事、ピックアップ記事、トップテックピック記事）
-const popularPostId = 'e2e00000-ed17-4000-b000-000000000002'; // 人気記事
-const pickupPostId = 'e2e00000-ed17-4000-b000-000000000003'; // ピックアップ記事
-const topTechPickPostId = 'e2e00000-ed17-4000-b000-000000000004'; // トップテックピック記事
+const popularPostId = '91450c47-9845-4398-ad3a-275118d223ea'; // 人気記事
+const pickupPostId = '20b73825-9a6f-4901-aa42-e104a8d2c4f6'; // ピックアップ記事
+const topTechPickPostId = '672f2772-72b5-404a-8895-b1fbbf310801'; // トップテックピック記事
 
 Given(
   '【正常系 記事編集 非公開不可の記事】人気記事に設定されている記事の編集ページにアクセスする',
