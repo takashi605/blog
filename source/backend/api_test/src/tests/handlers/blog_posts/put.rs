@@ -187,6 +187,121 @@ mod tests {
     Ok(())
   }
 
+  #[tokio::test(flavor = "current_thread")]
+  async fn put_blog_post_cannot_unpublish_popular_post() -> Result<()> {
+    // 人気記事のIDを取得
+    let popular_posts_url = "http://localhost:8001/blog/posts/popular";
+    let popular_request = Request::new(Methods::GET, popular_posts_url);
+    let popular_response = popular_request.send().await.unwrap().text().await.unwrap();
+    let popular_posts: Vec<BlogPost> = serde_json::from_str(&popular_response).context("人気記事の取得に失敗")?;
+    
+    let popular_post = popular_posts.first().context("人気記事が見つかりません")?;
+
+    // 未来の日付を設定して非公開にしようとする
+    let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
+    
+    let update_request = UpdateBlogPostRequest {
+      title: popular_post.title.clone(),
+      thumbnail: popular_post.thumbnail.clone(),
+      published_date: tomorrow,
+      contents: popular_post.contents.clone(),
+    };
+
+    let url = format!("http://localhost:8001/admin/blog/posts/{}", popular_post.id);
+    let request_body = serde_json::to_string(&update_request).context("JSON データに変換できませんでした")?;
+
+    let put_request = Request::new(Methods::PUT { body: request_body }, &url);
+
+    let response = put_request.send().await.unwrap();
+
+    // 400 Bad Request が返されることを確認
+    assert_eq!(response.status(), 400);
+
+    let resp_body = response.text().await.unwrap();
+    let error_response: ErrResponse = serde_json::from_str(&resp_body).context("エラーレスポンスのパースに失敗")?;
+
+    // エラーメッセージに人気記事は非公開にできない旨が含まれていることを確認
+    assert!(error_response.message.contains("人気記事に設定されているため非公開にできません"));
+
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn put_blog_post_cannot_unpublish_pickup_post() -> Result<()> {
+    // ピックアップ記事のIDを取得
+    let pickup_posts_url = "http://localhost:8001/blog/posts/pickup";
+    let pickup_request = Request::new(Methods::GET, pickup_posts_url);
+    let pickup_response = pickup_request.send().await.unwrap().text().await.unwrap();
+    let pickup_posts: Vec<BlogPost> = serde_json::from_str(&pickup_response).context("ピックアップ記事の取得に失敗")?;
+    
+    let pickup_post = pickup_posts.first().context("ピックアップ記事が見つかりません")?;
+
+    // 未来の日付を設定して非公開にしようとする
+    let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
+    
+    let update_request = UpdateBlogPostRequest {
+      title: pickup_post.title.clone(),
+      thumbnail: pickup_post.thumbnail.clone(),
+      published_date: tomorrow,
+      contents: pickup_post.contents.clone(),
+    };
+
+    let url = format!("http://localhost:8001/admin/blog/posts/{}", pickup_post.id);
+    let request_body = serde_json::to_string(&update_request).context("JSON データに変換できませんでした")?;
+
+    let put_request = Request::new(Methods::PUT { body: request_body }, &url);
+
+    let response = put_request.send().await.unwrap();
+
+    // 400 Bad Request が返されることを確認
+    assert_eq!(response.status(), 400);
+
+    let resp_body = response.text().await.unwrap();
+    let error_response: ErrResponse = serde_json::from_str(&resp_body).context("エラーレスポンスのパースに失敗")?;
+
+    // エラーメッセージにピックアップ記事は非公開にできない旨が含まれていることを確認
+    assert!(error_response.message.contains("ピックアップ記事に設定されているため非公開にできません"));
+
+    Ok(())
+  }
+
+  #[tokio::test(flavor = "current_thread")]
+  async fn put_blog_post_cannot_unpublish_top_tech_pick_post() -> Result<()> {
+    // トップテックピック記事のIDを取得
+    let top_tech_pick_url = "http://localhost:8001/blog/posts/top-tech-pick";
+    let top_tech_pick_request = Request::new(Methods::GET, top_tech_pick_url);
+    let top_tech_pick_response = top_tech_pick_request.send().await.unwrap().text().await.unwrap();
+    let top_tech_pick_post: BlogPost = serde_json::from_str(&top_tech_pick_response).context("トップテックピック記事の取得に失敗")?;
+
+    // 未来の日付を設定して非公開にしようとする
+    let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
+    
+    let update_request = UpdateBlogPostRequest {
+      title: top_tech_pick_post.title.clone(),
+      thumbnail: top_tech_pick_post.thumbnail.clone(),
+      published_date: tomorrow,
+      contents: top_tech_pick_post.contents.clone(),
+    };
+
+    let url = format!("http://localhost:8001/admin/blog/posts/{}", top_tech_pick_post.id);
+    let request_body = serde_json::to_string(&update_request).context("JSON データに変換できませんでした")?;
+
+    let put_request = Request::new(Methods::PUT { body: request_body }, &url);
+
+    let response = put_request.send().await.unwrap();
+
+    // 400 Bad Request が返されることを確認
+    assert_eq!(response.status(), 400);
+
+    let resp_body = response.text().await.unwrap();
+    let error_response: ErrResponse = serde_json::from_str(&resp_body).context("エラーレスポンスのパースに失敗")?;
+
+    // エラーメッセージにトップテックピック記事は非公開にできない旨が含まれていることを確認
+    assert!(error_response.message.contains("トップテックピック記事に設定されているため非公開にできません"));
+
+    Ok(())
+  }
+
   mod helper {
     use super::*;
 
