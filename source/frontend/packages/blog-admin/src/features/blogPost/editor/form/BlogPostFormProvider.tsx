@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { FormProvider, useForm, type UseFormReturn } from 'react-hook-form';
-import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
+import type { CreateBlogPostFormData } from '../../create/CreateBlogPostForm';
 
 type BlogPostFormState = UseFormReturn<CreateBlogPostFormData>;
 
