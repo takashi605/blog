@@ -1,10 +1,9 @@
 'use client';
-import { useFormContext } from 'react-hook-form';
-import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
+import { useBlogPostFormContext } from './BlogPostFormProvider';
 import styles from './publishedDatePicker.module.scss';
 
 function PublishedDatePicker() {
-  const { register } = useFormContext<CreateBlogPostFormData>();
+  const { register } = useBlogPostFormContext();
 
   return (
     <div className={styles.publishedDate}>

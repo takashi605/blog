@@ -1,8 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import type { Dispatch, SetStateAction } from 'react';
-import { createContext, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useState } from 'react';
 import type {
   BlogPostContent,
   CreateBlogPostRequest,
@@ -10,8 +8,10 @@ import type {
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
+import { BlogPostContentsSetterContext } from './blogPostEditor/BlogPostContentsContext';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
+import { useBlogPostFormContext } from './form/BlogPostFormProvider';
 import PublishedDatePicker from './form/PublishedDatePicker';
 import SubmitButton from './form/SubmitButton';
 import TitleInput from './form/TitleInput';
@@ -28,24 +28,13 @@ export type CreateBlogPostFormData = {
 };
 
 function CreateBlogPostForm() {
-  // 今日の日付をYYYY-MM-DD形式で取得
-  const todayHyphenDelimited = new Date().toISOString().split('T')[0];
   const router = useRouter();
 
   const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
     [],
   );
 
-  const form = useForm<CreateBlogPostFormData>({
-    defaultValues: {
-      title: '',
-      thumbnail: {
-        id: '',
-        path: '',
-      },
-      publishedDate: todayHyphenDelimited,
-    },
-  });
+  const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
   const { createBlogPost, error } = useCreateBlogPost();
@@ -76,50 +65,42 @@ function CreateBlogPostForm() {
 
   return (
     <>
-      <FormProvider {...form}>
-        <form
-          className={styles.form}
-          role="form"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          {error && <p role="alert">{error}</p>}
+      <form
+        className={styles.form}
+        role="form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {error && <p role="alert">{error}</p>}
 
-          <div className={styles.formHeader}>
-            <TitleInput />
+        <div className={styles.formHeader}>
+          <TitleInput />
 
-            <div className={styles.controlsContainer}>
-              <div className={styles.publishedDateContainer}>
-                <PublishedDatePicker />
-              </div>
+          <div className={styles.controlsContainer}>
+            <div className={styles.publishedDateContainer}>
+              <PublishedDatePicker />
+            </div>
 
-              <div className={styles.buttons}>
-                <CommonModalProvider>
-                  <ThumbnailPickModalWithOpenButton />
-                </CommonModalProvider>
+            <div className={styles.buttons}>
+              <CommonModalProvider>
+                <ThumbnailPickModalWithOpenButton />
+              </CommonModalProvider>
 
-                <SubmitButton />
-              </div>
+              <SubmitButton />
             </div>
           </div>
-        </form>
-
-        <ThumbnailPreview />
-
-        <div>
-          <h2>内容</h2>
-          <BlogPostContentsSetterContext.Provider value={setBlogPostContents}>
-            <BlogPostEditor />
-          </BlogPostContentsSetterContext.Provider>
         </div>
-      </FormProvider>
+      </form>
+
+      <ThumbnailPreview />
+
+      <div>
+        <h2>内容</h2>
+        <BlogPostContentsSetterContext.Provider value={setBlogPostContents}>
+          <BlogPostEditor />
+        </BlogPostContentsSetterContext.Provider>
+      </div>
     </>
   );
 }
 
 export default CreateBlogPostForm;
-
-export const BlogPostContentsSetterContext = createContext<
-  Dispatch<SetStateAction<BlogPostContent[]>>
->(() => {
-  throw new Error('BlogPostContentsSetterContext の設定が完了していません');
-});

@@ -9,7 +9,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
 import { useContext } from 'react';
 import type { BlogPostContent } from 'shared-lib/src/api';
-import { BlogPostContentsSetterContext } from '../CreateBlogPostForm';
+import { BlogPostContentsSetterContext } from './BlogPostContentsContext';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { blogPostContentsToLexicalNodes } from './helper/blogPostContentToLexicalNode';

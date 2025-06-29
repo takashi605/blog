@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
-import { useFormContext } from 'react-hook-form';
 import type { Image } from 'shared-lib/src/api';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
 import ImageListProvider from '../../images/list/ImageListProvider';
 import ImagePicker from '../../images/pick/ImagePicker';
+import { useBlogPostFormContext } from './form/BlogPostFormProvider';
 
 function ThumbnailPickModalWithOpenButton() {
-  const { register, setValue } = useFormContext();
+  const { register, setValue } = useBlogPostFormContext();
 
   const { onBlur, name, ref } = register('thumbnail.id');
 

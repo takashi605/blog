@@ -37,15 +37,12 @@ jest.mock('@lexical/link', () => ({
   })),
 }));
 
-jest.mock(
-  '../plugins/customNodes/codeBlock/CustomCodeNode',
-  () => ({
-    $createCustomCodeNode: jest.fn().mockImplementation(() => ({
-      getType: () => 'code',
-      append: jest.fn().mockReturnThis(),
-    })),
-  }),
-);
+jest.mock('../plugins/customNodes/codeBlock/CustomCodeNode', () => ({
+  $createCustomCodeNode: jest.fn().mockImplementation(() => ({
+    getType: () => 'code',
+    append: jest.fn().mockReturnThis(),
+  })),
+}));
 
 jest.mock('../plugins/customNodes/image/ImageNode', () => ({
   $createImageNode: jest.fn().mockImplementation(() => ({
