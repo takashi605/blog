@@ -126,15 +126,15 @@ mod tests {
     let response = put_request.send().await.unwrap();
     let status = response.status();
     let resp = response.text().await.unwrap();
-    
+
     // デバッグ用：レスポンスの内容を出力
     println!("Response status: {}", status);
     println!("Response body: {}", resp);
-    
+
     if status < 200 || status >= 300 {
       return Err(anyhow::anyhow!("PUT request failed with status {}: {}", status, resp));
     }
-    
+
     let edited_post: BlogPost = serde_json::from_str(&resp).context("編集レスポンスのパースに失敗")?;
 
     // 編集後の記事データを検証
@@ -189,17 +189,18 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_blog_post_cannot_unpublish_popular_post() -> Result<()> {
-    // 人気記事のIDを取得
-    let popular_posts_url = "http://localhost:8001/blog/posts/popular";
-    let popular_request = Request::new(Methods::GET, popular_posts_url);
-    let popular_response = popular_request.send().await.unwrap().text().await.unwrap();
-    let popular_posts: Vec<BlogPost> = serde_json::from_str(&popular_response).context("人気記事の取得に失敗")?;
-    
-    let popular_post = popular_posts.first().context("人気記事が見つかりません")?;
+    // 人気記事専用のIDを直接指定（重複のない記事を使用）
+    let popular_post_id = "f735a7b7-8bbc-4cb5-b6cf-c188734f64d3"; // ミニマル記事3（人気記事のみ）
+
+    // 該当記事を取得して存在確認
+    let post_url = format!("http://localhost:8001/admin/blog/posts/{}", popular_post_id);
+    let get_request = Request::new(Methods::GET, &post_url);
+    let get_response = get_request.send().await.unwrap().text().await.unwrap();
+    let popular_post: BlogPost = serde_json::from_str(&get_response).context("人気記事の取得に失敗")?;
 
     // 未来の日付を設定して非公開にしようとする
     let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
-    
+
     let update_request = UpdateBlogPostRequest {
       title: popular_post.title.clone(),
       thumbnail: popular_post.thumbnail.clone(),
@@ -228,17 +229,18 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_blog_post_cannot_unpublish_pickup_post() -> Result<()> {
-    // ピックアップ記事のIDを取得
-    let pickup_posts_url = "http://localhost:8001/blog/posts/pickup";
-    let pickup_request = Request::new(Methods::GET, pickup_posts_url);
-    let pickup_response = pickup_request.send().await.unwrap().text().await.unwrap();
-    let pickup_posts: Vec<BlogPost> = serde_json::from_str(&pickup_response).context("ピックアップ記事の取得に失敗")?;
-    
-    let pickup_post = pickup_posts.first().context("ピックアップ記事が見つかりません")?;
+    // ピックアップ記事専用のIDを直接指定（重複のない記事を使用）
+    let pickup_post_id = "20b73825-9a6f-4901-aa42-e104a8d2c4f6"; // ミニマル記事1（ピックアップ記事のみ）
+
+    // 該当記事を取得して存在確認
+    let post_url = format!("http://localhost:8001/admin/blog/posts/{}", pickup_post_id);
+    let get_request = Request::new(Methods::GET, &post_url);
+    let get_response = get_request.send().await.unwrap().text().await.unwrap();
+    let pickup_post: BlogPost = serde_json::from_str(&get_response).context("ピックアップ記事の取得に失敗")?;
 
     // 未来の日付を設定して非公開にしようとする
     let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
-    
+
     let update_request = UpdateBlogPostRequest {
       title: pickup_post.title.clone(),
       thumbnail: pickup_post.thumbnail.clone(),
@@ -267,15 +269,18 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_blog_post_cannot_unpublish_top_tech_pick_post() -> Result<()> {
-    // トップテックピック記事のIDを取得
-    let top_tech_pick_url = "http://localhost:8001/blog/posts/top-tech-pick";
-    let top_tech_pick_request = Request::new(Methods::GET, top_tech_pick_url);
-    let top_tech_pick_response = top_tech_pick_request.send().await.unwrap().text().await.unwrap();
-    let top_tech_pick_post: BlogPost = serde_json::from_str(&top_tech_pick_response).context("トップテックピック記事の取得に失敗")?;
+    // トップテックピック記事のIDを直接指定
+    let top_tech_pick_post_id = "672f2772-72b5-404a-8895-b1fbbf310801"; // 初めての技術スタックへの挑戦
+
+    // 該当記事を取得して存在確認
+    let post_url = format!("http://localhost:8001/admin/blog/posts/{}", top_tech_pick_post_id);
+    let get_request = Request::new(Methods::GET, &post_url);
+    let get_response = get_request.send().await.unwrap().text().await.unwrap();
+    let top_tech_pick_post: BlogPost = serde_json::from_str(&get_response).context("トップテックピック記事の取得に失敗")?;
 
     // 未来の日付を設定して非公開にしようとする
     let tomorrow = chrono::Utc::now().date_naive() + chrono::Duration::days(1);
-    
+
     let update_request = UpdateBlogPostRequest {
       title: top_tech_pick_post.title.clone(),
       thumbnail: top_tech_pick_post.thumbnail.clone(),

@@ -362,9 +362,11 @@ pub mod handle_funcs {
     // DIコンテナからユースケースを取得
     let usecase = di_container.update_blog_post_usecase();
     let blog_post_dto = usecase.execute(&post_id, update_dto).await.map_err(|e| {
-      // BlogPostNotFound エラーを特別扱い
+      // エラーメッセージによる分類
       let error_message = e.to_string();
-      if error_message.starts_with("BlogPostNotFound:") {
+      if error_message.contains("非公開にできません") {
+        ApiCustomError::ValidationError(error_message)
+      } else if error_message.starts_with("BlogPostNotFound:") {
         ApiCustomError::BlogPostNotFound(post_id.clone())
       } else {
         ApiCustomError::Other(e)

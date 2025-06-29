@@ -22,6 +22,12 @@ impl UpdateBlogPostUseCase {
     // 既存記事の存在確認
     let mut existing_blog_post = self.repository.find(id).await?;
 
+    // 非公開化しようとしている場合（未来の日付設定）は制限チェックを実行
+    let today = chrono::Utc::now().date_naive();
+    if dto.published_date > today {
+      self.validate_unpublish_restrictions(id).await?;
+    }
+
     // DTOから更新内容をエンティティに反映
     convert_dto_to_entity(dto, &mut existing_blog_post)?;
 
@@ -32,6 +38,35 @@ impl UpdateBlogPostUseCase {
     let result_dto = dto_mapper::convert_to_blog_post_dto(updated_blog_post);
 
     Ok(result_dto)
+  }
+
+  async fn validate_unpublish_restrictions(&self, post_id: &str) -> anyhow::Result<()> {
+    // トップテックピック記事チェック（最優先）
+    if let Ok(top_tech_pick) = self.repository.find_top_tech_pick().await {
+      if top_tech_pick.get_post().get_id().to_string() == post_id {
+        return Err(anyhow::anyhow!("トップテックピック記事に設定されているため非公開にできません"));
+      }
+    }
+
+    // ピックアップ記事チェック
+    if let Ok(pickup_posts) = self.repository.find_pick_up_posts().await {
+      for post in pickup_posts.get_all_posts() {
+        if post.get_id().to_string() == post_id {
+          return Err(anyhow::anyhow!("ピックアップ記事に設定されているため非公開にできません"));
+        }
+      }
+    }
+
+    // 人気記事チェック
+    if let Ok(popular_posts) = self.repository.find_popular_posts().await {
+      for post in popular_posts.get_all_posts() {
+        if post.get_id().to_string() == post_id {
+          return Err(anyhow::anyhow!("人気記事に設定されているため非公開にできません"));
+        }
+      }
+    }
+
+    Ok(())
   }
 }
 
