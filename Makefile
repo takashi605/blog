@@ -213,9 +213,9 @@ web-sh:
 # usage:
 #   make api-migrate-add name=xxxxx
 api-migrate-add-schema:
-	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/schema
+	cd source/backend/api && cargo sqlx migrate add $(name) --source ./migrations/schema
 api-migrate-add-seeds:
-	cd source/backend/api && sqlx migrate add $(name) --source ./migrations/seeds
+	cd source/backend/api && cargo sqlx migrate add $(name) --source ./migrations/seeds
 
 # OpenAPI仕様書生成
 api-generate-openapi:
