@@ -16,7 +16,7 @@ export type BlogPostContent = components['schemas']['BlogPostContent'];
 export type CreateBlogPostRequest =
   paths['/api/admin/blog/posts']['post']['requestBody']['content']['application/json'];
 export type UpdateBlogPostRequest =
-  paths['/api/admin/blog/posts/{id}']['put']['requestBody']['content']['application/json'];
+  paths['/api/admin/blog/posts/{uuid}']['put']['requestBody']['content']['application/json'];
 export type RegisterImageRequest =
   paths['/api/admin/blog/images']['post']['requestBody']['content']['application/json'];
 

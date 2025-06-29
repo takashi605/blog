@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import type { components } from 'shared-lib/src/generated';
 import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
+import type { components } from 'shared-lib/src/generated';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
@@ -54,7 +54,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
         initialData.id,
         updateRequest,
       );
-      router.push(`/posts/edit/success?id=${updatedBlogPost.id}`);
+      router.push(`/posts/${updatedBlogPost.id}/edit/success`);
     } catch (e) {
       // エラーメッセージはフック内で設定されるため、ここでは何もしない
     }
