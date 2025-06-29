@@ -1,6 +1,7 @@
 use crate::tests::helper::http::methods::Methods;
 use crate::tests::helper::http::request::Request;
 use anyhow::{Context, Result};
+use chrono::Duration;
 use common::types::api::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
@@ -177,4 +178,52 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
     ],
   };
   Ok(blog_post)
+}
+
+pub fn expected_future_blog_post() -> Result<BlogPost> {
+  let target_post_id: Uuid = future_post_id()?;
+  
+  // シードファイルでは CURRENT_DATE を使用しているため、今日の日付を使用
+  let today = chrono::Utc::now().date_naive();
+  let today_str = today.format("%Y-%m-%d").to_string();
+  
+  // 公開日は50年後に設定（シードファイルの CURRENT_TIMESTAMP + INTERVAL '50 years' に対応）
+  let published_date = today + chrono::Duration::days(365 * 50);
+  let published_date_str = published_date.format("%Y-%m-%d").to_string();
+  
+  let blog_post = BlogPost {
+    id: target_post_id,
+    title: "50年後記事1".to_string(),
+    thumbnail: Image {
+      id: Uuid::new_v4(),
+      path: "test-book".to_string(),
+    },
+    post_date: today_str.parse()?,
+    last_update_date: today_str.parse()?,
+    published_date: published_date_str.parse()?,
+    contents: vec![
+      BlogPostContent::H2(H2Block {
+        id: Uuid::new_v4(),
+        text: "50年後記事1の見出し".to_string(),
+      }),
+      BlogPostContent::Paragraph(ParagraphBlock {
+        id: Uuid::new_v4(),
+        text: vec![RichText {
+          text: "これは50年後に公開される予定の記事の段落です。".to_string(),
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
+          link: Option::None,
+        }],
+      }),
+    ],
+  };
+
+  Ok(blog_post)
+}
+
+pub fn future_post_id() -> Result<Uuid> {
+  let uuid = Uuid::parse_str("12345678-90ab-cdef-1234-567890abcdef")?;
+  Ok(uuid)
 }

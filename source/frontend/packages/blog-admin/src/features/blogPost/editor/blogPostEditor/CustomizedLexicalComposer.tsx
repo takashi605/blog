@@ -69,17 +69,22 @@ const theme = {
 
 type CustomizedLexicalComposerProps = {
   children: React.ReactNode;
+  initialEditorState?: () => void;
 };
 
 function CustomizedLexicalComposer({
   children,
+  initialEditorState,
 }: CustomizedLexicalComposerProps) {
+  const handleError = (error: Error) => {
+    console.error('Lexical Editor Error:', error);
+    console.error('Error Stack:', error.stack);
+  };
+
   const initialConfig = {
     namespace: 'MyEditor',
     // TODO 適切なエラーハンドリングを実装する
-    onError: (error: Error) => {
-      console.error(error);
-    },
+    onError: handleError,
     // node を色々と追加しないと MarkDown が動かないらしい： https://zenn.dev/ikenohi/scraps/e2832cbcb566a2
     nodes: [
       LinkNode,
@@ -98,6 +103,7 @@ function CustomizedLexicalComposer({
       CustomCodeNode,
     ],
     theme,
+    editorState: initialEditorState,
   };
   return (
     <LexicalComposer initialConfig={initialConfig}>{children}</LexicalComposer>

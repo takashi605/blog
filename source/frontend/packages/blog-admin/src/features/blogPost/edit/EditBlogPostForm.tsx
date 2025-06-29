@@ -1,9 +1,6 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import type { CreateBlogPostRequest } from 'shared-lib/src/api';
-import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
+import type { components } from 'shared-lib/src/generated';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
-import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
 import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
@@ -12,9 +9,9 @@ import SubmitButton from '../editor/form/SubmitButton';
 import TitleInput from '../editor/form/TitleInput';
 import ThumbnailPickModalWithOpenButton from '../editor/ThumbnailPickModal';
 import ThumbnailPreview from '../editor/ThumbnailPreview';
-import styles from './createBlogPostForm.module.scss';
+import styles from './editBlogPostForm.module.scss';
 
-export type CreateBlogPostFormData = {
+export type EditBlogPostFormData = {
   title: string;
   thumbnail: {
     id: string;
@@ -23,37 +20,32 @@ export type CreateBlogPostFormData = {
   publishedDate: string;
 };
 
-function CreateBlogPostForm() {
-  const router = useRouter();
+type BlogPost = components['schemas']['BlogPost'];
+
+interface EditBlogPostFormProps {
+  initialData: BlogPost;
+}
+
+function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
   const { blogPostContents } = useBlogPostContentsContext();
 
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
-  const { createBlogPost, error } = useCreateBlogPost();
   const onSubmit = async () => {
     const formValues = form.getValues();
-    // 日付の生成
-    const todaySlashDelimited = toISOStringWithTimezone(new Date())
-      .split('T')[0]
-      .replace('/', '-');
 
-    // BlogPost型に合わせてデータを構築
-    const blogPost: CreateBlogPostRequest = {
+    console.log('編集フォーム送信データ:', {
       title: formValues.title,
       thumbnail: formValues.thumbnail,
-      postDate: todaySlashDelimited,
-      lastUpdateDate: todaySlashDelimited,
-      contents: blogPostContents,
       publishedDate: formValues.publishedDate,
-    };
+      contents: blogPostContents,
+      originalData: initialData,
+    });
 
-    try {
-      const createdBlogPost = await createBlogPost(blogPost);
-      router.push(`/posts/create/success?id=${createdBlogPost.id}`);
-    } catch (e) {
-      // エラーメッセージはフック内で設定されるため、ここでは何もしない
-    }
+    alert(
+      '編集処理はまだ実装されていません。コンソールにデータが出力されました。',
+    );
   };
 
   return (
@@ -63,8 +55,6 @@ function CreateBlogPostForm() {
         role="form"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {error && <p role="alert">{error}</p>}
-
         <div className={styles.formHeader}>
           <TitleInput />
 
@@ -88,10 +78,10 @@ function CreateBlogPostForm() {
 
       <div>
         <h2>内容</h2>
-        <BlogPostEditor />
+        <BlogPostEditor initialContents={initialData.contents} />
       </div>
     </>
   );
 }
 
-export default CreateBlogPostForm;
+export default EditBlogPostForm;

@@ -7,11 +7,12 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
-import { useContext } from 'react';
-import { BlogPostContentsSetterContext } from '../CreateBlogPostForm';
-import { lexicalNodeToBlogPostContent } from '../helper/lexicalNodeToBlogPostContent';
+import type { BlogPostContent } from 'shared-lib/src/api';
+import { useBlogPostContentsContext } from './BlogPostContentsProvider';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
+import { blogPostContentsToLexicalNodes } from './helper/blogPostContentToLexicalNode';
+import { lexicalNodeToBlogPostContent } from './helper/lexicalNodeToBlogPostContent';
 import { validateUrl } from './helper/url';
 import CodeHighlightPlugin from './plugins/customNodes/codeBlock/CodeHighlightPlugin';
 import CodeLanguageClassPlugin from './plugins/customNodes/codeBlock/CodeLanguageClassPlugin';
@@ -19,8 +20,12 @@ import { ImageRegister } from './plugins/customNodes/image/ImagePlugin';
 import ToolBarPlugin from './plugins/toolBar/ToolBarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
 
-function BlogPostEditor() {
-  const setBlogPostContents = useContext(BlogPostContentsSetterContext);
+type BlogPostEditorProps = {
+  initialContents?: BlogPostContent[];
+};
+
+function BlogPostEditor({ initialContents }: BlogPostEditorProps) {
+  const { setBlogPostContents } = useBlogPostContentsContext();
   const onChange = (editor: EditorState) => {
     editor.read(() => {
       const root = $getRoot();
@@ -31,8 +36,22 @@ function BlogPostEditor() {
     });
   };
 
+  // 初期コンテンツからLexicalの初期エディタステートを作成
+  const prepopulatedRichText = () => {
+    const root = $getRoot();
+    if (root.getChildrenSize() === 0 && initialContents) {
+      // 初期コンテンツをLexicalNodeに変換
+      const nodes = blogPostContentsToLexicalNodes(initialContents);
+      // ルートに直接追加（$insertNodesではなくroot.appendを使用）
+      root.clear();
+      root.append(...nodes);
+    }
+  };
+
   return (
-    <CustomizedLexicalComposer>
+    <CustomizedLexicalComposer
+      initialEditorState={initialContents ? prepopulatedRichText : undefined}
+    >
       <div className={styles.toolBarWrapper}>
         <ToolBarPlugin />
       </div>

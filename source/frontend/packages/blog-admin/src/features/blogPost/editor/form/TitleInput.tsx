@@ -1,10 +1,9 @@
-import { useFormContext } from 'react-hook-form';
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
-import type { CreateBlogPostFormData } from '../CreateBlogPostForm';
+import { useBlogPostFormContext } from './BlogPostFormProvider';
 import styles from './titleInput.module.scss';
 
 function TitleInput() {
-  const { register } = useFormContext<CreateBlogPostFormData>();
+  const { register } = useBlogPostFormContext();
 
   return (
     <div className={styles.title}>

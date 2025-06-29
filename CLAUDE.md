@@ -136,6 +136,7 @@ type CreateBlogPostRequest =
 - **ライブリロード:** Tilt が開発中のフロントエンドとバックエンドの両方でライブリロードを提供
 - **テスト戦略:** 単体テスト、API 統合テスト、E2E テストすべてが完了の条件
 - **型安全性:** OpenAPI 仕様書から TypeScript 型を自動生成。手動型定義は非推奨
+- **OpenAPI 更新:** 新しい API ハンドラを追加した際は、`@source/backend/api/src/infrastructure/server/openapi.rs` にパスを追加する必要がある
 
 ## サービスアクセス情報
 
