@@ -4,15 +4,15 @@ import type { CreateBlogPostRequest } from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
-import { useBlogPostContentsContext } from './blogPostEditor/BlogPostContentsProvider';
-import BlogPostEditor from './blogPostEditor/BlogPostEditor';
+import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
+import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
-import { useBlogPostFormContext } from './form/BlogPostFormProvider';
-import PublishedDatePicker from './form/PublishedDatePicker';
-import SubmitButton from './form/SubmitButton';
-import TitleInput from './form/TitleInput';
-import ThumbnailPickModalWithOpenButton from './ThumbnailPickModal';
-import ThumbnailPreview from './ThumbnailPreview';
+import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
+import PublishedDatePicker from '../editor/form/PublishedDatePicker';
+import SubmitButton from '../editor/form/SubmitButton';
+import TitleInput from '../editor/form/TitleInput';
+import ThumbnailPickModalWithOpenButton from '../editor/ThumbnailPickModal';
+import ThumbnailPreview from '../editor/ThumbnailPreview';
 
 export type CreateBlogPostFormData = {
   title: string;

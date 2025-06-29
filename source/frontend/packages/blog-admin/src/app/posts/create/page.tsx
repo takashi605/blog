@@ -1,7 +1,7 @@
 import PageHeader from '@/components/ui/PageHeader';
 import CreateBlogPostForm from '@/features/blogPost/create/CreateBlogPostForm';
-import { BlogPostContentsProvider } from '@/features/blogPost/create/blogPostEditor/BlogPostContentsProvider';
-import { BlogPostFormProvider } from '@/features/blogPost/create/form/BlogPostFormProvider';
+import { BlogPostContentsProvider } from '@/features/blogPost/editor/blogPostEditor/BlogPostContentsProvider';
+import { BlogPostFormProvider } from '@/features/blogPost/editor/form/BlogPostFormProvider';
 
 export default function CreateBlogPostPage() {
   return (
