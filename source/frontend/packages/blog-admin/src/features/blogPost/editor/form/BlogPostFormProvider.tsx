@@ -21,6 +21,7 @@ export function BlogPostFormProvider({
   const todayHyphenDelimited = new Date().toISOString().split('T')[0];
 
   const form = useForm<CreateBlogPostFormData>({
+    mode: 'onChange',
     defaultValues: {
       title: '',
       thumbnail: {
