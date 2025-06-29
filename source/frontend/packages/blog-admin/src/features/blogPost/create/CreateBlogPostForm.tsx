@@ -1,14 +1,10 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import type {
-  BlogPostContent,
-  CreateBlogPostRequest,
-} from 'shared-lib/src/api';
+import type { CreateBlogPostRequest } from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
-import { BlogPostContentsSetterContext } from './blogPostEditor/BlogPostContentsContext';
+import { useBlogPostContentsContext } from './blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from './blogPostEditor/BlogPostEditor';
 import styles from './createBlogPostForm.module.scss';
 import { useBlogPostFormContext } from './form/BlogPostFormProvider';
@@ -29,10 +25,7 @@ export type CreateBlogPostFormData = {
 
 function CreateBlogPostForm() {
   const router = useRouter();
-
-  const [blogPostContents, setBlogPostContents] = useState<BlogPostContent[]>(
-    [],
-  );
+  const { blogPostContents } = useBlogPostContentsContext();
 
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
@@ -95,9 +88,7 @@ function CreateBlogPostForm() {
 
       <div>
         <h2>内容</h2>
-        <BlogPostContentsSetterContext.Provider value={setBlogPostContents}>
-          <BlogPostEditor />
-        </BlogPostContentsSetterContext.Provider>
+        <BlogPostEditor />
       </div>
     </>
   );

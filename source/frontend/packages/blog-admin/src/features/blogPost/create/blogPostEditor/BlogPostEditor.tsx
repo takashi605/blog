@@ -7,9 +7,8 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
-import { useContext } from 'react';
 import type { BlogPostContent } from 'shared-lib/src/api';
-import { BlogPostContentsSetterContext } from './BlogPostContentsContext';
+import { useBlogPostContentsContext } from './BlogPostContentsProvider';
 import styles from './blogPostEditor.module.scss';
 import CustomizedLexicalComposer from './CustomizedLexicalComposer';
 import { blogPostContentsToLexicalNodes } from './helper/blogPostContentToLexicalNode';
@@ -26,7 +25,7 @@ type BlogPostEditorProps = {
 };
 
 function BlogPostEditor({ initialContents }: BlogPostEditorProps) {
-  const setBlogPostContents = useContext(BlogPostContentsSetterContext);
+  const { setBlogPostContents } = useBlogPostContentsContext();
   const onChange = (editor: EditorState) => {
     editor.read(() => {
       const root = $getRoot();

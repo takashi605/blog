@@ -1,5 +1,6 @@
 import PageHeader from '@/components/ui/PageHeader';
 import CreateBlogPostForm from '@/features/blogPost/create/CreateBlogPostForm';
+import { BlogPostContentsProvider } from '@/features/blogPost/create/blogPostEditor/BlogPostContentsProvider';
 import { BlogPostFormProvider } from '@/features/blogPost/create/form/BlogPostFormProvider';
 
 export default function CreateBlogPostPage() {
@@ -11,7 +12,9 @@ export default function CreateBlogPostPage() {
         backButtonText="記事管理画面に戻る"
       />
       <BlogPostFormProvider>
-        <CreateBlogPostForm />
+        <BlogPostContentsProvider>
+          <CreateBlogPostForm />
+        </BlogPostContentsProvider>
       </BlogPostFormProvider>
     </div>
   );
