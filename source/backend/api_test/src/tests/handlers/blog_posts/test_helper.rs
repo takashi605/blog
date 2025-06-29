@@ -178,3 +178,42 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
   };
   Ok(blog_post)
 }
+
+pub fn expected_future_blog_post() -> Result<BlogPost> {
+  let target_post_id: Uuid = future_post_id()?;
+  let blog_post = BlogPost {
+    id: target_post_id,
+    title: "50年後記事1".to_string(),
+    thumbnail: Image {
+      id: Uuid::new_v4(),
+      path: "test-coffee".to_string(),
+    },
+    post_date: "2075-01-01".parse()?,
+    last_update_date: "2075-01-01".parse()?,
+    published_date: "2075-12-31".parse()?,
+    contents: vec![
+      BlogPostContent::H2(H2Block {
+        id: Uuid::new_v4(),
+        text: "50年後の技術".to_string(),
+      }),
+      BlogPostContent::Paragraph(ParagraphBlock {
+        id: Uuid::new_v4(),
+        text: vec![RichText {
+          text: "これは50年後に公開される記事です。未来の技術について書かれています。".to_string(),
+          styles: Style {
+            bold: false,
+            inline_code: false,
+          },
+          link: Option::None,
+        }],
+      }),
+    ],
+  };
+
+  Ok(blog_post)
+}
+
+pub fn future_post_id() -> Result<Uuid> {
+  let uuid = Uuid::parse_str("12345678-90ab-cdef-1234-567890abcdef")?;
+  Ok(uuid)
+}

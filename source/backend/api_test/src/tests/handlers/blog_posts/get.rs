@@ -132,6 +132,46 @@ mod tests {
     Ok(())
   }
 
+  // 管理者用: 単一記事取得（未公開記事も含む）
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_published() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = helper::regular_post_id().unwrap());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = helper::expected_regular_blog_post().unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+    Ok(())
+  }
+
+  // 管理者用: 単一記事取得（未公開記事）
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_unpublished() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = test_helper::future_post_id().unwrap());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
+
+    let actual_blog_post_resp: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
+    let expected_blog_post: BlogPost = test_helper::expected_future_blog_post().unwrap();
+
+    test_helper::assert_blog_post_without_uuid(&actual_blog_post_resp, &expected_blog_post);
+    Ok(())
+  }
+
+  // 管理者用: 存在しない記事取得で404エラー
+  #[tokio::test(flavor = "current_thread")]
+  async fn get_admin_single_blog_post_not_found() -> Result<()> {
+    let url = format!("http://localhost:8001/admin/blog/posts/{uuid}", uuid = Uuid::new_v4());
+    let resp = Request::new(Methods::GET, &url).send().await.unwrap();
+    let resp_status = resp.status();
+    let resp_body = resp.text().await.unwrap();
+
+    // ステータスが 404 エラーであることを確認
+    assert_eq!(resp_status, 404);
+    assert_eq!(resp_body.contains("ブログ記事が見つかりませんでした。"), true);
+    Ok(())
+  }
+
   mod helper {
     use common::types::api::{CodeBlock, H3Block, Link};
 
