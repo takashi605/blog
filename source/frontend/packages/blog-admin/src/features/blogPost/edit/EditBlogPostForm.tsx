@@ -81,7 +81,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
                 <ThumbnailPickModalWithOpenButton />
               </CommonModalProvider>
 
-              <SubmitButton />
+              <SubmitButton>編集確定</SubmitButton>
             </div>
           </div>
         </div>
