@@ -1,5 +1,7 @@
 use actix_web::{HttpResponse, Responder};
-use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
+use common::types::api::{
+  BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style, UpdateBlogPostRequest,
+};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -16,11 +18,12 @@ use utoipa::OpenApi;
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::create_blog_post,
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::get_admin_blog_posts,
     crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::get_admin_blog_post,
+    crate::infrastructure::server::handlers::blog_post_handlers::handle_funcs::update_blog_post,
     crate::infrastructure::server::handlers::image_handlers::handle_funcs::get_images,
     crate::infrastructure::server::handlers::image_handlers::handle_funcs::create_image,
   ),
   components(
-    schemas(BlogPost, Image, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, ImageBlock, CodeBlock, Style, Link)
+    schemas(BlogPost, Image, BlogPostContent, H2Block, H3Block, ParagraphBlock, RichText, ImageBlock, CodeBlock, Style, Link, UpdateBlogPostRequest)
   ),
   tags(
     (name = "blog", description = "Blog API"),

@@ -96,17 +96,21 @@ mod tests {
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_posts: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
-    
+
     // 50年後記事（未公開記事）が含まれていることを確認
     let future_post_exists = actual_blog_posts.iter().any(|post| post.title == "50年後記事1");
     assert!(future_post_exists, "50年後記事1（未公開記事）が取得結果に含まれていません");
-    
+
     // 既存の公開記事も含まれていることを確認
     let regular_post_exists = actual_blog_posts.iter().any(|post| post.title == "初めての技術スタックへの挑戦");
     assert!(regular_post_exists, "通常の公開記事が取得結果に含まれていません");
-    
+
     // 複数の記事が取得されることを確認（公開記事 + 未公開記事）
-    assert!(actual_blog_posts.len() >= 4, "4件以上の記事が取得されるべきです。実際: {}", actual_blog_posts.len());
+    assert!(
+      actual_blog_posts.len() >= 4,
+      "4件以上の記事が取得されるべきです。実際: {}",
+      actual_blog_posts.len()
+    );
 
     Ok(())
   }
@@ -117,17 +121,21 @@ mod tests {
     let resp = Request::new(Methods::GET, &url).send().await.unwrap().text().await.unwrap();
 
     let actual_blog_posts: Vec<BlogPost> = serde_json::from_str(&resp).context("JSON データをパースできませんでした").unwrap();
-    
+
     // 50年後記事（未公開記事）が含まれていないことを確認
     let future_post_exists = actual_blog_posts.iter().any(|post| post.title == "50年後記事1");
     assert!(!future_post_exists, "50年後記事1（未公開記事）が取得結果に含まれています");
-    
+
     // 既存の公開記事は含まれていることを確認
     let regular_post_exists = actual_blog_posts.iter().any(|post| post.title == "初めての技術スタックへの挑戦");
     assert!(regular_post_exists, "通常の公開記事が取得結果に含まれていません");
-    
+
     // 公開記事のみが取得されることを確認
-    assert!(actual_blog_posts.len() >= 3, "3件以上の公開記事が取得されるべきです。実際: {}", actual_blog_posts.len());
+    assert!(
+      actual_blog_posts.len() >= 3,
+      "3件以上の公開記事が取得されるべきです。実際: {}",
+      actual_blog_posts.len()
+    );
 
     Ok(())
   }

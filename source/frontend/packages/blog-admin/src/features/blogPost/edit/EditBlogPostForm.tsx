@@ -1,6 +1,9 @@
 'use client';
+import { useRouter } from 'next/navigation';
+import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
 import type { components } from 'shared-lib/src/generated';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
+import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
 import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
@@ -27,25 +30,34 @@ interface EditBlogPostFormProps {
 }
 
 function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
+  const router = useRouter();
   const { blogPostContents } = useBlogPostContentsContext();
 
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
+  const { updateBlogPost, error } = useUpdateBlogPost();
+
   const onSubmit = async () => {
     const formValues = form.getValues();
 
-    console.log('編集フォーム送信データ:', {
+    // UpdateBlogPostRequest型に合わせてデータを構築
+    const updateRequest: UpdateBlogPostRequest = {
       title: formValues.title,
       thumbnail: formValues.thumbnail,
       publishedDate: formValues.publishedDate,
       contents: blogPostContents,
-      originalData: initialData,
-    });
+    };
 
-    alert(
-      '編集処理はまだ実装されていません。コンソールにデータが出力されました。',
-    );
+    try {
+      const updatedBlogPost = await updateBlogPost(
+        initialData.id,
+        updateRequest,
+      );
+      router.push(`/posts/${updatedBlogPost.id}/edit/success`);
+    } catch (e) {
+      // エラーメッセージはフック内で設定されるため、ここでは何もしない
+    }
   };
 
   return (
@@ -55,6 +67,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
         role="form"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {error && <p role="alert">{error}</p>}
         <div className={styles.formHeader}>
           <TitleInput />
 
@@ -68,7 +81,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
                 <ThumbnailPickModalWithOpenButton />
               </CommonModalProvider>
 
-              <SubmitButton />
+              <SubmitButton>編集確定</SubmitButton>
             </div>
           </div>
         </div>

@@ -78,7 +78,7 @@ function CreateBlogPostForm() {
                 <ThumbnailPickModalWithOpenButton />
               </CommonModalProvider>
 
-              <SubmitButton />
+              <SubmitButton>投稿</SubmitButton>
             </div>
           </div>
         </div>

@@ -93,6 +93,16 @@ impl BlogPostEntity {
     let today = Local::now().date_naive();
     self.published_date <= today
   }
+
+  pub fn update_title(&mut self, title: String) -> &mut Self {
+    self.title = title;
+    self
+  }
+
+  pub fn clear_contents(&mut self) -> &mut Self {
+    self.contents.clear();
+    self
+  }
 }
 
 #[cfg(test)]

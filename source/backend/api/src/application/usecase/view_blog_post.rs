@@ -20,9 +20,7 @@ impl ViewBlogPostUseCase {
 
     // 公開記事閲覧サービスで公開状態をチェック
     let published_post_viewer = PublishedPostViewerService::new();
-    let published_post = published_post_viewer
-      .view_published_post(blog_post)
-      .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    let published_post = published_post_viewer.view_published_post(blog_post).map_err(|e| anyhow::anyhow!(e.to_string()))?;
 
     // BlogPostEntityからViewBlogPostDTOに変換
     let dto = dto_mapper::convert_to_blog_post_dto(published_post);
@@ -48,6 +46,7 @@ mod tests {
     impl BlogPostRepository for BlogPostRepo {
       async fn find(&self, id: &str) -> anyhow::Result<BlogPostEntity>;
       async fn save(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
+      async fn update(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
       async fn find_latests(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>>;
       async fn find_top_tech_pick(&self) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
       async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
@@ -64,21 +63,17 @@ mod tests {
     // Arrange
     let test_id = Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap();
     let mut expected_post = BlogPostEntity::new(test_id, "公開済みテストタイトル".to_string());
-    
+
     // 過去の日付で公開日を設定（公開済み状態）
     let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
     expected_post.set_published_date(past_date);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find()
-      .with(mockall::predicate::eq("published-post-id"))
-      .times(1)
-      .returning(move |_| {
-        let mut post = BlogPostEntity::new(test_id, "公開済みテストタイトル".to_string());
-        post.set_published_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
-        Ok(post)
-      });
+    mock_repository.expect_find().with(mockall::predicate::eq("published-post-id")).times(1).returning(move |_| {
+      let mut post = BlogPostEntity::new(test_id, "公開済みテストタイトル".to_string());
+      post.set_published_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
+      Ok(post)
+    });
 
     let usecase = ViewBlogPostUseCase::new(Arc::new(mock_repository));
 
@@ -96,21 +91,17 @@ mod tests {
     // Arrange
     let test_id = Uuid::parse_str("00000000-0000-0000-0000-000000000002").unwrap();
     let mut unpublished_post = BlogPostEntity::new(test_id, "未公開テストタイトル".to_string());
-    
+
     // 未来の日付で公開日を設定（未公開状態）
     let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap();
     unpublished_post.set_published_date(future_date);
 
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find()
-      .with(mockall::predicate::eq("unpublished-post-id"))
-      .times(1)
-      .returning(move |_| {
-        let mut post = BlogPostEntity::new(test_id, "未公開テストタイトル".to_string());
-        post.set_published_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap());
-        Ok(post)
-      });
+    mock_repository.expect_find().with(mockall::predicate::eq("unpublished-post-id")).times(1).returning(move |_| {
+      let mut post = BlogPostEntity::new(test_id, "未公開テストタイトル".to_string());
+      post.set_published_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap());
+      Ok(post)
+    });
 
     let usecase = ViewBlogPostUseCase::new(Arc::new(mock_repository));
 
@@ -127,11 +118,7 @@ mod tests {
   async fn test_returns_error_when_post_not_found() {
     // Arrange
     let mut mock_repository = MockBlogPostRepo::new();
-    mock_repository
-      .expect_find()
-      .with(mockall::predicate::eq("non-existent-id"))
-      .times(1)
-      .returning(|_| Err(anyhow::anyhow!("記事が見つかりません")));
+    mock_repository.expect_find().with(mockall::predicate::eq("non-existent-id")).times(1).returning(|_| Err(anyhow::anyhow!("記事が見つかりません")));
 
     let usecase = ViewBlogPostUseCase::new(Arc::new(mock_repository));
 

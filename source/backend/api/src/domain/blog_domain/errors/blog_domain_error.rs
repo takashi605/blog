@@ -32,10 +32,7 @@ mod tests {
       post_title: "テスト記事".to_string(),
     };
 
-    assert_eq!(
-      error.to_string(),
-      "未公開記事「テスト記事」にアクセスすることはできません"
-    );
+    assert_eq!(error.to_string(), "未公開記事「テスト記事」にアクセスすることはできません");
   }
 
   #[test]

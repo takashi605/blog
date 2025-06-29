@@ -29,6 +29,16 @@ pub trait BlogPostRepository: Send + Sync {
   /// * `Err` - 保存に失敗した場合
   async fn save(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
 
+  /// 既存の記事を更新する
+  ///
+  /// # Arguments
+  /// * `blog_post` - 更新する記事エンティティ
+  ///
+  /// # Returns
+  /// * `Ok(BlogPostEntity)` - 更新に成功した場合、更新された記事を返す
+  /// * `Err` - 更新に失敗した場合
+  async fn update(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity>;
+
   /// 最新の記事を複数取得する
   ///
   /// # Arguments
