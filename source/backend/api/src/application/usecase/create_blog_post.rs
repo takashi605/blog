@@ -58,6 +58,7 @@ mod tests {
     impl BlogPostRepository for BlogPostRepo {
       async fn find(&self, id: &str) -> anyhow::Result<BlogPostEntity>;
       async fn save(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
+      async fn update(&self, blog_post: &BlogPostEntity) -> anyhow::Result<BlogPostEntity>;
       async fn find_latests(&self, quantity: Option<u32>) -> anyhow::Result<Vec<BlogPostEntity>>;
       async fn find_top_tech_pick(&self) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;
       async fn update_top_tech_pick_post(&self, top_tech_pick: &crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity) -> anyhow::Result<crate::domain::blog_domain::top_tech_pick_entity::TopTechPickEntity>;

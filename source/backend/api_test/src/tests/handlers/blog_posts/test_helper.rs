@@ -1,7 +1,6 @@
 use crate::tests::helper::http::methods::Methods;
 use crate::tests::helper::http::request::Request;
 use anyhow::{Context, Result};
-use chrono::Duration;
 use common::types::api::{BlogPost, BlogPostContent, H2Block, Image, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
@@ -182,15 +181,15 @@ pub fn minimal_blog_post3() -> Result<BlogPost> {
 
 pub fn expected_future_blog_post() -> Result<BlogPost> {
   let target_post_id: Uuid = future_post_id()?;
-  
+
   // シードファイルでは CURRENT_DATE を使用しているため、今日の日付を使用
   let today = chrono::Utc::now().date_naive();
   let today_str = today.format("%Y-%m-%d").to_string();
-  
+
   // 公開日は50年後に設定（シードファイルの CURRENT_TIMESTAMP + INTERVAL '50 years' に対応）
   let published_date = today + chrono::Duration::days(365 * 50);
   let published_date_str = published_date.format("%Y-%m-%d").to_string();
-  
+
   let blog_post = BlogPost {
     id: target_post_id,
     title: "50年後記事1".to_string(),

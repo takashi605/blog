@@ -172,3 +172,13 @@ pub struct CreateCodeBlockRequest {
   pub code: String,
   pub language: String,
 }
+
+// 更新用のリクエスト型（post_dateとlast_update_dateは含まない）
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateBlogPostRequest {
+  pub title: String,
+  pub thumbnail: Image,
+  pub published_date: NaiveDate,
+  pub contents: Vec<BlogPostContent>,
+}

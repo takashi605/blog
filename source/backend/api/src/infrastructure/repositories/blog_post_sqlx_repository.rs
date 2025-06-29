@@ -26,12 +26,12 @@ use crate::{
 };
 
 use self::tables::{
-  blog_posts_table::insert_blog_post_with_published_at,
+  blog_posts_table::{insert_blog_post_with_published_at, update_blog_post_record},
   code_blocks_table::insert_code_block,
   heading_blocks_table::insert_heading_block,
   image_blocks_table::insert_image_block,
   paragraph_blocks_table::{insert_paragraph_block, insert_rich_text, insert_rich_text_link, insert_rich_text_style, insert_text_style_if_not_exists},
-  post_contents_table::{fetch_any_content_block, fetch_post_contents_by_post_id, insert_blog_post_content},
+  post_contents_table::{delete_post_contents_by_post_id, fetch_any_content_block, fetch_post_contents_by_post_id, insert_blog_post_content},
 };
 
 /// SQLxを使用したBlogPostRepositoryの実装
@@ -152,6 +152,74 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     tx.commit().await.context("トランザクションのコミットに失敗しました")?;
 
     // 保存されたデータを取得して返す
+    self.find(&blog_post.get_id().to_string()).await
+  }
+
+  async fn update(&self, blog_post: &BlogPostEntity) -> Result<BlogPostEntity> {
+    // record_mapperを使用してBlogPostEntityをDBレコードに変換
+    let (blog_post_record, content_records) = convert_from_blog_post_entity(blog_post).context("BlogPostEntityからDBレコードへの変換に失敗しました")?;
+
+    // トランザクションを開始
+    let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
+
+    // 1. ブログ記事の更新
+    update_blog_post_record(&mut *tx, blog_post_record).await.context("ブログ記事の更新に失敗しました")?;
+
+    // 2. 既存のコンテンツを削除（DELETE & INSERT戦略）
+    delete_post_contents_by_post_id(&mut *tx, blog_post.get_id()).await.context("既存コンテンツの削除に失敗しました")?;
+
+    // 3. 新しいコンテンツの挿入
+    for (post_content_record, content_block_record) in content_records {
+      // PostContentRecordの挿入
+      insert_blog_post_content(&mut *tx, post_content_record).await.context("コンテンツレコードの挿入に失敗しました")?;
+
+      // 各コンテンツタイプごとの詳細データを挿入
+      match content_block_record {
+        AnyContentBlockRecord::HeadingBlockRecord(heading) => {
+          insert_heading_block(&mut *tx, heading).await.context("見出しブロックの挿入に失敗しました")?;
+        }
+        AnyContentBlockRecord::ParagraphBlockRecord(paragraph) => {
+          // ParagraphBlockの挿入
+          insert_paragraph_block(&mut *tx, paragraph.paragraph_block).await.context("段落ブロックの挿入に失敗しました")?;
+
+          // RichTextRecordの挿入
+          for rich_text_record in paragraph.rich_text_records_with_relations {
+            let rich_text_id = rich_text_record.text_record.id;
+
+            insert_rich_text(&mut *tx, rich_text_record.text_record).await.context("リッチテキストの挿入に失敗しました")?;
+
+            // スタイルの挿入
+            for style_record in rich_text_record.style_records {
+              // text_stylesテーブルにスタイルが存在しない場合は挿入
+              insert_text_style_if_not_exists(&mut *tx, style_record.clone()).await.context("テキストスタイルの挿入に失敗しました")?;
+
+              let rich_text_style = crate::infrastructure::repositories::blog_post_sqlx_repository::tables::paragraph_blocks_table::RichTextStyleRecord {
+                style_id: style_record.id,
+                rich_text_id,
+              };
+              insert_rich_text_style(&mut *tx, rich_text_style).await.context("リッチテキストスタイルの挿入に失敗しました")?;
+            }
+
+            // リンクの挿入（存在する場合）
+            if let Some(link_record) = rich_text_record.link_record {
+              insert_rich_text_link(&mut *tx, link_record).await.context("リッチテキストリンクの挿入に失敗しました")?;
+            }
+          }
+        }
+        AnyContentBlockRecord::ImageBlockRecord(image_block) => {
+          // 画像ブロックの挿入
+          insert_image_block(&mut *tx, image_block.image_block_record).await.context("画像ブロックの挿入に失敗しました")?;
+        }
+        AnyContentBlockRecord::CodeBlockRecord(code_block) => {
+          insert_code_block(&mut *tx, code_block).await.context("コードブロックの挿入に失敗しました")?;
+        }
+      }
+    }
+
+    // トランザクションをコミット
+    tx.commit().await.context("トランザクションのコミットに失敗しました")?;
+
+    // 更新されたデータを取得して返す
     self.find(&blog_post.get_id().to_string()).await
   }
 
@@ -319,8 +387,8 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
   }
 
   async fn find_all(&self) -> Result<Vec<BlogPostEntity>> {
-    use self::tables::blog_posts_table::fetch_all_blog_posts_records;
     use self::domain_data_mapper::convert_to_blog_post_entity;
+    use self::tables::blog_posts_table::fetch_all_blog_posts_records;
 
     // 全記事レコードを取得
     let blog_post_records = fetch_all_blog_posts_records(&self.pool).await.context("全記事の取得に失敗しました")?;

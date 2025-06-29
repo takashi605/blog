@@ -3,7 +3,7 @@ mod tests {
   use crate::tests::helper::http::request::Request;
   use crate::tests::{handlers::blog_posts::test_helper, helper::http::methods::Methods};
   use anyhow::{Context, Result};
-  use common::types::api::{BlogPost, ErrResponse};
+  use common::types::api::{BlogPost, ErrResponse, UpdateBlogPostRequest};
 
   #[tokio::test(flavor = "current_thread")]
   async fn put_top_tech_pick_post() -> Result<()> {
@@ -74,34 +74,62 @@ mod tests {
 
   #[tokio::test(flavor = "current_thread")]
   async fn edit_blog_post_success() -> Result<()> {
-    // 編集対象の記事データを準備
-    let mut target_post = test_helper::minimal_blog_post1().unwrap();
+    // テスト用の画像を取得
+    let thumbnail = test_helper::fetch_any_image().await?;
 
-    // 編集内容を設定
-    target_post.title = "編集後のタイトル".to_string();
-    target_post.contents[0] = common::types::api::BlogPostContent::H2(common::types::api::H2Block {
-      id: uuid::Uuid::new_v4(),
-      text: "編集後の見出し".to_string(),
-    });
+    // まず新しい記事を作成
+    let create_request = common::types::api::CreateBlogPostRequest {
+      title: "作成された記事".to_string(),
+      thumbnail: common::types::api::CreateImageContentRequest {
+        id: Some(thumbnail.id),
+        path: thumbnail.path.clone(),
+      },
+      post_date: "2025-01-01".parse()?,
+      last_update_date: "2025-01-01".parse()?,
+      published_date: "2025-01-01".parse()?,
+      contents: vec![common::types::api::CreateBlogPostContentRequest::H2(common::types::api::CreateH2BlockRequest {
+        text: "元の見出し".to_string(),
+      })],
+    };
 
-    let url = format!("http://localhost:8001/admin/blog/posts/{}", target_post.id);
-    let request_body = serde_json::to_string(&target_post).context("JSON データに変換できませんでした")?;
+    let create_url = "http://localhost:8001/admin/blog/posts";
+    let create_body = serde_json::to_string(&create_request).context("作成リクエストのJSON変換に失敗")?;
+    let create_request_obj = Request::new(Methods::POST { body: create_body }, create_url);
+    let create_resp = create_request_obj.send().await.unwrap().text().await.unwrap();
+    let created_post: BlogPost = serde_json::from_str(&create_resp).context("作成レスポンスのパースに失敗")?;
+
+    // 編集リクエストを作成（post_dateとlast_update_dateは含まない）
+    let update_request = UpdateBlogPostRequest {
+      title: "編集後のタイトル".to_string(),
+      thumbnail: thumbnail,
+      published_date: created_post.published_date,
+      contents: vec![common::types::api::BlogPostContent::H2(common::types::api::H2Block {
+        id: uuid::Uuid::new_v4(),
+        text: "編集後の見出し".to_string(),
+      })],
+    };
+
+    let url = format!("http://localhost:8001/admin/blog/posts/{}", created_post.id);
+    let request_body = serde_json::to_string(&update_request).context("編集リクエストのJSON変換に失敗")?;
 
     let put_request = Request::new(Methods::PUT { body: request_body }, &url);
 
     let resp = put_request.send().await.unwrap().text().await.unwrap();
-    let edited_post: BlogPost = serde_json::from_str(&resp).context("JSON データをパースできませんでした")?;
+    let edited_post: BlogPost = serde_json::from_str(&resp).context("編集レスポンスのパースに失敗")?;
 
     // 編集後の記事データを検証
     assert_eq!(edited_post.title, "編集後のタイトル");
-    assert_eq!(edited_post.id, target_post.id);
+    assert_eq!(edited_post.id, created_post.id);
 
     // 更新日が今日の日付になっていることを確認
     let today = chrono::Utc::now().date_naive();
     assert_eq!(edited_post.last_update_date, today);
 
-    // その他のフィールドが正しく更新されていることを確認
-    test_helper::assert_blog_post_without_uuid(&edited_post, &target_post);
+    // 投稿日は変わらないことを確認
+    assert_eq!(edited_post.post_date, created_post.post_date);
+
+    // 公開日が正しく設定されていることを確認
+    assert_eq!(edited_post.published_date, update_request.published_date);
 
     Ok(())
   }
@@ -110,12 +138,18 @@ mod tests {
   async fn edit_blog_post_not_found() -> Result<()> {
     // 存在しない記事IDを使用
     let non_existent_id = uuid::Uuid::new_v4();
-    let mut dummy_post = test_helper::minimal_blog_post1().unwrap();
-    dummy_post.id = non_existent_id;
-    dummy_post.title = "存在しない記事".to_string();
+    let dummy_post = test_helper::minimal_blog_post1().unwrap();
+
+    // 編集リクエストを作成
+    let update_request = UpdateBlogPostRequest {
+      title: "存在しない記事".to_string(),
+      thumbnail: dummy_post.thumbnail,
+      published_date: dummy_post.published_date,
+      contents: dummy_post.contents,
+    };
 
     let url = format!("http://localhost:8001/admin/blog/posts/{}", non_existent_id);
-    let request_body = serde_json::to_string(&dummy_post).context("JSON データに変換できませんでした")?;
+    let request_body = serde_json::to_string(&update_request).context("JSON データに変換できませんでした")?;
 
     let put_request = Request::new(Methods::PUT { body: request_body }, &url);
 

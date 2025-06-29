@@ -64,3 +64,17 @@ pub async fn insert_blog_post_with_published_at(executor: impl Executor<'_, Data
     .await?;
   Ok(())
 }
+
+pub async fn update_blog_post_record(executor: impl Executor<'_, Database = Postgres>, post: BlogPostRecord) -> Result<()> {
+  let published_at_timestamp = post.published_at.and_hms_opt(0, 0, 0).unwrap().and_utc();
+  sqlx::query("UPDATE blog_posts SET title = $2, thumbnail_image_id = $3, post_date = $4, last_update_date = $5, published_at = $6 WHERE id = $1")
+    .bind(post.id)
+    .bind(post.title)
+    .bind(post.thumbnail_image_id)
+    .bind(post.post_date)
+    .bind(post.last_update_date)
+    .bind(published_at_timestamp)
+    .execute(executor)
+    .await?;
+  Ok(())
+}

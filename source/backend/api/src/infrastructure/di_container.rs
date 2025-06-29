@@ -4,9 +4,10 @@ use std::sync::Arc;
 use crate::{
   application::usecase::{
     create_blog_post::CreateBlogPostUseCase, register_image::RegisterImageUseCase, select_pick_up_posts::SelectPickUpPostsUseCase,
-    select_popular_posts::SelectPopularPostsUseCase, select_top_tech_pick_post::SelectTopTechPickPostUseCase, view_admin_blog_post::ViewAdminBlogPostUseCase,
-    view_all_blog_posts::ViewAllBlogPostsUseCase, view_blog_post::ViewBlogPostUseCase, view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase,
-    view_pick_up_posts::ViewPickUpPostsUseCase, view_popular_blog_posts::ViewPopularBlogPostsUseCase, view_top_tech_pick::ViewTopTechPickUseCase,
+    select_popular_posts::SelectPopularPostsUseCase, select_top_tech_pick_post::SelectTopTechPickPostUseCase, update_blog_post::UpdateBlogPostUseCase,
+    view_admin_blog_post::ViewAdminBlogPostUseCase, view_all_blog_posts::ViewAllBlogPostsUseCase, view_blog_post::ViewBlogPostUseCase,
+    view_images::ViewImagesUseCase, view_latest_blog_posts::ViewLatestBlogPostsUseCase, view_pick_up_posts::ViewPickUpPostsUseCase,
+    view_popular_blog_posts::ViewPopularBlogPostsUseCase, view_top_tech_pick::ViewTopTechPickUseCase,
   },
   domain::{
     blog_domain::{blog_post_factory::BlogPostFactory, blog_post_repository::BlogPostRepository, image_content_factory::ImageContentFactory},
@@ -108,5 +109,10 @@ impl DiContainer {
   /// ViewAdminBlogPostUseCaseを作成する
   pub fn view_admin_blog_post_usecase(&self) -> ViewAdminBlogPostUseCase {
     ViewAdminBlogPostUseCase::new(self.blog_post_repository.clone())
+  }
+
+  /// UpdateBlogPostUseCaseを作成する
+  pub fn update_blog_post_usecase(&self) -> UpdateBlogPostUseCase {
+    UpdateBlogPostUseCase::new(self.blog_post_repository.clone())
   }
 }

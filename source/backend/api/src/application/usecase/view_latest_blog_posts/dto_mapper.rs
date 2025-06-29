@@ -48,9 +48,7 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
     post_date: entity.get_post_date(),
     last_update_date: entity.get_last_update_date(),
     contents,
-    published_date: Utc.from_utc_datetime(
-      &entity.get_published_date().and_hms_opt(0, 0, 0).unwrap(),
-    ),
+    published_date: Utc.from_utc_datetime(&entity.get_published_date().and_hms_opt(0, 0, 0).unwrap()),
     is_public: true, // 公開済みの記事のみ取得するため常にtrue
   })
 }
