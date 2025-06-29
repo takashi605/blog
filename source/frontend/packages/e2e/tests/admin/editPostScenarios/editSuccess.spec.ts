@@ -448,7 +448,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // 編集した記事へのリンクが表示されていることを確認
-    const articleLink = page.getByRole('link', { name: '編集した記事を確認する' });
+    const articleLink = page.getByRole('link', { name: '編集した記事を見る' });
     await expect(articleLink).toBeVisible();
   },
 );
@@ -459,7 +459,7 @@ When(
     const page = playwrightHelper.getPage();
     
     // 編集した記事へのリンクをクリック
-    const articleLink = page.getByRole('link', { name: '編集した記事を確認する' });
+    const articleLink = page.getByRole('link', { name: '編集した記事を見る' });
     await articleLink.click();
   },
 );
