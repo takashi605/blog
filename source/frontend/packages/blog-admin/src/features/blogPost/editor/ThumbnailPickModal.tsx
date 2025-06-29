@@ -14,8 +14,8 @@ function ThumbnailPickModalWithOpenButton() {
 
   const onChangePickHandler = useCallback(
     (_e: React.ChangeEvent<HTMLInputElement>, image: Image) => {
-      setValue('thumbnail.id', image.id);
-      setValue('thumbnail.path', image.path);
+      setValue('thumbnail.id', image.id, { shouldDirty: true });
+      setValue('thumbnail.path', image.path, { shouldDirty: true });
     },
     [setValue],
   );

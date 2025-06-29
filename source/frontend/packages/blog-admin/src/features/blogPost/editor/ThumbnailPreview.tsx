@@ -1,10 +1,15 @@
+import { useWatch } from 'react-hook-form';
 import Thumbnail from 'shared-ui/src/blogPost/components/Thumbnail';
 import styles from 'shared-ui/src/blogPost/styles/blogPostViewer.module.scss';
 import { useBlogPostFormContext } from './form/BlogPostFormProvider';
 
 function ThumbnailPreview() {
   const form = useBlogPostFormContext();
-  const path = form.watch('thumbnail.path');
+  const path = useWatch({
+    control: form.control,
+    name: 'thumbnail.path',
+  });
+
   return (
     <>
       {path && (
