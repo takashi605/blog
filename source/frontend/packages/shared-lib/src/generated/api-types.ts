@@ -84,6 +84,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/blog/posts/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_admin_blog_post"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/blog/images": {
         parameters: {
             query?: never;
@@ -458,6 +474,36 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["BlogPost"];
                 };
+            };
+        };
+    };
+    get_admin_blog_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Blog post UUID */
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Blog post found (including unpublished) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlogPost"];
+                };
+            };
+            /** @description Blog post not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
