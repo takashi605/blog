@@ -137,10 +137,11 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const todayFormatted = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
     
     // 投稿日が今日の日付でないことを確認（正規表現パターンで投稿日を取得）
-    await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).not.toContainText(today);
+    await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).not.toContainText(todayFormatted);
   },
 );
 
@@ -149,9 +150,10 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const todayFormatted = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
     
     // 更新日が今日の日付になっていることを確認（正規表現パターンで更新日を取得）
-    await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(today);
+    await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(todayFormatted);
   },
 );

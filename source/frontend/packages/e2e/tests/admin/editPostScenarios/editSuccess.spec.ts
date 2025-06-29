@@ -557,15 +557,17 @@ Then('【正常系 記事編集】画像コンテンツが表示されている'
 Then('【正常系 記事編集】投稿日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayFormatted = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
   // 正規表現パターンで投稿日を取得
-  await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(today);
+  await expect(page.getByText(/投稿日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(todayFormatted);
 });
 
 Then('【正常系 記事編集】更新日が今日の日付になっている', async function () {
   const page = playwrightHelper.getPage();
   
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayFormatted = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
   // 正規表現パターンで更新日を取得
-  await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(today);
+  await expect(page.getByText(/更新日:\d{4}\/\d{1,2}\/\d{1,2}/)).toContainText(todayFormatted);
 });
