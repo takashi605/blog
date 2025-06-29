@@ -142,16 +142,15 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
         }
         AnyContentBlockRecord::ImageBlockRecord(image_block) => {
           // 画像パスから実際の画像IDを検索
-          let actual_image_record = fetch_image_by_path(&mut *tx, &image_block.image_record.file_path)
-            .await
-            .context("画像パスから画像IDの検索に失敗しました")?;
-          
+          let actual_image_record =
+            fetch_image_by_path(&mut *tx, &image_block.image_record.file_path).await.context("画像パスから画像IDの検索に失敗しました")?;
+
           // 正しい画像IDで画像ブロックレコードを作成
           let corrected_image_block_record = ImageBlockRecord {
             id: image_block.image_block_record.id,
             image_id: actual_image_record.id,
           };
-          
+
           // 画像ブロックの挿入
           insert_image_block(&mut *tx, corrected_image_block_record).await.context("画像ブロックの挿入に失敗しました")?;
         }
@@ -221,16 +220,15 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
         }
         AnyContentBlockRecord::ImageBlockRecord(image_block) => {
           // 画像パスから実際の画像IDを検索
-          let actual_image_record = fetch_image_by_path(&mut *tx, &image_block.image_record.file_path)
-            .await
-            .context("画像パスから画像IDの検索に失敗しました")?;
-          
+          let actual_image_record =
+            fetch_image_by_path(&mut *tx, &image_block.image_record.file_path).await.context("画像パスから画像IDの検索に失敗しました")?;
+
           // 正しい画像IDで画像ブロックレコードを作成
           let corrected_image_block_record = ImageBlockRecord {
             id: image_block.image_block_record.id,
             image_id: actual_image_record.id,
           };
-          
+
           // 画像ブロックの挿入
           insert_image_block(&mut *tx, corrected_image_block_record).await.context("画像ブロックの挿入に失敗しました")?;
         }
