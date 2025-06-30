@@ -51,6 +51,10 @@ When(
 When(
   '【正常系 記事編集 記事の公開,非公開】記事閲覧ページにアクセスする',
   async function () {
+    const revalidateTime = 2000; // 2秒のリバリデート時間
+    // リバリデートのために少し待機
+    await new Promise(resolve => setTimeout(resolve, revalidateTime));
+
     const page = playwrightHelper.getPage();
     
     // 記事閲覧ページにアクセス
