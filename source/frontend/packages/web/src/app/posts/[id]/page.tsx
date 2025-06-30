@@ -4,6 +4,7 @@ import { api, HttpError, type BlogPost } from 'shared-lib/src/api';
 import { z } from 'zod';
 import ViewBlogPostController from '../../../features/blogPost/viewBlogPost/ViewBlogPostController';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 2; // 2秒でキャッシュを無効化
 
 type ViewBlogPostParams = {
