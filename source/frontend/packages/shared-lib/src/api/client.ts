@@ -179,6 +179,7 @@ export async function apiClient<
     ...defaultFetchOptions,
     method: method.toUpperCase(),
     signal,
+    cache: 'no-store',
     headers: {
       ...defaultFetchOptions.headers,
       ...customHeaders,
