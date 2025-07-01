@@ -1,5 +1,7 @@
+@use "shared-ui/src/styles/_variables.scss" as vars;
+
 .container {
-  max-width: 1400px;
+  max-width: vars.$container-max-width;
   margin: 0 auto;
 }
 
