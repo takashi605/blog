@@ -1,4 +1,5 @@
 import { useCommonModalContext } from './CommonModalProvider';
+import styles from './CommonModalCloseButton.module.scss';
 
 type CommonModalCloseButtonProps = {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ function CommonModalCloseButton({ children, buttonClassName }: CommonModalCloseB
     <>
       <button 
         onClick={closeModal} 
-        className={`modal-close${buttonClassName ? ` ${buttonClassName}` : ''}`} 
+        className={`${styles.button}${buttonClassName ? ` ${buttonClassName}` : ''}`} 
         type="button"
       >
         {children}
