@@ -176,8 +176,8 @@ mod tests {
 
     let mut blog_post = BlogPostEntity::new(blog_post_id, "テストブログ記事".to_string());
     blog_post.set_thumbnail(thumbnail_id, "test/image/path".to_string());
-    blog_post.set_post_date(JstDate::from_naive_date(post_date));
-    blog_post.set_last_update_date(JstDate::from_naive_date(last_update_date));
+    blog_post.set_post_date(JstDate::from_jst_naive_date(post_date));
+    blog_post.set_last_update_date(JstDate::from_jst_naive_date(last_update_date));
 
     // コンテンツを個別に追加（moveで所有権を移動）
     for content in contents {

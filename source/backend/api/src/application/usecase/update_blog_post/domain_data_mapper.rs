@@ -23,7 +23,7 @@ pub fn convert_dto_to_entity(dto: UpdateBlogPostDTO, entity: &mut BlogPostEntity
   entity.set_last_update_date(today);
 
   // 公開日の更新
-  entity.set_published_date(JstDate::from_naive_date(dto.published_date));
+  entity.set_published_date(JstDate::from_jst_naive_date(dto.published_date));
 
   // コンテンツの更新
   entity.clear_contents();

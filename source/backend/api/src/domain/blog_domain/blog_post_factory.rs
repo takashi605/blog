@@ -362,8 +362,8 @@ mod tests {
     let input = CreateBlogPostInput {
       title: "日付指定記事".to_string(),
       thumbnail: None,
-      post_date: Some(JstDate::from_naive_date(specified_date)),
-      last_update_date: Some(JstDate::from_naive_date(specified_date)),
+      post_date: Some(JstDate::from_jst_naive_date(specified_date)),
+      last_update_date: Some(JstDate::from_jst_naive_date(specified_date)),
       published_date: None,
       contents: vec![],
     };
@@ -373,7 +373,7 @@ mod tests {
     assert!(result.is_ok());
     let blog_post = result.unwrap();
 
-    assert_eq!(blog_post.get_post_date(), &JstDate::from_naive_date(specified_date));
+    assert_eq!(blog_post.get_post_date(), &JstDate::from_jst_naive_date(specified_date));
   }
 
   #[tokio::test]
@@ -582,7 +582,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
-      published_date: Some(JstDate::from_naive_date(specified_published_date)),
+      published_date: Some(JstDate::from_jst_naive_date(specified_published_date)),
       contents: vec![],
     };
 
@@ -591,7 +591,7 @@ mod tests {
     assert!(result.is_ok());
     let blog_post = result.unwrap();
 
-    assert_eq!(blog_post.get_published_date(), &JstDate::from_naive_date(specified_published_date));
+    assert_eq!(blog_post.get_published_date(), &JstDate::from_jst_naive_date(specified_published_date));
     assert_eq!(blog_post.get_title_text(), "公開日指定記事");
   }
 

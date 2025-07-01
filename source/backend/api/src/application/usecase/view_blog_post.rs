@@ -66,13 +66,13 @@ mod tests {
     let mut expected_post = BlogPostEntity::new(test_id, "公開済みテストタイトル".to_string());
 
     // 過去の日付で公開日を設定（公開済み状態）
-    let past_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
+    let past_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
     expected_post.set_published_date(past_date);
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find().with(mockall::predicate::eq("published-post-id")).times(1).returning(move |_| {
       let mut post = BlogPostEntity::new(test_id, "公開済みテストタイトル".to_string());
-      post.set_published_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
+      post.set_published_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
       Ok(post)
     });
 
@@ -94,13 +94,13 @@ mod tests {
     let mut unpublished_post = BlogPostEntity::new(test_id, "未公開テストタイトル".to_string());
 
     // 未来の日付で公開日を設定（未公開状態）
-    let future_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap());
+    let future_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap());
     unpublished_post.set_published_date(future_date);
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find().with(mockall::predicate::eq("unpublished-post-id")).times(1).returning(move |_| {
       let mut post = BlogPostEntity::new(test_id, "未公開テストタイトル".to_string());
-      post.set_published_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap()));
+      post.set_published_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(3000, 12, 31).unwrap()));
       Ok(post)
     });
 

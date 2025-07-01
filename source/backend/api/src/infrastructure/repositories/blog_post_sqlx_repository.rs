@@ -504,8 +504,8 @@ mod tests {
     blog_post.set_thumbnail(thumbnail_id, unique_thumbnail_path);
 
     // 日付を設定
-    let post_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 15).unwrap());
-    let published_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 16).unwrap());
+    let post_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 15).unwrap());
+    let published_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 16).unwrap());
     blog_post.set_post_date(post_date.clone());
     blog_post.set_last_update_date(post_date.clone());
     blog_post.set_published_date(published_date);

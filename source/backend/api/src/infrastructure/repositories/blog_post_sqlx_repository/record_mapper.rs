@@ -187,10 +187,13 @@ fn convert_styles_vo_to_records(styles: &crate::domain::blog_domain::blog_post_e
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::domain::blog_domain::{blog_post_entity::{
-    rich_text_vo::{LinkVO, RichTextStylesVO, RichTextVO},
-    BlogPostEntity,
-  }, jst_date_vo::JstDate};
+  use crate::domain::blog_domain::{
+    blog_post_entity::{
+      rich_text_vo::{LinkVO, RichTextStylesVO, RichTextVO},
+      BlogPostEntity,
+    },
+    jst_date_vo::JstDate,
+  };
   use chrono::NaiveDate;
 
   #[test]
@@ -204,8 +207,8 @@ mod tests {
     blog_post.set_thumbnail(thumbnail_id, "/images/thumbnail.jpg".to_string());
 
     // 日付を設定
-    let post_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
-    let published_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
+    let post_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
+    let published_date = JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
     blog_post.set_post_date(post_date.clone());
     blog_post.set_last_update_date(post_date.clone());
     blog_post.set_published_date(published_date.clone());

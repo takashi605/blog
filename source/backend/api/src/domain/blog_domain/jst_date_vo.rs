@@ -35,10 +35,11 @@ impl JstDate {
     })
   }
 
+  // TODO 以下のメソッドにより2重変換を防止しているが、完全に防ぐことはできていない。将来的に設計を改善して廃止する。
   /// `NaiveDate`からJSTの日付を作成する
   ///
   /// 引数の`NaiveDate`はJSTの日付として解釈されます。
-  pub fn from_naive_date(date: NaiveDate) -> Self {
+  pub fn from_jst_naive_date(date: NaiveDate) -> Self {
     Self { date }
   }
 
@@ -152,7 +153,7 @@ mod tests {
   #[test]
   fn test_from_naive_date() {
     let naive_date = NaiveDate::from_ymd_opt(2024, 3, 20).unwrap();
-    let jst_date = JstDate::from_naive_date(naive_date);
+    let jst_date = JstDate::from_jst_naive_date(naive_date);
     assert_eq!(jst_date.to_naive_date(), naive_date);
   }
 
@@ -260,13 +261,13 @@ mod tests {
 
     // 1日後
     let next_day = naive_date + Duration::days(1);
-    let next_jst_date = JstDate::from_naive_date(next_day);
+    let next_jst_date = JstDate::from_jst_naive_date(next_day);
     assert_eq!(next_jst_date.day(), 16);
 
     // 1ヶ月後（chronoのadd_monthsを使用する場合）
     let next_month =
       naive_date.with_month(naive_date.month() + 1).unwrap_or_else(|| naive_date.with_month(1).unwrap().with_year(naive_date.year() + 1).unwrap());
-    let next_month_jst = JstDate::from_naive_date(next_month);
+    let next_month_jst = JstDate::from_jst_naive_date(next_month);
     assert_eq!(next_month_jst.month(), 4);
   }
 }

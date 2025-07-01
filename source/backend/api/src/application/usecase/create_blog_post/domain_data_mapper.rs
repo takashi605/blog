@@ -12,9 +12,9 @@ pub fn convert_dto_to_domain_input(dto: CreateBlogPostDTO) -> CreateBlogPostInpu
   CreateBlogPostInput {
     title: dto.title,
     thumbnail: Some(convert_image_dto_to_domain(dto.thumbnail)),
-    post_date: dto.post_date.map(JstDate::from_naive_date),
-    last_update_date: dto.last_update_date.map(JstDate::from_naive_date),
-    published_date: dto.published_date.map(JstDate::from_naive_date),
+    post_date: dto.post_date.map(JstDate::from_jst_naive_date),
+    last_update_date: dto.last_update_date.map(JstDate::from_jst_naive_date),
+    published_date: dto.published_date.map(JstDate::from_jst_naive_date),
     contents: dto.contents.into_iter().map(convert_content_dto_to_domain).collect(),
   }
 }
@@ -118,7 +118,7 @@ mod tests {
 
     assert_eq!(
       domain_input.post_date,
-      Some(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 6, 15).unwrap()))
+      Some(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 6, 15).unwrap()))
     );
   }
 

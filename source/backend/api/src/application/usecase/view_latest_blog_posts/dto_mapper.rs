@@ -133,8 +133,8 @@ mod tests {
     let content_id = Uuid::new_v4();
 
     let mut entity = BlogPostEntity::new(post_id, "テスト記事".to_string());
-    entity.set_post_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
-    entity.set_last_update_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
+    entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
+    entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
 
     // サムネイル設定
     entity.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
@@ -174,8 +174,8 @@ mod tests {
       let thumbnail_id = Uuid::new_v4();
 
       let mut entity = BlogPostEntity::new(post_id, format!("記事{}", i));
-      entity.set_post_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32).unwrap()));
-      entity.set_last_update_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32 + 10).unwrap()));
+      entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32).unwrap()));
+      entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32 + 10).unwrap()));
 
       entity.set_thumbnail(thumbnail_id, format!("thumbnail{}.jpg", i));
 
@@ -211,8 +211,8 @@ mod tests {
     let code_id = Uuid::new_v4();
 
     let mut entity = BlogPostEntity::new(post_id, "コンテンツ変換テスト記事".to_string());
-    entity.set_post_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
-    entity.set_last_update_date(JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
+    entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
+    entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
     entity.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
 
     // H2コンテンツ
