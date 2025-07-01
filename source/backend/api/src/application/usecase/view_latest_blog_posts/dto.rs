@@ -1,4 +1,4 @@
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::NaiveDate;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14,7 +14,7 @@ pub struct ViewLatestBlogPostItemDTO {
   pub post_date: NaiveDate,
   pub last_update_date: NaiveDate,
   pub contents: Vec<ViewLatestBlogPostContentDTO>,
-  pub published_date: DateTime<Utc>,
+  pub published_date: NaiveDate,
   pub is_public: bool,
 }
 

@@ -17,7 +17,7 @@ pub fn view_blog_post_dto_to_response(dto: BlogPostDTO) -> Result<BlogPost> {
     thumbnail: convert_image_dto_to_api(dto.thumbnail),
     post_date: dto.post_date,
     last_update_date: dto.last_update_date,
-    published_date: dto.published_date.date_naive(),
+    published_date: dto.published_date,
     contents: convert_contents_dto_to_api(dto.contents),
   })
 }
@@ -113,7 +113,7 @@ fn convert_code_block_dto_to_api(dto: BlogPostCodeBlockDTO) -> CodeBlock {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use chrono::{NaiveDate, Utc};
+  use chrono::{NaiveDate};
   use uuid::Uuid;
 
   #[test]
@@ -134,7 +134,7 @@ mod tests {
         id: test_h2_id,
         text: "見出し".to_string(),
       })],
-      published_date: Utc::now(),
+      published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
       is_public: true,
     };
 
@@ -170,7 +170,7 @@ mod tests {
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
       contents: vec![],
-      published_date: Utc::now(),
+      published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
       is_public: true,
     };
 

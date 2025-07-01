@@ -44,6 +44,7 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
   use crate::domain::blog_domain::blog_post_repository::BlogPostRepository;
+  use crate::domain::blog_domain::jst_date_vo::JstDate;
   use chrono::NaiveDate;
   use mockall::mock;
   use std::sync::Arc;
@@ -72,7 +73,7 @@ mod tests {
   fn create_test_blog_post(title: &str, post_date: NaiveDate) -> BlogPostEntity {
     let id = Uuid::new_v4();
     let mut post = BlogPostEntity::new(id, title.to_string());
-    post.set_post_date(post_date);
+    post.set_post_date(JstDate::from_naive_date(post_date));
 
     // テスト用のダミーサムネイル画像を設定
     let thumbnail_id = Uuid::new_v4();
@@ -85,8 +86,8 @@ mod tests {
   fn create_test_blog_post_with_published_date(title: &str, post_date: NaiveDate, published_date: NaiveDate) -> BlogPostEntity {
     let id = Uuid::new_v4();
     let mut post = BlogPostEntity::new(id, title.to_string());
-    post.set_post_date(post_date);
-    post.set_published_date(published_date);
+    post.set_post_date(JstDate::from_naive_date(post_date));
+    post.set_published_date(JstDate::from_naive_date(published_date));
 
     // テスト用のダミーサムネイル画像を設定
     let thumbnail_id = Uuid::new_v4();

@@ -26,9 +26,9 @@ pub fn convert_from_blog_post_entity(entity: &BlogPostEntity) -> Result<(BlogPos
     id: entity.get_id(),
     title: entity.get_title_text().to_string(),
     thumbnail_image_id: thumbnail.get_id(),
-    post_date: entity.get_post_date(),
-    last_update_date: entity.get_last_update_date(),
-    published_at: entity.get_published_date(),
+    post_date: entity.get_post_date().to_naive_date(),
+    last_update_date: entity.get_last_update_date().to_naive_date(),
+    published_at: entity.get_published_date().to_naive_date(),
   };
 
   // ContentRecordを作成
@@ -187,10 +187,10 @@ fn convert_styles_vo_to_records(styles: &crate::domain::blog_domain::blog_post_e
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::domain::blog_domain::blog_post_entity::{
+  use crate::domain::blog_domain::{blog_post_entity::{
     rich_text_vo::{LinkVO, RichTextStylesVO, RichTextVO},
     BlogPostEntity,
-  };
+  }, jst_date_vo::JstDate};
   use chrono::NaiveDate;
 
   #[test]
@@ -204,11 +204,11 @@ mod tests {
     blog_post.set_thumbnail(thumbnail_id, "/images/thumbnail.jpg".to_string());
 
     // 日付を設定
-    let post_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
-    let published_date = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap();
-    blog_post.set_post_date(post_date);
-    blog_post.set_last_update_date(post_date);
-    blog_post.set_published_date(published_date);
+    let post_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
+    let published_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
+    blog_post.set_post_date(post_date.clone());
+    blog_post.set_last_update_date(post_date.clone());
+    blog_post.set_published_date(published_date.clone());
 
     // H2見出しを追加
     let h2_content = ContentEntity::h2(Uuid::new_v4(), "見出し2".to_string());
@@ -246,9 +246,9 @@ mod tests {
     // BlogPostRecordの検証
     assert_eq!(blog_post_record.id, blog_post_id);
     assert_eq!(blog_post_record.title, "テスト記事");
-    assert_eq!(blog_post_record.post_date, post_date);
-    assert_eq!(blog_post_record.last_update_date, post_date);
-    assert_eq!(blog_post_record.published_at, published_date);
+    assert_eq!(blog_post_record.post_date, post_date.to_naive_date());
+    assert_eq!(blog_post_record.last_update_date, post_date.to_naive_date());
+    assert_eq!(blog_post_record.published_at, published_date.to_naive_date());
     assert_eq!(blog_post_record.thumbnail_image_id, thumbnail_id);
 
     // ContentRecordsの検証（3つのコンテンツ）

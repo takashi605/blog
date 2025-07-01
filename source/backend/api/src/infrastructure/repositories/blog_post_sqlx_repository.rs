@@ -451,11 +451,11 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
 mod tests {
   use super::*;
   use crate::{
-    domain::blog_domain::blog_post_entity::{
+    domain::blog_domain::{blog_post_entity::{
       content_entity::ContentEntity,
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
       BlogPostEntity,
-    },
+    }, jst_date_vo::JstDate},
     infrastructure::repositories::db_pool::create_db_pool,
   };
   use chrono::NaiveDate;
@@ -504,10 +504,10 @@ mod tests {
     blog_post.set_thumbnail(thumbnail_id, unique_thumbnail_path);
 
     // 日付を設定
-    let post_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
-    let published_date = NaiveDate::from_ymd_opt(2024, 1, 16).unwrap();
-    blog_post.set_post_date(post_date);
-    blog_post.set_last_update_date(post_date);
+    let post_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 15).unwrap());
+    let published_date = JstDate::from_naive_date(NaiveDate::from_ymd_opt(2024, 1, 16).unwrap());
+    blog_post.set_post_date(post_date.clone());
+    blog_post.set_last_update_date(post_date.clone());
     blog_post.set_published_date(published_date);
 
     // H2見出しを追加

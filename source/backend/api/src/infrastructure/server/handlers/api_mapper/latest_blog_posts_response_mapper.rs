@@ -1,5 +1,4 @@
 use anyhow::{anyhow, Result};
-use chrono::NaiveDate;
 use common::types::api::{BlogPost, BlogPostContent, CodeBlock, H2Block, H3Block, Image, ImageBlock, Link, ParagraphBlock, RichText, Style};
 use uuid::Uuid;
 
@@ -32,7 +31,7 @@ fn convert_view_latest_blog_post_item_dto_to_blog_post(dto: ViewLatestBlogPostIt
     thumbnail: convert_view_latest_image_dto_to_api(dto.thumbnail),
     post_date: dto.post_date,
     last_update_date: dto.last_update_date,
-    published_date: NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(),
+    published_date: dto.published_date,
     contents: convert_view_latest_contents_dto_to_api(dto.contents),
   })
 }
@@ -116,7 +115,7 @@ fn convert_view_latest_code_block_dto_to_api(dto: ViewLatestBlogPostCodeBlockDTO
 #[cfg(test)]
 mod tests {
   use super::*;
-  use chrono::{NaiveDate, Utc};
+  use chrono::{NaiveDate};
   use uuid::Uuid;
 
   #[test]
@@ -149,7 +148,7 @@ mod tests {
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
       contents: vec![],
-      published_date: Utc::now(),
+      published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
       is_public: true,
     };
 
@@ -191,7 +190,7 @@ mod tests {
         post_date: NaiveDate::from_ymd_opt(2024, 1, i as u32).unwrap(),
         last_update_date: NaiveDate::from_ymd_opt(2024, 1, i as u32 + 10).unwrap(),
         contents: vec![],
-        published_date: Utc::now(),
+        published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
         is_public: true,
       };
 
@@ -288,7 +287,7 @@ mod tests {
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
       contents,
-      published_date: Utc::now(),
+      published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
       is_public: true,
     };
 
@@ -377,7 +376,7 @@ mod tests {
       post_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
       last_update_date: NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(),
       contents: vec![],
-      published_date: Utc::now(),
+      published_date: NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(),
       is_public: true,
     };
 
