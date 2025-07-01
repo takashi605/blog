@@ -85,9 +85,7 @@ function Modal() {
           </ImageUploadFormProvider>
         </div>
         <div className={styles.buttonContainer}>
-          <CommonModalCloseButton>
-            閉じる
-          </CommonModalCloseButton>
+          <CommonModalCloseButton>閉じる</CommonModalCloseButton>
         </div>
       </div>
     </CommonModal>
