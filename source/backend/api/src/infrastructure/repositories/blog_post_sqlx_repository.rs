@@ -26,7 +26,7 @@ use crate::{
 };
 
 use self::tables::{
-  blog_posts_table::{insert_blog_post_with_published_at, update_blog_post_record},
+  blog_posts_table::{insert_blog_post, update_blog_post_record},
   code_blocks_table::insert_code_block,
   heading_blocks_table::insert_heading_block,
   image_blocks_table::{insert_image_block, ImageBlockRecord},
@@ -100,7 +100,7 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
     let mut tx = self.pool.begin().await.context("トランザクションの開始に失敗しました")?;
 
     // 1. ブログ記事の挿入
-    insert_blog_post_with_published_at(&mut *tx, blog_post_record).await.context("ブログ記事の挿入に失敗しました")?;
+    insert_blog_post(&mut *tx, blog_post_record).await.context("ブログ記事の挿入に失敗しました")?;
 
     // 2. コンテンツの挿入
     for (post_content_record, content_block_record) in content_records {
@@ -451,11 +451,14 @@ impl<I: ImageRepository + Send + Sync> BlogPostRepository for BlogPostSqlxReposi
 mod tests {
   use super::*;
   use crate::{
-    domain::blog_domain::{blog_post_entity::{
-      content_entity::ContentEntity,
-      rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
-      BlogPostEntity,
-    }, jst_date_vo::JstDate},
+    domain::blog_domain::{
+      blog_post_entity::{
+        content_entity::ContentEntity,
+        rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
+        BlogPostEntity,
+      },
+      jst_date_vo::JstDate,
+    },
     infrastructure::repositories::db_pool::create_db_pool,
   };
   use chrono::NaiveDate;
