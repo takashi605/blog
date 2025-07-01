@@ -10,6 +10,7 @@ import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
 import type { ImageUploadFormValues } from './form/ImageUploadFormProvider';
 import ImageUploadFormProvider from './form/ImageUploadFormProvider';
+import styles from './ImageUploadModal.module.scss';
 
 function ImageUploadModalWithOpenButton() {
   return (
@@ -70,12 +71,25 @@ function Modal() {
   };
 
   return (
-    <CommonModal>
-      <ImageUploadFormProvider>
-        <ImageUploadForm onSubmit={onSubmit} errorMessage={errorMessage} />
-        {isUploadSuccess && <p>画像のアップロードに成功しました</p>}
-      </ImageUploadFormProvider>
-      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+    <CommonModal maxWidth="500px" width="90%">
+      <div className={styles.modalContent}>
+        <h2 className={styles.header}>画像アップロード</h2>
+        <div className={styles.formContainer}>
+          <ImageUploadFormProvider>
+            <ImageUploadForm onSubmit={onSubmit} errorMessage={errorMessage} />
+            {isUploadSuccess && (
+              <div className={styles.successMessage}>
+                画像のアップロードに成功しました
+              </div>
+            )}
+          </ImageUploadFormProvider>
+        </div>
+        <div className={styles.buttonContainer}>
+          <CommonModalCloseButton buttonClassName={styles.closeButton}>
+            閉じる
+          </CommonModalCloseButton>
+        </div>
+      </div>
     </CommonModal>
   );
 }
