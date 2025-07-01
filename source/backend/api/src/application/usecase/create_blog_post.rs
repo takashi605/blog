@@ -148,7 +148,7 @@ mod tests {
       if let Some(thumbnail) = blog_post.get_thumbnail() {
         new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
       }
-      new_post.set_post_date(blog_post.get_post_date());
+      new_post.set_post_date(blog_post.get_post_date().clone());
       Ok(new_post)
     });
 
@@ -180,7 +180,7 @@ mod tests {
       if let Some(thumbnail) = blog_post.get_thumbnail() {
         new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
       }
-      new_post.set_post_date(blog_post.get_post_date());
+      new_post.set_post_date(blog_post.get_post_date().clone());
       Ok(new_post)
     });
 
@@ -212,7 +212,7 @@ mod tests {
       if let Some(thumbnail) = blog_post.get_thumbnail() {
         new_post.set_thumbnail(thumbnail.get_id(), thumbnail.get_path().to_string());
       }
-      new_post.set_post_date(blog_post.get_post_date());
+      new_post.set_post_date(blog_post.get_post_date().clone());
       Ok(new_post)
     });
 

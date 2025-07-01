@@ -1,7 +1,6 @@
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use anyhow::Result;
-use chrono::{TimeZone, Utc};
 
 use super::dto::{
   ViewLatestBlogPostCodeBlockDTO, ViewLatestBlogPostContentDTO, ViewLatestBlogPostH2BlockDTO, ViewLatestBlogPostH3BlockDTO, ViewLatestBlogPostImageBlockDTO,
@@ -45,10 +44,10 @@ fn blog_post_entity_to_view_latest_single_dto(entity: BlogPostEntity) -> Result<
     id: entity.get_id().to_string(),
     title: entity.get_title_text().to_string(),
     thumbnail,
-    post_date: entity.get_post_date(),
-    last_update_date: entity.get_last_update_date(),
+    post_date: entity.get_post_date().to_naive_date(),
+    last_update_date: entity.get_last_update_date().to_naive_date(),
     contents,
-    published_date: Utc.from_utc_datetime(&entity.get_published_date().and_hms_opt(0, 0, 0).unwrap()),
+    published_date: entity.get_published_date().to_naive_date(),
     is_public: true, // 公開済みの記事のみ取得するため常にtrue
   })
 }
@@ -108,6 +107,7 @@ mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
+  use crate::domain::blog_domain::jst_date_vo::JstDate;
   use chrono::NaiveDate;
   use uuid::Uuid;
 
@@ -133,8 +133,8 @@ mod tests {
     let content_id = Uuid::new_v4();
 
     let mut entity = BlogPostEntity::new(post_id, "テスト記事".to_string());
-    entity.set_post_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
-    entity.set_last_update_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
+    entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
+    entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
 
     // サムネイル設定
     entity.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
@@ -174,8 +174,8 @@ mod tests {
       let thumbnail_id = Uuid::new_v4();
 
       let mut entity = BlogPostEntity::new(post_id, format!("記事{}", i));
-      entity.set_post_date(NaiveDate::from_ymd_opt(2024, 1, i as u32).unwrap());
-      entity.set_last_update_date(NaiveDate::from_ymd_opt(2024, 1, i as u32 + 10).unwrap());
+      entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32).unwrap()));
+      entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, i as u32 + 10).unwrap()));
 
       entity.set_thumbnail(thumbnail_id, format!("thumbnail{}.jpg", i));
 
@@ -211,8 +211,8 @@ mod tests {
     let code_id = Uuid::new_v4();
 
     let mut entity = BlogPostEntity::new(post_id, "コンテンツ変換テスト記事".to_string());
-    entity.set_post_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap());
-    entity.set_last_update_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap());
+    entity.set_post_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()));
+    entity.set_last_update_date(JstDate::from_jst_naive_date(NaiveDate::from_ymd_opt(2024, 1, 2).unwrap()));
     entity.set_thumbnail(thumbnail_id, "test-thumbnail.jpg".to_string());
 
     // H2コンテンツ

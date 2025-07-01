@@ -1,4 +1,3 @@
-use chrono::NaiveDate;
 use std::sync::Arc;
 use uuid::Uuid;
 
@@ -9,6 +8,7 @@ use super::{
     BlogPostEntity,
   },
   image_content_factory::{ImageContentFactory, ImageContentFactoryError},
+  jst_date_vo::JstDate,
 };
 
 // ファクトリの入力用構造体（APIレスポンス型を参考にドメイン層独自に定義）
@@ -17,9 +17,9 @@ use super::{
 pub struct CreateBlogPostInput {
   pub title: String,
   pub thumbnail: Option<CreateImageInput>,
-  pub post_date: Option<NaiveDate>,
-  pub last_update_date: Option<NaiveDate>,
-  pub published_date: Option<NaiveDate>,
+  pub post_date: Option<JstDate>,
+  pub last_update_date: Option<JstDate>,
+  pub published_date: Option<JstDate>,
   pub contents: Vec<CreateContentInput>,
 }
 
@@ -96,15 +96,15 @@ impl BlogPostFactory {
     let mut blog_post = BlogPostEntity::new(post_id, input.title);
 
     // 投稿日を設定（指定があれば設定、なければデフォルトの現在日付）
-    if let Some(post_date) = input.post_date {
-      blog_post.set_post_date(post_date);
+    if let Some(ref post_date) = input.post_date {
+      blog_post.set_post_date(post_date.clone());
     }
 
     // 最終更新日を設定（指定があれば設定、なければpost_dateと同じ値）
     if let Some(last_update_date) = input.last_update_date {
       blog_post.set_last_update_date(last_update_date);
-    } else if let Some(post_date) = input.post_date {
-      blog_post.set_last_update_date(post_date);
+    } else if let Some(ref post_date) = input.post_date {
+      blog_post.set_last_update_date(post_date.clone());
     }
 
     // 公開日を設定（指定があれば設定、なければデフォルトの今日の日付）
@@ -166,7 +166,6 @@ mod tests {
   use super::*;
   use crate::domain::image_domain::{image_entity::ImageEntity, image_repository::ImageRepository, image_repository::ImageRepositoryError};
   use async_trait::async_trait;
-  use chrono::Local;
   use std::collections::HashMap;
   use std::sync::Arc;
 
@@ -230,7 +229,7 @@ mod tests {
     assert_eq!(blog_post.get_title_text(), "テスト記事");
     assert!(blog_post.get_thumbnail().is_none());
     assert_eq!(blog_post.get_contents().len(), 0);
-    assert_eq!(blog_post.get_post_date(), Local::now().date_naive());
+    assert_eq!(blog_post.get_post_date(), &JstDate::today());
   }
 
   #[tokio::test]
@@ -363,8 +362,8 @@ mod tests {
     let input = CreateBlogPostInput {
       title: "日付指定記事".to_string(),
       thumbnail: None,
-      post_date: Some(specified_date),
-      last_update_date: Some(specified_date),
+      post_date: Some(JstDate::from_jst_naive_date(specified_date)),
+      last_update_date: Some(JstDate::from_jst_naive_date(specified_date)),
       published_date: None,
       contents: vec![],
     };
@@ -374,7 +373,7 @@ mod tests {
     assert!(result.is_ok());
     let blog_post = result.unwrap();
 
-    assert_eq!(blog_post.get_post_date(), specified_date);
+    assert_eq!(blog_post.get_post_date(), &JstDate::from_jst_naive_date(specified_date));
   }
 
   #[tokio::test]
@@ -583,7 +582,7 @@ mod tests {
       thumbnail: None,
       post_date: None,
       last_update_date: None,
-      published_date: Some(specified_published_date),
+      published_date: Some(JstDate::from_jst_naive_date(specified_published_date)),
       contents: vec![],
     };
 
@@ -592,14 +591,12 @@ mod tests {
     assert!(result.is_ok());
     let blog_post = result.unwrap();
 
-    assert_eq!(blog_post.get_published_date(), specified_published_date);
+    assert_eq!(blog_post.get_published_date(), &JstDate::from_jst_naive_date(specified_published_date));
     assert_eq!(blog_post.get_title_text(), "公開日指定記事");
   }
 
   #[tokio::test]
   async fn blog_post_creation_without_published_date_uses_default() {
-    use chrono::Local;
-
     let mock_repo = MockImageRepository::new();
     let image_factory = Arc::new(ImageContentFactory::new(Arc::new(mock_repo)));
     let factory = BlogPostFactory::new(image_factory);
@@ -619,8 +616,7 @@ mod tests {
     let blog_post = result.unwrap();
 
     // デフォルトでは今日の日付が設定される
-    let today = Local::now().date_naive();
-    assert_eq!(blog_post.get_published_date(), today);
+    assert_eq!(blog_post.get_published_date(), &JstDate::today());
     assert_eq!(blog_post.get_title_text(), "デフォルト公開日記事");
   }
 }

@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sqlx::{Executor, FromRow, PgConnection, Postgres, Transaction};
+use sqlx::{Executor, FromRow, Postgres};
 use uuid::Uuid;
 
 use super::{

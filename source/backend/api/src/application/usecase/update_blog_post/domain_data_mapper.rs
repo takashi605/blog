@@ -1,5 +1,4 @@
 use anyhow::Result;
-use chrono::Local;
 
 use super::dto::UpdateBlogPostDTO;
 use crate::application::usecase::create_blog_post::dto::CreateContentDTO;
@@ -9,6 +8,7 @@ use crate::domain::blog_domain::blog_post_entity::{
   rich_text_vo::{RichTextPartVO, RichTextVO},
   BlogPostEntity,
 };
+use crate::domain::blog_domain::jst_date_vo::JstDate;
 use crate::domain::image_domain::ImageEntity;
 
 pub fn convert_dto_to_entity(dto: UpdateBlogPostDTO, entity: &mut BlogPostEntity) -> Result<()> {
@@ -19,11 +19,11 @@ pub fn convert_dto_to_entity(dto: UpdateBlogPostDTO, entity: &mut BlogPostEntity
   entity.set_thumbnail(dto.thumbnail.id, dto.thumbnail.path);
 
   // 更新日の設定（常に現在日時に更新）
-  let today = Local::now().date_naive();
+  let today = JstDate::today();
   entity.set_last_update_date(today);
 
   // 公開日の更新
-  entity.set_published_date(dto.published_date);
+  entity.set_published_date(JstDate::from_jst_naive_date(dto.published_date));
 
   // コンテンツの更新
   entity.clear_contents();

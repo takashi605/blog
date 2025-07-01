@@ -44,7 +44,7 @@ impl LatestBlogPostsService {
 mod tests {
   use super::*;
   use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
-  use chrono::NaiveDate;
+  use crate::domain::blog_domain::jst_date_vo::JstDate;
   use mockall::mock;
   use uuid::Uuid;
 
@@ -68,7 +68,7 @@ mod tests {
   }
 
   // ヘルパー関数: テスト用のBlogPostEntityを作成
-  fn create_test_blog_post_with_published_date(title: &str, published_date: NaiveDate) -> BlogPostEntity {
+  fn create_test_blog_post_with_published_date(title: &str, published_date: JstDate) -> BlogPostEntity {
     let id = Uuid::new_v4();
     let mut post = BlogPostEntity::new(id, title.to_string());
     post.set_published_date(published_date);
@@ -78,15 +78,15 @@ mod tests {
   #[tokio::test]
   async fn returns_only_published_posts() {
     // Arrange
-    let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(); // 公開済み
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(); // 未公開
+    let past_date = JstDate::new(2024, 1, 1).unwrap(); // 公開済み
+    let future_date = JstDate::new(3000, 12, 31).unwrap(); // 未公開
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(move |_| {
       Ok(vec![
-        create_test_blog_post_with_published_date("公開済み記事1", past_date),
-        create_test_blog_post_with_published_date("未公開記事", future_date),
-        create_test_blog_post_with_published_date("公開済み記事2", past_date),
+        create_test_blog_post_with_published_date("公開済み記事1", past_date.clone()),
+        create_test_blog_post_with_published_date("未公開記事", future_date.clone()),
+        create_test_blog_post_with_published_date("公開済み記事2", past_date.clone()),
       ])
     });
 
@@ -106,13 +106,13 @@ mod tests {
   #[tokio::test]
   async fn returns_empty_list_when_no_published_posts() {
     // Arrange
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(); // 未公開
+    let future_date = JstDate::new(3000, 12, 31).unwrap(); // 未公開
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(move |_| {
       Ok(vec![
-        create_test_blog_post_with_published_date("未公開記事1", future_date),
-        create_test_blog_post_with_published_date("未公開記事2", future_date),
+        create_test_blog_post_with_published_date("未公開記事1", future_date.clone()),
+        create_test_blog_post_with_published_date("未公開記事2", future_date.clone()),
       ])
     });
 
@@ -130,14 +130,14 @@ mod tests {
   #[tokio::test]
   async fn returns_all_posts_when_all_are_published() {
     // Arrange
-    let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(); // 公開済み
+    let past_date = JstDate::new(2024, 1, 1).unwrap(); // 公開済み
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(move |_| {
       Ok(vec![
-        create_test_blog_post_with_published_date("公開済み記事1", past_date),
-        create_test_blog_post_with_published_date("公開済み記事2", past_date),
-        create_test_blog_post_with_published_date("公開済み記事3", past_date),
+        create_test_blog_post_with_published_date("公開済み記事1", past_date.clone()),
+        create_test_blog_post_with_published_date("公開済み記事2", past_date.clone()),
+        create_test_blog_post_with_published_date("公開済み記事3", past_date.clone()),
       ])
     });
 
@@ -191,19 +191,19 @@ mod tests {
   #[tokio::test]
   async fn maintains_order_after_filtering() {
     // Arrange
-    let date1 = NaiveDate::from_ymd_opt(2024, 1, 3).unwrap(); // 新しい
-    let date2 = NaiveDate::from_ymd_opt(2024, 1, 2).unwrap(); // 中間
-    let date3 = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(); // 古い
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(); // 未公開
+    let date1 = JstDate::new(2024, 1, 3).unwrap(); // 新しい
+    let date2 = JstDate::new(2024, 1, 2).unwrap(); // 中間
+    let date3 = JstDate::new(2024, 1, 1).unwrap(); // 古い
+    let future_date = JstDate::new(3000, 12, 31).unwrap(); // 未公開
 
     let mut mock_repository = MockBlogPostRepo::new();
     mock_repository.expect_find_latests().with(mockall::predicate::eq(None)).times(1).returning(move |_| {
       // 新着順（降順）で並んだデータ（途中に未公開記事を挿入）
       Ok(vec![
-        create_test_blog_post_with_published_date("新しい記事", date1),
-        create_test_blog_post_with_published_date("未公開記事", future_date),
-        create_test_blog_post_with_published_date("中間の記事", date2),
-        create_test_blog_post_with_published_date("古い記事", date3),
+        create_test_blog_post_with_published_date("新しい記事", date1.clone()),
+        create_test_blog_post_with_published_date("未公開記事", future_date.clone()),
+        create_test_blog_post_with_published_date("中間の記事", date2.clone()),
+        create_test_blog_post_with_published_date("古い記事", date3.clone()),
       ])
     });
 
@@ -219,12 +219,12 @@ mod tests {
 
     // 新着順が保持されていることを確認
     assert_eq!(published_posts[0].get_title_text(), "新しい記事");
-    assert_eq!(published_posts[0].get_published_date(), date1);
+    assert_eq!(published_posts[0].get_published_date(), &JstDate::new(2024, 1, 3).unwrap());
 
     assert_eq!(published_posts[1].get_title_text(), "中間の記事");
-    assert_eq!(published_posts[1].get_published_date(), date2);
+    assert_eq!(published_posts[1].get_published_date(), &JstDate::new(2024, 1, 2).unwrap());
 
     assert_eq!(published_posts[2].get_title_text(), "古い記事");
-    assert_eq!(published_posts[2].get_published_date(), date3);
+    assert_eq!(published_posts[2].get_published_date(), &JstDate::new(2024, 1, 1).unwrap());
   }
 }

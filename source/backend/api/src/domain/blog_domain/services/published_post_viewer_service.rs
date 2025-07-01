@@ -1,5 +1,6 @@
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
 use crate::domain::blog_domain::errors::blog_domain_error::BlogDomainError;
+use crate::domain::blog_domain::jst_date_vo::JstDate;
 
 /// 公開記事閲覧サービス
 ///
@@ -45,7 +46,6 @@ impl PublishedPostViewerService {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use chrono::NaiveDate;
   use uuid::Uuid;
 
   fn create_test_blog_post(id: &str, title: &str) -> BlogPostEntity {
@@ -57,14 +57,14 @@ mod tests {
   fn filter_published_posts_returns_only_published_posts() {
     // Arrange
     let service = PublishedPostViewerService::new();
-    let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(); // 公開済み
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(); // 未公開
+    let past_date = JstDate::new(2024, 1, 1).unwrap(); // 公開済み
+    let future_date = JstDate::new(3000, 12, 31).unwrap(); // 未公開
 
     let mut published_post1 = create_test_blog_post("00000000-0000-0000-0000-000000000001", "公開済み記事1");
-    published_post1.set_published_date(past_date);
+    published_post1.set_published_date(past_date.clone());
 
     let mut unpublished_post = create_test_blog_post("00000000-0000-0000-0000-000000000002", "未公開記事");
-    unpublished_post.set_published_date(future_date);
+    unpublished_post.set_published_date(future_date.clone());
 
     let mut published_post2 = create_test_blog_post("00000000-0000-0000-0000-000000000003", "公開済み記事2");
     published_post2.set_published_date(past_date);
@@ -84,10 +84,10 @@ mod tests {
   fn filter_published_posts_returns_empty_when_no_published_posts() {
     // Arrange
     let service = PublishedPostViewerService::new();
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap(); // 未公開
+    let future_date = JstDate::new(3000, 12, 31).unwrap(); // 未公開
 
     let mut unpublished_post1 = create_test_blog_post("00000000-0000-0000-0000-000000000001", "未公開記事1");
-    unpublished_post1.set_published_date(future_date);
+    unpublished_post1.set_published_date(future_date.clone());
 
     let mut unpublished_post2 = create_test_blog_post("00000000-0000-0000-0000-000000000002", "未公開記事2");
     unpublished_post2.set_published_date(future_date);
@@ -108,7 +108,7 @@ mod tests {
     let mut blog_post = create_test_blog_post("00000000-0000-0000-0000-000000000003", "公開済み記事");
 
     // 過去の日付で公開日を設定（公開済み状態）
-    let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+    let past_date = JstDate::new(2024, 1, 1).unwrap();
     blog_post.set_published_date(past_date);
 
     // Act
@@ -127,7 +127,7 @@ mod tests {
     let mut blog_post = create_test_blog_post("00000000-0000-0000-0000-000000000004", "未公開記事");
 
     // 未来の日付で公開日を設定（未公開状態）
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap();
+    let future_date = JstDate::new(3000, 12, 31).unwrap();
     blog_post.set_published_date(future_date);
 
     // Act
@@ -168,10 +168,10 @@ mod tests {
   fn filter_published_posts_preserves_post_content_and_order() {
     // Arrange
     let service = PublishedPostViewerService::new();
-    let past_date = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+    let past_date = JstDate::new(2024, 1, 1).unwrap();
 
     let mut blog_post1 = create_test_blog_post("00000000-0000-0000-0000-000000000006", "内容確認記事1");
-    blog_post1.set_published_date(past_date);
+    blog_post1.set_published_date(past_date.clone());
     let original_id1 = blog_post1.get_id();
 
     let mut blog_post2 = create_test_blog_post("00000000-0000-0000-0000-000000000007", "内容確認記事2");

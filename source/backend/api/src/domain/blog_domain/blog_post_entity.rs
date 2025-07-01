@@ -6,8 +6,10 @@ pub mod image_content_entity;
 pub mod paragraph_entity;
 pub mod rich_text_vo;
 
-use crate::domain::{blog_domain::blog_post_entity::content_entity::ContentEntity, image_domain::ImageEntity};
-use chrono::{Local, NaiveDate};
+use crate::domain::{
+  blog_domain::{blog_post_entity::content_entity::ContentEntity, jst_date_vo::JstDate},
+  image_domain::ImageEntity,
+};
 use uuid::Uuid;
 
 // BlogPost aggregate root
@@ -17,21 +19,21 @@ pub struct BlogPostEntity {
   title: String,
   contents: Vec<ContentEntity>,
   thumbnail: Option<ImageEntity>,
-  post_date: NaiveDate,
-  last_update_date: NaiveDate,
-  published_date: NaiveDate,
+  post_date: JstDate,
+  last_update_date: JstDate,
+  published_date: JstDate,
 }
 
 impl BlogPostEntity {
   pub fn new(id: Uuid, title: String) -> Self {
-    let today = Local::now().date_naive();
+    let today = JstDate::today();
     Self {
       id,
       title,
       contents: Vec::new(),
       thumbnail: None,
-      post_date: today,
-      last_update_date: today,
+      post_date: today.clone(),
+      last_update_date: today.clone(),
       published_date: today,
     }
   }
@@ -62,36 +64,36 @@ impl BlogPostEntity {
     &self.contents
   }
 
-  pub fn set_post_date(&mut self, date: NaiveDate) -> &mut Self {
+  pub fn set_post_date(&mut self, date: JstDate) -> &mut Self {
     self.post_date = date;
     self
   }
 
-  pub fn get_post_date(&self) -> NaiveDate {
-    self.post_date
+  pub fn get_post_date(&self) -> &JstDate {
+    &self.post_date
   }
 
-  pub fn set_last_update_date(&mut self, date: NaiveDate) -> &mut Self {
+  pub fn set_last_update_date(&mut self, date: JstDate) -> &mut Self {
     self.last_update_date = date;
     self
   }
 
-  pub fn get_last_update_date(&self) -> NaiveDate {
-    self.last_update_date
+  pub fn get_last_update_date(&self) -> &JstDate {
+    &self.last_update_date
   }
 
-  pub fn set_published_date(&mut self, date: NaiveDate) -> &mut Self {
+  pub fn set_published_date(&mut self, date: JstDate) -> &mut Self {
     self.published_date = date;
     self
   }
 
-  pub fn get_published_date(&self) -> NaiveDate {
-    self.published_date
+  pub fn get_published_date(&self) -> &JstDate {
+    &self.published_date
   }
 
   pub fn is_published(&self) -> bool {
-    let today = Local::now().date_naive();
-    self.published_date <= today
+    let today = JstDate::today();
+    &self.published_date <= &today
   }
 
   pub fn update_title(&mut self, title: String) -> &mut Self {
@@ -221,44 +223,44 @@ mod tests {
 
   #[test]
   fn can_set_post_date_and_last_update_date() {
-    use chrono::NaiveDate;
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
 
     let id = Uuid::new_v4();
     let mut blog_post = BlogPostEntity::new(id, "日付のある記事".to_string());
 
-    let post_date = NaiveDate::from_ymd_opt(2024, 1, 15).unwrap();
-    let last_update_date = NaiveDate::from_ymd_opt(2024, 1, 20).unwrap();
+    let post_date = JstDate::new(2024, 1, 15).unwrap();
+    let last_update_date = JstDate::new(2024, 1, 20).unwrap();
 
-    blog_post.set_post_date(post_date);
-    blog_post.set_last_update_date(last_update_date);
+    blog_post.set_post_date(post_date.clone());
+    blog_post.set_last_update_date(last_update_date.clone());
 
-    assert_eq!(blog_post.get_post_date(), post_date);
-    assert_eq!(blog_post.get_last_update_date(), last_update_date);
+    assert_eq!(blog_post.get_post_date(), &post_date);
+    assert_eq!(blog_post.get_last_update_date(), &last_update_date);
   }
 
   #[test]
   fn default_values_for_post_date_and_last_update_date() {
-    use chrono::Local;
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
 
     let id = Uuid::new_v4();
     let blog_post = BlogPostEntity::new(id, "デフォルト日付の記事".to_string());
 
-    let today = Local::now().date_naive();
+    let today = JstDate::today();
 
     // デフォルトでは本日の日付が設定される
-    assert_eq!(blog_post.get_post_date(), today);
-    assert_eq!(blog_post.get_last_update_date(), today);
+    assert_eq!(blog_post.get_post_date(), &today);
+    assert_eq!(blog_post.get_last_update_date(), &today);
   }
 
   #[test]
   fn is_published_returns_true_when_published_date_is_today_or_past() {
-    use chrono::NaiveDate;
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
 
     let id = Uuid::new_v4();
     let mut blog_post = BlogPostEntity::new(id, "過去日付で公開する記事".to_string());
 
     // 昨日の日付で公開日を設定
-    let yesterday = NaiveDate::from_ymd_opt(2024, 1, 1).unwrap();
+    let yesterday = JstDate::new(2024, 1, 1).unwrap();
     blog_post.set_published_date(yesterday);
 
     assert!(blog_post.is_published());
@@ -266,13 +268,13 @@ mod tests {
 
   #[test]
   fn is_published_returns_false_when_published_date_is_future() {
-    use chrono::NaiveDate;
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
 
     let id = Uuid::new_v4();
     let mut blog_post = BlogPostEntity::new(id, "未来日付で公開予定の記事".to_string());
 
     // 未来の日付で公開日を設定
-    let future_date = NaiveDate::from_ymd_opt(3000, 12, 31).unwrap();
+    let future_date = JstDate::new(3000, 12, 31).unwrap();
     blog_post.set_published_date(future_date);
 
     assert!(!blog_post.is_published());
@@ -280,14 +282,14 @@ mod tests {
 
   #[test]
   fn can_set_and_get_published_date() {
-    use chrono::NaiveDate;
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
 
     let id = Uuid::new_v4();
     let mut blog_post = BlogPostEntity::new(id, "公開日設定記事".to_string());
 
-    let published_date = NaiveDate::from_ymd_opt(2024, 6, 15).unwrap();
-    blog_post.set_published_date(published_date);
+    let published_date = JstDate::new(2024, 6, 15).unwrap();
+    blog_post.set_published_date(published_date.clone());
 
-    assert_eq!(blog_post.get_published_date(), published_date);
+    assert_eq!(blog_post.get_published_date(), &published_date);
   }
 }

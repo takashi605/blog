@@ -4,12 +4,10 @@ use crate::application::dto::{
 };
 use crate::domain::blog_domain::blog_post_entity::content_entity::ContentEntity;
 use crate::domain::blog_domain::blog_post_entity::BlogPostEntity;
-use chrono::{TimeZone, Utc};
 
 pub fn convert_to_blog_post_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
-  // TODO エンティティに公開状態を追加したら、ここで設定する
-  // NaiveDateをDateTime<Utc>に変換（UTC 00:00:00として）
-  let published_date = Utc.from_utc_datetime(&blog_post.get_published_date().and_hms_opt(0, 0, 0).unwrap());
+  // JstDateをNaiveDateに変換（DTOはUTCとして扱う）
+  let published_date = blog_post.get_published_date().to_naive_date();
 
   let thumbnail = convert_thumbnail(&blog_post);
   let contents = convert_contents(&blog_post);
@@ -18,8 +16,8 @@ pub fn convert_to_blog_post_dto(blog_post: BlogPostEntity) -> BlogPostDTO {
     id: blog_post.get_id().to_string(),
     title: blog_post.get_title_text().to_string(),
     thumbnail,
-    post_date: blog_post.get_post_date(),
-    last_update_date: blog_post.get_last_update_date(),
+    post_date: blog_post.get_post_date().to_naive_date(),
+    last_update_date: blog_post.get_last_update_date().to_naive_date(),
     contents,
     published_date,
     is_public: true, // TODO: 実際の公開状態を使用
@@ -103,6 +101,7 @@ mod tests {
       paragraph_entity::ParagraphEntity,
       rich_text_vo::{LinkVO, RichTextPartVO, RichTextStylesVO, RichTextVO},
     };
+    use crate::domain::blog_domain::jst_date_vo::JstDate;
     use chrono::NaiveDate;
 
     // Arrange
@@ -177,8 +176,8 @@ mod tests {
 
     let mut blog_post = BlogPostEntity::new(blog_post_id, "テストブログ記事".to_string());
     blog_post.set_thumbnail(thumbnail_id, "test/image/path".to_string());
-    blog_post.set_post_date(post_date);
-    blog_post.set_last_update_date(last_update_date);
+    blog_post.set_post_date(JstDate::from_jst_naive_date(post_date));
+    blog_post.set_last_update_date(JstDate::from_jst_naive_date(last_update_date));
 
     // コンテンツを個別に追加（moveで所有権を移動）
     for content in contents {
