@@ -15,8 +15,7 @@ function ImageUploadForm({ onSubmit, errorMessage, loading = false }: ImageUploa
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <ImageInput id="image" label="ファイルを選択" {...register('image')} />
-      <TextInput id="name" label="画像名" {...register('imageName')} />
-      <TextInput id="path" label="パス" {...register('imagePath')} />
+      <TextInput id="name" label="画像名" {...register('imagePath')} />
       <UploadButton loading={loading}>
         {loading ? 'アップロード中...' : 'アップロード'}
       </UploadButton>
