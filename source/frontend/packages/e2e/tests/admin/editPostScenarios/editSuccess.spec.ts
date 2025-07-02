@@ -293,7 +293,7 @@ Then('【正常系 記事編集】リンク設定 input が出現する', async 
   const page = playwrightHelper.getPage();
 
   const linkInput = page.getByRole('textbox', {
-    name: 'URL(https:// から始まるもの)を入力してください。',
+    name: 'URL(http(s):// から始まるもの)を入力してください。',
   });
   await expect(linkInput).toBeVisible({ timeout: 10000 });
 });
@@ -302,7 +302,7 @@ When('【正常系 記事編集】リンク設定 input に「example.com」と�
   const page = playwrightHelper.getPage();
 
   const linkInput = page.getByRole('textbox', {
-    name: 'URL(https:// から始まるもの)を入力してください。',
+    name: 'URL(http(s):// から始まるもの)を入力してください。',
   });
   await linkInput.fill('https://example.com');
 
