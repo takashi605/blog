@@ -4,6 +4,7 @@ import PageHeader from '../../../components/ui/PageHeader';
 import TopTechPickPostSelectModalWithOpenButton from '../../../features/blogPost/topTechPick/select/TopTechPickSelectModal';
 import TopTechPickPostList from '../../../features/blogPost/topTechPick/view/TopTechPickPostView';
 import TopTechPickPostViewProvider from '../../../features/blogPost/topTechPick/view/TopTechPickViewProvider';
+import styles from './page.module.scss';
 
 export default function TopTechPickManagementPage() {
   return (
@@ -15,10 +16,12 @@ export default function TopTechPickManagementPage() {
       />
       <section>
         <TopTechPickPostViewProvider>
-          <TopTechPickPostList />
           <CommonModalProvider>
-            <TopTechPickPostSelectModalWithOpenButton />
+            <div className={styles.selectButton}>
+              <TopTechPickPostSelectModalWithOpenButton />
+            </div>
           </CommonModalProvider>
+          <TopTechPickPostList />
         </TopTechPickPostViewProvider>
       </section>
     </div>

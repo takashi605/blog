@@ -17,13 +17,13 @@ export default function PostsManagement() {
           記事を投稿
         </NavigationLinkButton>
         <NavigationLinkButton href="/posts/pickup">
-          ピックアップ記事を選択
+          ピックアップ記事の管理
         </NavigationLinkButton>
         <NavigationLinkButton href="/posts/popular">
-          人気記事を選択
+          人気記事の管理
         </NavigationLinkButton>
         <NavigationLinkButton href="/posts/top-tech-pick">
-          トップテック記事を選択
+          トップテック記事の管理
         </NavigationLinkButton>
       </div>
 

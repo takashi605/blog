@@ -113,7 +113,7 @@ fn convert_code_block_dto_to_api(dto: BlogPostCodeBlockDTO) -> CodeBlock {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use chrono::{NaiveDate};
+  use chrono::NaiveDate;
   use uuid::Uuid;
 
   #[test]
