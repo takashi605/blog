@@ -11,10 +11,26 @@ type ImageUploadFormProps = {
 };
 
 function ImageUploadForm({ onSubmit, errorMessage, loading = false }: ImageUploadFormProps) {
-  const { register, handleSubmit } = useFormContext<ImageUploadFormValues>();
+  const { register, handleSubmit, formState: { errors } } = useFormContext<ImageUploadFormValues>();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <ImageInput id="image" label="ファイルを選択" {...register('image')} />
+      <ImageInput 
+        id="image" 
+        label="ファイルを選択" 
+        {...register('image', {
+          validate: (files) => {
+            if (!files || files.length === 0) {
+              return '画像ファイルを選択してください';
+            }
+            return true;
+          }
+        })} 
+      />
+      {errors.image && (
+        <p role="alert" style={{ color: 'red', fontSize: '14px', marginTop: '4px' }}>
+          {errors.image.message}
+        </p>
+      )}
       <TextInput id="name" label="画像名" {...register('imagePath')} />
       <UploadButton loading={loading}>
         {loading ? 'アップロード中...' : 'アップロード'}
