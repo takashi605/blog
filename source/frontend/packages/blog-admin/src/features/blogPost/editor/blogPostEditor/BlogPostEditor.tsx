@@ -7,6 +7,7 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { $getRoot, type EditorState } from 'lexical';
+import { useEffect } from 'react';
 import type { BlogPostContent } from 'shared-lib/src/api';
 import { useBlogPostContentsContext } from './BlogPostContentsProvider';
 import styles from './blogPostEditor.module.scss';
@@ -26,6 +27,14 @@ type BlogPostEditorProps = {
 
 function BlogPostEditor({ initialContents }: BlogPostEditorProps) {
   const { setBlogPostContents } = useBlogPostContentsContext();
+
+  // 初回レンダリング時に初期コンテンツを設定
+  useEffect(() => {
+    if (initialContents) {
+      setBlogPostContents(initialContents);
+    }
+  }, [initialContents, setBlogPostContents]);
+
   const onChange = (editor: EditorState) => {
     editor.read(() => {
       const root = $getRoot();
