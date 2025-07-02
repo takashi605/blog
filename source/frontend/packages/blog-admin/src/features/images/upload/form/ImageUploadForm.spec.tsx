@@ -30,17 +30,14 @@ function ImageUploadFormWithProvider(optionProps: OptionProps = {}) {
 }
 
 describe('ImageUploadForm', () => {
-  it('入力した画像名,パスが送信関数に渡されている', async () => {
+  it('入力した画像ファイルと画像名が送信関数に渡されている', async () => {
     renderComponent();
     const fileInput = screen.getByLabelText('ファイルを選択');
     const file = new File(['(⌐□_□)'], 'test-image.png', { type: 'image/png' });
     await userEvent.upload(fileInput, file);
 
     const nameInput = screen.getByLabelText('画像名');
-    await userEvent.type(nameInput, 'テスト画像');
-
-    const pathInput = screen.getByLabelText('パス');
-    await userEvent.type(pathInput, 'test-image');
+    await userEvent.type(nameInput, 'test-image');
 
     const submitButton = screen.getByRole('button', { name: 'アップロード' });
     await userEvent.click(submitButton);
@@ -48,11 +45,50 @@ describe('ImageUploadForm', () => {
     expect(onSubmitMock).toHaveBeenCalledWith(
       {
         image: expect.any(FileList),
-        imageName: 'テスト画像',
         imagePath: 'test-image',
       },
       expect.any(Object),
     );
+  });
+
+  describe('必須項目のバリデーション', () => {
+    it('画像ファイルが選択されていない場合、エラーメッセージが表示される', async () => {
+      renderComponent();
+      
+      const nameInput = screen.getByLabelText('画像名');
+      await userEvent.type(nameInput, 'test-image');
+
+      const submitButton = screen.getByRole('button', { name: 'アップロード' });
+      await userEvent.click(submitButton);
+
+      expect(await screen.findByText('画像ファイルを選択してください')).toBeInTheDocument();
+      expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+
+    it('画像名が入力されていない場合、エラーメッセージが表示される', async () => {
+      renderComponent();
+      
+      const fileInput = screen.getByLabelText('ファイルを選択');
+      const file = new File(['(⌐□_□)'], 'test-image.png', { type: 'image/png' });
+      await userEvent.upload(fileInput, file);
+
+      const submitButton = screen.getByRole('button', { name: 'アップロード' });
+      await userEvent.click(submitButton);
+
+      expect(await screen.findByText('画像名を入力してください')).toBeInTheDocument();
+      expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+
+    it('画像ファイルと画像名の両方が未入力の場合、両方のエラーメッセージが表示される', async () => {
+      renderComponent();
+
+      const submitButton = screen.getByRole('button', { name: 'アップロード' });
+      await userEvent.click(submitButton);
+
+      expect(await screen.findByText('画像ファイルを選択してください')).toBeInTheDocument();
+      expect(await screen.findByText('画像名を入力してください')).toBeInTheDocument();
+      expect(onSubmitMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('エラーメッセージの表示・非表示', () => {

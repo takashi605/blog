@@ -31,7 +31,18 @@ function ImageUploadForm({ onSubmit, errorMessage, loading = false }: ImageUploa
           {errors.image.message}
         </p>
       )}
-      <TextInput id="name" label="画像名" {...register('imagePath')} />
+      <TextInput 
+        id="name" 
+        label="画像名" 
+        {...register('imagePath', {
+          required: '画像名を入力してください'
+        })} 
+      />
+      {errors.imagePath && (
+        <p role="alert" style={{ color: 'red', fontSize: '14px', marginTop: '4px' }}>
+          {errors.imagePath.message}
+        </p>
+      )}
       <UploadButton loading={loading}>
         {loading ? 'アップロード中...' : 'アップロード'}
       </UploadButton>
