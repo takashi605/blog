@@ -1,12 +1,6 @@
 'use client';
 import type { ReactNode } from 'react';
-import { createContext } from 'react';
-import {
-  FormProvider,
-  useForm,
-  useFormContext,
-  type UseFormReturn,
-} from 'react-hook-form';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 export type BlogPostFormData = {
   title: string;
   thumbnail: {
@@ -16,14 +10,10 @@ export type BlogPostFormData = {
   publishedDate: string;
 };
 
-type BlogPostFormState = UseFormReturn<BlogPostFormData>;
-
 type BlogPostFormProviderProps = {
   children: ReactNode;
   defaultValues?: Partial<BlogPostFormData>;
 };
-
-const BlogPostFormContext = createContext<BlogPostFormState | null>(null);
 
 export function BlogPostFormProvider({
   children,
@@ -45,13 +35,7 @@ export function BlogPostFormProvider({
     },
   });
 
-  return (
-    <FormProvider {...form}>
-      <BlogPostFormContext.Provider value={form}>
-        {children}
-      </BlogPostFormContext.Provider>
-    </FormProvider>
-  );
+  return <FormProvider {...form}>{children}</FormProvider>;
 }
 
 /**
