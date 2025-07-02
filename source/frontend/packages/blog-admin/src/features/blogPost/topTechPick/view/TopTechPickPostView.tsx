@@ -1,4 +1,5 @@
 'use client';
+import styles from './topTechPickPostView.module.scss';
 import { useTopTechPickPostList } from './useTopTechPickPostView';
 
 function TopTechPickPostList() {
@@ -6,10 +7,19 @@ function TopTechPickPostList() {
   const post = getTopTechPickPost();
 
   return (
-    <>
-      <h2>現在のトップテックピック記事</h2>
-      <h3>{post?.title}</h3>
-    </>
+    <div className={styles.container}>
+      <h2 className={styles.title}>現在のトップテックピック記事</h2>
+
+      {post ? (
+        <div className={styles.postContainer}>
+          <h3 className={styles.postTitle}>{post.title}</h3>
+        </div>
+      ) : (
+        <div className={styles.emptyState}>
+          トップテックピック記事が設定されていません
+        </div>
+      )}
+    </div>
   );
 }
 
