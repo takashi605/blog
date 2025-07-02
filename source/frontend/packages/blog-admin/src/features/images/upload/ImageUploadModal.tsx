@@ -30,13 +30,6 @@ function Modal() {
   const onSubmit = async (data: ImageUploadFormValues) => {
     setIsLoading(true);
     setErrorMessage('');
-    
-    const isSuccess = await uploadCloudinary(data);
-    if (!isSuccess) {
-      setErrorMessage('画像ストレージへのアップロードに失敗しました。');
-      setIsLoading(false);
-      return;
-    }
 
     try {
       // 画像をDBに保存
@@ -54,26 +47,39 @@ function Modal() {
       }
 
       setErrorMessage('データベースへのアップロードに失敗しました。');
-      // ここで return すると画像の再取得が行われず、e2e テストが適切な結果を返さない
+      setIsLoading(false);
+      fetchImages()
+      return;
     }
 
-    try {
-      // 画像一覧を再取得
-      const fetchedImages = await api.get('/api/blog/images');
-      updateImages(fetchedImages);
-    } catch (error) {
-      console.error('画像一覧の再取得に失敗しました:', error);
-
-      if (error instanceof HttpError) {
-        console.error(`HTTPエラー: ${error.status}`);
-      }
-
-      // エラー時は空配列を設定
-      updateImages([]);
+    const isSuccess = await uploadCloudinary(data);
+    if (!isSuccess) {
+      setErrorMessage('画像ストレージへのアップロードに失敗しました。');
+      setIsLoading(false);
+      fetchImages();
+      return;
     }
 
+    fetchImages()
     setIsUploadSuccess(true);
     setIsLoading(false);
+
+    async function fetchImages() {
+      try {
+        // 画像一覧を再取得
+        const fetchedImages = await api.get('/api/blog/images');
+        updateImages(fetchedImages);
+      } catch (error) {
+        console.error('画像一覧の再取得に失敗しました:', error);
+
+        if (error instanceof HttpError) {
+          console.error(`HTTPエラー: ${error.status}`);
+        }
+
+        // エラー時は空配列を設定
+        updateImages([]);
+      }
+    }
   };
 
   return (
@@ -82,9 +88,9 @@ function Modal() {
         <h2 className={styles.header}>画像アップロード</h2>
         <div className={styles.formContainer}>
           <ImageUploadFormProvider>
-            <ImageUploadForm 
-              onSubmit={onSubmit} 
-              errorMessage={errorMessage} 
+            <ImageUploadForm
+              onSubmit={onSubmit}
+              errorMessage={errorMessage}
               loading={isLoading}
             />
             {isUploadSuccess && (
