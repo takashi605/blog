@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import type { Image } from 'shared-lib/src/api';
+import ErrorMessage from '../../../components/form/parts/ErrorMessage';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
@@ -30,18 +31,7 @@ function ThumbnailPickModalWithOpenButton() {
     <div style={{ position: 'relative' }}>
       <CommonModalOpenButton>サムネイル画像を選択</CommonModalOpenButton>
       {errors.thumbnail?.id && (
-        <p
-          role="alert"
-          style={{
-            position: 'absolute',
-            color: 'red',
-            fontSize: '0.875rem',
-            marginTop: '0.25rem',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {errors.thumbnail.id.message}
-        </p>
+        <ErrorMessage absolute>{errors.thumbnail.id.message}</ErrorMessage>
       )}
       <CommonModal>
         <ImageListProvider>

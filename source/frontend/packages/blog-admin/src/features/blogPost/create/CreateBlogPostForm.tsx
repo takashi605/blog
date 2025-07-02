@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import type { CreateBlogPostRequest } from 'shared-lib/src/api';
 import { toISOStringWithTimezone } from 'shared-lib/src/utils/date';
+import ErrorMessage from '../../../components/form/parts/ErrorMessage';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
@@ -56,7 +57,7 @@ function CreateBlogPostForm() {
         role="form"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {error && <p role="alert">{error}</p>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
         <div className={styles.formHeader}>
           <TitleInput />

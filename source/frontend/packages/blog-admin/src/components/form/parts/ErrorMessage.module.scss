@@ -1,0 +1,12 @@
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.error.absolute {
+  position: absolute;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+}

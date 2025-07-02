@@ -1,4 +1,5 @@
 import postTitleStyles from 'shared-ui/src/blogPost/styles/blogPostTitle.module.scss';
+import ErrorMessage from '../../../../components/form/parts/ErrorMessage';
 import { useBlogPostFormContext } from './BlogPostFormProvider';
 import styles from './titleInput.module.scss';
 
@@ -16,14 +17,7 @@ function TitleInput() {
         id="title"
         {...register('title', { required: 'タイトルは必須です' })}
       />
-      {errors.title && (
-        <p
-          role="alert"
-          style={{ color: 'red', fontSize: '14px', marginTop: '4px' }}
-        >
-          {errors.title.message}
-        </p>
-      )}
+      {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
 import type { components } from 'shared-lib/src/generated';
+import ErrorMessage from '../../../components/form/parts/ErrorMessage';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
@@ -66,7 +67,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
         role="form"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {error && <p role="alert">{error}</p>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <div className={styles.formHeader}>
           <TitleInput />
 
