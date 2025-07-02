@@ -25,6 +25,9 @@ function Modal() {
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
     try {
+      // 成功フラグをリセット
+      setIsUploadSuccess(false);
+
       // 選択されたブログ記事を取得
       const selectedPosts = selectedBlogPosts(data.checkedPosts);
 

@@ -27,6 +27,9 @@ function Modal() {
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
     try {
+      // 成功フラグをリセット
+      setIsUploadSuccess(false);
+
       const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
       if (selectedTopTechPickBlogPosts.length !== 1) {
         alert('トップテックピック記事は1つだけ選択してください。');

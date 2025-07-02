@@ -1,4 +1,5 @@
 import React from 'react';
+import SuccessMessage from '../../../components/form/parts/SuccessMessage';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import PostCheckboxes from './checkboxes/PostCheckboxes';
@@ -23,6 +24,25 @@ function PostSelectModal({
   successMessage,
   isSuccess = false,
 }: PostSelectModalProps) {
+  const [showSuccess, setShowSuccess] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      setShowSuccess(true);
+    }
+  }, [isSuccess]);
+
+  // isSuccessがfalseになったときにshowSuccessもリセット
+  React.useEffect(() => {
+    if (!isSuccess) {
+      setShowSuccess(false);
+    }
+  }, [isSuccess]);
+
+  const handleHideSuccess = () => {
+    setShowSuccess(false);
+  };
+
   return (
     <CommonModal width="700px">
       <div className={styles.modalContent}>
@@ -32,8 +52,12 @@ function PostSelectModal({
           <PostCheckboxes onSubmit={onSubmit} validate={validate} />
         </PostCheckboxesFormProvider>
 
-        {isSuccess && successMessage && (
-          <p className={styles.successMessage}>{successMessage}</p>
+        {successMessage && (
+          <SuccessMessage
+            message={successMessage}
+            isVisible={showSuccess}
+            onHide={handleHideSuccess}
+          />
         )}
 
         <div className={styles.footer}>
