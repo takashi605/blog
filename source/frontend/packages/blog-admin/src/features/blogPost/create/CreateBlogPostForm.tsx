@@ -25,7 +25,7 @@ function CreateBlogPostForm() {
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
-  const { createBlogPost, error } = useCreateBlogPost();
+  const { createBlogPost, error, loading } = useCreateBlogPost();
   const onSubmit = async (formValues: BlogPostFormData) => {
     // 日付の生成
     const todaySlashDelimited = toISOStringWithTimezone(new Date())
@@ -73,7 +73,7 @@ function CreateBlogPostForm() {
                   <ThumbnailPickModalWithOpenButton />
                 </CommonModalProvider>
 
-                <SubmitButton>投稿</SubmitButton>
+                <SubmitButton isLoading={loading}>投稿</SubmitButton>
               </div>
             </div>
           </div>

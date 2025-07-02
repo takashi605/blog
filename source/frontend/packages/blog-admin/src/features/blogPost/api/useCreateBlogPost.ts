@@ -36,7 +36,8 @@ export function useCreateBlogPost() {
           blogPost,
         );
         setState({
-          loading: false,
+          // 成功時は別ページに遷移するので、loadingをtrueのままにする
+          loading: true,
           error: null,
           blogPost: createdBlogPost,
         });
