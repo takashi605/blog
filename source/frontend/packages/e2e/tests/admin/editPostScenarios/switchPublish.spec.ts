@@ -42,7 +42,7 @@ When(
     await updateButton.first().click();
     
     // 編集完了メッセージの確認
-    await expect(page.getByText('記事を編集しました')).toBeVisible({
+    await expect(page.getByText('記事を更新しました！')).toBeVisible({
       timeout: 10000,
     });
   },
@@ -107,7 +107,7 @@ When(
     await updateButton.first().click();
     
     // 編集完了メッセージの確認
-    await expect(page.getByText('記事を編集しました')).toBeVisible({
+    await expect(page.getByText('記事を更新しました！')).toBeVisible({
       timeout: 10000,
     });
   },
