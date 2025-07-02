@@ -56,16 +56,17 @@ When(
     const labelsInModal = modal.locator('label');
     const firstLabelInModal = labelsInModal.first();
     await firstLabelInModal.click();
+
+    // 選択ボタンをクリック
+    const selectButton = modal.getByRole('button', { name: '選択' });
+    await selectButton.click();
   },
 );
 
 Then(
-  '【正常系 未公開投稿】モーダルを閉じると、投稿画面内にサムネイル画像が表示されている',
+  '【正常系 未公開投稿】投稿画面内にサムネイル画像が表示されている',
   async function () {
     const page = playwrightHelper.getPage();
-    const modal = page.getByRole('dialog');
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
 
     const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
     await expect(thumbnailImage).toBeVisible();

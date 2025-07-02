@@ -57,9 +57,9 @@ When(
     const firstLabelInModal = labelsInModal.first();
     await firstLabelInModal.click();
 
-    // 閉じるボタンをクリック
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
+    // 選択ボタンをクリック
+    const selectButton = modal.getByRole('button', { name: '選択' });
+    await selectButton.click();
 
     // モーダルが閉じられるまで待機
     await expect(modal).not.toBeVisible();

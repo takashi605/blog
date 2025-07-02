@@ -48,8 +48,9 @@ When(
     const firstLabelInModal = labelsInModal.first();
     await firstLabelInModal.click();
 
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
+    // 選択ボタンをクリック
+    const selectButton = modal.getByRole('button', { name: '選択' });
+    await selectButton.click();
   },
 );
 
