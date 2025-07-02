@@ -1,13 +1,10 @@
 'use client';
 import React from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
-import CommonModal from '../../../../components/modal/CommonModal';
-import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
-import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
 import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
+import PostSelectModal from '../../select/PostSelectModal';
 import { useTopTechPickPostViewContext } from '../view/TopTechPickViewProvider';
 
 function TopTechPickSelectModalWithOpenButton() {
@@ -60,24 +57,18 @@ function Modal() {
   };
 
   return (
-    <CommonModal>
-      <PostCheckboxesFormProvider
-        defaultValues={{
-          checkedPosts: [getTopTechPickPost()?.id ?? ''],
-        }}
-      >
-        <h2>ピックアップ記事を選択</h2>
-        <PostCheckboxes
-          onSubmit={onSubmit}
-          validate={(value: string[]) =>
-            value.length === 1 ||
-            'トップテック記事は必ず1つのみ選択してください'
-          }
-        />
-      </PostCheckboxesFormProvider>
-      {isUploadSuccess && <p>トップテックピック記事を更新しました。</p>}
-      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
-    </CommonModal>
+    <PostSelectModal
+      title="トップテックピック記事を選択"
+      defaultValues={{
+        checkedPosts: [getTopTechPickPost()?.id ?? ''],
+      }}
+      onSubmit={onSubmit}
+      validate={(value: string[]) =>
+        value.length === 1 || 'トップテック記事は必ず1つのみ選択してください'
+      }
+      successMessage="トップテックピック記事を更新しました。"
+      isSuccess={isUploadSuccess}
+    />
   );
 }
 

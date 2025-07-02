@@ -1,15 +1,11 @@
 'use client';
 import React from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
-import CommonModal from '../../../../components/modal/CommonModal';
-import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
-import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
 import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
+import PostSelectModal from '../../select/PostSelectModal';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
-import styles from './PickUpPostSelectModal.module.scss';
 
 function PickUpPostSelectModalWithOpenButton() {
   return (
@@ -50,34 +46,18 @@ function Modal() {
   };
 
   return (
-    <CommonModal width="700px">
-      <div className={styles.modalContent}>
-        <h2 className={styles.title}>ピックアップ記事を選択</h2>
-
-        <PostCheckboxesFormProvider
-          defaultValues={{
-            checkedPosts: getAllPickUpPosts().map((post) => post.id),
-          }}
-        >
-          <PostCheckboxes
-            onSubmit={onSubmit}
-            validate={(value: string[]) =>
-              value.length === 3 || 'ピックアップ記事は3件選択してください'
-            }
-          />
-        </PostCheckboxesFormProvider>
-
-        {isUploadSuccess && (
-          <p className={styles.successMessage}>
-            ピックアップ記事を更新しました。
-          </p>
-        )}
-
-        <div className={styles.footer}>
-          <CommonModalCloseButton>閉じる</CommonModalCloseButton>
-        </div>
-      </div>
-    </CommonModal>
+    <PostSelectModal
+      title="ピックアップ記事を選択"
+      defaultValues={{
+        checkedPosts: getAllPickUpPosts().map((post) => post.id),
+      }}
+      onSubmit={onSubmit}
+      validate={(value: string[]) =>
+        value.length === 3 || 'ピックアップ記事は3件選択してください'
+      }
+      successMessage="ピックアップ記事を更新しました。"
+      isSuccess={isUploadSuccess}
+    />
   );
 }
 
