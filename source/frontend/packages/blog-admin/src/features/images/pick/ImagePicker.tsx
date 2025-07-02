@@ -23,7 +23,11 @@ function ImagePicker({
 
   return (
     <>
-      <h2>画像を選択</h2>
+      <h2
+        style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}
+      >
+        画像を選択
+      </h2>
       <ul className={styles.imageList}>
         {getAllImages().map((image) => (
           <li key={image.id}>
