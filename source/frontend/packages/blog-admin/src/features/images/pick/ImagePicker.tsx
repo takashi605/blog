@@ -9,9 +9,16 @@ type ImagePickerProps = {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
   ref?: React.Ref<HTMLInputElement>;
+  selectedImageId?: string;
 };
 
-function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
+function ImagePicker({
+  onChange,
+  onBlur,
+  name,
+  ref,
+  selectedImageId,
+}: ImagePickerProps) {
   const { getAllImages } = useImageList();
 
   return (
@@ -24,6 +31,7 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
               id={image.id}
               type="radio"
               value={image.id}
+              checked={selectedImageId === image.id}
               onChange={(e) => onChange(e, image)}
               {...(onBlur && { onBlur })}
               {...(name && { name })}

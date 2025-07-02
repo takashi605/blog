@@ -36,7 +36,11 @@ function ImageInsertModal() {
     <>
       <CommonModal>
         <ImageListProvider>
-          <ImagePicker onChange={onChangePickerHandler} name="imageContent" />
+          <ImagePicker
+            onChange={onChangePickerHandler}
+            name="imageContent"
+            selectedImageId={selectedImage?.id}
+          />
         </ImageListProvider>
         <div
           style={{
