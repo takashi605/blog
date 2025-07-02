@@ -13,15 +13,13 @@ function CommonModalCloseButton({
   const { closeModal } = useCommonModalContext();
 
   return (
-    <>
-      <button
-        onClick={closeModal}
-        className={`${styles.button}${buttonClassName ? ` ${buttonClassName}` : ''}`}
-        type="button"
-      >
-        {children}
-      </button>
-    </>
+    <button
+      onClick={closeModal}
+      className={`${styles.button}${buttonClassName ? ` ${buttonClassName}` : ''}`}
+      type="button"
+    >
+      {children}
+    </button>
   );
 }
 
