@@ -1,10 +1,11 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
 import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
+import SuccessMessage from '../../../components/form/parts/SuccessMessage';
 import { useImageListContext } from '../list/ImageListProvider';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
@@ -24,32 +25,12 @@ function ImageUploadModalWithOpenButton() {
 function Modal() {
   const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
-  const [isFadingOut, setIsFadingOut] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // 成功メッセージを2秒後にフェードアウトアニメーションで非表示にする
-  useEffect(() => {
-    if (isUploadSuccess) {
-      const fadeOutTimer = setTimeout(() => {
-        setIsFadingOut(true);
-      }, 2000);
-
-      return () => clearTimeout(fadeOutTimer);
-    }
-  }, [isUploadSuccess]);
-
-  // フェードアウトアニメーション完了後にステートをリセット
-  useEffect(() => {
-    if (isFadingOut) {
-      const hideTimer = setTimeout(() => {
-        setIsUploadSuccess(false);
-        setIsFadingOut(false);
-      }, 500); // アニメーション時間と同じ
-
-      return () => clearTimeout(hideTimer);
-    }
-  }, [isFadingOut]);
+  const handleSuccessMessageHide = () => {
+    setIsUploadSuccess(false);
+  };
 
   const onSubmit = async (data: ImageUploadFormValues) => {
     setIsLoading(true);
@@ -117,11 +98,11 @@ function Modal() {
               errorMessage={errorMessage}
               loading={isLoading}
             />
-            {isUploadSuccess && (
-              <div className={`${styles.successMessage} ${isFadingOut ? styles.fadeOut : ''}`}>
-                画像のアップロードに成功しました
-              </div>
-            )}
+            <SuccessMessage
+              message="画像のアップロードに成功しました"
+              isVisible={isUploadSuccess}
+              onHide={handleSuccessMessageHide}
+            />
           </ImageUploadFormProvider>
         </div>
         <div className={styles.buttonContainer}>
