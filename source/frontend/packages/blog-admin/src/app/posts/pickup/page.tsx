@@ -4,6 +4,7 @@ import PageHeader from '../../../components/ui/PageHeader';
 import PickUpPostList from '../../../features/blogPost/pickup/list/PickUpPostList';
 import PickUpPostListProvider from '../../../features/blogPost/pickup/list/PickUpPostListProvider';
 import PickUpPostSelectModalWithOpenButton from '../../../features/blogPost/pickup/select/PickUpPostSelectModal';
+import styles from './page.module.scss';
 
 export default function PickUpManagementPage() {
   return (
@@ -15,10 +16,12 @@ export default function PickUpManagementPage() {
       />
       <section>
         <PickUpPostListProvider>
-          <PickUpPostList />
           <CommonModalProvider>
-            <PickUpPostSelectModalWithOpenButton />
+            <div className={styles.selectButton}>
+              <PickUpPostSelectModalWithOpenButton />
+            </div>
           </CommonModalProvider>
+          <PickUpPostList />
         </PickUpPostListProvider>
       </section>
     </div>
