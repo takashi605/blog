@@ -240,7 +240,7 @@ Then('【正常系 記事投稿】リンク設定 input が出現する', async 
 
   // リンク設定入力フィールドを確認
   const linkInput = page.getByRole('textbox', {
-    name: 'URL(https:// から始まるもの)を入力してください。',
+    name: 'URL(http(s):// から始まるもの)を入力してください。',
   });
   await expect(linkInput).toBeVisible({ timeout: 10000 });
 });
@@ -252,7 +252,7 @@ When(
 
     // リンク設定入力フィールドにURLを入力
     const linkInput = page.getByRole('textbox', {
-      name: 'URL(https:// から始まるもの)を入力してください。',
+      name: 'URL(http(s):// から始まるもの)を入力してください。',
     });
     await linkInput.fill('https://example.com');
 
