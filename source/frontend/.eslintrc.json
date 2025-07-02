@@ -4,7 +4,6 @@
   // extends はルールの on,off を外部から読み込む
   "extends": [
     "plugin:@typescript-eslint/recommended", // TypeScriptのための推奨設定を内包したプラグイン
-    "plugin:tailwindcss/recommended", // Tailwind CSSの使用に関する推奨設定を内包したプラグイン
     "prettier"
   ],
 

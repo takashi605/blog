@@ -8,7 +8,6 @@
   ],
   "rules": {
     "@next/next/no-img-element": "off", // Next.jsでの<img>タグを使用できるようにする
-    "tailwindcss/no-custom-classname": "off", // TailwindCSS で定義されていないクラス名を使用することを許可
     "react/jsx-curly-brace-presence": "error", // JSX内で余分な{}を許可しない
     "react/self-closing-comp": [
       "error", // セルフクローズタグの使用を強制

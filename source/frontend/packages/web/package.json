@@ -42,7 +42,6 @@
     "shared-lib": "workspace:*",
     "shared-test-data": "workspace:*",
     "shared-ui": "workspace:*",
-    "tailwindcss": "^3.4.15",
     "zod": "^3.23.8"
   },
   "msw": {
