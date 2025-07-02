@@ -6,7 +6,7 @@
 
 .main {
   width: 100%;
-  max-width: 1540px;
+  max-width: vars.$container-max-width;
   min-height: 100vh;
   margin: 0 auto;
   padding: 0 50px;

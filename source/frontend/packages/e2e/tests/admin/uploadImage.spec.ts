@@ -64,10 +64,6 @@ When('【正常系画像アップロード】画像名を入力する', async fu
   const nameInput = getImageNameInput();
   await nameInput.fill('test-image');
 });
-When('【正常系画像アップロード】パスを入力する', async function () {
-  const pathInput = getImagePathInput();
-  await pathInput.fill('test-image.jpg');
-});
 When(
   '【正常系画像アップロード】モーダル内の「アップロード」ボタンを押下する',
   async function () {
@@ -91,7 +87,7 @@ Then(
     const images = page.locator('img');
     const count = await images.count();
     expect(count).toBe(initialImageCount + 1);
-    const pathText = page.getByText('test-image.jpg');
+    const pathText = page.getByText('test-image');
     await expect(pathText).toBeVisible({ timeout: 10000 });
   },
 );
@@ -149,15 +145,11 @@ When('【重複パス画像アップロード】画像を選択する', async fu
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles(path.join(dirname(), 'images/camera.jpg'));
 });
-When('【重複パス画像アップロード】画像名を入力する', async function () {
-  const nameInput = getImageNameInput();
-  await nameInput.fill('test-image2');
-});
 When(
-  '【重複パス画像アップロード】正常系アップロードで入力したものと同じパスを入力する',
+  '【重複パス画像アップロード】正常系アップロードで入力したものと同じ画像名を入力する',
   async function () {
-    const pathInput = getImagePathInput();
-    await pathInput.fill('test-image.jpg');
+    const nameInput = getImageNameInput();
+    await nameInput.fill('test-image');
   },
 );
 When(
@@ -199,12 +191,6 @@ function getImageNameInput(): Locator {
   const modal = getModal();
   const nameInput = modal.getByRole('textbox', { name: '画像名' });
   return nameInput;
-}
-
-function getImagePathInput(): Locator {
-  const modal = getModal();
-  const pathInput = modal.getByRole('textbox', { name: 'パス' });
-  return pathInput;
 }
 
 function dirname() {

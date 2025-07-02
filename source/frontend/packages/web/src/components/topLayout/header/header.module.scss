@@ -3,7 +3,7 @@
 .header {
   position: relative;
   width: 100%;
-  max-width: 1540px;
+  max-width: vars.$container-max-width;
   margin: 0 auto;
   padding: 25px 50px;
 
