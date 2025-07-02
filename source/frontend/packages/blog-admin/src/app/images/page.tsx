@@ -3,6 +3,7 @@ import PageHeader from '../../components/ui/PageHeader';
 import ImageList from '../../features/images/list/ImageList';
 import ImageListProvider from '../../features/images/list/ImageListProvider';
 import ImageUploadModalWithOpenButton from '../../features/images/upload/ImageUploadModal';
+import styles from './page.module.scss';
 
 export default function ImageManagementPage() {
   return (
@@ -14,7 +15,9 @@ export default function ImageManagementPage() {
           backButtonText="ダッシュボードに戻る"
         />
         <ImageListProvider>
-          <ImageUploadModalWithOpenButton />
+          <div className={styles.uploadButtonContainer}>
+            <ImageUploadModalWithOpenButton />
+          </div>
           <ImageList />
         </ImageListProvider>
       </CommonModalProvider>
