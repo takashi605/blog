@@ -8,6 +8,7 @@ import CommonModalSubmitButton from '../../../../../../../components/modal/Commo
 import ImageListProvider from '../../../../../../images/list/ImageListProvider';
 import ImagePicker from '../../../../../../images/pick/ImagePicker';
 import { INSERT_IMAGE_COMMAND } from '../../customNodes/image/InsertImageCommand';
+import styles from './imageInsertModal.module.scss';
 
 function ImageInsertModal() {
   const [editor] = useLexicalComposerContext();
@@ -42,14 +43,7 @@ function ImageInsertModal() {
             selectedImageId={selectedImage?.id}
           />
         </ImageListProvider>
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            justifyContent: 'flex-end',
-            marginTop: '1rem',
-          }}
-        >
+        <div className={styles.buttonContainer}>
           <CommonModalCloseButton>閉じる</CommonModalCloseButton>
           <CommonModalSubmitButton
             type="button"
