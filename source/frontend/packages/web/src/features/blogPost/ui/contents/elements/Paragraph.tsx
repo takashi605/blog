@@ -14,6 +14,7 @@ type ParagraphProps = {
 export function Paragraph({ richText }: ParagraphProps) {
   return (
     <p className={styles.paragraph}>
+      {richText.length === 0 && <br />}
       {richText.map((text) => (
         <span key={createUUIDv4()}>
           <StyledText richText={text} />
