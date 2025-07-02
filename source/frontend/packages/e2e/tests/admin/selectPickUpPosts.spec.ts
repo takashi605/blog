@@ -6,7 +6,7 @@ let initialPickUpPostTitles: string[] = [];
 let updatedPickUpPostTitles: string[] = [];
 
 Given(
-  '【ピックアップ記事選択】ピックアップ記事選択ページにアクセスする',
+  '【ピックアップ記事選択】ピックアップ記事管理ページにアクセスする',
   async function () {
     if (!process.env.ADMIN_URL) {
       throw new Error('ADMIN_URL 環境変数が設定されていません');
@@ -46,8 +46,7 @@ When(
     const [response] = await Promise.all([
       page.waitForResponse(
         (resp) =>
-          resp.url().includes('/api/admin/blog/posts') &&
-          resp.status() === 200,
+          resp.url().includes('/api/admin/blog/posts') && resp.status() === 200,
       ),
       getOpenModalButton().click(),
     ]);
