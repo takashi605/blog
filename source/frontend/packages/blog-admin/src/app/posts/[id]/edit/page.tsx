@@ -1,4 +1,5 @@
 'use client';
+import ErrorMessage from '@/components/form/parts/ErrorMessage';
 import PageHeader from '@/components/ui/PageHeader';
 import { useAdminBlogPost } from '@/features/blogPost/api/useAdminBlogPost';
 import EditBlogPostForm from '@/features/blogPost/edit/EditBlogPostForm';
@@ -27,7 +28,7 @@ export default function EditBlogPostPage() {
   if (loading) {
     content = <p>記事を読み込み中...</p>;
   } else if (error) {
-    content = <p role="alert">エラー: {error}</p>;
+    content = <ErrorMessage>エラー: {error}</ErrorMessage>;
   } else if (!blogPost) {
     content = <p>記事が見つかりませんでした。</p>;
   } else {

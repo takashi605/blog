@@ -1,17 +1,19 @@
 'use client';
 import type { ReactNode } from 'react';
-import { createContext, useContext } from 'react';
-import { FormProvider, useForm, type UseFormReturn } from 'react-hook-form';
-import type { CreateBlogPostFormData } from '../../create/CreateBlogPostForm';
-
-type BlogPostFormState = UseFormReturn<CreateBlogPostFormData>;
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+export type BlogPostFormData = {
+  title: string;
+  thumbnail: {
+    id: string;
+    path: string;
+  };
+  publishedDate: string;
+};
 
 type BlogPostFormProviderProps = {
   children: ReactNode;
-  defaultValues?: Partial<CreateBlogPostFormData>;
+  defaultValues?: Partial<BlogPostFormData>;
 };
-
-const BlogPostFormContext = createContext<BlogPostFormState | null>(null);
 
 export function BlogPostFormProvider({
   children,
@@ -20,8 +22,8 @@ export function BlogPostFormProvider({
   // 今日の日付をYYYY-MM-DD形式で取得
   const todayHyphenDelimited = new Date().toISOString().split('T')[0];
 
-  const form = useForm<CreateBlogPostFormData>({
-    mode: 'onChange',
+  const form = useForm<BlogPostFormData>({
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       thumbnail: {
@@ -33,13 +35,7 @@ export function BlogPostFormProvider({
     },
   });
 
-  return (
-    <FormProvider {...form}>
-      <BlogPostFormContext.Provider value={form}>
-        {children}
-      </BlogPostFormContext.Provider>
-    </FormProvider>
-  );
+  return <FormProvider {...form}>{children}</FormProvider>;
 }
 
 /**
@@ -47,7 +43,7 @@ export function BlogPostFormProvider({
  * useContextのラッパーとして機能
  */
 export const useBlogPostFormContext = () => {
-  const formState = useContext(BlogPostFormContext);
+  const formState = useFormContext<BlogPostFormData>();
   if (formState === null) {
     throw new Error(
       'useBlogPostFormContext は BlogPostFormProvider でラップされていなければ利用できません',

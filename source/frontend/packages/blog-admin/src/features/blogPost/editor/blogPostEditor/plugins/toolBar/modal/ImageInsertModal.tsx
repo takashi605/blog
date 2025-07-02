@@ -4,9 +4,11 @@ import type { Image } from 'shared-lib/src/api';
 import CommonModal from '../../../../../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../../../../../components/modal/CommonModalCloseButton';
 import { useCommonModalContext } from '../../../../../../../components/modal/CommonModalProvider';
+import CommonModalSubmitButton from '../../../../../../../components/modal/CommonModalSubmitButton';
 import ImageListProvider from '../../../../../../images/list/ImageListProvider';
 import ImagePicker from '../../../../../../images/pick/ImagePicker';
 import { INSERT_IMAGE_COMMAND } from '../../customNodes/image/InsertImageCommand';
+import styles from './imageInsertModal.module.scss';
 
 function ImageInsertModal() {
   const [editor] = useLexicalComposerContext();
@@ -35,12 +37,22 @@ function ImageInsertModal() {
     <>
       <CommonModal>
         <ImageListProvider>
-          <ImagePicker onChange={onChangePickerHandler} name="imageContent" />
+          <ImagePicker
+            onChange={onChangePickerHandler}
+            name="imageContent"
+            selectedImageId={selectedImage?.id}
+          />
         </ImageListProvider>
-        <button type="button" onClick={onClickInsertImageButton}>
-          挿入
-        </button>
-        <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+        <div className={styles.buttonContainer}>
+          <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+          <CommonModalSubmitButton
+            type="button"
+            onClick={onClickInsertImageButton}
+            disabled={!selectedImage}
+          >
+            挿入
+          </CommonModalSubmitButton>
+        </div>
       </CommonModal>
     </>
   );

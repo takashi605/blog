@@ -72,22 +72,25 @@ When(
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible({ timeout: 10000 });
 
-    // 対応する画像をクリックし、src 属性を取得して変数に保持
+    // 対応する画像をクリック
     const labelsInModal = modal.locator('label');
     const firstLabelInModal = labelsInModal.first();
     await firstLabelInModal.click();
+
+    // src 属性を取得して変数に保持
     selectedThumbnailImageSrc = await firstLabelInModal
       .locator('img')
       .getAttribute('src');
+
+    // 選択ボタンをクリック
+    const selectButton = modal.getByRole('button', { name: '選択' });
+    await selectButton.click();
   },
 );
 Then(
-  '【正常系 記事投稿】モーダルを閉じると、投稿画面内にサムネイル画像が表示されている',
+  '【正常系 記事投稿】投稿画面内にサムネイル画像が表示されている',
   async function () {
     const page = playwrightHelper.getPage();
-    const modal = page.getByRole('dialog');
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
 
     const thumbnailImage = page.getByRole('img', { name: 'サムネイル画像' });
     await expect(thumbnailImage).toBeVisible();
@@ -513,7 +516,7 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    await expect(page.getByText('記事を公開しました')).toBeVisible({
+    await expect(page.getByText('記事を公開しました！')).toBeVisible({
       timeout: 10000,
     });
   },

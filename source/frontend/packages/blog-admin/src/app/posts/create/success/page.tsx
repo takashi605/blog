@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import styles from './page.module.scss';
 
 function CreateBlogPostSuccessPage({
   searchParams,
@@ -19,8 +20,39 @@ function CreateBlogPostSuccessPage({
 
   return (
     <div>
-      <p>記事を公開しました</p>
-      <Link href={postedPageUrl}>投稿した記事を見る</Link>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <div className={styles.iconSection}>
+            <div className={styles.iconContainer}>
+              <svg
+                className={styles.icon}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h2 className={styles.title}>記事を公開しました！</h2>
+            <p className={styles.description}>記事が正常に公開されました。</p>
+          </div>
+
+          <div className={styles.buttonGroup}>
+            <Link href={postedPageUrl} className={styles.primaryButton}>
+              投稿した記事を見る
+            </Link>
+
+            <Link href="/posts" className={styles.secondaryButton}>
+              記事管理画面に戻る
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

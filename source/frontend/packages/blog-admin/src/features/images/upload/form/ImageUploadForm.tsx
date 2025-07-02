@@ -1,7 +1,8 @@
 import { useFormContext } from 'react-hook-form';
+import ErrorMessage from '../../../../components/form/parts/ErrorMessage';
 import ImageInput from '../../../../components/form/parts/ImageInput';
 import TextInput from '../../../../components/form/parts/TextInput';
-import UploadButton from '../ui/UploadButton';
+import CommonModalSubmitButton from '../../../../components/modal/CommonModalSubmitButton';
 import type { ImageUploadFormValues } from './ImageUploadFormProvider';
 
 type ImageUploadFormProps = {
@@ -34,14 +35,7 @@ function ImageUploadForm({
           },
         })}
       />
-      {errors.image && (
-        <p
-          role="alert"
-          style={{ color: 'red', fontSize: '14px', marginTop: '4px' }}
-        >
-          {errors.image.message}
-        </p>
-      )}
+      {errors.image && <ErrorMessage>{errors.image.message}</ErrorMessage>}
       <TextInput
         id="name"
         label="画像名"
@@ -50,21 +44,12 @@ function ImageUploadForm({
         })}
       />
       {errors.imagePath && (
-        <p
-          role="alert"
-          style={{ color: 'red', fontSize: '14px', marginTop: '4px' }}
-        >
-          {errors.imagePath.message}
-        </p>
+        <ErrorMessage>{errors.imagePath.message}</ErrorMessage>
       )}
-      <UploadButton loading={loading}>
+      <CommonModalSubmitButton loading={loading}>
         {loading ? 'アップロード中...' : 'アップロード'}
-      </UploadButton>
-      {errorMessage && (
-        <p role="alert" style={{ color: 'red' }}>
-          {errorMessage}
-        </p>
-      )}
+      </CommonModalSubmitButton>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </form>
   );
 }

@@ -2,10 +2,12 @@
 import { useRouter } from 'next/navigation';
 import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
 import type { components } from 'shared-lib/src/generated';
+import ErrorMessage from '../../../components/form/parts/ErrorMessage';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
+import type { BlogPostFormData } from '../editor/form/BlogPostFormProvider';
 import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
 import PublishedDatePicker from '../editor/form/PublishedDatePicker';
 import SubmitButton from '../editor/form/SubmitButton';
@@ -36,11 +38,9 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
-  const { updateBlogPost, error } = useUpdateBlogPost();
+  const { updateBlogPost, error, loading } = useUpdateBlogPost();
 
-  const onSubmit = async () => {
-    const formValues = form.getValues();
-
+  const onSubmit = async (formValues: BlogPostFormData) => {
     // UpdateBlogPostRequest型に合わせてデータを構築
     const updateRequest: UpdateBlogPostRequest = {
       title: formValues.title,
@@ -62,32 +62,36 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
 
   return (
     <>
-      <form
-        className={styles.form}
-        role="form"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {error && <p role="alert">{error}</p>}
-        <div className={styles.formHeader}>
-          <TitleInput />
+      <div className={styles.formSection}>
+        <form
+          className={styles.form}
+          role="form"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <div className={styles.formHeader}>
+            <TitleInput />
 
-          <div className={styles.controlsContainer}>
-            <div className={styles.publishedDateContainer}>
-              <PublishedDatePicker />
-            </div>
+            <div className={styles.controlsContainer}>
+              <div className={styles.publishedDateContainer}>
+                <PublishedDatePicker />
+              </div>
 
-            <div className={styles.buttons}>
-              <CommonModalProvider>
-                <ThumbnailPickModalWithOpenButton />
-              </CommonModalProvider>
+              <div className={styles.buttons}>
+                <CommonModalProvider>
+                  <ThumbnailPickModalWithOpenButton />
+                </CommonModalProvider>
 
-              <SubmitButton>編集確定</SubmitButton>
+                <SubmitButton isLoading={loading} loadingText="更新中...">
+                  編集確定
+                </SubmitButton>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <ThumbnailPreview />
+        <ThumbnailPreview />
+      </div>
 
       <div>
         <h2>内容</h2>

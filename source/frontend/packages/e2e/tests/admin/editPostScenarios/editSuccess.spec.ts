@@ -57,9 +57,9 @@ When(
     const firstLabelInModal = labelsInModal.first();
     await firstLabelInModal.click();
 
-    // 閉じるボタンをクリック
-    const closeButton = modal.getByRole('button', { name: '閉じる' });
-    await closeButton.click();
+    // 選択ボタンをクリック
+    const selectButton = modal.getByRole('button', { name: '選択' });
+    await selectButton.click();
 
     // モーダルが閉じられるまで待機
     await expect(modal).not.toBeVisible();
@@ -91,7 +91,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     // 投稿完了メッセージの確認
-    await expect(page.getByText('記事を公開しました')).toBeVisible({
+    await expect(page.getByText('記事を公開しました！')).toBeVisible({
       timeout: 10000,
     });
   },
@@ -436,7 +436,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // 編集完了メッセージの確認
-    await expect(page.getByText('記事を編集しました')).toBeVisible({
+    await expect(page.getByText('記事を更新しました！')).toBeVisible({
       timeout: 10000,
     });
   },
@@ -448,7 +448,7 @@ Then(
     const page = playwrightHelper.getPage();
     
     // 編集した記事へのリンクが表示されていることを確認
-    const articleLink = page.getByRole('link', { name: '編集した記事を見る' });
+    const articleLink = page.getByRole('link', { name: '更新した記事を見る' });
     await expect(articleLink).toBeVisible();
   },
 );
@@ -459,7 +459,7 @@ When(
     const page = playwrightHelper.getPage();
     
     // 編集した記事へのリンクをクリック
-    const articleLink = page.getByRole('link', { name: '編集した記事を見る' });
+    const articleLink = page.getByRole('link', { name: '更新した記事を見る' });
     await articleLink.click();
   },
 );

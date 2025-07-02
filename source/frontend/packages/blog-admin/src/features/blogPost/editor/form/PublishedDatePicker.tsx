@@ -1,9 +1,13 @@
 'use client';
+import ErrorMessage from '../../../../components/form/parts/ErrorMessage';
 import { useBlogPostFormContext } from './BlogPostFormProvider';
 import styles from './publishedDatePicker.module.scss';
 
 function PublishedDatePicker() {
-  const { register } = useBlogPostFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useBlogPostFormContext();
 
   return (
     <div className={styles.publishedDate}>
@@ -15,8 +19,11 @@ function PublishedDatePicker() {
         aria-label="公開日"
         aria-expanded="false"
         aria-controls="publishedDate"
-        {...register('publishedDate')}
+        {...register('publishedDate', { required: '公開日を選択してください' })}
       />
+      {errors.publishedDate && (
+        <ErrorMessage>{errors.publishedDate.message}</ErrorMessage>
+      )}
     </div>
   );
 }

@@ -1,24 +1,23 @@
 import React from 'react';
-import styles from './UploadButton.module.scss';
-import containerStyles from './UploadButtonContainer.module.scss';
+import styles from './CommonModalSubmitButton.module.scss';
 
-type UploadButtonProps = {
+type CommonModalSubmitButtonProps = {
   loading?: boolean;
   disabled?: boolean;
   children: React.ReactNode;
 } & React.ComponentPropsWithoutRef<'button'>;
 
-function UploadButton({
+function CommonModalSubmitButton({
   loading = false,
   disabled = false,
   children,
   className,
   ...props
-}: UploadButtonProps) {
+}: CommonModalSubmitButtonProps) {
   const isDisabled = disabled || loading;
 
   return (
-    <div className={containerStyles.container}>
+    <div className={styles.container}>
       <button
         type="submit"
         disabled={isDisabled}
@@ -31,4 +30,4 @@ function UploadButton({
   );
 }
 
-export default UploadButton;
+export default CommonModalSubmitButton;

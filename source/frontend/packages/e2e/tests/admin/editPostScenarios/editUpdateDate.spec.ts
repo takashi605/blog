@@ -80,7 +80,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     // 編集完了メッセージの確認
-    await expect(page.getByText('記事を編集しました')).toBeVisible({
+    await expect(page.getByText('記事を更新しました！')).toBeVisible({
       timeout: 10000,
     });
   },
@@ -93,7 +93,7 @@ Then(
 
     // 編集した記事へのリンクが表示されていることを確認
     const articleLink = page.getByRole('link', {
-      name: '編集した記事を見る',
+      name: '更新した記事を見る',
     });
     await expect(articleLink).toBeVisible();
   },
@@ -106,7 +106,7 @@ When(
 
     // 編集した記事へのリンクをクリック
     const articleLink = page.getByRole('link', {
-      name: '編集した記事を見る',
+      name: '更新した記事を見る',
     });
     await articleLink.click();
   },

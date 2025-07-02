@@ -8,15 +8,26 @@ type ImagePickerProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>, image: Image) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
-  ref?: React.Ref<HTMLInputElement>;
+  forwardedRef?: React.Ref<HTMLInputElement>;
+  selectedImageId?: string;
 };
 
-function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
+function ImagePicker({
+  onChange,
+  onBlur,
+  name,
+  forwardedRef: ref,
+  selectedImageId,
+}: ImagePickerProps) {
   const { getAllImages } = useImageList();
 
   return (
     <>
-      <h2>画像を選択</h2>
+      <h2
+        style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}
+      >
+        画像を選択
+      </h2>
       <ul className={styles.imageList}>
         {getAllImages().map((image) => (
           <li key={image.id}>
@@ -24,6 +35,7 @@ function ImagePicker({ onChange, onBlur, name, ref }: ImagePickerProps) {
               id={image.id}
               type="radio"
               value={image.id}
+              checked={selectedImageId === image.id}
               onChange={(e) => onChange(e, image)}
               {...(onBlur && { onBlur })}
               {...(name && { name })}
