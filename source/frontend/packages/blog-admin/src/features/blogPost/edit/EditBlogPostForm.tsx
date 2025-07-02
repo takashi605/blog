@@ -62,32 +62,34 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
 
   return (
     <>
-      <form
-        className={styles.form}
-        role="form"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <div className={styles.formHeader}>
-          <TitleInput />
+      <div className={styles.formSection}>
+        <form
+          className={styles.form}
+          role="form"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <div className={styles.formHeader}>
+            <TitleInput />
 
-          <div className={styles.controlsContainer}>
-            <div className={styles.publishedDateContainer}>
-              <PublishedDatePicker />
-            </div>
+            <div className={styles.controlsContainer}>
+              <div className={styles.publishedDateContainer}>
+                <PublishedDatePicker />
+              </div>
 
-            <div className={styles.buttons}>
-              <CommonModalProvider>
-                <ThumbnailPickModalWithOpenButton />
-              </CommonModalProvider>
+              <div className={styles.buttons}>
+                <CommonModalProvider>
+                  <ThumbnailPickModalWithOpenButton />
+                </CommonModalProvider>
 
-              <SubmitButton>編集確定</SubmitButton>
+                <SubmitButton>編集確定</SubmitButton>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <ThumbnailPreview />
+        <ThumbnailPreview />
+      </div>
 
       <div>
         <h2>内容</h2>
