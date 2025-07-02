@@ -8,11 +8,11 @@ type SuccessMessageProps = {
   autoHideDuration?: number;
 };
 
-function SuccessMessage({ 
-  message, 
-  isVisible, 
-  onHide, 
-  autoHideDuration = 2000 
+function SuccessMessage({
+  message,
+  isVisible,
+  onHide,
+  autoHideDuration = 2000,
 }: SuccessMessageProps) {
   const [isFadingOut, setIsFadingOut] = React.useState(false);
 
@@ -46,7 +46,9 @@ function SuccessMessage({
   }
 
   return (
-    <div className={`${styles.successMessage} ${isFadingOut ? styles.fadeOut : ''}`}>
+    <div
+      className={`${styles.successMessage} ${isFadingOut ? styles.fadeOut : ''}`}
+    >
       {message}
     </div>
   );

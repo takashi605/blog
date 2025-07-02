@@ -8,12 +8,12 @@ type UploadButtonProps = {
   children: React.ReactNode;
 } & React.ComponentPropsWithoutRef<'button'>;
 
-function UploadButton({ 
-  loading = false, 
-  disabled = false, 
-  children, 
+function UploadButton({
+  loading = false,
+  disabled = false,
+  children,
   className,
-  ...props 
+  ...props
 }: UploadButtonProps) {
   const isDisabled = disabled || loading;
 

@@ -2,10 +2,10 @@
 import React from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
 import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
+import SuccessMessage from '../../../components/form/parts/SuccessMessage';
 import CommonModal from '../../../components/modal/CommonModal';
 import CommonModalCloseButton from '../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../components/modal/CommonModalOpenButton';
-import SuccessMessage from '../../../components/form/parts/SuccessMessage';
 import { useImageListContext } from '../list/ImageListProvider';
 import { uploadCloudinary } from './cloudinary/uploadCloudinary';
 import ImageUploadForm from './form/ImageUploadForm';
@@ -53,7 +53,7 @@ function Modal() {
 
       setErrorMessage('データベースへのアップロードに失敗しました。');
       setIsLoading(false);
-      fetchImages()
+      fetchImages();
       return;
     }
 
@@ -65,7 +65,7 @@ function Modal() {
       return;
     }
 
-    fetchImages()
+    fetchImages();
     setIsUploadSuccess(true);
     setIsLoading(false);
 

@@ -54,28 +54,34 @@ describe('ImageUploadForm', () => {
   describe('必須項目のバリデーション', () => {
     it('画像ファイルが選択されていない場合、エラーメッセージが表示される', async () => {
       renderComponent();
-      
+
       const nameInput = screen.getByLabelText('画像名');
       await userEvent.type(nameInput, 'test-image');
 
       const submitButton = screen.getByRole('button', { name: 'アップロード' });
       await userEvent.click(submitButton);
 
-      expect(await screen.findByText('画像ファイルを選択してください')).toBeInTheDocument();
+      expect(
+        await screen.findByText('画像ファイルを選択してください'),
+      ).toBeInTheDocument();
       expect(onSubmitMock).not.toHaveBeenCalled();
     });
 
     it('画像名が入力されていない場合、エラーメッセージが表示される', async () => {
       renderComponent();
-      
+
       const fileInput = screen.getByLabelText('ファイルを選択');
-      const file = new File(['(⌐□_□)'], 'test-image.png', { type: 'image/png' });
+      const file = new File(['(⌐□_□)'], 'test-image.png', {
+        type: 'image/png',
+      });
       await userEvent.upload(fileInput, file);
 
       const submitButton = screen.getByRole('button', { name: 'アップロード' });
       await userEvent.click(submitButton);
 
-      expect(await screen.findByText('画像名を入力してください')).toBeInTheDocument();
+      expect(
+        await screen.findByText('画像名を入力してください'),
+      ).toBeInTheDocument();
       expect(onSubmitMock).not.toHaveBeenCalled();
     });
 
@@ -85,8 +91,12 @@ describe('ImageUploadForm', () => {
       const submitButton = screen.getByRole('button', { name: 'アップロード' });
       await userEvent.click(submitButton);
 
-      expect(await screen.findByText('画像ファイルを選択してください')).toBeInTheDocument();
-      expect(await screen.findByText('画像名を入力してください')).toBeInTheDocument();
+      expect(
+        await screen.findByText('画像ファイルを選択してください'),
+      ).toBeInTheDocument();
+      expect(
+        await screen.findByText('画像名を入力してください'),
+      ).toBeInTheDocument();
       expect(onSubmitMock).not.toHaveBeenCalled();
     });
   });
