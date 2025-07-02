@@ -6,22 +6,16 @@ import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useCreateBlogPost } from '../api/useCreateBlogPost';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
-import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
+import {
+  useBlogPostFormContext,
+  type BlogPostFormData,
+} from '../editor/form/BlogPostFormProvider';
 import PublishedDatePicker from '../editor/form/PublishedDatePicker';
 import SubmitButton from '../editor/form/SubmitButton';
 import TitleInput from '../editor/form/TitleInput';
 import ThumbnailPickModalWithOpenButton from '../editor/ThumbnailPickModal';
 import ThumbnailPreview from '../editor/ThumbnailPreview';
 import styles from './createBlogPostForm.module.scss';
-
-export type CreateBlogPostFormData = {
-  title: string;
-  thumbnail: {
-    id: string;
-    path: string;
-  };
-  publishedDate: string;
-};
 
 function CreateBlogPostForm() {
   const router = useRouter();
@@ -31,7 +25,7 @@ function CreateBlogPostForm() {
   const { handleSubmit } = form;
 
   const { createBlogPost, error } = useCreateBlogPost();
-  const onSubmit = async (formValues: CreateBlogPostFormData) => {
+  const onSubmit = async (formValues: BlogPostFormData) => {
     // 日付の生成
     const todaySlashDelimited = toISOStringWithTimezone(new Date())
       .split('T')[0]

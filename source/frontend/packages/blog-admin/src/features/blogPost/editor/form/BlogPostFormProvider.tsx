@@ -7,13 +7,20 @@ import {
   useFormContext,
   type UseFormReturn,
 } from 'react-hook-form';
-import type { CreateBlogPostFormData } from '../../create/CreateBlogPostForm';
+export type BlogPostFormData = {
+  title: string;
+  thumbnail: {
+    id: string;
+    path: string;
+  };
+  publishedDate: string;
+};
 
-type BlogPostFormState = UseFormReturn<CreateBlogPostFormData>;
+type BlogPostFormState = UseFormReturn<BlogPostFormData>;
 
 type BlogPostFormProviderProps = {
   children: ReactNode;
-  defaultValues?: Partial<CreateBlogPostFormData>;
+  defaultValues?: Partial<BlogPostFormData>;
 };
 
 const BlogPostFormContext = createContext<BlogPostFormState | null>(null);
@@ -25,7 +32,7 @@ export function BlogPostFormProvider({
   // 今日の日付をYYYY-MM-DD形式で取得
   const todayHyphenDelimited = new Date().toISOString().split('T')[0];
 
-  const form = useForm<CreateBlogPostFormData>({
+  const form = useForm<BlogPostFormData>({
     mode: 'onSubmit',
     defaultValues: {
       title: '',
@@ -52,7 +59,7 @@ export function BlogPostFormProvider({
  * useContextのラッパーとして機能
  */
 export const useBlogPostFormContext = () => {
-  const formState = useFormContext<CreateBlogPostFormData>();
+  const formState = useFormContext<BlogPostFormData>();
   if (formState === null) {
     throw new Error(
       'useBlogPostFormContext は BlogPostFormProvider でラップされていなければ利用できません',

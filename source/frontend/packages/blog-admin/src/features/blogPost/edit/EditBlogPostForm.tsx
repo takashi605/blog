@@ -4,9 +4,9 @@ import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
 import type { components } from 'shared-lib/src/generated';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
-import type { CreateBlogPostFormData } from '../create/CreateBlogPostForm';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
+import type { BlogPostFormData } from '../editor/form/BlogPostFormProvider';
 import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
 import PublishedDatePicker from '../editor/form/PublishedDatePicker';
 import SubmitButton from '../editor/form/SubmitButton';
@@ -39,7 +39,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
 
   const { updateBlogPost, error } = useUpdateBlogPost();
 
-  const onSubmit = async (formValues: CreateBlogPostFormData) => {
+  const onSubmit = async (formValues: BlogPostFormData) => {
     // UpdateBlogPostRequest型に合わせてデータを構築
     const updateRequest: UpdateBlogPostRequest = {
       title: formValues.title,
