@@ -5,7 +5,7 @@ import playwrightHelper from '../../support/playwrightHelper.ts';
 let initialPopularPostTitles: string[] = [];
 let updatedPopularPostTitles: string[] = [];
 
-Given('【人気記事選択】人気記事選択ページにアクセスする', async function () {
+Given('【人気記事選択】人気記事管理ページにアクセスする', async function () {
   if (!process.env.ADMIN_URL) {
     throw new Error('ADMIN_URL 環境変数が設定されていません');
   }

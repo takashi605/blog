@@ -1,0 +1,19 @@
+@use "../../../styles/_variables.scss" as vars;
+
+.modalContent {
+  padding: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: vars.$text-color;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}

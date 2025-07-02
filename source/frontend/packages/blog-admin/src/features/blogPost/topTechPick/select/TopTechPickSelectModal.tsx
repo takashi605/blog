@@ -1,13 +1,10 @@
 'use client';
 import React from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
-import CommonModal from '../../../../components/modal/CommonModal';
-import CommonModalCloseButton from '../../../../components/modal/CommonModalCloseButton';
 import CommonModalOpenButton from '../../../../components/modal/CommonModalOpenButton';
-import PostCheckboxes from '../../select/checkboxes/PostCheckboxes';
 import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostCheckboxesProvider';
-import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
 import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
+import PostSelectModal from '../../select/PostSelectModal';
 import { useTopTechPickPostViewContext } from '../view/TopTechPickViewProvider';
 
 function TopTechPickSelectModalWithOpenButton() {
@@ -25,11 +22,16 @@ function Modal() {
   const { getTopTechPickPost, updateTopTechPickPost } =
     useTopTechPickPostViewContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const { selectedBlogPosts } = usePostsCheckboxes();
 
   const onSubmit = async (data: PostsCheckboxesFormValues) => {
     try {
+      // 成功フラグをリセット
+      setIsUploadSuccess(false);
+      setIsLoading(true);
+
       const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
       if (selectedTopTechPickBlogPosts.length !== 1) {
         alert('トップテックピック記事は1つだけ選択してください。');
@@ -56,28 +58,25 @@ function Modal() {
       alert(
         'トップテックピック記事の更新に失敗しました。ログを確認してください。',
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <CommonModal>
-      <PostCheckboxesFormProvider
-        defaultValues={{
-          checkedPosts: [getTopTechPickPost()?.id ?? ''],
-        }}
-      >
-        <h2>ピックアップ記事を選択</h2>
-        <PostCheckboxes
-          onSubmit={onSubmit}
-          validate={(value: string[]) =>
-            value.length === 1 ||
-            'トップテック記事は必ず1つのみ選択してください'
-          }
-        />
-      </PostCheckboxesFormProvider>
-      {isUploadSuccess && <p>トップテックピック記事を更新しました。</p>}
-      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
-    </CommonModal>
+    <PostSelectModal
+      title="トップテックピック記事を選択"
+      defaultValues={{
+        checkedPosts: [getTopTechPickPost()?.id ?? ''],
+      }}
+      onSubmit={onSubmit}
+      validate={(value: string[]) =>
+        value.length === 1 || 'トップテック記事は必ず1つのみ選択してください'
+      }
+      successMessage="トップテックピック記事を更新しました。"
+      isSuccess={isUploadSuccess}
+      loading={isLoading}
+    />
   );
 }
 
