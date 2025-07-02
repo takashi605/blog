@@ -1,31 +1,110 @@
+@use "../../../../styles/_variables.scss" as vars;
+
+.form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.postList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.postItem {
+  background: vars.$background-light;
+  border: 1px solid vars.$border-color;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: vars.$background-hover;
+    border-color: vars.$border-hover-color;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .label {
   display: flex;
   align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
   cursor: pointer;
+  width: 100%;
+  min-height: 60px;
 
-  .checkbox {
-    appearance: none;
-    position: relative;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #06b6d4;
-    border-radius: 2px;
-    cursor: pointer;
+  &:hover {
+    .postTitle {
+      color: vars.$primary-button-color;
+    }
+  }
+}
+
+.checkbox {
+  appearance: none;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid vars.$text-muted-color;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: vars.$primary-button-color;
   }
 
-  .checkbox:checked {
-    background-color: #06b6d4;
+  &:focus {
+    outline: 2px solid vars.$primary-button-color;
+    outline-offset: 2px;
   }
+}
 
-  .checkbox:checked::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    width: 8px;
-    height: 4px;
-    border-bottom: 2px solid #ffffff;
-    border-left: 2px solid #ffffff;
+.checkbox:checked {
+  background-color: vars.$primary-button-color;
+  border-color: vars.$primary-button-color;
+}
+
+.checkbox:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  width: 10px;
+  height: 5px;
+  border-bottom: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+}
+
+.postTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: vars.$text-color;
+  margin: 0;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.errorMessage {
+  color: vars.$error-color;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  padding: 12px 16px;
+  background: vars.$error-background;
+  border: 1px solid vars.$error-border;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: "⚠️";
+    font-size: 16px;
   }
 }

@@ -1,8 +1,9 @@
+import CommonModalSubmitButton from '@/components/modal/CommonModalSubmitButton';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useBlogPostList } from '../../list/useBlogPostList';
-import type { PostsCheckboxesFormValues } from './PostCheckboxesProvider';
 import styles from './postCheckboxes.module.scss';
+import type { PostsCheckboxesFormValues } from './PostCheckboxesProvider';
 
 type PostsCheckboxesProps = {
   onSubmit: (data: PostsCheckboxesFormValues) => void;
@@ -19,10 +20,10 @@ function PostCheckboxes({ onSubmit, validate }: PostsCheckboxesProps) {
   const error = errors?.checkedPosts;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <ul>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <ul className={styles.postList}>
         {getAllBlogPosts().map((blogPost) => (
-          <li key={blogPost.id}>
+          <li key={blogPost.id} className={styles.postItem}>
             <label className={styles.label}>
               <input
                 className={styles.checkbox}
@@ -32,15 +33,15 @@ function PostCheckboxes({ onSubmit, validate }: PostsCheckboxesProps) {
                   validate,
                 })}
               />
-              <h3>{blogPost.title}</h3>
+              <h3 className={styles.postTitle}>{blogPost.title}</h3>
             </label>
           </li>
         ))}
       </ul>
 
-      {error && <p>{error.message}</p>}
+      {error && <p className={styles.errorMessage}>{error.message}</p>}
 
-      <button type="submit">保存</button>
+      <CommonModalSubmitButton>保存</CommonModalSubmitButton>
     </form>
   );
 }
