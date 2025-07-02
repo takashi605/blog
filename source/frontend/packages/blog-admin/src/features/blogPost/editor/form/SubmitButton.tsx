@@ -6,13 +6,13 @@ interface SubmitButtonProps {
   loadingText?: string;
 }
 
-function SubmitButton({ children, isLoading = false, loadingText = '投稿中...' }: SubmitButtonProps) {
+function SubmitButton({
+  children,
+  isLoading = false,
+  loadingText = '投稿中...',
+}: SubmitButtonProps) {
   return (
-    <button 
-      className={styles.submitButton} 
-      type="submit"
-      disabled={isLoading}
-    >
+    <button className={styles.submitButton} type="submit" disabled={isLoading}>
       {isLoading ? loadingText : children}
     </button>
   );

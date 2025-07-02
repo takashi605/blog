@@ -1,4 +1,4 @@
-@import '../../../../styles/variables';
+@import "../../../../styles/variables";
 
 .submitButton {
   display: flex;
@@ -12,7 +12,9 @@
   font-size: 14px;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   box-shadow: 0 2px 4px $primary-button-shadow;
 
   &:hover:not(:disabled) {

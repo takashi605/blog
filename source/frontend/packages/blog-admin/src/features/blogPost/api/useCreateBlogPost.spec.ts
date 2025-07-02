@@ -81,7 +81,7 @@ describe('useCreateBlogPost', () => {
       mockBlogPost,
     );
     expect(createdPost).toEqual(mockBlogPost);
-    expect(result.current.loading).toBe(false);
+    expect(result.current.loading).toBe(true); // 成功時はページ遷移があるためloadingをtrueのままにする
     expect(result.current.error).toBe(null);
     expect(result.current.blogPost).toEqual(mockBlogPost);
   });
@@ -107,7 +107,7 @@ describe('useCreateBlogPost', () => {
       await promise;
     });
 
-    expect(result.current.loading).toBe(false);
+    expect(result.current.loading).toBe(true); // 成功時はページ遷移があるためloadingをtrueのままにする
   });
 
   it('400エラーの場合は入力エラーメッセージを表示すること', async () => {

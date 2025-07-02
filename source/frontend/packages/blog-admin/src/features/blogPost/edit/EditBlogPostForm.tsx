@@ -38,7 +38,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
   const form = useBlogPostFormContext();
   const { handleSubmit } = form;
 
-  const { updateBlogPost, error } = useUpdateBlogPost();
+  const { updateBlogPost, error, loading } = useUpdateBlogPost();
 
   const onSubmit = async (formValues: BlogPostFormData) => {
     // UpdateBlogPostRequest型に合わせてデータを構築
@@ -82,7 +82,9 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
                   <ThumbnailPickModalWithOpenButton />
                 </CommonModalProvider>
 
-                <SubmitButton>編集確定</SubmitButton>
+                <SubmitButton isLoading={loading} loadingText="更新中...">
+                  編集確定
+                </SubmitButton>
               </div>
             </div>
           </div>
