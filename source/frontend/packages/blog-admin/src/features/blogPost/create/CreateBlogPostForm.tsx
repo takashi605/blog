@@ -31,8 +31,7 @@ function CreateBlogPostForm() {
   const { handleSubmit } = form;
 
   const { createBlogPost, error } = useCreateBlogPost();
-  const onSubmit = async () => {
-    const formValues = form.getValues();
+  const onSubmit = async (formValues: CreateBlogPostFormData) => {
     // 日付の生成
     const todaySlashDelimited = toISOStringWithTimezone(new Date())
       .split('T')[0]

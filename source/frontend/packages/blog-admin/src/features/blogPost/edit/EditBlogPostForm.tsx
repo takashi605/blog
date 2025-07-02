@@ -4,6 +4,7 @@ import type { UpdateBlogPostRequest } from 'shared-lib/src/api';
 import type { components } from 'shared-lib/src/generated';
 import CommonModalProvider from '../../../components/modal/CommonModalProvider';
 import { useUpdateBlogPost } from '../api/useUpdateBlogPost';
+import type { CreateBlogPostFormData } from '../create/CreateBlogPostForm';
 import { useBlogPostContentsContext } from '../editor/blogPostEditor/BlogPostContentsProvider';
 import BlogPostEditor from '../editor/blogPostEditor/BlogPostEditor';
 import { useBlogPostFormContext } from '../editor/form/BlogPostFormProvider';
@@ -38,9 +39,7 @@ function EditBlogPostForm({ initialData }: EditBlogPostFormProps) {
 
   const { updateBlogPost, error } = useUpdateBlogPost();
 
-  const onSubmit = async () => {
-    const formValues = form.getValues();
-
+  const onSubmit = async (formValues: CreateBlogPostFormData) => {
     // UpdateBlogPostRequest型に合わせてデータを構築
     const updateRequest: UpdateBlogPostRequest = {
       title: formValues.title,
