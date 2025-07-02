@@ -51,7 +51,7 @@ function ThumbnailPickModalWithOpenButton() {
             onChange={onChangePickHandler}
             onBlur={onBlur}
             name={name}
-            ref={ref}
+            forwardedRef={ref}
             selectedImageId={selectedImage?.id}
           />
         </ImageListProvider>

@@ -8,7 +8,7 @@ type ImagePickerProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>, image: Image) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
-  ref?: React.Ref<HTMLInputElement>;
+  forwardedRef?: React.Ref<HTMLInputElement>;
   selectedImageId?: string;
 };
 
@@ -16,7 +16,7 @@ function ImagePicker({
   onChange,
   onBlur,
   name,
-  ref,
+  forwardedRef: ref,
   selectedImageId,
 }: ImagePickerProps) {
   const { getAllImages } = useImageList();
