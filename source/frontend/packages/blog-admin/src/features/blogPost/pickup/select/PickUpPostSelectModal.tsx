@@ -9,6 +9,7 @@ import type { PostsCheckboxesFormValues } from '../../select/checkboxes/PostChec
 import PostCheckboxesFormProvider from '../../select/checkboxes/PostCheckboxesProvider';
 import { usePostsCheckboxes } from '../../select/checkboxes/usePostCheckboxes';
 import { usePickUpPostListContext } from '../list/PickUpPostListProvider';
+import styles from './PickUpPostSelectModal.module.scss';
 
 function PickUpPostSelectModalWithOpenButton() {
   return (
@@ -49,22 +50,33 @@ function Modal() {
   };
 
   return (
-    <CommonModal>
-      <PostCheckboxesFormProvider
-        defaultValues={{
-          checkedPosts: getAllPickUpPosts().map((post) => post.id),
-        }}
-      >
-        <h2>ピックアップ記事を選択</h2>
-        <PostCheckboxes
-          onSubmit={onSubmit}
-          validate={(value: string[]) =>
-            value.length === 3 || 'ピックアップ記事は3件選択してください'
-          }
-        />
-      </PostCheckboxesFormProvider>
-      {isUploadSuccess && <p>ピックアップ記事を更新しました。</p>}
-      <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+    <CommonModal width="700px">
+      <div className={styles.modalContent}>
+        <h2 className={styles.title}>ピックアップ記事を選択</h2>
+
+        <PostCheckboxesFormProvider
+          defaultValues={{
+            checkedPosts: getAllPickUpPosts().map((post) => post.id),
+          }}
+        >
+          <PostCheckboxes
+            onSubmit={onSubmit}
+            validate={(value: string[]) =>
+              value.length === 3 || 'ピックアップ記事は3件選択してください'
+            }
+          />
+        </PostCheckboxesFormProvider>
+
+        {isUploadSuccess && (
+          <p className={styles.successMessage}>
+            ピックアップ記事を更新しました。
+          </p>
+        )}
+
+        <div className={styles.footer}>
+          <CommonModalCloseButton>閉じる</CommonModalCloseButton>
+        </div>
+      </div>
     </CommonModal>
   );
 }

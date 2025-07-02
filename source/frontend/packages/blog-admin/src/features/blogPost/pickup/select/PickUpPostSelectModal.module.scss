@@ -1,0 +1,47 @@
+@use "../../../../styles/_variables.scss" as vars;
+
+.modalContent {
+  padding: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: vars.$text-color;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.successMessage {
+  color: #10b981;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0 0 0;
+  padding: 12px 16px;
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: "✓";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #10b981;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+}
