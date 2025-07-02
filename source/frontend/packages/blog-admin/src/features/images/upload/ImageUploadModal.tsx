@@ -25,11 +25,16 @@ function Modal() {
   const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const onSubmit = async (data: ImageUploadFormValues) => {
+    setIsLoading(true);
+    setErrorMessage('');
+    
     const isSuccess = await uploadCloudinary(data);
     if (!isSuccess) {
       setErrorMessage('画像ストレージへのアップロードに失敗しました。');
+      setIsLoading(false);
       return;
     }
 
@@ -68,6 +73,7 @@ function Modal() {
     }
 
     setIsUploadSuccess(true);
+    setIsLoading(false);
   };
 
   return (
@@ -76,7 +82,11 @@ function Modal() {
         <h2 className={styles.header}>画像アップロード</h2>
         <div className={styles.formContainer}>
           <ImageUploadFormProvider>
-            <ImageUploadForm onSubmit={onSubmit} errorMessage={errorMessage} />
+            <ImageUploadForm 
+              onSubmit={onSubmit} 
+              errorMessage={errorMessage} 
+              loading={isLoading}
+            />
             {isUploadSuccess && (
               <div className={styles.successMessage}>
                 画像のアップロードに成功しました
