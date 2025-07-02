@@ -19,6 +19,7 @@ function PickUpPostSelectModalWithOpenButton() {
 function Modal() {
   const { getAllPickUpPosts, updatePickUpPosts } = usePickUpPostListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const { selectedBlogPosts } = usePostsCheckboxes();
 
@@ -26,6 +27,7 @@ function Modal() {
     try {
       // 成功フラグをリセット
       setIsUploadSuccess(false);
+      setIsLoading(true);
 
       // 選択されたブログ記事を取得
       const selectedPosts = selectedBlogPosts(data.checkedPosts);
@@ -45,6 +47,8 @@ function Modal() {
       }
 
       alert('ピックアップ記事の更新に失敗しました。ログを確認してください。');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,6 +64,7 @@ function Modal() {
       }
       successMessage="ピックアップ記事を更新しました。"
       isSuccess={isUploadSuccess}
+      loading={isLoading}
     />
   );
 }

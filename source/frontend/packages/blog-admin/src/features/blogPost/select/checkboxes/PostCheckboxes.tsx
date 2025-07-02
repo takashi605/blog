@@ -8,9 +8,14 @@ import type { PostsCheckboxesFormValues } from './PostCheckboxesProvider';
 type PostsCheckboxesProps = {
   onSubmit: (data: PostsCheckboxesFormValues) => void;
   validate: (value: string[]) => boolean | string;
+  loading?: boolean;
 };
 
-function PostCheckboxes({ onSubmit, validate }: PostsCheckboxesProps) {
+function PostCheckboxes({
+  onSubmit,
+  validate,
+  loading = false,
+}: PostsCheckboxesProps) {
   const { getAllBlogPosts } = useBlogPostList({ includeUnpublished: false });
   const {
     register,
@@ -41,7 +46,7 @@ function PostCheckboxes({ onSubmit, validate }: PostsCheckboxesProps) {
 
       {error && <p className={styles.errorMessage}>{error.message}</p>}
 
-      <CommonModalSubmitButton>保存</CommonModalSubmitButton>
+      <CommonModalSubmitButton loading={loading}>保存</CommonModalSubmitButton>
     </form>
   );
 }

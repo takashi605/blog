@@ -14,6 +14,7 @@ type PostSelectModalProps = {
   validate: (value: string[]) => boolean | string;
   successMessage?: string;
   isSuccess?: boolean;
+  loading?: boolean;
 };
 
 function PostSelectModal({
@@ -23,6 +24,7 @@ function PostSelectModal({
   validate,
   successMessage,
   isSuccess = false,
+  loading = false,
 }: PostSelectModalProps) {
   const [showSuccess, setShowSuccess] = React.useState(false);
 
@@ -49,7 +51,11 @@ function PostSelectModal({
         <h2 className={styles.title}>{title}</h2>
 
         <PostCheckboxesFormProvider defaultValues={defaultValues}>
-          <PostCheckboxes onSubmit={onSubmit} validate={validate} />
+          <PostCheckboxes
+            onSubmit={onSubmit}
+            validate={validate}
+            loading={loading}
+          />
         </PostCheckboxesFormProvider>
 
         {successMessage && (

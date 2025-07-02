@@ -22,6 +22,7 @@ function Modal() {
   const { getTopTechPickPost, updateTopTechPickPost } =
     useTopTechPickPostViewContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const { selectedBlogPosts } = usePostsCheckboxes();
 
@@ -29,6 +30,7 @@ function Modal() {
     try {
       // 成功フラグをリセット
       setIsUploadSuccess(false);
+      setIsLoading(true);
 
       const selectedTopTechPickBlogPosts = selectedBlogPosts(data.checkedPosts);
       if (selectedTopTechPickBlogPosts.length !== 1) {
@@ -56,6 +58,8 @@ function Modal() {
       alert(
         'トップテックピック記事の更新に失敗しました。ログを確認してください。',
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,6 +75,7 @@ function Modal() {
       }
       successMessage="トップテックピック記事を更新しました。"
       isSuccess={isUploadSuccess}
+      loading={isLoading}
     />
   );
 }
