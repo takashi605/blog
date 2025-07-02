@@ -8,9 +8,15 @@ import ImagePicker from '../../images/pick/ImagePicker';
 import { useBlogPostFormContext } from './form/BlogPostFormProvider';
 
 function ThumbnailPickModalWithOpenButton() {
-  const { register, setValue } = useBlogPostFormContext();
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useBlogPostFormContext();
 
-  const { onBlur, name, ref } = register('thumbnail.id');
+  const { onBlur, name, ref } = register('thumbnail.id', {
+    required: 'サムネイル画像は必須です',
+  });
 
   const onChangePickHandler = useCallback(
     (_e: React.ChangeEvent<HTMLInputElement>, image: Image) => {
@@ -21,8 +27,22 @@ function ThumbnailPickModalWithOpenButton() {
   );
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       <CommonModalOpenButton>サムネイル画像を選択</CommonModalOpenButton>
+      {errors.thumbnail?.id && (
+        <p
+          role="alert"
+          style={{
+            position: 'absolute',
+            color: 'red',
+            fontSize: '0.875rem',
+            marginTop: '0.25rem',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {errors.thumbnail.id.message}
+        </p>
+      )}
       <CommonModal>
         <ImageListProvider>
           <ImagePicker
@@ -34,7 +54,7 @@ function ThumbnailPickModalWithOpenButton() {
         </ImageListProvider>
         <CommonModalCloseButton>閉じる</CommonModalCloseButton>
       </CommonModal>
-    </>
+    </div>
   );
 }
 
