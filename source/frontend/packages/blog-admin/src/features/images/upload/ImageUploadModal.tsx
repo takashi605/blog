@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { api, HttpError } from 'shared-lib/src/api';
 import { createUUIDv4 } from 'shared-lib/src/utils/uuid';
 import CommonModal from '../../../components/modal/CommonModal';
@@ -24,8 +24,32 @@ function ImageUploadModalWithOpenButton() {
 function Modal() {
   const { updateImages } = useImageListContext();
   const [isUploadSuccess, setIsUploadSuccess] = React.useState(false);
+  const [isFadingOut, setIsFadingOut] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState(false);
+
+  // 成功メッセージを2秒後にフェードアウトアニメーションで非表示にする
+  useEffect(() => {
+    if (isUploadSuccess) {
+      const fadeOutTimer = setTimeout(() => {
+        setIsFadingOut(true);
+      }, 2000);
+
+      return () => clearTimeout(fadeOutTimer);
+    }
+  }, [isUploadSuccess]);
+
+  // フェードアウトアニメーション完了後にステートをリセット
+  useEffect(() => {
+    if (isFadingOut) {
+      const hideTimer = setTimeout(() => {
+        setIsUploadSuccess(false);
+        setIsFadingOut(false);
+      }, 500); // アニメーション時間と同じ
+
+      return () => clearTimeout(hideTimer);
+    }
+  }, [isFadingOut]);
 
   const onSubmit = async (data: ImageUploadFormValues) => {
     setIsLoading(true);
@@ -94,7 +118,7 @@ function Modal() {
               loading={isLoading}
             />
             {isUploadSuccess && (
-              <div className={styles.successMessage}>
+              <div className={`${styles.successMessage} ${isFadingOut ? styles.fadeOut : ''}`}>
                 画像のアップロードに成功しました
               </div>
             )}
