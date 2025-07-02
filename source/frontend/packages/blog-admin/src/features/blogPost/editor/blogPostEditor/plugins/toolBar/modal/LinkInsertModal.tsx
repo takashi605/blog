@@ -25,11 +25,10 @@ function LinkInsertModal() {
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value);
     if (urlError) {
       setUrlError('');
-      return;
     }
-    setUrl(e.target.value);
   };
 
   return (
