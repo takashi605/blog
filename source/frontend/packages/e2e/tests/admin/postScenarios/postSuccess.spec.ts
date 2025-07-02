@@ -516,7 +516,7 @@ Then(
   async function () {
     const page = playwrightHelper.getPage();
 
-    await expect(page.getByText('記事を公開しました')).toBeVisible({
+    await expect(page.getByText('記事を公開しました！')).toBeVisible({
       timeout: 10000,
     });
   },

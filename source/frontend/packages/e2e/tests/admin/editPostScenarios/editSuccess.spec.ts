@@ -91,7 +91,7 @@ Then(
     const page = playwrightHelper.getPage();
 
     // 投稿完了メッセージの確認
-    await expect(page.getByText('記事を公開しました')).toBeVisible({
+    await expect(page.getByText('記事を公開しました！')).toBeVisible({
       timeout: 10000,
     });
   },
