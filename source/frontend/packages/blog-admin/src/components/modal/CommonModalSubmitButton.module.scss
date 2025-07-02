@@ -1,4 +1,10 @@
-@use "../../../../styles/_variables.scss" as vars;
+@use "../../styles/_variables.scss" as vars;
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
 
 .button {
   display: inline-flex;
